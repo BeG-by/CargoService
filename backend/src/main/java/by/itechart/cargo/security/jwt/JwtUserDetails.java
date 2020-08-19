@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 @Builder
-public class JwtUser implements UserDetails {
+public class JwtUserDetails implements UserDetails {
 
     private long id;
     private String login;
@@ -16,7 +16,7 @@ public class JwtUser implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnable;
 
-    public JwtUser(long id, String login, String password, Collection<? extends GrantedAuthority> authorities, boolean isEnable) {
+    public JwtUserDetails(long id, String login, String password, Collection<? extends GrantedAuthority> authorities, boolean isEnable) {
         this.id = id;
         this.login = login;
         this.password = password;

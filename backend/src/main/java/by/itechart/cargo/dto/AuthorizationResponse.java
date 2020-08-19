@@ -11,5 +11,6 @@ public class AuthorizationResponse {
 
     private String role;
     private long companyId;
+    private String token;
 
 }
