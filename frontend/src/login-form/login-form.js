@@ -14,8 +14,7 @@ export default class LoginForm extends Component {
     }
 
     async searchByLoginPass() {
-        await fetch("/users/findByLoginAndPassword?login=" + this.state.user.login
-            + "&password=" + this.state.user.password)
+        await fetch("/v1/api/users/authenticate", { method: 'POST'})
             .then(res => res.json())
             .then(
                 (result) => {
