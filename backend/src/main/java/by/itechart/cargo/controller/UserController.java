@@ -2,10 +2,18 @@ package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.AuthorizationRequest;
 import by.itechart.cargo.dto.AuthorizationResponse;
+import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.jwt.JwtUserDetails;
 import by.itechart.cargo.service.UserService;
+import io.jsonwebtoken.Jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.HashSet;
 
 @RestController
 @RequestMapping("/v1/api/users")
@@ -14,16 +22,22 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenUtil jwtTokenUtil) {
         this.userService = userService;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
-
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthorizationResponse> authenticate(@RequestBody AuthorizationRequest authorizationRequest) {
-        return ResponseEntity.ok(new AuthorizationResponse("ADMIN", 1));
+        return ResponseEntity.ok(new AuthorizationResponse(new HashSet<>(), 1 ,"token"));
     }
 
+    @GetMapping("/test")
+    public String test() {
+        System.out.println(jwtTokenUtil.getJwtUser().getCompanyId());
+        return "TEST";
+    }
 
 }
