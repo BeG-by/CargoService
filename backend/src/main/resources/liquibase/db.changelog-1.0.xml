@@ -5,7 +5,7 @@
 
     <changeSet id="1.0.0" author="eugene.begun">
         <createTable tableName="users">
-            <column name="id_user" type="BIGINT(20) UNSIGNED" autoIncrement="true">
+            <column name="id_user" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="VARCHAR(45)">
@@ -14,43 +14,34 @@
             <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(45)"></column>
-            <column name="surname" type="VARCHAR(45)"></column>
-            <column name="patronymic" type="VARCHAR(45)"></column>
-            <column name="birthday" type="DATE"></column>
-            <column name="city" type="VARCHAR(45)"></column>
-            <column name="street" type="VARCHAR(45)"></column>
-            <column name="house" type="VARCHAR(45)"></column>
-            <column name="flat" type="VARCHAR(45)"></column>
-            <column name="email" type="VARCHAR(45)"></column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="surname" type="VARCHAR(45)"/>
+            <column name="patronymic" type="VARCHAR(45)"/>
+            <column name="birthday" type="DATE"/>
+            <column name="city" type="VARCHAR(45)"/>
+            <column name="street" type="VARCHAR(45)"/>
+            <column name="house" type="VARCHAR(45)"/>
+            <column name="flat" type="VARCHAR(45)"/>
+            <column name="email" type="VARCHAR(45)"/>
         </createTable>
-        <modifySql dbms="mysql">
-            <append value="ENGINE=INNODB CHARSET=utf8mb4 COLLATE utf8mb4_bin"/>
-        </modifySql>
     </changeSet>
 
     <changeSet id="1.0.1" author="eugene.begun">
         <createTable tableName="roles">
-            <column name="id_role" type="INT" autoIncrement="true">
+            <column name="id_role" type="INTEGER" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="role" type="VARCHAR(45)">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
-        <modifySql dbms="mysql">
-            <append value="ENGINE=INNODB CHARSET=utf8mb4 COLLATE utf8mb4_bin"/>
-        </modifySql>
     </changeSet>
 
     <changeSet id="1.0.2" author="eugene.begun">
         <createTable tableName="user_role">
-            <column name="id_user" type="BIGINT(20) UNSIGNED"></column>
-            <column name="id_role" type="INT"></column>
+            <column name="id_user" type="BIGSERIAL"/>
+            <column name="id_role" type="BIGSERIAL"/>
         </createTable>
-        <modifySql dbms="mysql">
-            <append value="ENGINE=INNODB CHARSET=utf8mb4 COLLATE utf8mb4_bin"/>
-        </modifySql>
     </changeSet>
 
     <changeSet id="1.0.3" author="eugene.begun">

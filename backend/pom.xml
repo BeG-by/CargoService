@@ -57,14 +57,14 @@
             <scope>test</scope>
         </dependency>
 
-        <!--MySql connector-->
 
+        <!-- PostgreSql  -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.connector.version}</version>
-            <scope>runtime</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.15</version>
         </dependency>
+        
 
         <!--Lombok-->
 
