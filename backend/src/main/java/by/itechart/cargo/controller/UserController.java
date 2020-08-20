@@ -22,8 +22,12 @@ public class UserController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthorizationResponse> authenticate(@RequestBody AuthorizationRequest authorizationRequest) {
-        return ResponseEntity.ok(new AuthorizationResponse("ADMIN", 1));
+        return ResponseEntity.ok(new AuthorizationResponse("ADMIN", 1 ,"token"));
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "TEST";
+    }
 
 }
