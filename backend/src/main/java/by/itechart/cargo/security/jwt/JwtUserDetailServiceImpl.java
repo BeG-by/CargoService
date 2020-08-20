@@ -35,7 +35,9 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .id(user.getUserId())
                 .login(user.getLogin())
                 .password(user.getPassword())
+                .companyId(1)
                 .authorities(createGrantedAuthority(user.getRoles()))
+                .isEnable(true)
                 .build();
     }
 

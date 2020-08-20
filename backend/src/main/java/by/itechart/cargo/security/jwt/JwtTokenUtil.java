@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil {
@@ -46,7 +48,9 @@ public class JwtTokenUtil {
     public String createToken(String login, Set<Role> roles) {
 
         final Claims claims = Jwts.claims().setSubject(login);
-        claims.put("roles", roles);
+
+        final Set<String> rolesName = roles.stream().map(Role::getRole).collect(Collectors.toSet());
+        claims.put("roles", rolesName);
 
         Date now = new Date();
         Date periodOfValidity = new Date(now.getTime() + validityInMs);
@@ -79,6 +83,10 @@ public class JwtTokenUtil {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public JwtUserDetails getJwtUser() {
+        return (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }
