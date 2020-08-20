@@ -1,6 +1,6 @@
 package by.itechart.cargo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,7 +60,7 @@ public class User implements Serializable, Cloneable {
     @Column(name = "email")
     private String email;
 
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_role",

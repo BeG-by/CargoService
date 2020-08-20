@@ -1,9 +1,7 @@
 package by.itechart.cargo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,7 +23,9 @@ public class Role implements Serializable, Cloneable {
     @Column(name = "role", unique = true)
     private String role;
 
-    @JsonIgnore
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
