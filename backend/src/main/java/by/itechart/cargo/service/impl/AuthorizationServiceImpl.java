@@ -1,7 +1,7 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.AuthorizationRequest;
-import by.itechart.cargo.dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
+import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
@@ -11,7 +11,6 @@ import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 

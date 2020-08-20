@@ -2,7 +2,7 @@ POST localhost:8080/v1/api/auth/login
 Content-Type: application/json
 
 {
-  "login": "rootd",
+  "login": "root",
   "password": "root"
 }
 

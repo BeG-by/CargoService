@@ -1,7 +1,7 @@
 package by.itechart.cargo.service;
 
-import by.itechart.cargo.dto.AuthorizationRequest;
-import by.itechart.cargo.dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
+import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
 import by.itechart.cargo.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;

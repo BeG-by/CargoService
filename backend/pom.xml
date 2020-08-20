@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <mysql.connector.version>8.0.21</mysql.connector.version>
+        <postgre.sql.version>42.2.15</postgre.sql.version>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
     </properties>
 
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.15</version>
+            <version>${postgre.sql.version}</version>
         </dependency>
         
 

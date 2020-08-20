@@ -64,4 +64,19 @@
                                  referencedTableName="roles"/>
     </changeSet>
 
+    <changeSet id="1.0.5" author="eugene.begun">
+        <insert tableName="users">
+            <column name="login" value="root"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="sysadmin"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="role" value="SYSADMIN"/>
+        </insert>
+        <insert tableName="user_role">
+            <column name="id_user">1</column>
+            <column name="id_role">1</column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

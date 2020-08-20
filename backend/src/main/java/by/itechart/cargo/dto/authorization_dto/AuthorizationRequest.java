@@ -1,4 +1,4 @@
-package by.itechart.cargo.dto;
+package by.itechart.cargo.dto.authorization_dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
