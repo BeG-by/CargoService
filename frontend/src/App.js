@@ -1,30 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import LoginForm from './login-form';
-import './App.css';
+import React from "react";
+import "./App.css";
+import {BrowserRouter} from "react-router-dom";
+import {Route} from "react-router-dom";
+import interceptors from "../src/security/Interceptors";
+import LoginForm from "./login-form/login-form";
+import MainPage from "./main-page/main-page";
 
-function App() {
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <p>
-                    If you are a real full stack...
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React or Die!
-                </a>
-            </header>
-            <div>
-                <LoginForm/>
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <header className="App-header">
+                    <BrowserRouter>
+                        <Route exact path="/" component={LoginForm}/>
+                        <Route exact path="/mainPage" component={MainPage}/>
+                    </BrowserRouter>
+                </header>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default App;
