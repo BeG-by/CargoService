@@ -1,5 +1,6 @@
 package by.itechart.cargo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -69,4 +70,8 @@ public class User implements Serializable, Cloneable {
     )
     Set<Role> roles = new HashSet<>();
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_client_company", nullable = false)
+    private ClientCompany clientCompany;
 }
