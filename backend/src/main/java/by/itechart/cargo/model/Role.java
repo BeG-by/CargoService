@@ -17,11 +17,11 @@ public class Role implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_role")
+    @Column(name = "id_role", nullable = false, updatable = false)
     private Long roleId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", unique = true)
+    @Column(name = "role", unique = true, nullable = false)
     private RoleType role;
 
     @JsonBackReference

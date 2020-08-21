@@ -18,17 +18,17 @@ public class Contract implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_contract", insertable = true, updatable = false)
-    private long id;
+    @Column(name = "id_contract", nullable = false, updatable = false)
+    private Long id;
 
-    @Column(name = "start_date", insertable = true, updatable = false)
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column(name = "expiration_date", insertable = true, updatable = false)
+    @Column(name = "expiration_date", nullable = false)
     private LocalDate expirationDate;
 
-    @Column(name = "payment", insertable = true, updatable = false)
-    private double payment;
+    @Column(name = "payment", nullable = false)
+    private Double payment;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)

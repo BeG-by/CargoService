@@ -20,35 +20,35 @@ public class ClientCompany implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_client_company", insertable = true, nullable = false)
-    private long id;
+    @Column(name = "id_client_company", nullable = false, updatable = false)
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private ClientCompanyType type;
 
-    @Column(name = "pan")
+    @Column(name = "pan", nullable = false)
     private String payerAccountNumber;
 
-    @Column(name = "country")
+    @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "city")
+    @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "street")
+    @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "house")
+    @Column(name = "house", nullable = false)
     private String house;
 
-    @Column(name = "flat")
+    @Column(name = "flat", nullable = false)
     private String flat;
 
-    @Column(name = "registration_date")
+    @Column(name = "registration_date", nullable = false)
     private LocalDate registrationDate;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @JsonManagedReference
@@ -61,6 +61,6 @@ public class ClientCompany implements Serializable, Cloneable {
 
     public enum ClientCompanyType {
         SP, //Sole proprietorship
-        JP; //Juridical person
+        JP //Juridical person
     }
 }
