@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
     <React.StrictMode>
         <MuiThemeProvider>
-        <App/>
+            <App/>
         </MuiThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
