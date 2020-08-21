@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "material-ui": "^0.20.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
@@ -36,6 +37,8 @@
   },
   "devDependencies": {
     "axios": "^0.19.2",
-    "react-router-dom": "^5.2.0"
+    "formik": "^2.1.5",
+    "react-router-dom": "^5.2.0",
+    "yup": "^0.29.3"
   }
 }

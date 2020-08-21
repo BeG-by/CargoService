@@ -1,7 +1,20 @@
 import React, {Component} from "react";
-import axios from "axios";
-import jwtToken from "../security/Interceptors";
+import axios from 'axios';
+import {jwtToken} from '../security/Interceptors';
+import {validationSchema} from '../validation/validation-schema';
 import './login-form.css';
+import RaisedButton from 'material-ui/RaisedButton';
+import {ErrorMessage, Field, Form, Formik, getIn} from 'formik';
+// import * as Yup from "yup";
+
+// const validationSchema = Yup.object({
+//     username: Yup.string()
+//         .max(16, "login is too long")
+//         .required("login is required"),
+//     password: Yup.string()
+//         .max(16, "password is too long")
+//         .required("password is required")
+// });
 
 export default class LoginForm extends Component {
     constructor(props) {
@@ -9,16 +22,17 @@ export default class LoginForm extends Component {
         this.state = {
             error: null,
             user: {login: '', password: '', companyId: '', role: ''}
-            // user: {login: '', password: '', surname: '', roles: [] }
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.searchByLoginPass = this.searchByLoginPass.bind(this);
     }
 
-    // async
-    searchByLoginPass(event) {
-        event.preventDefault();
+    searchByLoginPass = (values, {
+        props = this.props,
+        setSubmitting
+    }) => {
+        setSubmitting(false);
 
         const endpoint = "/v1/api/auth/login";
         const login = this.state.user.login;
@@ -34,7 +48,6 @@ export default class LoginForm extends Component {
                         companyId: res.data.companyId,
                         role: res.data.role
                     });
-                    alert(this.state.user.role + " " + this.state.user.companyId);
                     localStorage.setItem("authorization", res.data.token);
                     return this.showMainPage();
                 },
@@ -43,29 +56,6 @@ export default class LoginForm extends Component {
                         error
                     });
                 });
-
-        // await fetch("/v1/api/auth/login", { method: 'POST'})
-        //     .then(res => res.json())
-        //     .then(
-        //         (result) => {
-        //             this.setState({
-        //                 user: {
-        //                     surname: result.surname,
-        //                     roles: result.role
-        //                 },
-        //             });
-        //         },
-        //         (error) => {
-        //             this.setState({
-        //                 error
-        //             });
-        //         }
-        //     )
-        // if (!this.state.error) {
-        //     for (const role of this.state.user.roles) {
-        //         await alert(`${role.role} ${this.state.user.surname}, добро пожаловать!`);
-        //     }
-        // }
     }
 
     showMainPage() {
@@ -84,11 +74,6 @@ export default class LoginForm extends Component {
                     });
                 });
     }
-
-    // onSubmit(event) {
-    //     event.preventDefault();
-    //     this.searchByLoginPass();
-    // }
 
     onChangePassword(event) {
         this.setState({
@@ -120,47 +105,51 @@ export default class LoginForm extends Component {
             return <div><h2>Ошибка: {error.message}</h2></div>;
         } else {
             return (
-                <div>
-                    <div className="wrapper">
-                        <form className="form-login" onSubmit={this.searchByLoginPass}>
-                            <h2 className="form-login-heading">Please login</h2>
-                            <div className="form-group">
-                                <input type="text"
-                                       className="form-control"
-                                       placeholder="login"
-                                       name="login"
-                                       value={user.login}
-                                       onChange={this.onChangeLogin}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <input type="password"
-                                       className="form-control"
-                                       placeholder="password"
-                                       name="password"
-                                       value={user.password}
-                                       onChange={this.onChangePassword}
-                                />
-                            </div>
-                            <button className="btn btn-lg btn-primary btn-block"
-                                    type="submit"
-                                    onSubmit={this.searchByLoginPass}>
-                                Login
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            );
-            // return (
-            //     <form onSubmit={this.onSubmit}>
-            //         <p><label> Логин: <input type="text" name="login" value={user.login}
-            //                                  onChange={this.onChangeLogin}/></label></p>
-            //         <p><label> Пароль: <input type="password" name="password"
-            //                                   value={user.password}
-            //                                   onChange={this.onChangePassword}/></label></p>
-            //         <p><input type="submit" value="Submit"/></p>
-            //     </form>
-            // );
+                <Formik
+                    enableReinitialize
+                    initialValues={{
+                        username: user.login,
+                        password: user.password
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={this.searchByLoginPass}
+                    render={formProps => {
+                        return (
+                            <Form>
+                                <h2 className="form-signin-heading">Sign in, please</h2>
+                                <div style={{color: 'crimson', fontSize: '18px'}}>
+                                    <ErrorMessage name="username"/>
+                                </div>
+                                <div className="form-group">
+                                    <Field type="text"
+                                           className="form-control"
+                                           name="username"
+                                           placeholder="login"
+                                           maxLength="16"
+                                           onChange={this.onChangeLogin}
+                                    />
+                                </div>
+                                <br/>
+                                <div style={{color: 'crimson', fontSize: '18px'}}>
+                                    <ErrorMessage name="password"/>
+                                </div>
+                                <div className="form-group">
+                                    <Field type="password"
+                                           className="form-control"
+                                           name="password"
+                                           placeholder="password"
+                                           maxLength="16"
+                                           onChange={this.onChangePassword}
+                                    />
+                                </div>
+                                <br/>
+                                <RaisedButton type="submit" disabled={formProps.isSubmitting}>
+                                    sign in
+                                </RaisedButton>
+                            </Form>
+                        );
+                    }}
+                />);
         }
     }
 }
