@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -53,11 +53,11 @@ public class ClientCompany implements Serializable, Cloneable {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "clientCompany", fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "clientCompany", fetch = FetchType.LAZY)
-    private Set<Contract> contacts = new HashSet<>();
+    private List<Contract> contacts = new ArrayList<>();
 
     public enum ClientCompanyType {
         SP, //Sole proprietorship
