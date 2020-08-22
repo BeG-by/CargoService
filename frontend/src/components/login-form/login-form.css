@@ -1,11 +1,17 @@
 .form-signin {
-    background-color: lightseagreen;
+    background-color: white;
     padding: 40px;
+    border: 3px royalblue solid;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    color: white;
+    color: #2d3a6a;
+}
+
+.error-message {
+    color: chocolate;
+    font-size: 16px;
 }

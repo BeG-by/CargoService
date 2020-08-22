@@ -1,14 +1,15 @@
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import {validationSchema} from "../../validation/validation-schema";
-import {ErrorMessage, Field, Form, Formik} from "formik";
+import {ErrorMessage, Form, Formik} from "formik";
 import React from "react";
+import {FormikField, LoginField, PasswordField} from "../parts/formik-field";
 
 export function showError(object) {
     return <div className="form-signin">
         <h2>Something goes wrong...</h2>
-        <RaisedButton onClick={object.goBack}>
+        <Button variant="contained" color="secondary" onClick={object.goBack}>
             back
-        </RaisedButton>
+        </Button>
     </div>;
 }
 
@@ -26,35 +27,33 @@ export function showLoginForm(object) {
             return (
                 <Form className="form-signin">
                     <h2 className="form-signin-heading">Sign in, please</h2>
-                    <div style={{color: 'crimson', fontSize: '18px'}}>
+                    <div className="error-message">
                         <ErrorMessage name="username"/>
                     </div>
                     <div className="form-group">
-                        <Field type="text"
-                               className="form-control"
-                               name="username"
-                               placeholder="login"
-                               maxLength="16"
-                               onChange={object.onChangeLogin}
+                        <FormikField obj={object.onChangeLogin}
+                                     name={LoginField.name}
+                                     label={LoginField.label}
+                                     type={LoginField.type}
                         />
                     </div>
                     <br/>
-                    <div style={{color: 'crimson', fontSize: '18px'}}>
+                    <div className="error-message">
                         <ErrorMessage name="password"/>
                     </div>
                     <div className="form-group">
-                        <Field type="password"
-                               className="form-control"
-                               name="password"
-                               placeholder="password"
-                               maxLength="16"
-                               onChange={object.onChangePassword}
-                        />
+                        <FormikField obj={object.onChangePassword}
+                                     name={PasswordField.name}
+                                     label={PasswordField.label}
+                                     type={PasswordField.type}/>
                     </div>
                     <br/>
-                    <RaisedButton type="submit" disabled={formProps.isSubmitting}>
+                    <Button variant="contained"
+                            color="primary"
+                            type="submit"
+                            disabled={formProps.isSubmitting}>
                         sign in
-                    </RaisedButton>
+                    </Button>
                 </Form>
             );
         }}
