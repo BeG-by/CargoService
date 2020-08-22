@@ -4,24 +4,14 @@ import {jwtToken} from '../security/Interceptors';
 import {validationSchema} from '../validation/validation-schema';
 import './login-form.css';
 import RaisedButton from 'material-ui/RaisedButton';
-import {ErrorMessage, Field, Form, Formik, getIn} from 'formik';
-// import * as Yup from "yup";
-
-// const validationSchema = Yup.object({
-//     username: Yup.string()
-//         .max(16, "login is too long")
-//         .required("login is required"),
-//     password: Yup.string()
-//         .max(16, "password is too long")
-//         .required("password is required")
-// });
+import {ErrorMessage, Field, Form, Formik} from 'formik';
 
 export default class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             error: null,
-            user: {login: '', password: '', companyId: '', role: ''}
+            user: {login: '', password: '', role: ''}
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -45,7 +35,6 @@ export default class LoginForm extends Component {
         axios.post(endpoint, user_object)
             .then(res => {
                     this.setState({
-                        companyId: res.data.companyId,
                         role: res.data.role
                     });
                     localStorage.setItem("authorization", res.data.token);
@@ -80,7 +69,6 @@ export default class LoginForm extends Component {
                 user: {
                     password: event.target.value,
                     login: this.state.user.login,
-                    companyId: this.state.user.companyId,
                     role: this.state.user.role
                 }
             }
@@ -92,7 +80,6 @@ export default class LoginForm extends Component {
                 user: {
                     password: this.state.user.password,
                     login: event.target.value,
-                    companyId: this.state.user.companyId,
                     role: this.state.user.role
                 }
             }
