@@ -87,7 +87,7 @@
 
         <createTable tableName="client_companies">
             <column name="id_client_company" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
 
             <column name="type" type="client_company_type">

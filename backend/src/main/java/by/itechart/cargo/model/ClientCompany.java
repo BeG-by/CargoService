@@ -19,7 +19,7 @@ import java.util.List;
 public class ClientCompany implements Serializable, Cloneable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_client_company", nullable = false, updatable = false)
     private Long id;
 

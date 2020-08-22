@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 public class Contract implements Serializable, Cloneable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contract", nullable = false, updatable = false)
     private Long id;
 
@@ -28,7 +29,7 @@ public class Contract implements Serializable, Cloneable {
     private LocalDate expirationDate;
 
     @Column(name = "payment", nullable = false)
-    private Double payment;
+    private BigDecimal payment;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
