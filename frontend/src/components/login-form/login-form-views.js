@@ -26,7 +26,7 @@ export function showLoginForm(object) {
         {formProps => {
             return (
                 <Form className="form-signin">
-                    <h2 className="form-signin-heading">Sign in, please</h2>
+                    <h2 className="form-signin-heading">Please sign in</h2>
                     <div className="error-message">
                         <ErrorMessage name="username"/>
                     </div>
