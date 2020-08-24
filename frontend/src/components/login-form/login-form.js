@@ -10,7 +10,7 @@ export default class LoginForm extends Component {
         this.state = {
             error: null,
             errorText: '',
-            user: {login: '', password: '', role: ''}
+            user: {login: '', password: '', roles: []}
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -35,9 +35,10 @@ export default class LoginForm extends Component {
         axios.post(endpoint, user_object)
             .then(res => {
                     this.setState({
-                        role: res.data.role
+                        roles: res.data.role
                     });
                     localStorage.setItem("authorization", res.data.token);
+                    alert(localStorage.getItem("authorization"));
                     return this.showMainPage();
                 },
                 error => {
@@ -52,6 +53,7 @@ export default class LoginForm extends Component {
         const endpoint = "/mainPage";
         axios.get(endpoint)
             .then(res => {
+                alert(res.data);
                     if (res.data === "success") {
                         this.props.history.push("/mainPage");
                     } else {
@@ -71,7 +73,7 @@ export default class LoginForm extends Component {
                 user: {
                     password: event.target.value,
                     login: this.state.user.login,
-                    role: this.state.user.role
+                    roles: this.state.user.roles
                 }
             }
         );
@@ -82,7 +84,7 @@ export default class LoginForm extends Component {
                 user: {
                     password: this.state.user.password,
                     login: event.target.value,
-                    role: this.state.user.role
+                    roles: this.state.user.roles
                 }
             }
         );
@@ -94,7 +96,8 @@ export default class LoginForm extends Component {
             errorText: null,
             user: {
                 password: '',
-                login: ''
+                login: '',
+                roles: []
             }
         })
     }
