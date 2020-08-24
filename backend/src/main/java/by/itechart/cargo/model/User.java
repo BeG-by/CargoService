@@ -1,5 +1,6 @@
 package by.itechart.cargo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,22 +25,22 @@ public class User implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
+    @Column(name = "id_user", nullable = false, updatable = false)
     private Long userId;
 
-    @Column(name = "login", unique = true)
+    @Column(name = "login", unique = true, nullable = false)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "surname")
+    @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "patronymic")
+    @Column(name = "patronymic", nullable = false)
     private String patronymic;
 
     @Column(name = "birthday")
@@ -69,4 +70,8 @@ public class User implements Serializable, Cloneable {
     )
     Set<Role> roles = new HashSet<>();
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_client_company", nullable = false)
+    private ClientCompany clientCompany;
 }

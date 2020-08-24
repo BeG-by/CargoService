@@ -17,11 +17,12 @@ public class Role implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_role")
+    @Column(name = "id_role", nullable = false, updatable = false)
     private Long roleId;
 
-    @Column(name = "role", unique = true)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", unique = true, nullable = false)
+    private RoleType role;
 
     @JsonBackReference
     @ToString.Exclude
@@ -29,4 +30,14 @@ public class Role implements Serializable, Cloneable {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
+    public enum RoleType {
+        SYSADMIN,
+        ADMIN,
+        MANAGER,
+        DISPATCHER,
+        DRIVER,
+        CLIENT_COMPANY_OWNER
+    }
 }
+
+
