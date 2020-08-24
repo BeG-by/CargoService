@@ -9,6 +9,7 @@ export default class LoginForm extends Component {
         super(props);
         this.state = {
             error: null,
+            errorText: '',
             user: {login: '', password: '', role: ''}
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
@@ -41,6 +42,7 @@ export default class LoginForm extends Component {
                 },
                 error => {
                     this.setState({
+                        errorText: "Something goes wrong...",
                         error
                     });
                 });
@@ -58,6 +60,7 @@ export default class LoginForm extends Component {
                 },
                 error => {
                     this.setState({
+                        errorText: "The page is not available...",
                         error
                     });
                 });
@@ -88,6 +91,7 @@ export default class LoginForm extends Component {
     goBack() {
         this.setState({
             error: null,
+            errorText: null,
             user: {
                 password: '',
                 login: ''

@@ -1,16 +1,21 @@
 .form-signin {
     background-color: white;
-    padding: 40px;
-    border: 3px royalblue solid;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    color: #2d3a6a;
 }
 
 .error-message {
     color: #f50057;
-    font-size: 16px;
+    font-size: 12px;
+}
+
+.error-text {
+    font-style: oblique;
+    margin-bottom: 40px;
 }

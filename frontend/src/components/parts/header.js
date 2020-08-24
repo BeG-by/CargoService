@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
             display: 'flex',
         },
         marginRight: theme.spacing(2),
-        fontSize: '18px'
+        fontSize: '18px',
+        fontStyle: 'oblique',
     },
     hide: {
         display: 'none',

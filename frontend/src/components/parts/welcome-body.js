@@ -71,7 +71,7 @@ export const WelcomeBody = (props) => {
                 <Typography
                     className={classes.mainParagraph}
                     paragraph>
-                    Please sign in to access all the features you need.
+                    Please sign in to access all features you need.
                 </Typography>
             </div>
         </main>
