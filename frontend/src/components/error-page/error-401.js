@@ -1,6 +1,6 @@
 import React from "react";
 import {Component} from "react";
-import {ReturnButton} from "../parts/return-button";
+import ReturnButton from "../parts/return-button";
 
 export default class NotAuthorized extends Component {
     render() {
