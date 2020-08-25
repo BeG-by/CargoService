@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Table(name = "contracts")
 public class Contract implements Serializable, Cloneable {
+    private static final long serialVersionUID = 1238378954432122692L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,6 @@ public class Contract implements Serializable, Cloneable {
     private BigDecimal payment;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_client_company", nullable = false)
-    private ClientCompany clientCompany;
+    @Column(name = "id_client_company", nullable = false)
+    private Long clientCompanyId;
 }
