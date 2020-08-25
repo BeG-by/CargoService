@@ -9,7 +9,6 @@ export default class ReturnButton extends Component {
         this.goMainHandler = this.goMainHandler.bind(this);
     }
 
-    //fixme привязать к истории переходов
     goBackHandler() {
         this.props.history.goBack();
     }
