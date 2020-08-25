@@ -38,7 +38,6 @@ export default class LoginForm extends Component {
                         roles: res.data.role
                     });
                     localStorage.setItem("authorization", res.data.token);
-                    alert(localStorage.getItem("authorization"));
                     return this.showMainPage();
                 },
                 error => {
@@ -53,16 +52,13 @@ export default class LoginForm extends Component {
         const endpoint = "/mainPage";
         axios.get(endpoint)
             .then(res => {
-                alert(res.data);
                     if (res.data === "success") {
                         this.props.history.push("/mainPage");
-                    } else {
-                        alert("Authentication failure");
                     }
                 },
                 error => {
                     this.setState({
-                        errorText: "The page is not available...",
+                        errorText: "Authentication failure",
                         error
                     });
                 });

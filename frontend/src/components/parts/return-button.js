@@ -5,6 +5,11 @@ function returnHandler() {
     window.location.href = "/";
 }
 
+function goMainHandler() {
+    window.location.href = "/mainPage";
+}
+
+//fixme привязать к истории переходов
 function goBackHandler() {
     this.props.history.goBack();
 }
@@ -14,11 +19,16 @@ export const ReturnButton = (props) => {
     let handler;
     switch (switcher) {
         case 'NotAuthorized':
-        case 'NotFound':
             handler = returnHandler;
+            break;
+        case 'NotFound':
+            handler = goMainHandler;
             break;
         case 'NoRights':
             handler = goBackHandler;
+            break;
+        default:
+            handler = returnHandler;
             break;
     }
     return (

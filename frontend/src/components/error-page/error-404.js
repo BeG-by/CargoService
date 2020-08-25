@@ -7,7 +7,7 @@ export default class NotFound extends Component {
         return (
             <div>
                 <h2>Page not found.</h2>
-                <ReturnButton buttonText="Go to Start Page" returnHandler="NotFound"/>
+                <ReturnButton buttonText="Return to Main Page" returnHandler="NotFound"/>
             </div>
         );
     }
