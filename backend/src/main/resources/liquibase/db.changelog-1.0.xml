@@ -90,6 +90,10 @@
                 <constraints primaryKey="true"/>
             </column>
 
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="type" type="client_company_type">
                 <constraints nullable="false"/>
             </column>
@@ -174,6 +178,7 @@
     <changeSet id="1.0.6" author="vladislav.mironuk">
         <insert tableName="client_companies">
             <column name="id_client_company" value="1"/>
+            <column name="name" value="Google"/>
             <column name="type" value="SP"/>
             <column name="pan" value="123456789"/>
             <column name="country" value="Belarus"/>
@@ -202,5 +207,6 @@
             <column name="id_role" value="1"/>
         </insert>
     </changeSet>
+
 
 </databaseChangeLog>

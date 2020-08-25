@@ -23,6 +23,10 @@ public class ClientCompany implements Serializable, Cloneable {
     @Column(name = "id_client_company", nullable = false, updatable = false)
     private Long id;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private ClientCompanyType type;
