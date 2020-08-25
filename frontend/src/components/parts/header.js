@@ -6,7 +6,6 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {SigninButton} from "./signin-button";
 
 let drawerWidth;
 
@@ -76,13 +75,10 @@ export const Header = (props) => {
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
-                    Manage your cargo with convenient digital tools
+                    {props.headerText}
                 </Typography>
                 <div className={classes.grow}/>
-                <SigninButton openDialog={props.openDialog}
-                              handleClickOpen={props.handleClickOpen}
-                              handleClose={props.handleClose}
-                />
+                {props.headerButton}
             </Toolbar>
         </AppBar>
     );
