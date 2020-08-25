@@ -49,7 +49,7 @@ public class JwtTokenUtil {
 
         final Claims claims = Jwts.claims().setSubject(login);
 
-        final Set<String> rolesName = roles.stream().map(Role::getRole).collect(Collectors.toSet());
+        final Set<String> rolesName = roles.stream().map(r -> r.getRole().toString()).collect(Collectors.toSet());
         claims.put("roles", rolesName);
 
         Date now = new Date();
