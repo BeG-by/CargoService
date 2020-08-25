@@ -76,7 +76,7 @@ export const Header = (props) => {
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
-                    Cargo transportation - reliable and on time!
+                    Manage your cargo with convenient digital tools
                 </Typography>
                 <div className={classes.grow}/>
                 <SigninButton openDialog={props.openDialog}

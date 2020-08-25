@@ -35,8 +35,7 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: '30px',
         margin: '20px auto',
         color: 'white',
-        backgroundColor: 'black',
-        opacity: '0.7',
+        background: 'rgba(0, 0, 0, 0.4)',
         maxWidth: '800px',
         borderRadius: '30px',
     },
@@ -56,6 +55,7 @@ export const WelcomeBody = (props) => {
             })}
         >
             <div className={classes.drawerHeader}/>
+
             <div className={classes.mainField}>
                 <Typography
                     variant="h4"
@@ -65,7 +65,7 @@ export const WelcomeBody = (props) => {
                 <Typography
                     className={classes.mainParagraph}
                     paragraph>
-                    This application is ready to offer our customers convenient control
+                    This application is ready to offer our customers easy and reliable control
                     over the movement of the necessary goods.
                 </Typography>
                 <Typography
