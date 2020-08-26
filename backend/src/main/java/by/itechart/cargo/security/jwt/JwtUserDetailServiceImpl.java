@@ -35,7 +35,16 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .id(user.getUserId())
                 .login(user.getLogin())
                 .password(user.getPassword())
-                .companyId(1)
+                .name(user.getName())
+                .surname(user.getSurname())
+                .patronymic(user.getPatronymic())
+                .birthday(user.getBirthday())
+                .city(user.getCity())
+                .street(user.getStreet())
+                .house(user.getHouse())
+                .flat(user.getFlat())
+                .email(user.getEmail())
+                .companyId(user.getClientCompany().getId())
                 .authorities(createGrantedAuthority(user.getRoles()))
                 .isEnable(true)
                 .build();
@@ -43,7 +52,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
 
 
     private List<GrantedAuthority> createGrantedAuthority(Set<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().toString())).collect(Collectors.toList());
     }
 
 }
