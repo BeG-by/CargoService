@@ -1,5 +1,7 @@
 package by.itechart.cargo.dto.model_dto;
 
+import by.itechart.cargo.model.Address;
+import by.itechart.cargo.model.Contract;
 import by.itechart.cargo.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +33,7 @@ public class ClientCompanyDto implements Serializable, Cloneable {
 
     @Valid
     @NotNull
-    private AddressDto address;
+    private Address address;
 
     @NotNull(message = "Registration date is mandatory")
     private LocalDate registrationDate;
@@ -42,7 +44,7 @@ public class ClientCompanyDto implements Serializable, Cloneable {
 
     private List<User> users;
 
-    private List<ContractDto> contracts;
+    private List<Contract> contracts;
 
     public enum Type {
         SP, //Sole proprietorship
