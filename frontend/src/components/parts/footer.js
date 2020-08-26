@@ -9,7 +9,7 @@ let drawerWidth;
 const useStyles = makeStyles((theme) => ({
     footer: {
         minWidth: '240px',
-        position: 'absolute',
+        position: 'fixed',
         left: '0',
         bottom: '0',
         width: '100%',

@@ -10,7 +10,7 @@ export default class LoginForm extends Component {
         this.state = {
             error: null,
             errorText: '',
-            user: {login: '', password: '', role: ''}
+            user: {login: '', password: '', roles: []}
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -35,7 +35,7 @@ export default class LoginForm extends Component {
         axios.post(endpoint, user_object)
             .then(res => {
                     this.setState({
-                        role: res.data.role
+                        roles: res.data.role
                     });
                     localStorage.setItem("authorization", res.data.token);
                     return this.showMainPage();
@@ -54,13 +54,11 @@ export default class LoginForm extends Component {
             .then(res => {
                     if (res.data === "success") {
                         this.props.history.push("/mainPage");
-                    } else {
-                        alert("Authentication failure");
                     }
                 },
                 error => {
                     this.setState({
-                        errorText: "The page is not available...",
+                        errorText: "Authentication failure",
                         error
                     });
                 });
@@ -71,7 +69,7 @@ export default class LoginForm extends Component {
                 user: {
                     password: event.target.value,
                     login: this.state.user.login,
-                    role: this.state.user.role
+                    roles: this.state.user.roles
                 }
             }
         );
@@ -82,7 +80,7 @@ export default class LoginForm extends Component {
                 user: {
                     password: this.state.user.password,
                     login: event.target.value,
-                    role: this.state.user.role
+                    roles: this.state.user.roles
                 }
             }
         );
@@ -94,7 +92,8 @@ export default class LoginForm extends Component {
             errorText: null,
             user: {
                 password: '',
-                login: ''
+                login: '',
+                roles: []
             }
         })
     }
