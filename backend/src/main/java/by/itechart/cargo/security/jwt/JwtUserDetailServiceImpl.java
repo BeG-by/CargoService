@@ -32,7 +32,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User with login %s doesn't exist", login)));
 
         return JwtUserDetails.builder()
-                .id(user.getUserId())
+                .id(user.getId())
                 .login(user.getLogin())
                 .password(user.getPassword())
                 .companyId(1)
