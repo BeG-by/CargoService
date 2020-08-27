@@ -1,9 +1,7 @@
 package by.itechart.cargo.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -52,6 +50,8 @@ public class ClientCompany implements Serializable, Cloneable {
     private String email;
 
     @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "clientCompany", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
 
