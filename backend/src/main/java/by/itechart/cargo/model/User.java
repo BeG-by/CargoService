@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -71,6 +72,7 @@ public class User implements Serializable, Cloneable {
     Set<Role> roles = new HashSet<>();
 
     @JsonBackReference
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_client_company", nullable = false)
     private ClientCompany clientCompany;
