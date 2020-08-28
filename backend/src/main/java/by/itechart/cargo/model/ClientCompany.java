@@ -1,6 +1,7 @@
 package by.itechart.cargo.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class ClientCompany implements Serializable, Cloneable {
     @Column(name = "id_client_company", nullable = false, updatable = false)
     private Long id;
 
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -30,7 +32,6 @@ public class ClientCompany implements Serializable, Cloneable {
 
     @Column(name = "pan", nullable = false)
     private String payerAccountNumber;
-
 
     @Embedded
     @AttributeOverrides({

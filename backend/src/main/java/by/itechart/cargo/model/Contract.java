@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,11 +19,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Table(name = "contracts")
 public class Contract implements Serializable, Cloneable {
+
     private static final long serialVersionUID = 1238378954432122692L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contract", nullable = false, updatable = false)
+
     @NotNull
     private Long id;
 
