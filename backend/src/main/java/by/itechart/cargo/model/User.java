@@ -1,6 +1,5 @@
 package by.itechart.cargo.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +8,11 @@ import lombok.ToString;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -27,40 +31,50 @@ public class User implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", nullable = false, updatable = false)
-    private Long userId;
+    @NotNull
+    private Long id;
 
     @Column(name = "login", unique = true, nullable = false)
+    @NotBlank(message = "Login is mandatory")
+    @Size(max = 64)
     private String login;
 
     @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password is mandatory")
+    @Size(max = 64)
     private String password;
 
     @Column(name = "name", nullable = false)
+    @NotBlank(message = "Name is mandatory")
+    @Size(max = 64)
     private String name;
 
     @Column(name = "surname", nullable = false)
+    @NotBlank(message = "Surname is mandatory")
+    @Size(max = 64)
     private String surname;
 
     @Column(name = "patronymic", nullable = false)
+    @NotBlank(message = "Patronymic is mandatory")
+    @Size(max = 64)
     private String patronymic;
 
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Column(name = "city")
-    private String city;
-
-    @Column(name = "street")
-    private String street;
-
-    @Column(name = "house")
-    private String house;
-
-    @Column(name = "flat")
-    private String flat;
+    @Embedded
+    @Valid
+    @NotNull
+    private Address address;
 
     @Column(name = "email")
+    @Email
+    @Size(max = 64)
     private String email;
+
+    @Column(name = "id_client_company", nullable = false)
+    @NotNull
+    private Long clientCompanyId;
 
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
@@ -70,10 +84,4 @@ public class User implements Serializable, Cloneable {
             inverseJoinColumns = {@JoinColumn(name = "id_role")}
     )
     Set<Role> roles = new HashSet<>();
-
-    @JsonBackReference
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_client_company", nullable = false)
-    private ClientCompany clientCompany;
 }

@@ -51,7 +51,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         final Set<String> rolesNames = user.getRoles().stream().map(r -> r.getRole().toString()).collect(Collectors.toSet());
 
-        return new AuthorizationResponse(rolesNames, user.getClientCompany().getId(), token);
+        return new AuthorizationResponse(rolesNames, user.getClientCompanyId(), token);
 
     }
 

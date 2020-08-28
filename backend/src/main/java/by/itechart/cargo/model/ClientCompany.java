@@ -21,27 +21,26 @@ public class ClientCompany implements Serializable, Cloneable {
     @Column(name = "id_client_company", nullable = false, updatable = false)
     private Long id;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private ClientCompanyType type;
+    private Type type;
 
     @Column(name = "pan", nullable = false)
     private String payerAccountNumber;
 
-    @Column(name = "country", nullable = false)
-    private String country;
 
-    @Column(name = "city", nullable = false)
-    private String city;
-
-    @Column(name = "street", nullable = false)
-    private String street;
-
-    @Column(name = "house", nullable = false)
-    private String house;
-
-    @Column(name = "flat", nullable = false)
-    private String flat;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(nullable = false)),
+            @AttributeOverride(name = "city", column = @Column(nullable = false)),
+            @AttributeOverride(name = "street", column = @Column(nullable = false)),
+            @AttributeOverride(name = "house", column = @Column(nullable = false)),
+            @AttributeOverride(name = "flat", column = @Column(nullable = false))
+    })
+    private Address address;
 
     @Column(name = "registration_date", nullable = false)
     private LocalDate registrationDate;
@@ -49,17 +48,17 @@ public class ClientCompany implements Serializable, Cloneable {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @JsonManagedReference
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "clientCompany", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_client_company")
     private List<User> users = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "clientCompany", fetch = FetchType.LAZY)
-    private List<Contract> contacts = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_client_company")
+    @ToString.Exclude
+    private List<Contract> contracts = new ArrayList<>();
 
-    public enum ClientCompanyType {
+    public enum Type {
         SP, //Sole proprietorship
         JP //Juridical person
     }
