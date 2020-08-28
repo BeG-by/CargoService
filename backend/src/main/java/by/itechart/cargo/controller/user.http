@@ -10,7 +10,7 @@ Content-Type: application/json
 
 GET localhost:8080/v1/api/users/test
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiQURNSU4iXSwiaWF0IjoxNTk3OTMwOTM2LCJleHAiOjE1OTc5MzI3MzZ9.CJeOw7s625mqyhCU__RNkCtE7HJ6BnTZ8XRNl_-vX94
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk4MzU2NDcxLCJleHAiOjE1OTgzNTgyNzF9.43LTDD3_3K7NDQ-UaTbF9le1GMOk9kKfXBwXz1ApoPk
 
 ###
 

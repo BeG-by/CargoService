@@ -31,11 +31,21 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User with login %s doesn't exist", login)));
 
+        //todo: fix address creating
         return JwtUserDetails.builder()
-                .id(user.getUserId())
+                .id(user.getId())
                 .login(user.getLogin())
                 .password(user.getPassword())
-                .companyId(1)
+                .name(user.getName())
+                .surname(user.getSurname())
+                .patronymic(user.getPatronymic())
+                .birthday(user.getBirthday())
+                .city(user.getAddress() == null ? null : user.getAddress().getCity())
+                .street(user.getAddress() == null ? null : user.getAddress().getStreet())
+                .house(user.getAddress() == null ? null : user.getAddress().getHouse())
+                .flat(user.getAddress() == null ? null : user.getAddress().getFlat())
+                .email(user.getAddress() == null ? null : user.getEmail())
+                .companyId(user.getClientCompanyId())
                 .authorities(createGrantedAuthority(user.getRoles()))
                 .isEnable(true)
                 .build();
@@ -43,7 +53,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
 
 
     private List<GrantedAuthority> createGrantedAuthority(Set<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().toString())).collect(Collectors.toList());
     }
 
 }

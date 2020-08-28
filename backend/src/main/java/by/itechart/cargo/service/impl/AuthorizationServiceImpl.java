@@ -3,7 +3,6 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,10 +49,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         final String token = jwtTokenUtil.createToken(login, user.getRoles());
 
-        final Set<String> rolesNames = user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
+        final Set<String> rolesNames = user.getRoles().stream().map(r -> r.getRole().toString()).collect(Collectors.toSet());
 
-        //TODO
-        return new AuthorizationResponse(rolesNames, 1, token);
+        return new AuthorizationResponse(rolesNames, user.getClientCompanyId(), token);
 
     }
 

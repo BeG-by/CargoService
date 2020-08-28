@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/test")
     public String test() {
-        System.out.println(jwtTokenUtil.getJwtUser().getCompanyId());
+        System.out.println(jwtTokenUtil.getJwtUser());
         return "TEST";
     }
 

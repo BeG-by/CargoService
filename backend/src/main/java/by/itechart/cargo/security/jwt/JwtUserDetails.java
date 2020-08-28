@@ -1,44 +1,71 @@
 package by.itechart.cargo.security.jwt;
 
+import by.itechart.cargo.model.ClientCompany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
+@Getter
+@ToString
 @Builder
 public class JwtUserDetails implements UserDetails {
 
     private long id;
     private String login;
     private String password;
-    private long companyId;
+    private String name;
+    private String surname;
+    private String patronymic;
+    private LocalDate birthday;
+    private String city;
+    private String street;
+    private String house;
+    private String flat;
+    private String email;
+    private Long companyId;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnable;
 
-    public JwtUserDetails(long id, String login,
+
+    public JwtUserDetails(long id,
+                          String login,
                           String password,
-                          long companyId,
+                          String name,
+                          String surname,
+                          String patronymic,
+                          LocalDate birthday,
+                          String city,
+                          String street,
+                          String house,
+                          String flat,
+                          String email,
+                          Long companyId,
                           Collection<? extends GrantedAuthority> authorities,
                           boolean isEnable) {
 
         this.id = id;
         this.login = login;
         this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.birthday = birthday;
+        this.city = city;
+        this.street = street;
+        this.house = house;
+        this.flat = flat;
+        this.email = email;
         this.companyId = companyId;
         this.authorities = authorities;
         this.isEnable = isEnable;
-
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public long getCompanyId() {
-        return companyId;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
