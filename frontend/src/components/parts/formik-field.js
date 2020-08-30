@@ -1,6 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import '../login-form/login-form.css';
+import '../forms/login-form/login-form.css';
 import {ErrorMsg} from "./error-message";
 
 export const FormikField = (props) => {

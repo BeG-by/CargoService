@@ -7,6 +7,7 @@ import by.itechart.cargo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,6 +22,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByLogin(String login) throws NotFoundException {
         return userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public List<User> findByClientCompanyId(Long clientCompanyId) throws NotFoundException {
+        return userRepository.findByClientCompanyId(clientCompanyId).orElseThrow(NotFoundException::new);
     }
 
 }

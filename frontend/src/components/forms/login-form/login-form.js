@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from 'axios';
-import {jwtToken} from '../../security/Interceptors';
+import {jwtToken} from '../../../security/Interceptors';
 import './login-form.css';
 import {showError, showLoginForm} from "./login-form-views";
 
