@@ -12,7 +12,6 @@ import java.util.Set;
 public class AuthorizationResponse {
 
     private Set<String> roles;
-    private long companyId;
     private String token;
 
 }

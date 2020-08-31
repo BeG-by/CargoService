@@ -209,5 +209,61 @@
         </insert>
     </changeSet>
 
+    <!-- Product owners -->
+
+    <changeSet id="1.0.7" author="eugene.begun">
+        <sql>CREATE TYPE product_owner_type AS ENUM('SP', 'JP')</sql>
+
+        <createTable tableName="product_owners">
+            <column name="id_product_owner" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="product_owner_type">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="country" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="city" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="street" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="house" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="flat" type="VARCHAR(64)"/>
+
+            <column name="registration_date" type="DATE" defaultValue="NOW">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="phone" type="VARCHAR(255)"/>
+
+            <column name="id_client_company" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product_owners"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_product_owner_client_companies"
+                                 onDelete="CASCADE"
+                                 referencedTableName="client_companies"
+                                 referencedColumnNames="id_client_company"/>
+    </changeSet>
+
 
 </databaseChangeLog>

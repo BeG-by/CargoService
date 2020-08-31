@@ -32,7 +32,6 @@ public class User implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", nullable = false, updatable = false)
-
     @NotNull
     private Long id;
 
@@ -74,9 +73,11 @@ public class User implements Serializable, Cloneable {
     @Size(max = 64)
     private String email;
 
-    @Column(name = "id_client_company", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY  , cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_client_company", nullable = false)
+    @JsonBackReference
     @NotNull
-    private Long clientCompanyId;
+    private ClientCompany clientCompany;
 
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})

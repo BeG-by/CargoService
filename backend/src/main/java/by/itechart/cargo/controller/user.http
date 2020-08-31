@@ -8,9 +8,9 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/v1/api/users/test
+GET localhost:8080/v1/api/owner/findAll
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk4MzU2NDcxLCJleHAiOjE1OTgzNTgyNzF9.43LTDD3_3K7NDQ-UaTbF9le1GMOk9kKfXBwXz1ApoPk
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk4OTEwNzU5LCJleHAiOjE1OTg5MTI1NTl9.U3jf5WjaKXW7IWVct6bpQOijZY_zHUi9d9a5S3IVzsQ
 
 ###
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 
+// TODO
 // TEST
 
 @RestController
@@ -28,7 +29,7 @@ public class UserController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthorizationResponse> authenticate(@RequestBody AuthorizationRequest authorizationRequest) {
-        return ResponseEntity.ok(new AuthorizationResponse(new HashSet<>(), 1 ,"token"));
+        return ResponseEntity.ok(new AuthorizationResponse(new HashSet<>() ,"token"));
     }
 
     @GetMapping("/test")
