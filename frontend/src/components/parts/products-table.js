@@ -10,7 +10,7 @@ let validateName = (name) => {
 }
 
 let validateAmountProducts = (amount) => {
-    if (amount === '' || amount === undefined) {
+    if (amount === '' || amount === undefined || Number.isNaN(amount)) {
         return {isValid: false, helperText: ''}
     } else {
         return {isValid: true, helperText: ''};
@@ -18,7 +18,7 @@ let validateAmountProducts = (amount) => {
 }
 
 let validatePriceForOneProduct = (price) => {
-    if (price === '' || price === undefined) {
+    if (price === '' || price === undefined || Number.isNaN(price)) {
         return {isValid: false, helperText: ''}
     } else {
         return {isValid: true, helperText: ''};
