@@ -16,6 +16,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 POST localhost:8080/v1/api/users/authenticate
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk4OTYzNjAyLCJleHAiOjE1OTg5NjU0MDJ9._-jQnBO0BBTufIXFIew_AEPOyLUZ2hJe3rMGuo-MmUA
 
 {
   "login": "testLogin",

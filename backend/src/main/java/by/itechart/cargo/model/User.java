@@ -22,8 +22,8 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
-@Proxy(lazy = false)
+@Table(name = "user" , schema = "public")
+//@Proxy(lazy = false)
 public class User implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 2888798985824900383L;

@@ -43,7 +43,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public AuthorizationResponse login(AuthorizationRequest request) throws NotFoundException {
-
+        
         final String login = request.getLogin();
         final String password = request.getPassword();
 

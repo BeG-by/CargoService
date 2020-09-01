@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "contracts")
+@Table(name = "contract")
 public class Contract implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1238378954432122692L;

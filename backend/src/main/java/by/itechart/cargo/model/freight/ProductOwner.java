@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "product_owners")
+@Table(name = "product_owner")
 public class ProductOwner implements Serializable, Cloneable {
 
     @Id

@@ -5,7 +5,7 @@
 
     <!--  Create users table-->
     <changeSet id="1.0.0" author="vladislav.mironuk">
-        <createTable tableName="users">
+        <createTable tableName="user">
             <column name="id_user" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -41,13 +41,13 @@
 
     <!--  Create roles table-->
     <changeSet id="1.0.1" author="vladislav.mironuk">
-        <sql>CREATE TYPE role AS ENUM('SYSADMIN', 'ADMIN', 'MANAGER', 'DISPATCHER', 'DRIVER', 'CLIENT_COMPANY_OWNER')
+        <sql>CREATE TYPE role_enum AS ENUM('SYSADMIN', 'ADMIN', 'MANAGER', 'DISPATCHER', 'DRIVER', 'CLIENT_COMPANY_OWNER')
         </sql>
-        <createTable tableName="roles">
+        <createTable tableName="role">
             <column name="id_role" type="INTEGER" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="role" type="role">
+            <column name="role" type="role_enum">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
@@ -71,22 +71,22 @@
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id_user"
-                                 referencedTableName="users"/>
+                                 referencedTableName="user"/>
 
         <addForeignKeyConstraint baseColumnNames="id_role"
                                  baseTableName="user_role"
-                                 constraintName="fk_user_role_roles"
+                                 constraintName="fk_user_role_role"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id_role"
-                                 referencedTableName="roles"/>
+                                 referencedTableName="role"/>
     </changeSet>
 
     <!-- Create client company and contract table, add reference from user to company -->
-    <changeSet id="1.0.5" author="vladislav.mironuk">
+    <changeSet id="1.0.3" author="vladislav.mironuk">
         <sql>CREATE TYPE client_company_type AS ENUM('SP', 'JP')</sql>
 
-        <createTable tableName="client_companies">
+        <createTable tableName="client_company">
             <column name="id_client_company" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
@@ -132,7 +132,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="contracts">
+        <createTable tableName="contract">
             <column name="id_contract" type="BIGSERIAL">
                 <constraints primaryKey="true"/>
             </column>
@@ -154,30 +154,30 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="contracts"
+        <addForeignKeyConstraint baseTableName="contract"
                                  baseColumnNames="id_client_company"
-                                 constraintName="fk_contracts_client_companies"
+                                 constraintName="fk_contracts_client_company"
                                  onDelete="CASCADE"
-                                 referencedTableName="client_companies"
+                                 referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
 
-        <addColumn tableName="users">
+        <addColumn tableName="user">
             <column name="id_client_company" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
-        <addForeignKeyConstraint baseTableName="users"
+        <addForeignKeyConstraint baseTableName="user"
                                  baseColumnNames="id_client_company"
-                                 constraintName="fk_users_client_companies"
+                                 constraintName="fk_user_client_company"
                                  onDelete="CASCADE"
-                                 referencedTableName="client_companies"
+                                 referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
 
     <!-- Insert data for tests -->
-    <changeSet id="1.0.6" author="vladislav.mironuk">
-        <insert tableName="client_companies">
+    <changeSet id="1.0.4" author="vladislav.mironuk">
+        <insert tableName="client_company">
             <column name="id_client_company" value="1"/>
             <column name="name" value="Google"/>
             <column name="type" value="SP"/>
@@ -190,7 +190,7 @@
             <column name="email" value="tractor@email.com"/>
         </insert>
 
-        <insert tableName="users">
+        <insert tableName="user">
             <column name="login" value="root"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="sysadmin"/>
@@ -199,7 +199,7 @@
             <column name="id_client_company" value="1"/>
         </insert>
 
-        <insert tableName="roles">
+        <insert tableName="role">
             <column name="role" value="SYSADMIN"/>
         </insert>
 
@@ -211,10 +211,10 @@
 
     <!-- Product owners -->
 
-    <changeSet id="1.0.7" author="eugene.begun">
+    <changeSet id="1.0.5" author="eugene.begun">
         <sql>CREATE TYPE product_owner_type AS ENUM('SP', 'JP')</sql>
 
-        <createTable tableName="product_owners">
+        <createTable tableName="product_owner">
             <column name="id_product_owner" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
@@ -257,16 +257,16 @@
 
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="product_owners"
+        <addForeignKeyConstraint baseTableName="product_owner"
                                  baseColumnNames="id_client_company"
-                                 constraintName="fk_product_owner_client_companies"
+                                 constraintName="fk_product_owner_client_company"
                                  onDelete="CASCADE"
-                                 referencedTableName="client_companies"
+                                 referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
     <!--Driver, Product, DeliveryNote-->
-    <changeSet id="1.0.8" author="eugene.begun">
+    <changeSet id="1.0.6" author="eugene.begun">
 
         <!--Driver-->
         <createTable tableName="driver">
@@ -292,13 +292,6 @@
             </column>
 
         </createTable>
-
-        <insert tableName="driver">
-            <column name="name" value="driver-name-test"/>
-            <column name="surname" value="driver-surname-test"/>
-            <column name="patronymic" value="driver-pat-test"/>
-            <column name="passport" value="passport-test-тест"/>
-        </insert>
 
         <!--Product-->
         <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
@@ -340,7 +333,105 @@
                 <constraints nullable="false"/>
             </column>
 
+        <!--Delivery Note-->
         </createTable>
+
+        <sql>CREATE TYPE delivery_note_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED')</sql>
+        <createTable tableName="delivery_note">
+
+            <column name="id_delivery_note" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="registration_date" type="DATE" defaultValue="NOW">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="checking_date" type="DATE"/>
+
+            <column name="shipper" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="consignee" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_driver" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_user_registration" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_user_checking" type="BIGSERIAL"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product"
+                                 baseColumnNames="id_delivery_note"
+                                 constraintName="fk_product_delivery_note"
+                                 onDelete="CASCADE"
+                                 referencedTableName="delivery_note"
+                                 referencedColumnNames="id_delivery_note"/>
+
+        <addForeignKeyConstraint baseTableName="delivery_note"
+                                 baseColumnNames="id_driver"
+                                 constraintName="fk_driver_delivery_note"
+                                 onDelete="CASCADE"
+                                 referencedTableName="driver"
+                                 referencedColumnNames="id_driver"/>
+
+        <addForeignKeyConstraint baseTableName="delivery_note"
+                                 baseColumnNames="id_user_registration"
+                                 constraintName="fk_user_registration_delivery_note"
+                                 onDelete="CASCADE"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id_user"/>
+
+        <addForeignKeyConstraint baseTableName="delivery_note"
+                                 baseColumnNames="id_user_checking"
+                                 constraintName="fk_user_checking_delivery_note"
+                                 onDelete="CASCADE"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id_user"/>
+
+    </changeSet>
+
+    <!--Data for test-->
+    <changeSet id="1.0.7" author="eugene.begun">
+
+        <insert tableName="driver">
+            <column name="name" value="driver-name-test"/>
+            <column name="surname" value="driver-surname-test"/>
+            <column name="patronymic" value="driver-pat-test"/>
+            <column name="passport" value="passport-test-тест"/>
+        </insert>
+
+        <insert tableName="delivery_note">
+            <column name="number" value="TTN321332"/>
+            <column name="registration_date" value="2020-01-01"/>
+            <column name="shipper" value="OOO 'Cool company', Minsk, Nemiga 3 "/>
+            <column name="consignee" value="OOO 'Cool warehouse', Smolensk, Lenina 5 "/>
+            <column name="id_driver" value="1"/>
+            <column name="id_user_registration" value="1"/>
+        </insert>
+
+        <insert tableName="product">
+            <column name="name" value="beer"/>
+            <column name="quantity" value="5"/>
+            <column name="measure" value="bochka"/>
+            <column name="price" value="100"/>
+            <column name="sum" value="500"/>
+            <column name="mass" value="100 kg"/>
+            <column name="status" value="ACCEPTED"/>
+            <column name="id_delivery_note" value="1"/>
+        </insert>
 
     </changeSet>
 

@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "client_companies")
+@Table(name = "client_company")
 public class ClientCompany implements Serializable, Cloneable {
 
     @Id
