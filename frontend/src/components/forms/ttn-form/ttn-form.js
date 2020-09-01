@@ -1,16 +1,16 @@
 import React, {Component} from "react";
 import axios from 'axios';
 import {jwtToken} from '../../../security/Interceptors';
-import './login-form.css';
-import {showError, showLoginForm} from "./login-form-views";
+import '../login-form/login-form.css';
+import {showError, showTtnForm} from "./ttn-form-views";
 
-export default class LoginForm extends Component {
+export default class TtnForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             error: null,
             errorText: '',
-            user: {login: '', password: '', roles: []}
+            ttn: {login: '', password: '',}
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -24,9 +24,9 @@ export default class LoginForm extends Component {
     }) => {
         setSubmitting(false);
 
-        const endpoint = "/v1/api/auth/login";
-        const login = this.state.user.login;
-        const password = this.state.user.password;
+        const endpoint = "/v1/api/ttn";
+        const login = this.state.ttn.login;
+        const password = this.state.ttn.password;
         const user_object = {
             login: login,
             password: password
@@ -34,11 +34,6 @@ export default class LoginForm extends Component {
 
         axios.post(endpoint, user_object)
             .then(res => {
-                    this.setState({
-                        roles: res.data.role
-                    });
-                    localStorage.setItem("authorization", res.data.token);
-                    // localStorage.setItem("role", res.data.role);//fixme как лучше сохранить роль?
                     return this.showMainPage();
                 },
                 error => {
@@ -59,7 +54,7 @@ export default class LoginForm extends Component {
                 },
                 error => {
                     this.setState({
-                        errorText: "Authentication failure",
+                        errorText: "Something goes wrong",
                         error
                     });
                 });
@@ -69,8 +64,7 @@ export default class LoginForm extends Component {
         this.setState({
                 user: {
                     password: event.target.value,
-                    login: this.state.user.login,
-                    roles: this.state.user.roles
+                    login: this.state.ttn.login,
                 }
             }
         );
@@ -79,9 +73,8 @@ export default class LoginForm extends Component {
     onChangeLogin(event) {
         this.setState({
                 user: {
-                    password: this.state.user.password,
+                    password: this.state.ttn.password,
                     login: event.target.value,
-                    roles: this.state.user.roles
                 }
             }
         );
@@ -91,10 +84,9 @@ export default class LoginForm extends Component {
         this.setState({
             error: null,
             errorText: null,
-            user: {
+            ttn: {
                 password: '',
                 login: '',
-                roles: []
             }
         })
     }
@@ -105,8 +97,8 @@ export default class LoginForm extends Component {
             let err = showError(this);
             return <div>{err}</div>;
         } else {
-            let loginform = showLoginForm(this);
-            return <div>{loginform}</div>;
+            let ttnform = showTtnForm(this);
+            return <div>{ttnform}</div>;
         }
     }
 }

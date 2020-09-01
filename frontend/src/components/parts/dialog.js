@@ -43,7 +43,7 @@ export const DialogWindow = (props) => {
             <DialogTitle id="customized-dialog-title" onClose={props.handleClose}>
                 {props.dialogTitle}
             </DialogTitle>
-            <LoginForm/>
+            {props.form}
         </Dialog>
     );
 }

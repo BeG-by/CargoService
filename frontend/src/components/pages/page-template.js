@@ -93,8 +93,12 @@ export default function PageTemplate(props) {
                               handleClose={handleClose}/>;
             break;
         case 'main':
-            body = <MainBody classes={classes}/>;
-            headerText = "Hello, username!"; //fixme исправить заголовок, добавить иконку
+            localStorage.setItem("role", "dispatcher");//fixme передать роль в параметрах?
+            let role = localStorage.getItem("role");
+            body = <MainBody classes={classes}
+                             openMenu={openMenu}
+                             role={role}/>;
+            headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку
             headerButton = <SignoutButton/>;
             break
         default:

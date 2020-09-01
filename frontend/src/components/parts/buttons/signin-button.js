@@ -2,6 +2,7 @@ import Button from "@material-ui/core/Button";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {DialogWindow} from "../dialog";
+import LoginForm from "../../forms/login-form";
 
 const useStyles = makeStyles((theme) => ({
     sectionDesktop: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const SigninButton = (props) => {
     const classes = useStyles();
+    const form = <LoginForm/>;
     return (
         <div className={classes.sectionDesktop}>
             <Button variant="outlined"
@@ -23,7 +25,8 @@ export const SigninButton = (props) => {
             <DialogWindow
                 dialogTitle="Entry:"
                 handleClose={props.handleClose}
-                openDialog={props.openDialog}/>
+                openDialog={props.openDialog}
+                form={form}/>
         </div>
     );
 }

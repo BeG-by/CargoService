@@ -18,6 +18,8 @@ export const FormikField = (props) => {
     )
 }
 
+////////////////////////////
+// LOGIN
 export const LoginField = {
     name: 'username',
     label: 'Login',
@@ -29,3 +31,69 @@ export const PasswordField = {
     label: 'Password',
     type: 'password'
 }
+
+//////////////////////////////
+// REGISTRATION
+export const CompanyTypeField = {
+    name: 'companyType',
+    label: 'CompanyType',
+    type: 'text'
+}
+
+export const CompanyPanField = {
+    name: 'companyPan',
+    label: 'CompanyPan',
+    type: 'text'
+}
+
+export const CompanyNameField = {
+    name: 'companyName',
+    label: 'CompanyName',
+    type: 'text'
+}
+
+export const CompanyCountryField = {
+    name: 'companyCountry',
+    label: 'CompanyCountry',
+    type: 'text'
+}
+
+export const CompanyCityField = {
+    name: 'companyCity',
+    label: 'CompanyCity',
+    type: 'text'
+}
+
+export const CompanyStreetField = {
+    name: 'companyStreet',
+    label: 'CompanyStreet',
+    type: 'text'
+}
+
+export const CompanyHouseField = {
+    name: 'companyHouse',
+    label: 'CompanyHouse',
+    type: 'text'
+}
+
+export const CompanyFlatField = {
+    name: 'companyFlat',
+    label: 'CompanyFlat',
+    type: 'text'
+}
+
+export const CompanyEmailField = {
+    name: 'companyEmail',
+    label: 'CompanyEmail',
+    type: 'text'
+}
+
+/////////////////////////////////////
+// TTN
+
+export const TtnNumberField = {
+    name: 'ttnNumber',
+    label: 'TtnNumber',
+    type: 'text'
+}
+
