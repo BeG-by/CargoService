@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import MaterialTable from "material-table";
 
 let validateName = (name) => {
@@ -27,83 +27,81 @@ let validatePriceForOneProduct = (price) => {
 
 let countPriceForAllProducts = (amountProducts, priceForOne) => {
     const accuracy = 3;
-    return (amountProducts * priceForOne).toFixed(accuracy)
+    if (validateAmountProducts(amountProducts).isValid && validatePriceForOneProduct(priceForOne).isValid)
+        return (amountProducts * priceForOne).toFixed(accuracy)
+    else {
+        return 0;
+    }
 }
 
-export default function ProductsTable() {
-    const [state, setState] = useState({
-        columns: [
-            {
-                title: 'Name',
-                field: 'name',
-                validate: rowData => validateName(rowData.name)
-            },
-            {
-                title: 'Amount',
-                field: 'amount',
-                type: 'numeric',
-                validate: rowData => validateAmountProducts(rowData.amount)
-            },
-            {
-                title: 'Price for one',
-                field: 'priceForOne',
-                type: 'numeric',
-                validate: rowData => validatePriceForOneProduct(rowData.priceForOne)
-            },
-            {
-                title: 'Price for all',
-                field: 'priceForAll',
-                type: 'numeric',
-                editable: "never"
-            },
-        ],
+const columns = [
+    {
+        title: 'Name',
+        field: 'name',
+        validate: rowData => validateName(rowData.name)
+    },
+    {
+        title: 'Amount',
+        field: 'amount',
+        type: 'numeric',
+        validate: rowData => validateAmountProducts(rowData.amount)
+    },
+    {
+        title: 'Price for one',
+        field: 'priceForOne',
+        type: 'numeric',
+        validate: rowData => validatePriceForOneProduct(rowData.priceForOne)
+    },
+    {
+        title: 'Price for all',
+        field: 'priceForAll',
+        type: 'numeric',
+        editable: "never"
+    },
+]
 
-        //todo: put this data to the parent component and get it from props
-        data: [
-            {name: 'Bananas', amount: 3, priceForOne: 2, priceForAll: 6},
-        ],
-    });
+export default function ProductsTable(props) {
+
+    const onRowAdd = props.onRowAdd;
+    const onRowUpdate = props.onRowUpdate;
+    const onRowDelete = props.onRowDelete;
+    const products = props.products;
 
     return (
         <MaterialTable
+            //todo: fix it and use classes
+            style={{maxWidth: 1000}}
             title="Products table"
-            columns={state.columns}
-            data={state.data}
+            columns={columns}
+            data={products}
 
-            //todo: get this methods from parent
             editable={{
                 onRowAdd: (newData) =>
                     new Promise((resolve) => {
-                        resolve();
-                        newData.priceForAll = countPriceForAllProducts(newData.amount, newData.priceForOne)
-                        setState((prevState) => {
-                            const data = [...prevState.data];
-                            data.push(newData);
-                            return {...prevState, data};
-                        });
+                        setTimeout(() => {
+                            newData.priceForAll = countPriceForAllProducts(newData.amount, newData.priceForOne)
+                            onRowAdd(newData);
+                            resolve();
+                        }, 600)
                     }),
 
                 onRowUpdate: (newData, oldData) =>
                     new Promise((resolve) => {
-                        resolve();
-                        if (oldData) {
-                            newData.priceForAll = countPriceForAllProducts(newData.amount, newData.priceForOne)
-                            setState((prevState) => {
-                                const data = [...prevState.data];
-                                data[data.indexOf(oldData)] = newData;
-                                return {...prevState, data};
-                            });
-                        }
+                        setTimeout(() => {
+                            if (oldData) {
+                                newData.priceForAll = countPriceForAllProducts(newData.amount, newData.priceForOne)
+                                onRowUpdate(newData, oldData);
+                            }
+                            resolve();
+                        }, 600)
                     }),
 
                 onRowDelete: (oldData) =>
                     new Promise((resolve) => {
-                        resolve();
-                        setState((prevState) => {
-                            const data = [...prevState.data];
-                            data.splice(data.indexOf(oldData), 1);
-                            return {...prevState, data};
-                        });
+                        setTimeout(() => {
+                            onRowDelete(oldData);
+                            resolve();
+                        }, 600)
                     }),
             }}
         />
