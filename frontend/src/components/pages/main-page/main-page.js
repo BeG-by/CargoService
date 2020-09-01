@@ -4,7 +4,7 @@ import NotAuthorized from "../error-page/error-401";
 import {Route} from "react-router-dom";
 
 export default function MainPage() {
-    // if (localStorage.getItem('authorization') != null
+    // if (localStorage.getItem('authorization') != null //fixme подключить авторизацию, когда заработает бэк
     //     && localStorage.getItem('authorization').trim()) {
         return (
             <PageTemplate page="main"/>
