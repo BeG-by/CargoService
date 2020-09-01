@@ -16,7 +16,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import DeliveryNoEForm from "../../forms/ttn-form/delivery-note-form";
+import DeliveryNoteForm from "../../forms/ttn-form/delivery-note-form";
 
 function handleRegisterDeliveryNoteClick(deliveryNote) {
     console.log(deliveryNote);
@@ -140,7 +140,7 @@ export default function MainBodyDispatcher() {
                 }}
             />
 
-            <DeliveryNoEForm
+            <DeliveryNoteForm
                 open={deliveryDialogOpen}
                 onCloseClick={() => setDeliveryDialogOpen(false)}
                 onRegisterClick={handleRegisterDeliveryNoteClick}

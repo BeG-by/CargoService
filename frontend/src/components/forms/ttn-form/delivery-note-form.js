@@ -50,7 +50,7 @@ function convertToNecessaryApi(productsFromTable) {
     return products;
 }
 
-export default function DeliveryNoEForm(props) {
+export default function DeliveryNoteForm(props) {
     const classes = useStyles();
 
     const open = props.open;
