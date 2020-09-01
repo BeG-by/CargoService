@@ -25,7 +25,6 @@ public class Contract implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contract", nullable = false, updatable = false)
-
     @NotNull
     private Long id;
 

@@ -265,5 +265,84 @@
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
+    <!--Driver, Product, DeliveryNote-->
+    <changeSet id="1.0.8" author="eugene.begun">
+
+        <!--Driver-->
+        <createTable tableName="driver">
+
+            <column name="id_driver" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="surname" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="patronymic" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="passport" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <insert tableName="driver">
+            <column name="name" value="driver-name-test"/>
+            <column name="surname" value="driver-surname-test"/>
+            <column name="patronymic" value="driver-pat-test"/>
+            <column name="passport" value="passport-test-тест"/>
+        </insert>
+
+        <!--Product-->
+        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
+        <createTable tableName="product">
+
+            <column name="id_product" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="measure" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sum" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="mass" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="product_status">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_delivery_note" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
 
 </databaseChangeLog>

@@ -1,11 +1,9 @@
 package by.itechart.cargo.model;
 
+import by.itechart.cargo.model.freight.DeliveryNote;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -17,6 +15,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -73,18 +72,31 @@ public class User implements Serializable, Cloneable {
     @Size(max = 64)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY  , cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
     @JsonBackReference
     @NotNull
     private ClientCompany clientCompany;
 
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_role")}
     )
     Set<Role> roles = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "registrationUser")
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<DeliveryNote> registrationDeliveryNote;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "checkingUser")
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<DeliveryNote> checkingDeliveryNote;
+
 }
