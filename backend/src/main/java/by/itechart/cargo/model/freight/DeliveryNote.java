@@ -45,22 +45,22 @@ public class DeliveryNote implements Serializable, Cloneable {
     private String consignee;
 
     @JoinColumn(name = "id_driver", nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Driver driver;
 
     @JoinColumn(name = "id_user_registration", nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private User registrationUser;
 
     @JoinColumn(name = "id_user_checking")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private User checkingUser;
 
-    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER, mappedBy = "deliveryNote")
-    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "deliveryNote")
+    @JsonManagedReference(value = "product")
     private List<Product> products;
 
 }

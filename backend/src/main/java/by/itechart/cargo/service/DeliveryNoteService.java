@@ -8,4 +8,6 @@ public interface DeliveryNoteService {
 
     List<DeliveryNote> findAll();
 
+    void saveOne(DeliveryNote deliveryNote);
+
 }

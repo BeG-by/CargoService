@@ -1,16 +1,16 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.DeliveryNoteRequest;
 import by.itechart.cargo.model.freight.DeliveryNote;
 import by.itechart.cargo.service.DeliveryNoteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("vi/api/note")
+@RequestMapping("/v1/api/notes")
 public class DeliveryNoteController {
 
     private DeliveryNoteService deliveryNoteService;
@@ -20,9 +20,16 @@ public class DeliveryNoteController {
         this.deliveryNoteService = deliveryNoteService;
     }
 
-
-    @GetMapping()
-    public List<DeliveryNote> findAll() {
-        return deliveryNoteService.findAll();
+    @GetMapping
+    public ResponseEntity<List<DeliveryNote>> findAll() {
+        return ResponseEntity.ok(deliveryNoteService.findAll());
     }
+
+    @PostMapping
+    public ResponseEntity<String> saveOne(@RequestBody DeliveryNoteRequest deliveryNoteRequest) {
+        System.out.println(deliveryNoteRequest);
+//        deliveryNoteService.saveOne(deliveryNote);
+        return ResponseEntity.ok("Delivery note has been saved");
+    }
+
 }

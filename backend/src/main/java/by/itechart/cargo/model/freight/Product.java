@@ -1,6 +1,7 @@
 package by.itechart.cargo.model.freight;
 
 import by.itechart.cargo.model.enumeration.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,7 @@ public class Product implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
+    @Column(name = "id_product", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -45,11 +46,13 @@ public class Product implements Serializable, Cloneable {
     private String mass;
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     @NotNull
     private Status productStatus;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_delivery_note")
+    @JsonBackReference(value = "product")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private DeliveryNote deliveryNote;

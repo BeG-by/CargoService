@@ -8,19 +8,42 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/v1/api/owner/findAll
+GET localhost:8080/v1/api/notes
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk4OTEwNzU5LCJleHAiOjE1OTg5MTI1NTl9.U3jf5WjaKXW7IWVct6bpQOijZY_zHUi9d9a5S3IVzsQ
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDMyMDQ5LCJleHAiOjE1OTkwMzM4NDl9.YIWcKzu4B_Wwj0ER1jN2uBJU0rkfPMvKw2WPMVhU8Sk
 
 ###
 
-POST localhost:8080/v1/api/users/authenticate
+GET localhost:8080/v1/api/drivers
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk4OTYzNjAyLCJleHAiOjE1OTg5NjU0MDJ9._-jQnBO0BBTufIXFIew_AEPOyLUZ2hJe3rMGuo-MmUA
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDMwNjYwLCJleHAiOjE1OTkwMzI0NjB9.9XPU2K4hKs9rvqbxnShLt5Bwn7JsbJjkcaJjyPSYKEs
+
+###
+
+POST localhost:8080/v1/api/notes
+Content-Type: application/json
 
 {
-  "login": "testLogin",
-  "password": "password"
+  "number": "TTN321332",
+  "registrationDate": "2020-01-01",
+  "checkingDate": null,
+  "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
+  "consignee": "OOO 'Test warehouse', Smolensk, Lenina 5 ",
+  "driverId": 1
 }
 
 ###
+
+#  "products": [
+#    {
+#      "name": "test product",
+#      "quantity": 5,
+#      "measure": "bochka",
+#      "price": 100,
+#      "sum": 500,
+#      "mass": "100 kg",
+#      "productStatus": "ACCEPTED"
+#    }
+#  ]
+#}
+

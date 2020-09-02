@@ -30,7 +30,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
 
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User with login %s doesn't exist", login)));
-        
+
         //todo: fix address creating
         return JwtUserDetails.builder()
                 .id(user.getId())

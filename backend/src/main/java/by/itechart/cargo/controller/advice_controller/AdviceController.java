@@ -1,4 +1,4 @@
-package by.itechart.cargo.controller;
+package by.itechart.cargo.controller.advice_controller;
 
 import by.itechart.cargo.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;

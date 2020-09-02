@@ -79,7 +79,7 @@ public class User implements Serializable, Cloneable {
     private ClientCompany clientCompany;
 
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "id_user")},
