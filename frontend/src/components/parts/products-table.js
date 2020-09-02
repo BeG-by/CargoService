@@ -69,8 +69,6 @@ export default function ProductsTable(props) {
 
     return (
         <MaterialTable
-            //todo: fix it and use classes
-            style={{maxWidth: 1000}}
             title="Products table"
             columns={columns}
             data={products}

@@ -18,9 +18,12 @@ const columns = [
 export default function MainBodyDispatcher() {
     const user = {
         name: "Vladislav",
-        lastName: "Lemeshkov",
+        lastName: "Reznov",
         patronymic: "Vladimirovich",
-        companyId: 1,
+        company: {
+            name: "BestCargo",
+            pan: "S32YY3213"
+        },
 
         //todo: fix this shit
         jwtToken: localStorage.getItem("authorization")
@@ -30,13 +33,14 @@ export default function MainBodyDispatcher() {
     const clients = getClientsByCompanyId(user.companyId)
 
     const [deliveryDialogOpen, setDeliveryDialogOpen] = useState(false);
+
+    //todo: put null to the default client
     const [client, setClient] = useState({});
 
     return (
         <div>
             <MaterialTable
-                onRowClick={(event, rowData, toggleDetailPanel) => {
-                    console.log(rowData)
+                onRowClick={(event, rowData) => {
                     setClient(rowData)
                     setDeliveryDialogOpen(true)
                 }}
@@ -50,9 +54,11 @@ export default function MainBodyDispatcher() {
                 onCloseClick={() => setDeliveryDialogOpen(false)}
                 onRegisterClick={handleRegisterDeliveryNoteClick}
 
+                //todo: pass user
                 name={user.name}
                 lastName={user.lastName}
                 patronymic={user.patronymic}
+                carrierCompany={user.company}
                 drivers={drivers}
 
                 //todo: set via special methods

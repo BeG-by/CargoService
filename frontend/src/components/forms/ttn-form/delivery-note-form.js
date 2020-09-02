@@ -13,6 +13,11 @@ import ItemList from "../../parts/item-list";
 import ProductsTable from "../../parts/products-table";
 
 const useStyles = makeStyles((theme) => ({
+    disabledTextField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: '100ch',
+    },
     appBar: {
         position: 'relative',
     },
@@ -58,6 +63,7 @@ export default function DeliveryNoteForm(props) {
     const onRegisterClick = props.onRegisterClick;
 
     const name = props.name;
+    const carrierCompany = props.carrierCompany;
     const lastName = props.lastName;
     const patronymic = props.patronymic;
     const clientCompany = props.clientCompany;
@@ -67,7 +73,7 @@ export default function DeliveryNoteForm(props) {
     const [driver, setDriver] = useState({id: "", name: "", lastName: ""})
     const [products, setProducts] = useState([]);
 
-    const handleRegisterDeliveryNote = () => {
+    const handleRegisterDeliveryNoteClick = () => {
         let deliveryNote = {};
         deliveryNote.dispatcher = {
             name: name,
@@ -119,7 +125,7 @@ export default function DeliveryNoteForm(props) {
                         <Typography variant="h6" className={classes.title}>
                             Delivery note registration
                         </Typography>
-                        <Button autoFocus color="inherit" onClick={handleRegisterDeliveryNote}>
+                        <Button autoFocus color="inherit" onClick={handleRegisterDeliveryNoteClick}>
                             Register
                         </Button>
                     </Toolbar>
@@ -127,41 +133,84 @@ export default function DeliveryNoteForm(props) {
 
 
                 <form className={classes.root} noValidate autoComplete="off">
-                    <div>
-                        <TextField label="Name"
-                                   id="name"
-                                   defaultValue={name}
-                                   disabled={true}/>
-                        <TextField label="Last name"
-                                   id="last_name"
-                                   defaultValue={lastName}
-                                   disabled={true}/>
-                        <TextField label="Patronymic"
-                                   id="patronymic"
-                                   defaultValue={patronymic}
-                                   disabled={true}/>
-                        <TextField label="Client company"
-                                   id="client_company"
-                                   defaultValue={clientCompany.name}
-                                   disabled={true}/>
-                        <TextField label="Registration date"
-                                   id="registration_date"
-                                   defaultValue={new Date().toISOString().slice(0, 10)} disabled={true}/>
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "space-around"
+                    }}>
+                        <div>
+                            <div>
+                                <h3>Registered by</h3>
+                                <TextField label="Name"
+                                           id="name"
+                                           defaultValue={name}
+                                           disabled={true}/>
+                                <TextField label="Last name"
+                                           id="last_name"
+                                           defaultValue={lastName}
+                                           disabled={true}/>
+                                <TextField
+                                    label="Patronymic"
+                                    id="patronymic"
+                                    defaultValue={patronymic}
+                                    disabled={true}/>
+                            </div>
+
+                            <div>
+                                <h3>Carrier</h3>
+                                <TextField label="Company"
+                                           id="company_name"
+                                           defaultValue={carrierCompany.name}
+                                           disabled={true}/>
+                                <TextField label="PAN"
+                                           id="company_pan"
+                                           defaultValue={carrierCompany.pan}
+                                           disabled={true}/>
+                            </div>
+
+                            <div>
+                                <h3>Shipper</h3>
+                                <TextField label="Client company"
+                                           id="client_company"
+                                           defaultValue={clientCompany.name}
+                                           disabled={true}/>
+                                <TextField label="PAN"
+                                           id="company_pan"
+                                           defaultValue={clientCompany.pan}
+                                           disabled={true}/>
+                            </div>
+
+                        </div>
+                        <div>
+                            <div>
+                                <h3>Delivery note data</h3>
+                                <TextField label="Delivery note index"
+                                           id="delivery_note_index"
+                                           onChange={(e) => setDeliveryNoteIndex(e.target.value)}/>
+                            </div>
+                            <div>
+                                <h3>Registration date</h3>
+                                <TextField label="Registration date"
+                                           id="registration_date"
+                                           defaultValue={new Date().toISOString().slice(0, 10)} disabled={true}/>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Driver</h3>
+                            <TextField label="Name"
+                                       value={driver.name}
+                                       id="selected_driver_name"
+                                       disabled={true}/>
+                            <TextField label="Last name"
+                                       value={driver.lastName}
+                                       id="selected_driver_last_name"
+                                       disabled={true}/>
+                        </div>
+                        <ItemList
+                            items={drivers}
+                            onRowClick={(item) => (setDriver(item))}/>
                     </div>
 
-                    <TextField label="Delivery note index"
-                               id="delivery_note_index"
-                               onChange={(e) => setDeliveryNoteIndex(e.target.value)}/>
-
-                    <div>
-                        <TextField label="Driver"
-                                   value={driver.name}
-                                   id="selected_driver"
-                                   disabled={true}/>
-                        <ItemList items={drivers}
-                                  onRowClick={(item) => (setDriver(item))}/>
-                    </div>
-                    <div>
+                    <div style={{display: "flex", justifyContent: "center"}}>
                         <ProductsTable
                             onRowAdd={(product) => {
                                 handleProductAdding(product)
