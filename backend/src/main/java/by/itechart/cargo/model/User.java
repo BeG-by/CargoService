@@ -1,10 +1,9 @@
 package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.freight.DeliveryNote;
+import by.itechart.cargo.model.freight.Waybill;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -91,12 +90,12 @@ public class User implements Serializable, Cloneable {
     @JsonBackReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<DeliveryNote> registrationDeliveryNote;
+    private List<Waybill> registrationWaybill;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "checkingUser")
     @JsonBackReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<DeliveryNote> checkingDeliveryNote;
+    private List<Waybill> checkingWaybill;
 
 }

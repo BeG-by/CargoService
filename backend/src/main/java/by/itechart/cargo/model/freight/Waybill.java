@@ -1,6 +1,8 @@
 package by.itechart.cargo.model.freight;
 
+import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,12 +19,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "delivery_note")
-public class DeliveryNote implements Serializable, Cloneable {
+@Table(name = "waybill")
+public class Waybill implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_delivery_note")
+    @Column(name = "id_waybill")
     private Long id;
 
     @Column(name = "number", nullable = false)
@@ -35,6 +37,9 @@ public class DeliveryNote implements Serializable, Cloneable {
 
     @Column(name = "checking_date")
     private LocalDate checkingDate;
+
+    @Column(name = "close_date")
+    private LocalDate closeDate;
 
     @Column(name = "shipper", nullable = false)
     @NotBlank
@@ -59,8 +64,14 @@ public class DeliveryNote implements Serializable, Cloneable {
     @JsonManagedReference
     private User checkingUser;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "deliveryNote")
-    @JsonManagedReference(value = "product")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "waybill")
+    @JsonManagedReference
     private List<Product> products;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_client_company", nullable = false)
+    @JsonBackReference
+    @NotNull
+    private ClientCompany clientCompany;
 
 }

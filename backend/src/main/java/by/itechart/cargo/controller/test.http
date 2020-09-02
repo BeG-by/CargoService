@@ -8,17 +8,18 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/v1/api/notes
+GET localhost:8080/v1/api/waybills
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDMyMDQ5LCJleHAiOjE1OTkwMzM4NDl9.YIWcKzu4B_Wwj0ER1jN2uBJU0rkfPMvKw2WPMVhU8Sk
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDgyMDE4LCJleHAiOjE1OTkwODM4MTh9.w5PWFzyNnzhTvyivt7jttfg170DQyMXcjzx-fSg5dp4
 
 ###
 
-GET localhost:8080/v1/api/drivers
+GET localhost:8080/v1/api/owners
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDMwNjYwLCJleHAiOjE1OTkwMzI0NjB9.9XPU2K4hKs9rvqbxnShLt5Bwn7JsbJjkcaJjyPSYKEs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDgyMDE4LCJleHAiOjE1OTkwODM4MTh9.w5PWFzyNnzhTvyivt7jttfg170DQyMXcjzx-fSg5dp4
 
 ###
+
 
 POST localhost:8080/v1/api/notes
 Content-Type: application/json

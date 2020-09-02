@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryNoteRequest {
+public class WaybillRequest {
 
     private String number;
     private LocalDate registrationDate;

@@ -1,7 +1,10 @@
 package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.CompanyType;
+import by.itechart.cargo.model.freight.Auto;
+import by.itechart.cargo.model.freight.Driver;
 import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.freight.Waybill;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -63,6 +66,18 @@ public class ClientCompany implements Serializable, Cloneable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonManagedReference
     private List<ProductOwner> productOwners;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonManagedReference
+    private List<Waybill> waybills;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonManagedReference
+    private List<Auto> autos;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonManagedReference
+    private List<Driver> drivers;
 
     @Override
     public String toString() {

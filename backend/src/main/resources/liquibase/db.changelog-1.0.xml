@@ -265,7 +265,7 @@
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
-    <!--Driver, Product, DeliveryNote-->
+    <!--Driver, Product, Waybill , Auto-->
     <changeSet id="1.0.6" author="eugene.begun">
 
         <!--Driver-->
@@ -288,6 +288,34 @@
             </column>
 
             <column name="passport" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_auto" type="BIGSERIAL"/>
+
+            <column name="id_client_company" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <!--Auto-->
+        <sql>CREATE TYPE auto_type AS ENUM('EURO_TRACK', 'JUMBO' , 'REFRIGERATOR')</sql>
+        <createTable tableName="auto">
+
+            <column name="id_auto" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="mark" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="auto_type">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_client_company" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
 
@@ -329,17 +357,17 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="id_delivery_note" type="BIGSERIAL">
+            <column name="id_waybill" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
 
-        <!--Delivery Note-->
         </createTable>
 
-        <sql>CREATE TYPE delivery_note_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED')</sql>
-        <createTable tableName="delivery_note">
+        <!--Waybill-->
+        <sql>CREATE TYPE waybill_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED')</sql>
+        <createTable tableName="waybill">
 
-            <column name="id_delivery_note" type="BIGSERIAL" autoIncrement="true">
+            <column name="id_waybill" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
 
@@ -352,6 +380,8 @@
             </column>
 
             <column name="checking_date" type="DATE"/>
+
+            <column name="close_date" type="DATE"/>
 
             <column name="shipper" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -371,55 +401,94 @@
 
             <column name="id_user_checking" type="BIGSERIAL"/>
 
+            <column name="id_client_company" type="BIGSERIAL"/>
+
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="product"
-                                 baseColumnNames="id_delivery_note"
-                                 constraintName="fk_product_delivery_note"
+        <addForeignKeyConstraint baseTableName="driver"
+                                 baseColumnNames="id_auto"
+                                 constraintName="fk_driver_auto"
                                  onDelete="CASCADE"
-                                 referencedTableName="delivery_note"
-                                 referencedColumnNames="id_delivery_note"/>
+                                 referencedTableName="auto"
+                                 referencedColumnNames="id_auto"/>
 
-        <addForeignKeyConstraint baseTableName="delivery_note"
+        <addForeignKeyConstraint baseTableName="driver"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_driver"
+                                 onDelete="CASCADE"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
+
+        <addForeignKeyConstraint baseTableName="product"
+                                 baseColumnNames="id_waybill"
+                                 constraintName="fk_product_waybill"
+                                 onDelete="CASCADE"
+                                 referencedTableName="waybill"
+                                 referencedColumnNames="id_waybill"/>
+
+        <addForeignKeyConstraint baseTableName="waybill"
                                  baseColumnNames="id_driver"
-                                 constraintName="fk_driver_delivery_note"
+                                 constraintName="fk_driver_waybill"
                                  onDelete="CASCADE"
                                  referencedTableName="driver"
                                  referencedColumnNames="id_driver"/>
 
-        <addForeignKeyConstraint baseTableName="delivery_note"
+        <addForeignKeyConstraint baseTableName="waybill"
                                  baseColumnNames="id_user_registration"
-                                 constraintName="fk_user_registration_delivery_note"
+                                 constraintName="fk_user_registration_waybill"
                                  onDelete="CASCADE"
                                  referencedTableName="user"
                                  referencedColumnNames="id_user"/>
 
-        <addForeignKeyConstraint baseTableName="delivery_note"
+        <addForeignKeyConstraint baseTableName="waybill"
                                  baseColumnNames="id_user_checking"
-                                 constraintName="fk_user_checking_delivery_note"
+                                 constraintName="fk_user_checking_waybill"
                                  onDelete="CASCADE"
                                  referencedTableName="user"
                                  referencedColumnNames="id_user"/>
+
+        <addForeignKeyConstraint baseTableName="waybill"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_waybill"
+                                 onDelete="CASCADE"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
+
+        <addForeignKeyConstraint baseTableName="auto"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_auto"
+                                 onDelete="CASCADE"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
 
     </changeSet>
 
     <!--Data for test-->
     <changeSet id="1.0.7" author="eugene.begun">
 
+        <insert tableName="auto">
+            <column name="mark" value="VAZ2107"/>
+            <column name="type" value="EURO_TRACK"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
         <insert tableName="driver">
             <column name="name" value="driver-name-test"/>
             <column name="surname" value="driver-surname-test"/>
             <column name="patronymic" value="driver-pat-test"/>
             <column name="passport" value="passport-test-тест"/>
+            <column name="id_auto" value="1"/>
+            <column name="id_client_company" value="1"/>
         </insert>
 
-        <insert tableName="delivery_note">
+        <insert tableName="waybill">
             <column name="number" value="TTN321332"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="shipper" value="OOO 'Cool company', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Cool warehouse', Smolensk, Lenina 5 "/>
             <column name="id_driver" value="1"/>
             <column name="id_user_registration" value="1"/>
+            <column name="id_client_company" value="1"/>
         </insert>
 
         <insert tableName="product">
@@ -430,7 +499,7 @@
             <column name="sum" value="500"/>
             <column name="mass" value="100 kg"/>
             <column name="status" value="ACCEPTED"/>
-            <column name="id_delivery_note" value="1"/>
+            <column name="id_waybill" value="1"/>
         </insert>
 
     </changeSet>
