@@ -5,6 +5,7 @@ import by.itechart.cargo.model.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "waybill")
 public class Waybill implements Serializable, Cloneable {
 
@@ -65,7 +67,6 @@ public class Waybill implements Serializable, Cloneable {
     private User checkingUser;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "waybill")
-    @JsonManagedReference
     private List<Product> products;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

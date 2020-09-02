@@ -322,7 +322,7 @@
         </createTable>
 
         <!--Product-->
-        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
+<!--        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>-->
         <createTable tableName="product">
 
             <column name="id_product" type="BIGSERIAL" autoIncrement="true">
@@ -353,7 +353,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="product_status">
+            <column name="status" type="VARCHAR(64)"> <!--TODO :Enum type-->
                 <constraints nullable="false"/>
             </column>
 
