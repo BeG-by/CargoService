@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import MaterialTable from 'material-table';
-import DeliveryNoteForm from "../../forms/ttn-form/delivery-note-form";
+import DeliveryNoteForm from "../../forms/delivery-note-form/delivery-note-form";
 import {getDriversByCompanyId, getClientsByCompanyId} from "../../../request-api/utils";
 
 function handleRegisterDeliveryNoteClick(deliveryNote) {
@@ -22,7 +22,7 @@ export default function MainBodyDispatcher() {
         patronymic: "Vladimirovich",
         company: {
             name: "BestCargo",
-            pan: "S32YY3213"
+            pan: "S 32YY3213"
         },
 
         //todo: fix this shit
@@ -48,7 +48,6 @@ export default function MainBodyDispatcher() {
                 columns={columns}
                 data={clients}
             />
-
             <DeliveryNoteForm
                 open={deliveryDialogOpen}
                 onCloseClick={() => setDeliveryDialogOpen(false)}

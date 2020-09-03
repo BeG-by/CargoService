@@ -204,6 +204,10 @@ export default function DeliveryNoteForm(props) {
                                        value={driver.lastName}
                                        id="selected_driver_last_name"
                                        disabled={true}/>
+                            <TextField label="Passport"
+                                       value={driver.passport}
+                                       id="selected_driver_passport"
+                                       disabled={true}/>
                         </div>
                         <ItemList
                             items={drivers}
