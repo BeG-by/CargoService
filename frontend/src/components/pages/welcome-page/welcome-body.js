@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 
 export const WelcomeBody = (props) => {
     const classes = props.classes;
+    localStorage.setItem("role", "manager");//fixme удалить после авторизации
     return (
         <main
             className={clsx(classes.content, {

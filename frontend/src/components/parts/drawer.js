@@ -6,14 +6,11 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import LocalPhoneIcon from "@material-ui/icons/LocalPhone";
-import ListItemText from "@material-ui/core/ListItemText";
-import EmailIcon from "@material-ui/icons/Email";
 import {ItemDeliveryNoteList} from "./drawer-items/item-delivery-note-list";
 import {ItemWaybillList} from "./drawer-items/item-waybill-list";
 import {ItemInfo} from "./drawer-items/item-info";
+import {ItemContacts} from "./drawer-items/item-contacts";
+import {ItemSendMail} from "./drawer-items/item-send-mail";
 
 let drawerWidth;
 
@@ -34,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-let role = localStorage.getItem('role');
+const role = localStorage.getItem('role');
 let components = [];
 
 switch (role) {
@@ -51,10 +48,6 @@ switch (role) {
         const waybillList = <ItemWaybillList/>
         components.push(deliveryNotesList);
         components.push(waybillList);
-        //добавить в хедер кнопку назад
-        //сделать очистку массива после ухода со страницы
-        //сделать контакты и почту
-        //сделать верификацию для ттн
         break;
     case 'driver':
 
@@ -91,21 +84,11 @@ export const DrawerMenu = (props) => {
             <Divider/>
             <List>
                 <ItemInfo/>
-                {['Contacts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{<LocalPhoneIcon color='primary'/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ItemContacts/>
             </List>
             <Divider/>
             <List>
-                {['Send Message'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{<EmailIcon color='primary'/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ItemSendMail/>
             </List>
         </Drawer>
     );

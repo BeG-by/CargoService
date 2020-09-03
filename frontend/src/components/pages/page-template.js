@@ -6,8 +6,6 @@ import {WelcomeBody} from "./welcome-page/welcome-body";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {Footer} from "../parts/footer";
 import {MainBody} from "./main-page/main-body";
-import {SignoutButton} from "../parts/buttons/signout-button";
-import {SigninButton} from "../parts/buttons/signin-button";
 import {DeliveryNoteBody} from "./delivery-note-page/delivery-note-body";
 import {WaybillBody} from "./waybill-page/waybill-body";
 import AddBox from "@material-ui/icons/AddBox";
@@ -26,6 +24,28 @@ import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Remove from "@material-ui/icons/Remove";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 import {InfoBody} from "./info-page/info-body";
+import {SendMailBody} from "./send-mail-page/send-mail-body";
+import {ContactsBody} from "./contacts-page/contacts-body";
+
+const tableIcons = {
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+};
 
 const drawerWidth = 240;
 
@@ -75,27 +95,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PageTemplate(props) {
-    const tableIcons = {
-        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-    };
     const classes = useStyles();
-    const [openDialog, setOpenDialog] = React.useState(false);
     const [openMenu, setOpenMenu] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -104,18 +104,12 @@ export default function PageTemplate(props) {
     const handleDrawerClose = () => {
         setOpenMenu(false);
     };
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
 
     let page = props.page;
     let body;
     let headerText;
-    let headerButton;
     let role = localStorage.getItem("role");
+
     switch (page) {
         case 'welcome':
             body = <WelcomeBody classes={classes}
@@ -123,25 +117,27 @@ export default function PageTemplate(props) {
                                 tableIcons={tableIcons}
             />;
             headerText = 'Manage your cargo with convenient digital tools';
-            headerButton = localStorage.getItem('authorization') != null
-            && localStorage.getItem('authorization').trim() ?
-                <SignoutButton/> :
-                <SigninButton openDialog={openDialog}
-                              handleClickOpen={handleClickOpen}
-                              handleClose={handleClose}/>;
             break;
         case 'info':
             body = <InfoBody classes={classes}
-                                openMenu={openMenu}
-                                tableIcons={tableIcons}
+                             openMenu={openMenu}
+                             tableIcons={tableIcons}
             />;
             headerText = 'Manage your cargo with convenient digital tools';
-            headerButton = localStorage.getItem('authorization') != null
-            && localStorage.getItem('authorization').trim() ?
-                <SignoutButton/> :
-                <SigninButton openDialog={openDialog}
-                              handleClickOpen={handleClickOpen}
-                              handleClose={handleClose}/>;
+            break;
+        case 'sendMail':
+            body = <SendMailBody classes={classes}
+                                  openMenu={openMenu}
+                                  tableIcons={tableIcons}
+            />;
+            headerText = 'Manage your cargo with convenient digital tools';
+            break;
+        case 'contacts':
+            body = <ContactsBody classes={classes}
+                                 openMenu={openMenu}
+                                 tableIcons={tableIcons}
+            />;
+            headerText = 'Manage your cargo with convenient digital tools';
             break;
         case 'main':
             localStorage.setItem("role", "manager");//fixme передать роль в параметрах?
@@ -150,7 +146,6 @@ export default function PageTemplate(props) {
                              tableIcons={tableIcons}
                              role={role}/>;
             headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку
-            headerButton = <SignoutButton/>;
             break;
         case 'dn':
             localStorage.setItem("role", "manager");
@@ -159,7 +154,6 @@ export default function PageTemplate(props) {
                                      tableIcons={tableIcons}
                                      role={role}/>;
             headerText = <i>Hello, {role}!</i>;
-            headerButton = <SignoutButton/>;
             break;
         case 'wb':
             localStorage.setItem("role", "manager");
@@ -168,7 +162,6 @@ export default function PageTemplate(props) {
                                 tableIcons={tableIcons}
                                 role={role}/>;
             headerText = <i>Hello, {role}!</i>;
-            headerButton = <SignoutButton/>;
             break;
         default:
     }
@@ -177,12 +170,8 @@ export default function PageTemplate(props) {
         <div className={classes.grow}>
             <Header drawerWidth={drawerWidth}
                     openMenu={openMenu}
-                    openDialog={openDialog}
                     handleDrawerOpen={handleDrawerOpen}
-                    handleClickOpen={handleClickOpen}
-                    handleClose={handleClose}
                     headerText={headerText}
-                    headerButton={headerButton}
             />
             <DrawerMenu drawerWidth={drawerWidth}
                         openMenu={openMenu}

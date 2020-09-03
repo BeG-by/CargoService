@@ -3,12 +3,12 @@ import {DrawerItem} from "./drawer-item";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
 const handleClick = () => {
-    window.location.href = '/deliveryNote'; //fixme отрисовка таблицы ттнок
+    window.location.href = '/mainPage';
 }
 
 export const ItemDeliveryNoteList = () => {
     const icon = <AssignmentIcon color='primary'/>;
     return (
-        <DrawerItem text='Delivery Notes' icon={icon} handleClick={handleClick}/>
+        <DrawerItem text='Delivery notes' icon={icon} handleClick={handleClick}/>
     )
 }
