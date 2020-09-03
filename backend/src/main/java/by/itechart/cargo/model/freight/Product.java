@@ -1,15 +1,13 @@
 package by.itechart.cargo.model.freight;
 
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import by.itechart.cargo.model.enumeration.Status;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -17,6 +15,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product")
+@TypeDef(
+        name = "product_status",
+        typeClass = EnumTypePostgreSql.class
+)
 public class Product implements Serializable, Cloneable {
 
     @Id
@@ -25,32 +27,26 @@ public class Product implements Serializable, Cloneable {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @NotBlank
     private String name;
 
     @Column(name = "quantity", nullable = false)
-    @NotNull
     private Integer quantity;
 
     @Column(name = "measure", nullable = false)
-    @NotBlank
     private String measure;
 
     @Column(name = "price", nullable = false)
-    @NotNull
     private Long price;
 
     @Column(name = "sum", nullable = false)
-    @NotNull
     private Long sum;
 
     @Column(name = "mass", nullable = false)
-    @NotBlank
     private String mass;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @Type(type = "product_status")
     private Status productStatus;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

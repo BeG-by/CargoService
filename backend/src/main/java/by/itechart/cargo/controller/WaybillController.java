@@ -1,7 +1,6 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.WaybillRequest;
-import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.model.freight.Waybill;
 import by.itechart.cargo.service.WaybillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import java.util.List;
 @RequestMapping("/v1/api/waybills")
 public class WaybillController {
 
-    private WaybillService waybillService;
+    private final WaybillService waybillService;
 
     @Autowired
     public WaybillController(WaybillService waybillService) {
@@ -27,9 +26,9 @@ public class WaybillController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody WaybillRequest waybillRequest) throws NotFoundException {
+    public ResponseEntity<String> saveOne(@RequestBody WaybillRequest waybillRequest) {
         waybillService.saveOne(waybillRequest);
-        return ResponseEntity.ok("Delivery note has been saved");
+        return ResponseEntity.ok("Waybill has been saved");
     }
 
 }

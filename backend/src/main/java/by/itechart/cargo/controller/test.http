@@ -10,20 +10,47 @@ Content-Type: application/json
 
 GET localhost:8080/v1/api/waybills
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDgyMDE4LCJleHAiOjE1OTkwODM4MTh9.w5PWFzyNnzhTvyivt7jttfg170DQyMXcjzx-fSg5dp4
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
 
 ###
 
 GET localhost:8080/v1/api/owners
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDgyMDE4LCJleHAiOjE1OTkwODM4MTh9.w5PWFzyNnzhTvyivt7jttfg170DQyMXcjzx-fSg5dp4
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
+
+GET localhost:8080/v1/api/users
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
+
+POST localhost:8080/v1/api/users
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+{
+  "login": "test login",
+  "password": "test password",
+  "name": "Ivan",
+  "surname": "Ivanov",
+  "patronymic": "Ivanovich",
+  "birthday": "2020-01-01",
+  "address": {
+    "city": "Minsk"
+  },
+  "email": "test@mail.com",
+  "roles": ["ADMIN"]
+}
 
 ###
 
 
+
 POST localhost:8080/v1/api/waybills
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTIxNDEyLCJleHAiOjE1OTkxMjMyMTJ9.c88joRef1o-OU-t-aOla8_pk7VkpEKfLjPY0XbDnxQ0
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
 
 {
   "waybillNumber": "TTN321332",
@@ -38,8 +65,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
       "measure": "bochka",
       "price": 100,
       "sum": 500,
-      "mass": "100 kg",
-      "productStatus": "ACCEPTED"
+      "mass": "100 kg"
     }
   ]
 }

@@ -36,7 +36,7 @@ public class Auto implements Serializable, Cloneable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
-    @JsonBackReference
+    @JsonBackReference (value = "auto_company")
     @NotNull
     private ClientCompany clientCompany;
 
