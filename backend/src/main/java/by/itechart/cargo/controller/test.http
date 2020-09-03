@@ -23,7 +23,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 POST localhost:8080/v1/api/waybills
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MDkwMzE4LCJleHAiOjE1OTkwOTIxMTh9.l3pF9ANXh28AczsSi-_sLjaMqnR5TQluc6AtBAB-QaU
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTIxNDEyLCJleHAiOjE1OTkxMjMyMTJ9.c88joRef1o-OU-t-aOla8_pk7VkpEKfLjPY0XbDnxQ0
 
 {
   "waybillNumber": "TTN321332",
