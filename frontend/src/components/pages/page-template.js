@@ -25,6 +25,7 @@ import Search from "@material-ui/icons/Search";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Remove from "@material-ui/icons/Remove";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+import {InfoBody} from "./info-page/info-body";
 
 const drawerWidth = 240;
 
@@ -118,6 +119,19 @@ export default function PageTemplate(props) {
     switch (page) {
         case 'welcome':
             body = <WelcomeBody classes={classes}
+                                openMenu={openMenu}
+                                tableIcons={tableIcons}
+            />;
+            headerText = 'Manage your cargo with convenient digital tools';
+            headerButton = localStorage.getItem('authorization') != null
+            && localStorage.getItem('authorization').trim() ?
+                <SignoutButton/> :
+                <SigninButton openDialog={openDialog}
+                              handleClickOpen={handleClickOpen}
+                              handleClose={handleClose}/>;
+            break;
+        case 'info':
+            body = <InfoBody classes={classes}
                                 openMenu={openMenu}
                                 tableIcons={tableIcons}
             />;

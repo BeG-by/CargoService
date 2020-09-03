@@ -1,21 +1,13 @@
-import React, {forwardRef} from "react";
-import TtnForm from "../../forms/ttn-form";
+import React from "react";
 import MaterialTable from "material-table";
 import {DialogWindow} from "../../parts/dialog";
-import {OkButton} from "../../parts/buttons/ok-button";
-import {assignVerificationDN} from "../../parts/dialogs/verify-dn";
 import {assignFillingWB} from "../../parts/dialogs/fill-wb";
 
 export default function MainBodyManager(props) {
     const tableIcons = props.tableIcons;
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
 
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [form, setForm] = React.useState(null);
     const [state, setState] = React.useState({
         columns: [
             {title: '#', field: 'number'},
@@ -57,27 +49,23 @@ export default function MainBodyManager(props) {
         ],
     } || null);
 
-
-//примеры содержимого диалоговых окон (вынести куда-нибудь)
-    const [form, setForm] = React.useState(null);
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
 
     return (
         <div>
             <MaterialTable
+                style={{minWidth: 600}}
                 title="Delivery Notes"
                 icons={tableIcons}
                 columns={state.columns}
                 data={state.data}
-                options={{
-                    actionsColumnIndex: -1
-                }}
                 onRowClick={(event, rowData) => {
                     localStorage.setItem('number', rowData.number);
                     localStorage.setItem('status', rowData.status);
                     localStorage.setItem('waybill', rowData.waybill);
-                    if (rowData.status === 'registered') {
-                        window.location.href = '/deliveryNote';
-                    } else if (rowData.status === 'verified' && !rowData.waybill.trim()) {
+                    if (rowData.status === 'verified' && !rowData.waybill.trim()) {
                         setForm(assignFillingWB);
                         setOpenDialog(true);
                     } else {
