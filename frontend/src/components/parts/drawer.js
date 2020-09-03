@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const role = localStorage.getItem('role');
 let components = [];
 
+//todo для каждого свои кнопки
 switch (role) {
     case 'sysadmin':
         break;

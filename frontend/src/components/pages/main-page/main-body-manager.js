@@ -5,7 +5,6 @@ import {assignFillingWB} from "../../parts/dialogs/fill-wb";
 
 export default function MainBodyManager(props) {
     const tableIcons = props.tableIcons;
-
     const [openDialog, setOpenDialog] = React.useState(false);
     const [form, setForm] = React.useState(null);
     const [state, setState] = React.useState({

@@ -97,6 +97,14 @@ const useStyles = makeStyles((theme) => ({
 export default function PageTemplate(props) {
     const classes = useStyles();
     const [openMenu, setOpenMenu] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
 
     const handleDrawerOpen = () => {
         setOpenMenu(true);
@@ -143,6 +151,8 @@ export default function PageTemplate(props) {
             localStorage.setItem("role", "manager");//fixme передать роль в параметрах?
             body = <MainBody classes={classes}
                              openMenu={openMenu}
+                             openDialog={openDialog}
+                             handleClose={handleClose}
                              tableIcons={tableIcons}
                              role={role}/>;
             headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку
@@ -151,6 +161,9 @@ export default function PageTemplate(props) {
             localStorage.setItem("role", "manager");
             body = <DeliveryNoteBody classes={classes}
                                      openMenu={openMenu}
+                                     openDialog={openDialog}
+                                     handleClickOpen={handleClickOpen}
+                                     handleClose={handleClose}
                                      tableIcons={tableIcons}
                                      role={role}/>;
             headerText = <i>Hello, {role}!</i>;
@@ -159,6 +172,8 @@ export default function PageTemplate(props) {
             localStorage.setItem("role", "manager");
             body = <WaybillBody classes={classes}
                                 openMenu={openMenu}
+                                openDialog={openDialog}
+                                handleClose={handleClose}
                                 tableIcons={tableIcons}
                                 role={role}/>;
             headerText = <i>Hello, {role}!</i>;
