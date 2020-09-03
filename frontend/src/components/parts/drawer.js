@@ -44,10 +44,12 @@ switch (role) {
 
         break;
     case 'manager':
-        const deliveryNotesList = <ItemDeliveryNoteList/>;
-        const waybillList = <ItemWaybillList/>
+        const deliveryNotesList = <ItemDeliveryNoteList key='Delivery notes'/>;
+        const waybillList = <ItemWaybillList key='Waybills'/>;
+        const divider = <Divider key='Divider'/>;
         components.push(deliveryNotesList);
         components.push(waybillList);
+        components.push(divider);
         break;
     case 'driver':
 
@@ -81,7 +83,7 @@ export const DrawerMenu = (props) => {
             <List>
                 {components}
             </List>
-            <Divider/>
+
             <List>
                 <ItemInfo/>
                 <ItemContacts/>

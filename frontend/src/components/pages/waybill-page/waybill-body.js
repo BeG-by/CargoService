@@ -8,7 +8,7 @@ export const WaybillBody = (props) => {
 
     const content = <div>
         <h2>Here is your waybill {waybill}</h2>
-        <ReturnButton buttonText="To Main Page" returnHandler="BackToMain"/>
+        <ReturnButton buttonText="Main Page" returnHandler="BackToMain"/>
     </div>
 
     return (

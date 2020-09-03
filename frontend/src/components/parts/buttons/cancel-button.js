@@ -1,9 +1,9 @@
 import Button from "@material-ui/core/Button";
 import React from "react";
 
-export const OkButton = (props) => {
+export const CancelButton = (props) => {
     return (
-        <Button variant="contained" color="primary" onClick={props.handleClick}>
+        <Button variant="contained" color="secondary" onClick={props.handleClick}>
             {props.content}
         </Button>
     );

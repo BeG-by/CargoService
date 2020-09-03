@@ -1,6 +1,6 @@
 import {OkButton} from "../buttons/ok-button";
 import React from "react";
-import {CancelDnButton} from "../buttons/cancel-dn-button";
+import {CancelButton} from "../buttons/cancel-button";
 
 const handleFill = () => {
     window.location.href = '/waybill';
@@ -13,12 +13,12 @@ const handleDnShow = () => {
 export const assignFillingWB = () => {
     return (
         <div className="form-signin">
-            <i>Do you want to fill in the waybill
+            <i style={{fontSize: 16}}>Do you want to fill in the waybill
             <br/>
             for this delivery note?</i>
             <div className='btn-row'>
-                <OkButton handleClick={handleFill}/>
-                <CancelDnButton handleClick={handleDnShow}/>
+                <OkButton content='Yes, open waybill' handleClick={handleFill}/>
+                <CancelButton content='No, show note' handleClick={handleDnShow}/>
             </div>
     </div>);
 }

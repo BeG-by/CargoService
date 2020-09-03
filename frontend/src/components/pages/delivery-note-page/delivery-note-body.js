@@ -10,9 +10,7 @@ export const DeliveryNoteBody = (props) => {
     let button;
     let style;
     if (status.trim() === 'registered') {
-        button = <div>
-            <SubmitButton listener={false} buttonText={'Verify note'}/>
-        </div>
+        button = <SubmitButton listener={false} buttonText={'Verify note'}/>
         style = 'btn-row';
     } else {
         style = 'btn'
@@ -20,7 +18,7 @@ export const DeliveryNoteBody = (props) => {
     const content = <div>
         <h2>Here is your delivery note {number}</h2>
         <div className={style}>
-            {button} <ReturnButton buttonText="To Main Page" returnHandler="BackToMain"/>
+            {button} <ReturnButton buttonText="Main Page" returnHandler="BackToMain"/>
         </div>
     </div>
 

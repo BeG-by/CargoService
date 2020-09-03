@@ -3,48 +3,10 @@ import clsx from "clsx";
 
 export const InfoBody = (props) => {
     const classes = props.classes;
-    const content = <h3>
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-        Very interesting info about application which is full of eternal shine and marvelous glory etc.
-    </h3>;
+    const content = <h2> //todo
+        Very interesting and useful information about the application, it's full of eternal shine
+        and marvelous glory, splendid facts and high definition photos of little fluffy puppies, blah-blah-blah...
+    </h2>;
 
     return (
         <main

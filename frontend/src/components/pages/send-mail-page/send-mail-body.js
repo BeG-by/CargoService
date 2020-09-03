@@ -1,11 +1,12 @@
 import React from "react";
 import clsx from "clsx";
 
+//todo content
 export const SendMailBody = (props) => {
     const classes = props.classes;
-    const content = <h3>
+    const content = <h2>
         Here you can send message to iTechArt support team.
-    </h3>;
+    </h2>;
 
     return (
         <main
