@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/v1/api/auth")
-@CrossOrigin("*")
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;

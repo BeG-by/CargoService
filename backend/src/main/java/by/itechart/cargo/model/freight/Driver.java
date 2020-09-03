@@ -47,7 +47,7 @@ public class Driver implements Serializable, Cloneable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "driver_company")
     @NotNull
     private ClientCompany clientCompany;
 

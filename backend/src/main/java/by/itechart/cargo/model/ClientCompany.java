@@ -54,7 +54,7 @@ public class ClientCompany implements Serializable, Cloneable {
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference
+    @JsonManagedReference(value = "client_company")
     private List<User> users;
 
     // TODO fix contracts
@@ -64,20 +64,24 @@ public class ClientCompany implements Serializable, Cloneable {
     private List<Contract> contracts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference
+    @JsonManagedReference(value = "owners_company")
     private List<ProductOwner> productOwners;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference
+    @JsonManagedReference(value = "waybill_company")
     private List<Waybill> waybills;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference
+    @JsonManagedReference(value = "auto_company")
     private List<Auto> autos;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference
+    @JsonManagedReference(value = "driver_company")
     private List<Driver> drivers;
+
+    public ClientCompany(Long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {

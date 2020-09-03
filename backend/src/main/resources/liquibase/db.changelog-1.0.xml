@@ -41,7 +41,8 @@
 
     <!--  Create roles table-->
     <changeSet id="1.0.1" author="vladislav.mironuk">
-        <sql>CREATE TYPE role_enum AS ENUM('SYSADMIN', 'ADMIN', 'MANAGER', 'DISPATCHER', 'DRIVER', 'CLIENT_COMPANY_OWNER')
+        <sql>CREATE TYPE role_enum AS ENUM('SYSADMIN', 'ADMIN', 'MANAGER', 'DISPATCHER', 'DRIVER',
+            'CLIENT_COMPANY_OWNER')
         </sql>
         <createTable tableName="role">
             <column name="id_role" type="INTEGER" autoIncrement="true">
@@ -322,7 +323,7 @@
         </createTable>
 
         <!--Product-->
-<!--        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>-->
+        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
         <createTable tableName="product">
 
             <column name="id_product" type="BIGSERIAL" autoIncrement="true">
@@ -353,7 +354,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="VARCHAR(64)"> <!--TODO :Enum type-->
+            <column name="status" type="product_status" defaultValue="ACCEPTED">
                 <constraints nullable="false"/>
             </column>
 
@@ -364,7 +365,7 @@
         </createTable>
 
         <!--Waybill-->
-        <sql>CREATE TYPE waybill_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED')</sql>
+        <sql>CREATE TYPE waybill_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED')</sql>
         <createTable tableName="waybill">
 
             <column name="id_waybill" type="BIGSERIAL" autoIncrement="true">
@@ -372,6 +373,10 @@
             </column>
 
             <column name="number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="waybill_status" defaultValue="REGISTERED">
                 <constraints nullable="false"/>
             </column>
 
@@ -483,6 +488,7 @@
 
         <insert tableName="waybill">
             <column name="number" value="TTN321332"/>
+            <column name="status" value="REGISTERED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="shipper" value="OOO 'Cool company', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Cool warehouse', Smolensk, Lenina 5 "/>

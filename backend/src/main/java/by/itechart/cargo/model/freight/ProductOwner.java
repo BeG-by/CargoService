@@ -46,7 +46,7 @@ public class ProductOwner implements Serializable, Cloneable {
 
     @ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JoinColumn(name = "id_client_company" , nullable = false)
-    @JsonBackReference
+    @JsonBackReference (value = "owners_company")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private ClientCompany clientCompany;
