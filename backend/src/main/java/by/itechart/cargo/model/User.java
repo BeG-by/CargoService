@@ -1,12 +1,9 @@
 package by.itechart.cargo.model;
 
+import by.itechart.cargo.model.freight.Waybill;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.Proxy;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -17,14 +14,15 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
-@Proxy(lazy = false)
+@Table(name = "user" , schema = "public")
+//@Proxy(lazy = false)
 public class User implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 2888798985824900383L;
@@ -32,7 +30,6 @@ public class User implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", nullable = false, updatable = false)
-
     @NotNull
     private Long id;
 
@@ -74,9 +71,11 @@ public class User implements Serializable, Cloneable {
     @Size(max = 64)
     private String email;
 
-    @Column(name = "id_client_company", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_client_company", nullable = false)
+    @JsonBackReference
     @NotNull
-    private Long clientCompanyId;
+    private ClientCompany clientCompany;
 
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
@@ -86,4 +85,17 @@ public class User implements Serializable, Cloneable {
             inverseJoinColumns = {@JoinColumn(name = "id_role")}
     )
     Set<Role> roles = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "registrationUser")
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Waybill> registrationWaybill;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "checkingUser")
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Waybill> checkingWaybill;
+
 }

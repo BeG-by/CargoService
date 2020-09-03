@@ -2,6 +2,7 @@ package by.itechart.cargo.dto.model_dto.mapper;
 
 import by.itechart.cargo.dto.model_dto.ClientCompanyDto;
 import by.itechart.cargo.model.ClientCompany;
+import by.itechart.cargo.model.enumeration.CompanyType;
 
 public class ClientCompanyMapper implements DtoMapper<ClientCompanyDto, ClientCompany> {
     public static final int MAP_WITH_CONTRACTS = 1;
@@ -33,8 +34,8 @@ public class ClientCompanyMapper implements DtoMapper<ClientCompanyDto, ClientCo
         return dto;
     }
 
-    private static ClientCompanyDto.Type mapFromClientCompanyType(ClientCompany.Type clientCompanyType) {
-        switch (clientCompanyType) {
+    private static ClientCompanyDto.Type mapFromClientCompanyType(CompanyType companyType) {
+        switch (companyType) {
             case JP:
                 return ClientCompanyDto.Type.JP;
             case SP:

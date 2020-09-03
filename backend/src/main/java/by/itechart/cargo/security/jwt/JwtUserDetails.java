@@ -28,7 +28,7 @@ public class JwtUserDetails implements UserDetails {
     private String house;
     private String flat;
     private String email;
-    private Long companyId;
+    private ClientCompany clientCompany;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnable;
 
@@ -45,7 +45,7 @@ public class JwtUserDetails implements UserDetails {
                           String house,
                           String flat,
                           String email,
-                          Long companyId,
+                          ClientCompany clientCompany,
                           Collection<? extends GrantedAuthority> authorities,
                           boolean isEnable) {
 
@@ -61,7 +61,7 @@ public class JwtUserDetails implements UserDetails {
         this.house = house;
         this.flat = flat;
         this.email = email;
-        this.companyId = companyId;
+        this.clientCompany = clientCompany;
         this.authorities = authorities;
         this.isEnable = isEnable;
     }

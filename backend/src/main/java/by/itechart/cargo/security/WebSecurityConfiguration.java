@@ -41,6 +41,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // TODO roles configurations
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
