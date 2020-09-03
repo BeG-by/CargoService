@@ -93,7 +93,7 @@ export default function PageTemplate(props) {
                               handleClose={handleClose}/>;
             break;
         case 'main':
-            localStorage.setItem("role", "dispatcher");//fixme передать роль в параметрах?
+            localStorage.setItem("role", "manager");//fixme передать роль в параметрах?
             let role = localStorage.getItem("role");
             body = <MainBody classes={classes}
                              openMenu={openMenu}
