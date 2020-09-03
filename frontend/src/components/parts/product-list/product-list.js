@@ -19,48 +19,19 @@ const useStyles = makeStyles({
 });
 
 const columns = [
-  { id: "index", label: "Index", minWidth: 40 },
   { id: "name", label: "Name", minWidth: 170 },
   { id: "amount", label: "Amount", minWidth: 170 },
   { id: "priceForOne", label: "Price for one", minWidth: 170 },
-  // { id: "code", label: "ISO\u00a0Code", minWidth: 100 },
-  // {
-  //   id: "population",
-  //   label: "Population",
-  //   minWidth: 170,
-  //   align: "right",
-  //   format: (value) => value.toLocaleString("en-US"),
-  // },
-  // {
-  //   id: "size",
-  //   label: "Size\u00a0(km\u00b2)",
-  //   minWidth: 170,
-  //   align: "right",
-  //   format: (value) => value.toLocaleString("en-US"),
-  // },
-  // {
-  //   id: "density",
-  //   label: "Density",
-  //   minWidth: 170,
-  //   align: "right",
-  //   format: (value) => value.toFixed(2),
-  // },
 ];
 
-function createData(index, name, amount, priceForOne) {
-  return { index, name, amount, priceForOne };
+function createData(id, name, amount, priceForOne) {
+  return { id, name, amount, priceForOne };
 }
 
 const rows = [createData(1, "Orange", 2, 10), createData(2, "Banana", 3, 13)];
 
 export default (props) => {
-  // const [openProductDialog, setOpenProductDialog] = useState(false);
-  // const [selectedProduct, setSelectedProduct] = useState({
-  //   index: 0,
-  //   name: "",
-  //   amount: 0,
-  //   priceForOne: 0,
-  // });
+  const { onRowClick, products } = props;
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
@@ -68,6 +39,10 @@ export default (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleRowClick = (row) => {
+    onRowClick(row);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -93,12 +68,12 @@ export default (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {products
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
                   <TableRow
-                    onClick={(e) => console.log(row)}
+                    onClick={() => handleRowClick(row)}
                     hover
                     role="checkbox"
                     tabIndex={-1}

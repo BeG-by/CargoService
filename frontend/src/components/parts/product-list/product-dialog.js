@@ -5,16 +5,27 @@ import TextField from "@material-ui/core/TextField";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 export default (props) => {
-  const { productData, open, onSubmit, onClose } = props;
-
-  const [product, setProduct] = useState({ productData });
+  const {
+    selectedProduct,
+    onProductNameChange,
+    onProductAmountChange,
+    onProductPriceForOneChange,
+    open,
+    onSave,
+    onClose,
+    onDelete,
+  } = props;
 
   const handleSubmit = () => {
-    onSubmit(product);
+    onSave();
   };
 
   const handleClose = () => {
     onClose();
+  };
+
+  const handleDelete = (product) => {
+    onDelete(product);
   };
 
   return (
@@ -24,44 +35,33 @@ export default (props) => {
       open={open}
     >
       <DialogTitle id="product-dialog-title">{"Product"}</DialogTitle>
-
       <TextField
         label="Name"
         id="name"
+        defaultValue={selectedProduct.name}
         onChange={(e) => {
-          setProduct({
-            name: e.target.value,
-            amount: product.amount,
-            priceForOne: product.priceForOne,
-          });
+          onProductNameChange(e.target.value);
         }}
       />
-
       <TextField
         label="Amount"
         id="amount"
+        defaultValue={selectedProduct.amount}
         onChange={(e) => {
-          setProduct({
-            name: product.name,
-            amount: e.target.value,
-            priceForOne: product.priceForOne,
-          });
+          onProductAmountChange(e.target.value);
         }}
       />
-
       <TextField
         label="Price for one"
         id="priceForOne"
+        defaultValue={selectedProduct.priceForOne}
         onChange={(e) => {
-          setProduct({
-            name: product.name,
-            amount: product.amount,
-            priceForOne: e.target.value,
-          });
+          onProductPriceForOneChange(e.target.value);
         }}
       />
-
       <Button onClick={handleSubmit}>Save product</Button>
+      <Button onClick={handleClose}>Close</Button>
+      <Button onClick={handleDelete}>Delete</Button>
     </Dialog>
   );
 };
