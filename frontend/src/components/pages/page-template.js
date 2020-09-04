@@ -115,7 +115,7 @@ export default function PageTemplate(props) {
 
     let page = props.page;
     let body;
-    let headerText;
+    let headerText = 'Manage your cargo with convenient digital tools';
     let role = localStorage.getItem("role");
 
     switch (page) {
@@ -124,28 +124,24 @@ export default function PageTemplate(props) {
                                 openMenu={openMenu}
                                 tableIcons={tableIcons}
             />;
-            headerText = 'Manage your cargo with convenient digital tools';
             break;
         case 'info':
             body = <InfoBody classes={classes}
                              openMenu={openMenu}
                              tableIcons={tableIcons}
             />;
-            headerText = 'Manage your cargo with convenient digital tools';
             break;
         case 'sendMail':
             body = <SendMailBody classes={classes}
                                   openMenu={openMenu}
                                   tableIcons={tableIcons}
             />;
-            headerText = 'Manage your cargo with convenient digital tools';
             break;
         case 'contacts':
             body = <ContactsBody classes={classes}
                                  openMenu={openMenu}
                                  tableIcons={tableIcons}
             />;
-            headerText = 'Manage your cargo with convenient digital tools';
             break;
         case 'main':
             localStorage.setItem("role", "manager");//fixme передать роль в параметрах?

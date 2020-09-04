@@ -17,8 +17,8 @@ export const assignFillingWB = () => {
             <br/>
             for this delivery note?</i>
             <div className='btn-row'>
-                <OkButton content='Yes, open waybill' handleClick={handleFill}/>
-                <CancelButton content='No, show note' handleClick={handleDnShow}/>
+                <OkButton content='Yes' handleClick={handleFill}/>
+                <CancelButton content='No' handleClick={handleDnShow}/>
             </div>
     </div>);
 }

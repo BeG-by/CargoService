@@ -1,11 +1,11 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import '../forms/login-form/login-form.css';
+import '../forms/forms.css';
 import {ErrorMsg} from "./error-message";
 
 export const FormikField = (props) => {
     return (
-        <div className="FormikField ">
+        <div className="FormikField">
             <TextField variant="standard"
                        label={props.label}
                        name={props.name}
@@ -13,6 +13,7 @@ export const FormikField = (props) => {
                        className="form-control"
                        onChange={props.obj}
                        helperText={<ErrorMsg name={props.name} />}
+                       style={{minWidth: 250}}
             />
         </div>
     )
@@ -36,64 +37,84 @@ export const PasswordField = {
 // REGISTRATION
 export const CompanyTypeField = {
     name: 'companyType',
-    label: 'CompanyType',
+    label: 'Type',
     type: 'text'
 }
 
 export const CompanyPanField = {
     name: 'companyPan',
-    label: 'CompanyPan',
+    label: 'PAN',
     type: 'text'
 }
 
 export const CompanyNameField = {
     name: 'companyName',
-    label: 'CompanyName',
+    label: 'Name',
     type: 'text'
 }
 
 export const CompanyCountryField = {
     name: 'companyCountry',
-    label: 'CompanyCountry',
+    label: 'Country',
     type: 'text'
 }
 
 export const CompanyCityField = {
     name: 'companyCity',
-    label: 'CompanyCity',
+    label: 'City',
     type: 'text'
 }
 
 export const CompanyStreetField = {
     name: 'companyStreet',
-    label: 'CompanyStreet',
+    label: 'Street',
     type: 'text'
 }
 
 export const CompanyHouseField = {
     name: 'companyHouse',
-    label: 'CompanyHouse',
-    type: 'text'
-}
-
-export const CompanyFlatField = {
-    name: 'companyFlat',
-    label: 'CompanyFlat',
+    label: 'House',
     type: 'text'
 }
 
 export const CompanyEmailField = {
     name: 'companyEmail',
-    label: 'CompanyEmail',
+    label: 'Email',
+    type: 'text'
+}
+
+export const CompanyPhoneField = {
+    name: 'companyPhone',
+    label: 'Phone',
     type: 'text'
 }
 
 /////////////////////////////////////
-// TTN
+// DELIVERY NOTE
 
-export const TtnNumberField = {
-    name: 'ttnNumber',
-    label: 'TtnNumber',
+export const DnNumberField = {
+    name: 'dnNumber',
+    label: 'Number',
     type: 'text'
 }
 
+////////////////////////////////////////
+// WAYBILL
+
+export const WbNumberField = {
+    name: 'wbNumber',
+    label: 'Number',
+    type: 'text'
+}
+
+export const WbShipperField = {
+    name: 'wbShipper',
+    label: 'Shipper',
+    type: 'text'
+}
+
+export const WbConsigneeField = {
+    name: 'wbConsignee',
+    label: 'Consignee',
+    type: 'text'
+}

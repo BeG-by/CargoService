@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import axios from 'axios';
 import {jwtToken} from '../../../security/Interceptors';
-import '../login-form/login-form.css';
-import {showError, showTtnForm} from "./ttn-form-views";
+import '../forms.css';
+import {showError, showTtnForm} from "./delivery-note-form-views";
 
-export default class TtnForm extends Component {
+export default class DeliveryNoteForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
