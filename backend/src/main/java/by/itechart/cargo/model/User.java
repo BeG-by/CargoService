@@ -1,15 +1,13 @@
 package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.freight.Invoice;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -67,15 +65,15 @@ public class User implements Serializable, Cloneable {
     private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "registrationUser")
-    @JsonBackReference (value = "reg_waybill")
+    @JsonBackReference (value = "reg_invoice")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Waybill> registrationWaybill;
+    private List<Invoice> registrationInvoice;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "checkingUser")
-    @JsonBackReference(value = "check_waybill")
+    @JsonBackReference(value = "check_invoice")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Waybill> checkingWaybill;
+    private List<Invoice> checkingInvoice;
 
 }

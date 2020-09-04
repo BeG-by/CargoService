@@ -43,7 +43,7 @@ public class Driver implements Serializable, Cloneable {
     @JsonBackReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Waybill> waybills;
+    private List<Invoice> invoices;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)

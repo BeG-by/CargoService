@@ -50,11 +50,11 @@ public class Product implements Serializable, Cloneable {
     private Status productStatus;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_waybill")
+    @JoinColumn(name = "id_invoice")
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Waybill waybill;
+    private Invoice invoice;
 
 
 }
