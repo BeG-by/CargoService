@@ -14,20 +14,16 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class Address {
     private String country;
-
-    @NotBlank
+    
     @Size(max = 64)
     private String city;
-
-    @NotBlank
+    
     @Size(max = 64)
     private String street;
-
-    @NotBlank
+    
     @Size(max = 64)
     private String flat;
-
-    @NotBlank
+    
     @Size(max = 64)
     private String house;
 }
