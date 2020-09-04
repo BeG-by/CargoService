@@ -11,6 +11,7 @@ export default class WaybillForm extends Component {
             error: null,
             errorText: '',
             waybill: {
+                dnId: 1,// localStorage.getItem('deliveryNoteId'), //fixme передать id ттн
                 number: '',
                 shipper: '',
                 consignee: '',
@@ -21,6 +22,7 @@ export default class WaybillForm extends Component {
         this.onChangeNumber = this.onChangeNumber.bind(this);
         this.onChangeShipper = this.onChangeShipper.bind(this);
         this.onChangeConsignee = this.onChangeConsignee.bind(this);
+        this.onChangeDriver = this.onChangeDriver.bind(this);
         this.saveWaybill = this.saveWaybill.bind(this);
         this.goBack = this.goBack.bind(this);
     }
@@ -138,6 +140,7 @@ export default class WaybillForm extends Component {
     }
 
     render() {
+
         const {error} = this.state;
         if (error) {
             let err = showError(this);

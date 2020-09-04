@@ -25,14 +25,15 @@ export function showError(object) {
 export function showWaybillForm(object) {
     // let options = [<option value='0'/>]; //fixme включить при отправке запроса
     let options = [<option value='0'/>,
-                   <option value='1'>John Smith</option>,
-                   <option value='2'>Peter Blacksmith</option>];
+        <option value='1'>John Smith</option>,
+        <option value='2'>Peter Blacksmith</option>];
+    let products = [];
+
     const getDrivers = () => {
         const endpoint = "/v1/api/drivers";
         axios.get(endpoint)
             .then(res => {
                     const drivers = res.data;
-                    alert(drivers);
                     let option = null;
                     drivers.forEach(driver => {
                         option = <option value={driver.id}>{driver.name} {driver.surname}</option>;
@@ -45,6 +46,24 @@ export function showWaybillForm(object) {
     }
 
     getDrivers();
+
+    const getProducts = () => {
+        const endpoint = "/v1/api/waybills/" + object.state.waybill.dnId; //fixme url & res.data & error
+        axios.get(endpoint)
+            .then(res => {
+                    if (res.data === "success") {
+                        products = res.data;
+                        products.forEach(product => {
+                            //fixme отрисовка таблицы продуктов
+                        })
+                    }
+                },
+                error => {
+                    console.log(error);
+                });
+    }
+
+    getProducts();
 
     const {waybill} = object.state;
     return (
@@ -62,43 +81,50 @@ export function showWaybillForm(object) {
                 return (
                     <Form className="form-signin">
                         <h4 style={{color: '#3f51b5'}}>Fill the waybill:</h4>
-                        <div className="form-group">
-                            <FormikField obj={object.onChangeNumber}
-                                         name={WbNumberField.name}
-                                         label={WbNumberField.label}
-                                         type={WbNumberField.type}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <FormikField obj={object.onChangeShipper}
-                                         name={WbShipperField.name}
-                                         label={WbShipperField.label}
-                                         type={WbShipperField.type}/>
-                        </div>
-                        <div className="form-group">
-                            <FormikField obj={object.onChangeConsignee}
-                                         name={WbConsigneeField.name}
-                                         label={WbConsigneeField.label}
-                                         type={WbConsigneeField.type}/>
-                        </div>
-                        <div className="form-group" style={{marginTop: 20}}>
-                            <div className="FormikField ">
-                                <label style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    color: 'grey',
-                                    fontSize: 16,
-                                    alignItems: 'right',
-                                    justifyContent: 'right'
-                                }}>Driver</label>
-                                <Field style={{minWidth: 250, fontSize: 15}} name="driverId"
-                                       as="select"
-                                       label="Driver"
-                                       placeholder="Driver's name"
-                                       className="form-control"
-                                       onSelect={object.onChangeDriver}>
-                                    {options}
-                                </Field>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                            <div>
+                                <div className="form-group">
+                                    <FormikField obj={object.onChangeNumber}
+                                                 name={WbNumberField.name}
+                                                 label={WbNumberField.label}
+                                                 type={WbNumberField.type}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <FormikField obj={object.onChangeShipper}
+                                                 name={WbShipperField.name}
+                                                 label={WbShipperField.label}
+                                                 type={WbShipperField.type}/>
+                                </div>
+                                <div className="form-group">
+                                    <FormikField obj={object.onChangeConsignee}
+                                                 name={WbConsigneeField.name}
+                                                 label={WbConsigneeField.label}
+                                                 type={WbConsigneeField.type}/>
+                                </div>
+                                <div className="form-group" style={{marginTop: 20}}>
+                                    <div className="FormikField ">
+                                        <label style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            color: 'grey',
+                                            fontSize: 16,
+                                            alignItems: 'right',
+                                            justifyContent: 'right'
+                                        }}>Driver</label>
+                                        <Field style={{minWidth: 250, fontSize: 15}} name="driverId"
+                                               as="select"
+                                               label="Driver"
+                                               placeholder="Driver's name"
+                                               className="form-control"
+                                               onSelect={object.onChangeDriver}>
+                                            {options}
+                                        </Field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{color: 'black', textAlign: 'center'}}>
+                                Products Table
                             </div>
                         </div>
                         <br/>
