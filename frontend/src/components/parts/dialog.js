@@ -1,6 +1,5 @@
 import React from "react";
 import Dialog from "@material-ui/core/Dialog";
-import LoginForm from "../forms/login-form";
 import withStyles from "@material-ui/core/styles/withStyles";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";

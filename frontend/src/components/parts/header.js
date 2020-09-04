@@ -6,6 +6,8 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
+import {SignoutButton} from "./buttons/signout-button";
+import {SigninButton} from "./buttons/signin-button";
 
 let drawerWidth;
 
@@ -55,6 +57,23 @@ const useStyles = makeStyles((theme) => ({
 export const Header = (props) => {
     drawerWidth = props.drawerWidth;
     const classes = useStyles();
+    const [openDialog, setOpenDialog] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    const headerButton = (localStorage.getItem('authorization') != null
+                         && localStorage.getItem('authorization').trim())
+                         || (localStorage.getItem('role') != null //fixme удалить это условие после подключения авторизации
+                         && localStorage.getItem('role').trim())
+                         ? <SignoutButton/>
+                         : <SigninButton openDialog={openDialog}
+                                         handleClickOpen={handleClickOpen}
+                                         handleClose={handleClose}/>;
     return (
         <AppBar className={clsx(classes.appBar, {
             [classes.appBarShift]: props.openMenu,
@@ -78,7 +97,7 @@ export const Header = (props) => {
                     {props.headerText}
                 </Typography>
                 <div className={classes.grow}/>
-                {props.headerButton}
+                {headerButton}
             </Toolbar>
         </AppBar>
     );

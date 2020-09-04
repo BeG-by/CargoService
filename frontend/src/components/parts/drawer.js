@@ -6,11 +6,11 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
+import {ItemDeliveryNoteList} from "./drawer-items/item-delivery-note-list";
+import {ItemWaybillList} from "./drawer-items/item-waybill-list";
+import {ItemInfo} from "./drawer-items/item-info";
+import {ItemContacts} from "./drawer-items/item-contacts";
+import {ItemSendMail} from "./drawer-items/item-send-mail";
 
 let drawerWidth;
 
@@ -30,6 +30,36 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'flex-end',
     },
 }));
+
+const role = localStorage.getItem('role');
+let components = [];
+
+//todo для каждого свои кнопки
+switch (role) {
+    case 'sysadmin':
+        break;
+    case 'admin':
+
+        break;
+    case 'dispatcher':
+
+        break;
+    case 'manager':
+        const deliveryNotesList = <ItemDeliveryNoteList key='Delivery notes'/>;
+        const waybillList = <ItemWaybillList key='Waybills'/>;
+        const divider = <Divider key='Divider'/>;
+        components.push(deliveryNotesList);
+        components.push(waybillList);
+        components.push(divider);
+        break;
+    case 'driver':
+
+        break;
+    case 'owner':
+
+        break;
+    default:
+}
 
 export const DrawerMenu = (props) => {
     drawerWidth = props.drawerWidth;
@@ -52,21 +82,16 @@ export const DrawerMenu = (props) => {
             </div>
             <Divider/>
             <List>
-                {['Info', 'Contacts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{<InboxIcon/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                {components}
+            </List>
+
+            <List>
+                <ItemInfo/>
+                <ItemContacts/>
             </List>
             <Divider/>
             <List>
-                {['Send Message'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{<MailIcon/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ItemSendMail/>
             </List>
         </Drawer>
     );
