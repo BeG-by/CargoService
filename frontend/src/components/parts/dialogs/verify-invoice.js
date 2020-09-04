@@ -6,7 +6,7 @@ const handleVerify = () => {
     alert('verified!'); //todo запрос на изменение статуса
 }
 
-export const AssignVerificationDN = (props) => {
+export const AssignVerificationInvoice = (props) => {
     return (
         <div className="form-signin">
             <div>

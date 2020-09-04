@@ -8,7 +8,7 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/v1/api/waybills
+GET localhost:8080/v1/api/invoices
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
 
@@ -48,12 +48,12 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 
 
-POST localhost:8080/v1/api/waybills
+POST localhost:8080/v1/api/invoices
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
 
 {
-  "waybillNumber": "TTN321332",
+  "invoiceNumber": "TTN321332",
   "registrationDate": "2020-01-01",
   "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
   "consignee": "OOO 'Test warehouse', Smolensk, Lenina 5 ",

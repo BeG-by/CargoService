@@ -26,7 +26,9 @@ const DialogTitle = withStyles(styles)((props) => {
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h5">{children}</Typography>
             {onClose ? (
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <IconButton aria-label="close"
+                            className={classes.closeButton}
+                            onClick={onClose}>
                     <CloseIcon/>
                 </IconButton>
             ) : null}
@@ -39,7 +41,9 @@ export const DialogWindow = (props) => {
         <Dialog onClose={props.handleClose}
                 aria-labelledby="simple-dialog-title"
                 open={props.openDialog}>
-            <DialogTitle id="customized-dialog-title" onClose={props.handleClose}>
+            <DialogTitle style={{color:'#3f51b5'}}
+                         id="customized-dialog-title"
+                         onClose={props.handleClose}>
                 {props.dialogTitle}
             </DialogTitle>
             {props.form}

@@ -6,7 +6,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import {ItemDeliveryNoteList} from "./drawer-items/item-delivery-note-list";
+import {ItemInvoiceList} from "./drawer-items/item-invoice-list";
 import {ItemWaybillList} from "./drawer-items/item-waybill-list";
 import {ItemInfo} from "./drawer-items/item-info";
 import {ItemContacts} from "./drawer-items/item-contacts";
@@ -45,7 +45,7 @@ switch (role) {
 
         break;
     case 'manager':
-        const deliveryNotesList = <ItemDeliveryNoteList key='Delivery notes'/>;
+        const deliveryNotesList = <ItemInvoiceList key='Invoices'/>;
         const waybillList = <ItemWaybillList key='Waybills'/>;
         const divider = <Divider key='Divider'/>;
         components.push(deliveryNotesList);
@@ -84,7 +84,6 @@ export const DrawerMenu = (props) => {
             <List>
                 {components}
             </List>
-
             <List>
                 <ItemInfo/>
                 <ItemContacts/>

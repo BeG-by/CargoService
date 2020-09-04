@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import axios from 'axios';
 import {jwtToken} from '../../../security/Interceptors';
-import '../login-form/login-form.css';
-import {showError, showTtnForm} from "./ttn-form-views";
+import '../forms.css';
+import {showError, showTtnForm} from "./invoice-form-views";
 
-export default class TtnForm extends Component {
+export default class InvoiceForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -97,8 +97,8 @@ export default class TtnForm extends Component {
             let err = showError(this);
             return <div>{err}</div>;
         } else {
-            let ttnform = showTtnForm(this);
-            return <div>{ttnform}</div>;
+            let invoice = showTtnForm(this);
+            return <div>{invoice}</div>;
         }
     }
 }
