@@ -45,7 +45,7 @@ export function showTtnForm(object) {
                         <br/>
                         <SubmitButton
                             listener={formProps.isSubmitting}
-                            buttonText="send form"
+                            buttonText="Register the invoice"
                         />
                     </Form>
                 );

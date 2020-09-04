@@ -6,7 +6,7 @@ export default function WaybillPage() {
     // if (localStorage.getItem('authorization') != null //fixme подключить авторизацию, когда заработает бэк
     //     && localStorage.getItem('authorization').trim()) {
     return (
-        <PageTemplate page="wb"/>
+        <PageTemplate page="waybill"/>
     );
     // } else {
     //     return <Route component={NotAuthorized}/>;

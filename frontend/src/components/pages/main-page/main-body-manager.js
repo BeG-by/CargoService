@@ -1,7 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 import {DialogWindow} from "../../parts/dialog";
-import {assignFillingWB} from "../../parts/dialogs/fill-wb";
+import {assignFillingWaybill} from "../../parts/dialogs/fill-waybill";
 
 export default function MainBodyManager(props) {
     const tableIcons = props.tableIcons;
@@ -56,7 +56,7 @@ export default function MainBodyManager(props) {
         <div>
             <MaterialTable
                 style={{minWidth: 600}}
-                title="Delivery Notes"
+                title="Invoices"
                 icons={tableIcons}
                 columns={state.columns}
                 data={state.data}
@@ -65,10 +65,10 @@ export default function MainBodyManager(props) {
                     localStorage.setItem('status', rowData.status);
                     localStorage.setItem('waybill', rowData.waybill);
                     if (rowData.status === 'verified' && !rowData.waybill.trim()) {
-                        setForm(assignFillingWB);
+                        setForm(assignFillingWaybill);
                         setOpenDialog(true);
                     } else {
-                        window.location.href = '/deliveryNote';
+                        window.location.href = '/invoice';
                     }
                 }}
             />
