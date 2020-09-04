@@ -266,7 +266,7 @@
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
-    <!--Driver, Product, Waybill , Auto-->
+    <!--Driver, Product, Invoice , Waybill Auto-->
     <changeSet id="1.0.6" author="eugene.begun">
 
         <!--Driver-->
@@ -358,14 +358,59 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="id_waybill" type="BIGSERIAL">
+            <column name="id_invoice" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
 
         </createTable>
 
+        <!--Invoice-->
+        <sql>CREATE TYPE invoice_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED')</sql>
+        <createTable tableName="invoice">
+
+            <column name="id_invoice" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="invoice_status" defaultValue="REGISTERED">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="registration_date" type="DATE" defaultValue="NOW">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="checking_date" type="DATE"/>
+
+            <column name="close_date" type="DATE"/>
+
+            <column name="shipper" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="consignee" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_driver" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_user_registration" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="id_user_checking" type="BIGSERIAL"/>
+
+            <column name="id_client_company" type="BIGSERIAL"/>
+
+        </createTable>
+
         <!--Waybill-->
-        <sql>CREATE TYPE waybill_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED')</sql>
         <createTable tableName="waybill">
 
             <column name="id_waybill" type="BIGSERIAL" autoIncrement="true">
@@ -425,36 +470,36 @@
                                  referencedColumnNames="id_client_company"/>
 
         <addForeignKeyConstraint baseTableName="product"
-                                 baseColumnNames="id_waybill"
-                                 constraintName="fk_product_waybill"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_product_invoice"
                                  onDelete="CASCADE"
-                                 referencedTableName="waybill"
-                                 referencedColumnNames="id_waybill"/>
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
 
-        <addForeignKeyConstraint baseTableName="waybill"
+        <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_driver"
-                                 constraintName="fk_driver_waybill"
+                                 constraintName="fk_driver_invoice"
                                  onDelete="CASCADE"
                                  referencedTableName="driver"
                                  referencedColumnNames="id_driver"/>
 
-        <addForeignKeyConstraint baseTableName="waybill"
+        <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_user_registration"
-                                 constraintName="fk_user_registration_waybill"
+                                 constraintName="fk_user_registration_invoice"
                                  onDelete="CASCADE"
                                  referencedTableName="user"
                                  referencedColumnNames="id_user"/>
 
-        <addForeignKeyConstraint baseTableName="waybill"
+        <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_user_checking"
-                                 constraintName="fk_user_checking_waybill"
+                                 constraintName="fk_user_checking_invoice"
                                  onDelete="CASCADE"
                                  referencedTableName="user"
                                  referencedColumnNames="id_user"/>
 
-        <addForeignKeyConstraint baseTableName="waybill"
+        <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_client_company"
-                                 constraintName="fk_client_company_waybill"
+                                 constraintName="fk_client_company_invoice"
                                  onDelete="CASCADE"
                                  referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
@@ -465,8 +510,9 @@
                                  onDelete="CASCADE"
                                  referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
-
     </changeSet>
+
+
 
     <!--Data for test-->
     <changeSet id="1.0.7" author="eugene.begun">
@@ -486,7 +532,7 @@
             <column name="id_client_company" value="1"/>
         </insert>
 
-        <insert tableName="waybill">
+        <insert tableName="invoice">
             <column name="number" value="TTN321332"/>
             <column name="status" value="REGISTERED"/>
             <column name="registration_date" value="2020-01-01"/>
@@ -505,7 +551,7 @@
             <column name="sum" value="500"/>
             <column name="mass" value="100 kg"/>
             <column name="status" value="ACCEPTED"/>
-            <column name="id_waybill" value="1"/>
+            <column name="id_invoice" value="1"/>
         </insert>
 
     </changeSet>

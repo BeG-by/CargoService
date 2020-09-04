@@ -1,19 +1,19 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
+import by.itechart.cargo.dto.model_dto.waybill.InvoiceRequest;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.Status;
-import by.itechart.cargo.model.enumeration.WaybillStatus;
+import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.freight.Driver;
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.DriverRepository;
 import by.itechart.cargo.repository.UserRepository;
-import by.itechart.cargo.repository.WaybillRepository;
+import by.itechart.cargo.repository.InvoiceRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.security.jwt.JwtUserDetails;
-import by.itechart.cargo.service.WaybillService;
+import by.itechart.cargo.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,22 +24,22 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
-public class WaybillServiceImpl implements WaybillService {
+public class InvoiceServiceImpl implements InvoiceService {
 
-    private final WaybillRepository waybillRepository;
+    private final InvoiceRepository invoiceRepository;
     private final DriverRepository driverRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    public WaybillServiceImpl(WaybillRepository waybillRepository,
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               DriverRepository driverRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               UserRepository userRepository,
                               JwtTokenUtil jwtTokenUtil) {
 
-        this.waybillRepository = waybillRepository;
+        this.invoiceRepository = invoiceRepository;
         this.driverRepository = driverRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.userRepository = userRepository;
@@ -47,37 +47,37 @@ public class WaybillServiceImpl implements WaybillService {
     }
 
     @Override
-    public List<Waybill> findAll() {
-        return waybillRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
+    public List<Invoice> findAll() {
+        return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
 
     @Override
-    public void saveOne(WaybillRequest waybillRequest) {
-        final Waybill waybill = waybillRequest.toWayBill();
+    public void saveOne(InvoiceRequest invoiceRequest) {
+        final Invoice invoice = invoiceRequest.toWayBill();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
-        final Long driverId = waybillRequest.getDriverId();
+        final Long driverId = invoiceRequest.getDriverId();
 
         final Driver driver = driverRepository.getOne(driverId);
-        waybill.setDriver(driver);
+        invoice.setDriver(driver);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
-        waybill.setClientCompany(clientCompany);
+        invoice.setClientCompany(clientCompany);
 
         final User user = userRepository.getOne(currentUser.getId());
-        waybill.setRegistrationUser(user);
+        invoice.setRegistrationUser(user);
 
-        waybill.getProducts().forEach(p -> {
-            p.setWaybill(waybill);
+        invoice.getProducts().forEach(p -> {
+            p.setInvoice(invoice);
             p.setProductStatus(Status.ACCEPTED);
         });
-        waybill.setWaybillStatus(WaybillStatus.REGISTERED);
+        invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
 
-        final Waybill waybillDb = waybillRepository.save(waybill);
+        final Invoice invoiceDb = invoiceRepository.save(invoice);
 
-        log.info("Waybill has been saved {}", waybillDb);
+        log.info("Invoice has been saved {}", invoiceDb);
 
     }
 
