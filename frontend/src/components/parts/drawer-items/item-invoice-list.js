@@ -6,9 +6,9 @@ const handleClick = () => {
     window.location.href = '/mainPage';
 }
 
-export const ItemDeliveryNoteList = () => {
+export const ItemInvoiceList = () => {
     const icon = <AssignmentIcon color='primary'/>;
     return (
-        <DrawerItem text='Delivery notes' icon={icon} handleClick={handleClick}/>
+        <DrawerItem text='Invoices' icon={icon} handleClick={handleClick}/>
     )
 }

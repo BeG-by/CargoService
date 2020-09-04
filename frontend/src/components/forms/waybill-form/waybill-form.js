@@ -11,7 +11,7 @@ export default class WaybillForm extends Component {
             error: null,
             errorText: '',
             waybill: {
-                dnId: 1,// localStorage.getItem('deliveryNoteId'), //fixme передать id ттн
+                invoiceId: 1,// localStorage.getItem('invoiceId'), //fixme передать id ттн
                 number: '',
                 shipper: '',
                 consignee: '',

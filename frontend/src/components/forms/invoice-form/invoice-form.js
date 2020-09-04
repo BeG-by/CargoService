@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import axios from 'axios';
 import {jwtToken} from '../../../security/Interceptors';
 import '../forms.css';
-import {showError, showTtnForm} from "./delivery-note-form-views";
+import {showError, showTtnForm} from "./invoice-form-views";
 
-export default class DeliveryNoteForm extends Component {
+export default class InvoiceForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -97,8 +97,8 @@ export default class DeliveryNoteForm extends Component {
             let err = showError(this);
             return <div>{err}</div>;
         } else {
-            let ttnform = showTtnForm(this);
-            return <div>{ttnform}</div>;
+            let invoice = showTtnForm(this);
+            return <div>{invoice}</div>;
         }
     }
 }

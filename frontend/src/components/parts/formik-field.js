@@ -90,10 +90,10 @@ export const CompanyPhoneField = {
 }
 
 /////////////////////////////////////
-// DELIVERY NOTE
+// INVOICE
 
-export const DnNumberField = {
-    name: 'dnNumber',
+export const InvoiceNumberField = {
+    name: 'invoiceNumber',
     label: 'Number',
     type: 'text'
 }

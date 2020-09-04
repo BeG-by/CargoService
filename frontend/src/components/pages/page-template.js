@@ -6,7 +6,7 @@ import {WelcomeBody} from "./welcome-page/welcome-body";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {Footer} from "../parts/footer";
 import {MainBody} from "./main-page/main-body";
-import {DeliveryNoteBody} from "./delivery-note-page/delivery-note-body";
+import {InvoiceBody} from "./invoice-page/invoice-body";
 import {WaybillBody} from "./waybill-page/waybill-body";
 import AddBox from "@material-ui/icons/AddBox";
 import Check from "@material-ui/icons/Check";
@@ -153,18 +153,18 @@ export default function PageTemplate(props) {
                              role={role}/>;
             headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку
             break;
-        case 'dn':
+        case 'invoice':
             localStorage.setItem("role", "manager");
-            body = <DeliveryNoteBody classes={classes}
-                                     openMenu={openMenu}
-                                     openDialog={openDialog}
-                                     handleClickOpen={handleClickOpen}
-                                     handleClose={handleClose}
-                                     tableIcons={tableIcons}
-                                     role={role}/>;
+            body = <InvoiceBody classes={classes}
+                                openMenu={openMenu}
+                                openDialog={openDialog}
+                                handleClickOpen={handleClickOpen}
+                                handleClose={handleClose}
+                                tableIcons={tableIcons}
+                                role={role}/>;
             headerText = <i>Hello, {role}!</i>;
             break;
-        case 'wb':
+        case 'waybill':
             localStorage.setItem("role", "manager");
             body = <WaybillBody classes={classes}
                                 openMenu={openMenu}

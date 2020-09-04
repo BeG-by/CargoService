@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialTable from 'material-table';
 import {DialogWindow} from "../../parts/dialog";
-import DeliveryNoteForm from "../../forms/delivery-note-form";
+import InvoiceForm from "../../forms/invoice-form";
 
 export default function MainBodyDispatcher(props) {
     const tableIcons = props.tableIcons;
@@ -32,7 +32,7 @@ export default function MainBodyDispatcher(props) {
         ],
     } || null);
 
-    const form = <DeliveryNoteForm/>;
+    const form = <InvoiceForm/>;
 
     return (
         <div>

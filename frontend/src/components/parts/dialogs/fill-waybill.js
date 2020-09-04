@@ -6,11 +6,11 @@ const handleFill = () => {
     window.location.href = '/waybill';
 }
 
-const handleDnShow = () => {
-    window.location.href = '/deliveryNote';
+const handleInvoiceShow = () => {
+    window.location.href = '/invoice';
 }
 
-export const assignFillingWB = () => {
+export const assignFillingWaybill = () => {
     return (
         <div className="form-signin">
             <i style={{fontSize: 16}}>Do you want to fill in the waybill
@@ -18,7 +18,7 @@ export const assignFillingWB = () => {
             for this delivery note?</i>
             <div className='btn-row'>
                 <OkButton content='Yes' handleClick={handleFill}/>
-                <CancelButton content='No' handleClick={handleDnShow}/>
+                <CancelButton content='No' handleClick={handleInvoiceShow}/>
             </div>
     </div>);
 }

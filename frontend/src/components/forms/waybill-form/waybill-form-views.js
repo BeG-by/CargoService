@@ -48,7 +48,7 @@ export function showWaybillForm(object) {
     getDrivers();
 
     const getProducts = () => {
-        const endpoint = "/v1/api/waybills/" + object.state.waybill.dnId; //fixme url & res.data & error
+        const endpoint = "/v1/api/waybills/" + object.state.waybill.invoiceId; //fixme url & res.data & error
         axios.get(endpoint)
             .then(res => {
                     if (res.data === "success") {
