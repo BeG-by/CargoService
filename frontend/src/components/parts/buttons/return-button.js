@@ -29,6 +29,7 @@ export default class ReturnButton extends Component {
                 handler = this.returnHandler;
                 break;
             case 'NotFound':
+            case 'BackToMain':
                 handler = this.goMainHandler;
                 break;
             case 'NoRights':

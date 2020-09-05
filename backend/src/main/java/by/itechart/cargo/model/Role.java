@@ -1,7 +1,10 @@
 package by.itechart.cargo.model;
 
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +15,11 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roles")
+@Table(name = "role")
+@TypeDef(
+        name = "role_enum",
+        typeClass = EnumTypePostgreSql.class
+)
 public class Role implements Serializable, Cloneable {
 
     @Id
@@ -21,14 +28,19 @@ public class Role implements Serializable, Cloneable {
     private Long roleId;
 
     @Enumerated(EnumType.STRING)
+    @Type(type = "role_enum")
     @Column(name = "role", unique = true, nullable = false)
     private RoleType role;
 
-    @JsonBackReference
+    @JsonBackReference(value = "user_role")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
+
+    public Role(RoleType role) {
+        this.role = role;
+    }
 
     public enum RoleType {
         SYSADMIN,

@@ -10,6 +10,14 @@
     font-size: calc(10px + 2vmin);
 }
 
+.btn-row {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 .error-message {
     color: #f50057;
     font-size: 12px;

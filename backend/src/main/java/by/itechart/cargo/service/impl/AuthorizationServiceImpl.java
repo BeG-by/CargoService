@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_
 
 
 @Service
+@Transactional
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     private final UserRepository userRepository;
@@ -41,7 +43,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public AuthorizationResponse login(AuthorizationRequest request) throws NotFoundException {
-
+        
         final String login = request.getLogin();
         final String password = request.getPassword();
 
@@ -51,7 +53,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         final Set<String> rolesNames = user.getRoles().stream().map(r -> r.getRole().toString()).collect(Collectors.toSet());
 
-        return new AuthorizationResponse(rolesNames, user.getClientCompanyId(), token);
+        return new AuthorizationResponse(rolesNames, token);
 
     }
 
