@@ -10,9 +10,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import ItemList from "../../parts/item-list";
-import ProductsTable from "../../parts/products-table";
-import ProductDialog from "../../parts/product-list/product-dialog.js";
-import NewProductTable from "../../parts/product-list/product-list";
+import ProductsTable from "../../parts/products-table-with-bug";
 
 const useStyles = makeStyles((theme) => ({
   disabledTextField: {
@@ -44,13 +42,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const emptyProduct = {
-  id: 0,
-  name: "",
-  amount: 0,
-  priceForOne: 0,
-};
-
 function convertToNecessaryApi(productsFromTable) {
   let products = [];
   for (let product of productsFromTable) {
@@ -80,59 +71,7 @@ export default function DeliveryNoteForm(props) {
 
   const [deliveryNoteIndex, setDeliveryNoteIndex] = useState("");
   const [driver, setDriver] = useState({ id: "", name: "", lastName: "" });
-
   const [products, setProducts] = useState([]);
-
-  /**************** */
-  const [productDialogOpen, setProductDialogOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(emptyProduct);
-  console.log(selectedProduct);
-
-  const handleOpenProductDialogClick = () => {
-    setProductDialogOpen(true);
-  };
-
-  const handleProductDialogCloseClick = () => {
-    setProductDialogOpen(false);
-    setSelectedProduct(emptyProduct);
-  };
-
-  const handleSaveNewProductClick = () => {
-    if (selectedProduct.id === 0) {
-      setProducts((prevState) => {
-        console.log("SAVE: " + selectedProduct.id);
-        const products = [...prevState];
-        products.push(selectedProduct);
-        return products;
-      });
-    } else {
-      setProducts((prevState) => {
-        console.log("UPDATE: " + selectedProduct.id);
-        const products = [...prevState];
-        products[products.indexOf(selectedProduct)] = selectedProduct;
-        return products;
-      });
-    }
-    setProductDialogOpen(false);
-    setSelectedProduct(emptyProduct);
-  };
-
-  const handleDeleteProductClick = (product) => {
-    setProducts((prevState) => {
-      const products = [...prevState];
-      products.splice(products.indexOf(product), 1);
-      return products;
-    });
-    setProductDialogOpen(false);
-    setSelectedProduct(emptyProduct);
-  };
-
-  const handleProductTableRowClick = (product) => {
-    setSelectedProduct(product);
-    setProductDialogOpen(true);
-  };
-
-  /**************** */
 
   const handleRegisterDeliveryNoteClick = () => {
     let deliveryNote = {};
@@ -151,29 +90,29 @@ export default function DeliveryNoteForm(props) {
     onCloseClick();
   };
 
-  //   const handleProductAdding = (product) => {
-  //     setProducts((prevState) => {
-  //       const products = [...prevState];
-  //       products.push(product);
-  //       return products;
-  //     });
-  //   };
+  const handleProductAdding = (product) => {
+    setProducts((prevState) => {
+      const products = [...prevState];
+      products.push(product);
+      return products;
+    });
+  };
 
-  //   const handleProductDeleting = (product) => {
-  //     setProducts((prevState) => {
-  //       const products = [...prevState];
-  //       products.splice(products.indexOf(product), 1);
-  //       return products;
-  //     });
-  //   };
+  const handleProductDeleting = (product) => {
+    setProducts((prevState) => {
+      const products = [...prevState];
+      products.splice(products.indexOf(product), 1);
+      return products;
+    });
+  };
 
-  //   const handleProductUpdating = (newProduct, oldProduct) => {
-  //     setProducts((prevState) => {
-  //       const products = [...prevState];
-  //       products[products.indexOf(oldProduct)] = newProduct;
-  //       return products;
-  //     });
-  //   };
+  const handleProductUpdating = (newProduct, oldProduct) => {
+    setProducts((prevState) => {
+      const products = [...prevState];
+      products[products.indexOf(oldProduct)] = newProduct;
+      return products;
+    });
+  };
 
   return (
     <div>
@@ -183,43 +122,7 @@ export default function DeliveryNoteForm(props) {
         onClose={onCloseClick}
         TransitionComponent={Transition}
       >
-        <NewProductTable
-          onRowClick={handleProductTableRowClick}
-          products={products}
-        />
-        <Button onClick={handleOpenProductDialogClick}>Add product</Button>
-        <ProductDialog
-          selectedProduct={selectedProduct}
-          open={productDialogOpen}
-          onProductNameChange={(newName) => {
-            setSelectedProduct({
-              id: selectedProduct.id,
-              name: newName,
-              amount: selectedProduct.amount,
-              priceForOne: selectedProduct.priceForOne,
-            });
-          }}
-          onProductAmountChange={(newAmount) => {
-            setSelectedProduct({
-              id: selectedProduct.id,
-              name: selectedProduct.name,
-              amount: newAmount,
-              priceForOne: selectedProduct.priceForOne,
-            });
-          }}
-          onProductPriceForOneChange={(newPriceForOne) => {
-            setSelectedProduct({
-              id: selectedProduct.id,
-              name: selectedProduct.name,
-              amount: selectedProduct.amount,
-              priceForOne: newPriceForOne,
-            });
-          }}
-          onSave={handleSaveNewProductClick}
-          onDelete={handleDeleteProductClick}
-          onClose={handleProductDialogCloseClick}
-        />
-        {/* <AppBar className={classes.appBar}>
+        <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -360,7 +263,7 @@ export default function DeliveryNoteForm(props) {
               products={products}
             />
           </div>
-        </form> */}
+        </form>
       </Dialog>
     </div>
   );
