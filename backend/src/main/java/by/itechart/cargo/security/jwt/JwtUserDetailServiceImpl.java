@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class JwtUserDetailServiceImpl implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public JwtUserDetailServiceImpl(UserRepository userRepository) {
@@ -45,7 +45,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .house(user.getAddress() == null ? null : user.getAddress().getHouse())
                 .flat(user.getAddress() == null ? null : user.getAddress().getFlat())
                 .email(user.getAddress() == null ? null : user.getEmail())
-                .companyId(user.getClientCompanyId())
+                .clientCompany(user.getClientCompany())
                 .authorities(createGrantedAuthority(user.getRoles()))
                 .isEnable(true)
                 .build();
