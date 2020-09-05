@@ -1,99 +1,69 @@
-import React from 'react';
-import MaterialTable from 'material-table';
-import {DialogWindow} from "../../parts/dialog";
-import InvoiceForm from "../../forms/invoice-form";
+import React, { useState } from "react";
+import MaterialTable from "material-table";
+import DeliveryNoteForm from "../../forms/delivery-note-form/delivery-note-form";
+import {
+  getDriversByCompanyId,
+  getClientsByCompanyId,
+} from "../../../request-api/utils";
 
-export default function MainBodyDispatcher(props) {
-    const tableIcons = props.tableIcons;
-    const [openTtnDialog, setOpenTtnDialog] = React.useState(false);
-    const handleClickOpenTtn = () => {
-        setOpenTtnDialog(true);
-    };
-    const handleCloseTtn = () => {
-        setOpenTtnDialog(false);
-    };
+function handleRegisterDeliveryNoteClick(deliveryNote) {
+  alert("Registered");
+  //todo: send delivery note to backend
+}
 
-    const [state, setState] = React.useState({
-        columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Address', field: 'address' },
-            { title: 'Phone', field: 'phone' },
-            { title: 'Contact', field: 'contact' }
-        ],
-        data: [
-            { name: 'Gippo',
-                address: 'Minsk, Lenina 12a',
-                phone: '+375(29)321-26-23',
-                contact: 'Oleg Ivanov' },
-            { name: "Belmarket",
-                address: 'Minsk, Russiyanova 45',
-                phone: '+375(33)452-23-58',
-                contact: 'Irina Zaytseva' }
-        ],
-    } || null);
+const columns = [
+  { title: "Name", field: "name" },
+  { title: "Address", field: "address" },
+  { title: "Phone", field: "phone" },
+  { title: "Contact", field: "contact" },
+];
 
-    const form = <InvoiceForm/>;
+export default function MainBodyDispatcher() {
+  const user = {
+    name: "Vladislav",
+    lastName: "Reznov",
+    patronymic: "Vladimirovich",
+    company: {
+      name: "BestCargo",
+      pan: "S 32YY3213",
+    },
 
-    return (
-        <div>
-            <MaterialTable
-                title="Clients"
-                icons={tableIcons}
-                columns={state.columns}
-                data={state.data}
-                options={{
-                    actionsColumnIndex: -1
-                }}
-                actions={[
-                    {
-                        tooltip: 'Fill TTN',
-                        icon: tableIcons.Check,
-                        onClick: (evt, data) => handleClickOpenTtn()
-                    }
-                ]}
-                editable={{
-                    onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
-                            }, 500);
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                if (oldData) {
-                                    setState((prevState) => {
-                                        const data = [...prevState.data];
-                                        data[data.indexOf(oldData)] = newData;
-                                        return { ...prevState, data };
-                                    });
-                                }
-                            }, 500);
-                        }),
-                    onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                            }, 500);
-                        }),
-                }}
-            />
-            <DialogWindow
-                dialogTitle="Fill TTN:"
-                handleClose={handleCloseTtn}
-                openDialog={openTtnDialog}
-                form={form}/>
-        </div>
-    );
+    //todo: fix this shit
+    jwtToken: localStorage.getItem("authorization"),
+  };
+
+  const drivers = getDriversByCompanyId(user.companyId);
+  const clients = getClientsByCompanyId(user.companyId);
+
+  const [deliveryDialogOpen, setDeliveryDialogOpen] = useState(false);
+
+  //todo: put null to the default client
+  const [client, setClient] = useState({});
+
+  return (
+    <div>
+      <MaterialTable
+        onRowClick={(event, rowData) => {
+          setClient(rowData);
+          setDeliveryDialogOpen(true);
+        }}
+        title="Clients"
+        columns={columns}
+        data={clients}
+      />
+      <DeliveryNoteForm
+        open={deliveryDialogOpen}
+        onCloseClick={() => setDeliveryDialogOpen(false)}
+        onRegisterClick={handleRegisterDeliveryNoteClick}
+        //todo: pass user
+        name={user.name}
+        lastName={user.lastName}
+        patronymic={user.patronymic}
+        carrierCompany={user.company}
+        drivers={drivers}
+        //todo: set via special methods
+        clientCompany={client}
+      />
+    </div>
+  );
 }
