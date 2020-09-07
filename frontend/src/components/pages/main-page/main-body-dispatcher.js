@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import DeliveryNoteCreatingForm from "../../forms/delivery-note-form/delivery-note-creating-form";
 import ItemList from "../../parts/lists/item-list";
@@ -22,6 +22,7 @@ export default function MainBodyDispatcher() {
     lastName: "Reznov",
     patronymic: "Vladimirovich",
     company: {
+      id: 1,
       name: "BestCargo",
       pan: "S32YY3213",
     },
@@ -30,13 +31,7 @@ export default function MainBodyDispatcher() {
     jwtToken: localStorage.getItem("authorization"),
   };
 
-  const rejectedDeliveryNotes = getRejectedDeliveryNotesByDispatcherId(user.id);
-  const drivers = getDriversByCompanyId(user.companyId);
-  const clients = getClientsByCompanyId(user.companyId);
-
-  const [deliveryDialogOpen, setDeliveryDialogOpen] = useState(false);
-  const [currentDeliveryNote, setCurrentDeliveryNote] = useState({
-    //todo: set via special methods
+  const defaultDeliveryNote = {
     clientCompany: {},
     dispatcher: {
       name: user.name,
@@ -49,12 +44,47 @@ export default function MainBodyDispatcher() {
     carrierCompany: user.company,
     driver: {},
     products: [],
-  });
+  };
+
+  const [clients, setClients] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      setClients(await getClientsByCompanyId());
+      setDrivers(await getDriversByCompanyId());
+    }
+    fetchData();
+  }, []);
+
+  const rejectedDeliveryNotes = getRejectedDeliveryNotesByDispatcherId(user.id);
+
+  const [deliveryDialogOpen, setDeliveryDialogOpen] = useState(false);
+  const [currentDeliveryNote, setCurrentDeliveryNote] = useState(
+    defaultDeliveryNote
+  );
 
   const handleRegisterDeliveryNoteClick = (deliveryNote) => {
-    //todo: remove from arr clients field table data
     setDeliveryDialogOpen(false);
     alert("Registered");
+  };
+
+  const handleOnClientsTableRowClick = (clientData) => {
+    setCurrentDeliveryNote({
+      clientCompany: clientData,
+      dispatcher: {
+        name: user.name,
+        lastName: user.lastName,
+        patronymic: user.patronymic,
+      },
+      index: "",
+      fromAddress: "",
+      toAddress: "",
+      carrierCompany: user.company,
+      driver: { name: "", lastName: "", passport: "" },
+      products: [],
+    });
+    setDeliveryDialogOpen(true);
   };
 
   return (
@@ -64,21 +94,7 @@ export default function MainBodyDispatcher() {
       <div>
         <MaterialTable
           onRowClick={(event, rowData) => {
-            setCurrentDeliveryNote({
-              clientCompany: rowData,
-              dispatcher: {
-                name: user.name,
-                lastName: user.lastName,
-                patronymic: user.patronymic,
-              },
-              index: "",
-              fromAddress: "",
-              toAddress: "",
-              carrierCompany: user.company,
-              driver: { name: "", lastName: "", passport: "" },
-              products: [],
-            });
-            setDeliveryDialogOpen(true);
+            handleOnClientsTableRowClick(rowData);
           }}
           title="Clients"
           columns={columns}

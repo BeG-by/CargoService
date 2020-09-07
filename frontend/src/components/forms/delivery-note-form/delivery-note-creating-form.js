@@ -72,7 +72,7 @@ export default function DeliveryNoteForm(props) {
   const [products, setProducts] = useState(deliveryNote.products);
   const [driver, setDriver] = useState({
     name: "" + deliveryNote.driver.name,
-    lastName: "" + deliveryNote.driver.lastName,
+    lastName: "" + deliveryNote.driver.surname,
     passport: "" + deliveryNote.driver.passport,
   });
 

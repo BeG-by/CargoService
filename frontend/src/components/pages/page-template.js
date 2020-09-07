@@ -160,7 +160,7 @@ export default function PageTemplate(props) {
       );
       break;
     case "main":
-      localStorage.setItem("role", "driver"); //fixme передать роль в параметрах?
+      localStorage.setItem("role", "dispatcher"); //fixme передать роль в параметрах?
       body = (
         <MainBody
           classes={classes}
@@ -168,7 +168,7 @@ export default function PageTemplate(props) {
           openDialog={openDialog}
           handleClose={handleClose}
           tableIcons={tableIcons}
-          role={"driver"}
+          role={"dispatcher"}
         />
       );
       headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку
