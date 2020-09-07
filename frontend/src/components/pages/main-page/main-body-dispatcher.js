@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import DeliveryNoteCreatingForm from "../../forms/delivery-note-form/delivery-note-creating-form";
+import InvoiceCreatingForm from "../../forms/invoice-form/invoice-creating-form";
 import ItemList from "../../parts/lists/item-list";
 import {
-  getDriversByCompanyId,
-  getClientsByCompanyId,
-  getRejectedDeliveryNotesByDispatcherId,
+  getDrivers,
+  getProductOwners,
+  getRejectedInvoices,
 } from "../../../request-api/utils";
 
 const columns = [
@@ -15,76 +15,74 @@ const columns = [
   { title: "Contact", field: "contact" },
 ];
 
-export default function MainBodyDispatcher() {
-  const user = {
+const user = {
+  id: 1,
+  name: "Vladislav",
+  lastName: "Reznov",
+  patronymic: "Vladimirovich",
+  company: {
     id: 1,
-    name: "Vladislav",
-    lastName: "Reznov",
-    patronymic: "Vladimirovich",
-    company: {
-      id: 1,
-      name: "BestCargo",
-      pan: "S32YY3213",
-    },
+    name: "BestCargo",
+    pan: "S32YY3213",
+  },
 
-    //todo: fix this shit
-    jwtToken: localStorage.getItem("authorization"),
-  };
+  //todo: fix this shit
+  jwtToken: localStorage.getItem("authorization"),
+};
 
-  const defaultDeliveryNote = {
-    clientCompany: {},
-    dispatcher: {
-      name: user.name,
-      lastName: user.lastName,
-      patronymic: user.patronymic,
-    },
-    index: "",
-    fromAddress: "",
-    toAddress: "",
-    carrierCompany: user.company,
-    driver: {},
-    products: [],
-  };
+const EMPTY_INVOICE = {
+  clientCompany: {},
+  registrationUser: {
+    name: user.name,
+    lastName: user.lastName,
+    patronymic: user.patronymic,
+  },
+  index: "",
+  fromAddress: "",
+  toAddress: "",
+  carrierCompany: user.company,
+  driver: {},
+  products: [],
+};
 
+export default function MainBodyDispatcher() {
   const [clients, setClients] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [rejectedInvoices, setRejectedInvoices] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
-      setClients(await getClientsByCompanyId());
-      setDrivers(await getDriversByCompanyId());
+      setClients(await getProductOwners());
+      setDrivers(await getDrivers());
+      setRejectedInvoices(await getRejectedInvoices());
     }
     fetchData();
   }, []);
 
-  const rejectedDeliveryNotes = getRejectedDeliveryNotesByDispatcherId(user.id);
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(EMPTY_INVOICE);
 
-  const [deliveryDialogOpen, setDeliveryDialogOpen] = useState(false);
-  const [currentDeliveryNote, setCurrentDeliveryNote] = useState(
-    defaultDeliveryNote
-  );
-
-  const handleRegisterDeliveryNoteClick = (deliveryNote) => {
-    setDeliveryDialogOpen(false);
+  const handleRegisterInvoiceClick = (invoice) => {
+    setInvoiceDialogOpen(false);
     alert("Registered");
   };
 
   const handleOnClientsTableRowClick = (clientData) => {
-    setCurrentDeliveryNote({
+    setSelectedInvoice({
       clientCompany: clientData,
-      dispatcher: {
+      registrationUser: {
         name: user.name,
         lastName: user.lastName,
         patronymic: user.patronymic,
       },
-      index: "",
-      fromAddress: "",
-      toAddress: "",
+      number: "",
+      departurePlace: "",
+      deliveryPlace: "",
       carrierCompany: user.company,
-      driver: { name: "", lastName: "", passport: "" },
+      driver: { name: "", surname: "", passport: "" },
       products: [],
     });
-    setDeliveryDialogOpen(true);
+    setInvoiceDialogOpen(true);
   };
 
   return (
@@ -102,24 +100,24 @@ export default function MainBodyDispatcher() {
         />
       </div>
       <div>
-        <DeliveryNoteCreatingForm
-          open={deliveryDialogOpen}
-          onCloseClick={() => setDeliveryDialogOpen(false)}
-          onRegisterClick={handleRegisterDeliveryNoteClick}
-          deliveryNote={currentDeliveryNote}
+        <InvoiceCreatingForm
+          open={invoiceDialogOpen}
+          onCloseClick={() => setInvoiceDialogOpen(false)}
+          onRegisterClick={handleRegisterInvoiceClick}
+          invoice={selectedInvoice}
           drivers={drivers}
         />
       </div>
       <ItemList
         onRowClick={(item) => {
-          setCurrentDeliveryNote(item.deliveryNote);
-          setDeliveryDialogOpen(true);
+          setSelectedInvoice(item.invoice);
+          setInvoiceDialogOpen(true);
         }}
         listName="Rejected delivery notes"
-        items={rejectedDeliveryNotes.map((deliveryNote) => {
+        items={rejectedInvoices.map((invoice) => {
           return {
-            deliveryNote,
-            name: deliveryNote.index + " --- " + deliveryNote.registrationDate,
+            invoice,
+            name: invoice.index + " --- " + invoice.registrationDate,
           };
         })}
       />

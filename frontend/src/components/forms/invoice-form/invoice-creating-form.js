@@ -1,95 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Slide from "@material-ui/core/Slide";
 import IconButton from "@material-ui/core/IconButton";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+
 import ItemList from "../../parts/lists/item-list";
 import ProductsTable from "../../parts/crud-products-table";
+import useStyles from "./styles";
+import { convertToNecessaryApi, Transition } from "./utils";
 
-const useStyles = makeStyles((theme) => ({
-  disabledTextField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "100ch",
-  },
-  appBar: {
-    position: "relative",
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "100ch",
-  },
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-}));
+const initDriverState = {
+  name: "",
+  surname: "",
+  passport: "",
+};
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-function convertToNecessaryApi(productsFromTable) {
-  let products = [];
-  for (let product of productsFromTable) {
-    products.push({
-      name: product.name,
-      amount: product.amount,
-      priceForOne: product.priceForOne,
-      priceForAll: product.priceForAll,
-    });
-  }
-  return products;
-}
-
-export default function DeliveryNoteForm(props) {
+export default function InvoiceForm(props) {
   const classes = useStyles();
 
-  const open = props.open;
-  const onCloseClick = props.onCloseClick;
-  const onRegisterClick = props.onRegisterClick;
-  const deliveryNote = props.deliveryNote;
-  const drivers = props.drivers;
-
-  const [deliveryNoteIndex, setDeliveryNoteIndex] = useState(
-    deliveryNote.index
+  const [invoiceNumber, setInvoiceNumber] = useState(props.invoice.number);
+  const [departurePlace, setDeparturePlace] = useState(
+    props.invoice.departurePlace
   );
-  const [fromAddress, setFromAddress] = useState(deliveryNote.fromAddress);
-  const [toAddress, setToAddress] = useState(deliveryNote.toAddress);
-  const [products, setProducts] = useState(deliveryNote.products);
-  const [driver, setDriver] = useState({
-    name: "" + deliveryNote.driver.name,
-    lastName: "" + deliveryNote.driver.surname,
-    passport: "" + deliveryNote.driver.passport,
-  });
+  const [deliveryPlace, setDeliveryPlace] = useState(
+    props.invoice.deliveryPlace
+  );
+  const [products, setProducts] = useState(props.invoice.products);
+  const [driver, setDriver] = useState(initDriverState);
 
-  /* Events handlers */
-  const handleRegisterDeliveryNoteClick = () => {
-    let deliveryNote = {};
+  useEffect(() => {
+    setInvoiceNumber(props.invoice.number);
+  }, [props.invoice.number]);
 
-    //todo: put fields from deliveryNote
-    deliveryNote.driver = driver;
-    deliveryNote.products = convertToNecessaryApi(products);
-    deliveryNote.deliveryNoteIndex = deliveryNoteIndex;
-    deliveryNote.fromAddress = fromAddress;
-    deliveryNote.toAddress = toAddress;
+  useEffect(() => {
+    setDeparturePlace(props.invoice.departurePlace);
+  }, [props.invoice.departurePlace]);
 
-    console.log(deliveryNote);
+  useEffect(() => {
+    setDeliveryPlace(props.invoice.deliveryPlace);
+  }, [props.invoice.deliveryPlace]);
 
-    onRegisterClick(deliveryNote);
+  useEffect(() => {
+    setProducts(props.invoice.products);
+  }, [props.invoice.products]);
+
+  useEffect(() => {
+    setDriver({
+      name: props.invoice.driver.name,
+      surname: props.invoice.driver.surname,
+      passport: props.invoice.driver.passport,
+    });
+  }, [
+    props.invoice.driver.name,
+    props.invoice.driver.surname,
+    props.invoice.driver.passport,
+  ]);
+
+  const handleRegisterInvoiceClick = () => {
+    let invoice = {};
+
+    invoice.number = props.invoice.number;
+    invoice.registrationUser = props.invoice.registrationUser;
+    invoice.clientCompany = props.invoice.clientCompany;
+    invoice.carrierCompany = props.invoice.carrierCompany;
+
+    //replace on invoice.getRegistrationDae
+    invoice.registrationDate = new Date().toISOString().slice(0, 10);
+    invoice.driver = driver;
+    invoice.products = convertToNecessaryApi(products);
+    invoice.number = invoiceNumber;
+    invoice.departurePlace = departurePlace;
+    invoice.deliveryPlace = deliveryPlace;
+
+    console.log(invoice);
+    props.onRegisterClick(invoice);
   };
 
   const handleProductAdding = (product) => {
@@ -120,8 +108,8 @@ export default function DeliveryNoteForm(props) {
     <div>
       <Dialog
         fullScreen
-        open={open}
-        onClose={onCloseClick}
+        open={props.open}
+        onClose={props.onCloseClick}
         TransitionComponent={Transition}
       >
         <AppBar className={classes.appBar}>
@@ -129,18 +117,18 @@ export default function DeliveryNoteForm(props) {
             <IconButton
               edge="start"
               color="inherit"
-              onClick={onCloseClick}
+              onClick={props.onCloseClick}
               aria-label="close"
             >
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Delivery note registration
+              Invoice note registration
             </Typography>
             <Button
               autoFocus
               color="inherit"
-              onClick={handleRegisterDeliveryNoteClick}
+              onClick={handleRegisterInvoiceClick}
             >
               Register
             </Button>
@@ -159,19 +147,19 @@ export default function DeliveryNoteForm(props) {
                 <TextField
                   label="Name"
                   id="name"
-                  defaultValue={deliveryNote.dispatcher.name}
+                  defaultValue={props.invoice.registrationUser.name}
                   disabled={true}
                 />
                 <TextField
                   label="Last name"
                   id="last_name"
-                  defaultValue={deliveryNote.dispatcher.lastName}
+                  defaultValue={props.invoice.registrationUser.lastName}
                   disabled={true}
                 />
                 <TextField
                   label="Patronymic"
                   id="patronymic"
-                  defaultValue={deliveryNote.dispatcher.patronymic}
+                  defaultValue={props.invoice.registrationUser.patronymic}
                   disabled={true}
                 />
               </div>
@@ -181,13 +169,13 @@ export default function DeliveryNoteForm(props) {
                 <TextField
                   label="Client company"
                   id="client_company_name"
-                  defaultValue={deliveryNote.clientCompany.name}
+                  defaultValue={props.invoice.clientCompany.name}
                   disabled={true}
                 />
                 <TextField
                   label="PAN"
                   id="client_company_pan"
-                  defaultValue={deliveryNote.clientCompany.pan}
+                  defaultValue={props.invoice.clientCompany.pan}
                   disabled={true}
                 />
               </div>
@@ -197,35 +185,35 @@ export default function DeliveryNoteForm(props) {
                 <TextField
                   label="Carrier company"
                   id="carrier_company_name"
-                  defaultValue={deliveryNote.carrierCompany.name}
+                  defaultValue={props.invoice.carrierCompany.name}
                   disabled={true}
                 />
                 <TextField
                   label="PAN"
                   id="carrier_company_pna"
-                  defaultValue={deliveryNote.carrierCompany.pan}
+                  defaultValue={props.invoice.carrierCompany.pan}
                   disabled={true}
                 />
               </div>
               <div>
                 <TextField
-                  label="Delivery note index"
-                  id="delivery_note_index"
-                  defaultValue={deliveryNote.index}
-                  onChange={(e) => setDeliveryNoteIndex(e.target.value)}
+                  label="Invoice note number"
+                  id="invoice_note_number"
+                  defaultValue={props.invoice.number}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
                 />
                 <h3>Addresses</h3>
                 <TextField
-                  label="From address"
-                  id="from_address"
-                  defaultValue={deliveryNote.fromAddress}
-                  onChange={(e) => setFromAddress(e.target.value)}
+                  label="Departure place"
+                  id="departure_place"
+                  defaultValue={props.invoice.departurePlace}
+                  onChange={(e) => setDeparturePlace(e.target.value)}
                 />
                 <TextField
-                  label="To address"
-                  id="to_address"
-                  defaultValue={deliveryNote.toAddress}
-                  onChange={(e) => setToAddress(e.target.value)}
+                  label="Delivery place"
+                  id="delivery_place"
+                  defaultValue={props.invoice.deliveryPlace}
+                  onChange={(e) => setDeliveryPlace(e.target.value)}
                 />
               </div>
             </div>
@@ -235,6 +223,7 @@ export default function DeliveryNoteForm(props) {
                 <TextField
                   label="Registration date"
                   id="registration_date"
+                  //todo: fix default value
                   defaultValue={new Date().toISOString().slice(0, 10)}
                   disabled={true}
                 />
@@ -250,8 +239,8 @@ export default function DeliveryNoteForm(props) {
               />
               <TextField
                 label="Last name"
-                value={driver.lastName}
-                id="selected_driver_last_name"
+                value={driver.surname}
+                id="selected_driver_surname"
                 disabled={true}
               />
               <TextField
@@ -261,7 +250,7 @@ export default function DeliveryNoteForm(props) {
                 disabled={true}
               />
               <ItemList
-                items={drivers}
+                items={props.drivers}
                 onRowClick={(item) => {
                   setDriver(item);
                 }}
