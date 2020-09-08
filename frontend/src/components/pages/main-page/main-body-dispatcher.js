@@ -79,7 +79,7 @@ export default function MainBodyDispatcher() {
       departurePlace: "",
       deliveryPlace: "",
       carrierCompany: user.company,
-      driver: { name: "", surname: "", passport: "" },
+      driver: { id: -1, name: "", surname: "", passport: "" },
       products: [],
     });
     setInvoiceDialogOpen(true);

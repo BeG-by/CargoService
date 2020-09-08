@@ -1,40 +1,26 @@
 import axios from "axios";
 
 export async function getDrivers() {
-  //todo: delete it
-  // const config = {
-  //   headers: {
-  //     Authorization:
-  //       "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MjI4NTEwLCJleHAiOjE4MDE1OTkyMjg1MTB9.pWThA99Lk9LNudr2AAqx3uvrsGgpQ6LnfaTZXGHeZUM",
-  //   },
-  // };
+  // todo: delete it;
+  const config = {
+    headers: {
+      Authorization:
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MjI4NTEwLCJleHAiOjE4MDE1OTkyMjg1MTB9.pWThA99Lk9LNudr2AAqx3uvrsGgpQ6LnfaTZXGHeZUM",
+    },
+  };
 
-  // const endpoint = "/v1/api/drivers";
-  // return await axios.get(endpoint, config).then(
-  //   (res) => {
-  //     console.log("RESPONSE COME");
-  //     console.log(res);
-  //     const clients = res.data;
-  //     let newList = [];
-  //     clients.forEach((client) => {
-  //       let clientData = {
-  //         name: client.name,
-  //         address: client.city,
-  //         phone: client.phone,
-  //       };
-  //       newList.push(clientData);
-  //     });
-  //     return newList;
-  //   },
-  //   (error) => {
-  //     console.log("ERROR OCCURRED");
-  //     console.log(error);
-  //   }
-  // );
-  return [
-    { id: "123", name: "Nikolay", surname: "Valdau", passport: "MP3543212" },
-    { id: "321", name: "Cristian", surname: "Boll", passport: "PP3213212" },
-  ];
+  const endpoint = "/v1/api/drivers";
+  return await axios.get(endpoint, config).then(
+    (res) => {
+      const drivers = res.data;
+      console.log("DRIVERS COME");
+      console.log(drivers);
+      return drivers;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 }
 
 export async function getRejectedInvoices() {
@@ -107,6 +93,22 @@ export async function getRejectedInvoices() {
       registrationDate: "2020-07-02",
     },
   ];
+}
+
+export async function saveInvoice(invoice) {
+  const endpoint = "/v1/api/invoices";
+  axios({
+    method: "post",
+    url: endpoint,
+    headers: {
+      Authorization:
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MjI4NTEwLCJleHAiOjE4MDE1OTkyMjg1MTB9.pWThA99Lk9LNudr2AAqx3uvrsGgpQ6LnfaTZXGHeZUM",
+    },
+    data: invoice,
+  }).then((res) => {
+    console.log("INVOICE SAVE");
+    console.log(res);
+  });
 }
 
 export async function getProductOwners() {

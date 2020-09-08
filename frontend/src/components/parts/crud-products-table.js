@@ -25,13 +25,25 @@ let validatePriceForOneProduct = (price) => {
   }
 };
 
-let countPriceForAllProducts = (amountProducts, priceForOne) => {
-  const accuracy = 3;
+//todo: fix back and return this version
+// let countPriceForAllProducts = (amountProducts, priceForOne) => {
+//   const accuracy = 3;
+//   if (
+//     validateAmountProducts(amountProducts).isValid &&
+//     validatePriceForOneProduct(priceForOne).isValid
+//   )
+//     return (amountProducts * priceForOne).toFixed(accuracy);
+//   else {
+//     return 0;
+//   }
+// };
+
+let countSum = (amountProducts, priceForOne) => {
   if (
     validateAmountProducts(amountProducts).isValid &&
     validatePriceForOneProduct(priceForOne).isValid
   )
-    return (amountProducts * priceForOne).toFixed(accuracy);
+    return amountProducts * priceForOne;
   else {
     return 0;
   }
@@ -44,20 +56,28 @@ const columns = [
     validate: (rowData) => validateName(rowData.name),
   },
   {
-    title: "Amount",
-    field: "amount",
-    type: "numeric",
-    validate: (rowData) => validateAmountProducts(rowData.amount),
+    title: "Measure",
+    field: "measure",
   },
   {
-    title: "Price for one",
-    field: "priceForOne",
-    type: "numeric",
-    validate: (rowData) => validatePriceForOneProduct(rowData.priceForOne),
+    title: "Mass",
+    field: "mass",
   },
   {
-    title: "Price for all",
-    field: "priceForAll",
+    title: "Quantity",
+    field: "quantity",
+    type: "numeric",
+    validate: (rowData) => validateAmountProducts(rowData.quantity),
+  },
+  {
+    title: "Price",
+    field: "price",
+    type: "numeric",
+    validate: (rowData) => validatePriceForOneProduct(rowData.price),
+  },
+  {
+    title: "Sum",
+    field: "sum",
     type: "numeric",
     editable: "never",
   },
@@ -84,10 +104,7 @@ export default function ProductsTable(props) {
               onRowAdd: (newData) =>
                 new Promise((resolve) => {
                   setTimeout(() => {
-                    newData.priceForAll = countPriceForAllProducts(
-                      newData.amount,
-                      newData.priceForOne
-                    );
+                    newData.sum = countSum(newData.quantity, newData.price);
                     onRowAdd(newData);
                     resolve();
                   }, 600);
@@ -97,10 +114,7 @@ export default function ProductsTable(props) {
                 new Promise((resolve) => {
                   setTimeout(() => {
                     if (oldData) {
-                      newData.priceForAll = countPriceForAllProducts(
-                        newData.amount,
-                        newData.priceForOne
-                      );
+                      newData.sum = countSum(newData.quantity, newData.price);
                       onRowUpdate(newData, oldData);
                     }
                     resolve();

@@ -11,7 +11,8 @@ import TextField from "@material-ui/core/TextField";
 import ItemList from "../../parts/lists/item-list";
 import ProductsTable from "../../parts/crud-products-table";
 import useStyles from "./styles";
-import { convertToNecessaryApi, Transition } from "./utils";
+import { saveInvoice } from "../../../request-api/utils";
+import { convertInvoiceToNecessaryApi, Transition } from "./utils";
 
 const initDriverState = {
   name: "",
@@ -50,11 +51,13 @@ export default function InvoiceForm(props) {
 
   useEffect(() => {
     setDriver({
+      id: props.invoice.driver.id,
       name: props.invoice.driver.name,
       surname: props.invoice.driver.surname,
       passport: props.invoice.driver.passport,
     });
   }, [
+    props.invoice.driver.id,
     props.invoice.driver.name,
     props.invoice.driver.surname,
     props.invoice.driver.passport,
@@ -71,12 +74,17 @@ export default function InvoiceForm(props) {
     //replace on invoice.getRegistrationDae
     invoice.registrationDate = new Date().toISOString().slice(0, 10);
     invoice.driver = driver;
-    invoice.products = convertToNecessaryApi(products);
+    invoice.products = products;
     invoice.number = invoiceNumber;
     invoice.departurePlace = departurePlace;
     invoice.deliveryPlace = deliveryPlace;
 
-    console.log(invoice);
+    let necessaryInvoice = convertInvoiceToNecessaryApi(invoice);
+
+    console.log("SEND INVOICE");
+    console.log(necessaryInvoice);
+
+    saveInvoice(necessaryInvoice);
     props.onRegisterClick(invoice);
   };
 
