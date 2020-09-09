@@ -417,21 +417,17 @@
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="number" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="id_invoice" type="BIGSERIAL"/>
 
-            <column name="status" type="waybill_status" defaultValue="REGISTERED">
-                <constraints nullable="false"/>
-            </column>
+            <column name="id_auto" type="BIGSERIAL"/>
 
             <column name="registration_date" type="DATE" defaultValue="NOW">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="checking_date" type="DATE"/>
-
-            <column name="close_date" type="DATE"/>
+            <column name="arrival_date" type="DATE" defaultValue="NOW">
+                <constraints nullable="false"/>
+            </column>
 
             <column name="shipper" type="VARCHAR(255)">
                 <constraints nullable="false"/>
