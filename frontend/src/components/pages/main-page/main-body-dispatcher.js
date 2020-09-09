@@ -1,99 +1,126 @@
-import React from 'react';
-import MaterialTable from 'material-table';
-import {DialogWindow} from "../../parts/dialog";
-import InvoiceForm from "../../forms/invoice-form";
+import React, { useState, useEffect } from "react";
+import MaterialTable from "material-table";
+import InvoiceCreatingForm from "../../forms/invoice-form/invoice-creating-form";
+import ItemList from "../../parts/lists/item-list";
+import {
+  getDrivers,
+  getProductOwners,
+  getRejectedInvoices,
+} from "../../../request-api/utils";
 
-export default function MainBodyDispatcher(props) {
-    const tableIcons = props.tableIcons;
-    const [openTtnDialog, setOpenTtnDialog] = React.useState(false);
-    const handleClickOpenTtn = () => {
-        setOpenTtnDialog(true);
-    };
-    const handleCloseTtn = () => {
-        setOpenTtnDialog(false);
-    };
+const columns = [
+  { title: "Name", field: "name" },
+  { title: "Address", field: "address" },
+  { title: "Phone", field: "phone" },
+  { title: "Contact", field: "contact" },
+];
 
-    const [state, setState] = React.useState({
-        columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Address', field: 'address' },
-            { title: 'Phone', field: 'phone' },
-            { title: 'Contact', field: 'contact' }
-        ],
-        data: [
-            { name: 'Gippo',
-                address: 'Minsk, Lenina 12a',
-                phone: '+375(29)321-26-23',
-                contact: 'Oleg Ivanov' },
-            { name: "Belmarket",
-                address: 'Minsk, Russiyanova 45',
-                phone: '+375(33)452-23-58',
-                contact: 'Irina Zaytseva' }
-        ],
-    } || null);
+const user = {
+  id: 1,
+  name: "Vladislav",
+  lastName: "Reznov",
+  patronymic: "Vladimirovich",
+  company: {
+    id: 1,
+    name: "BestCargo",
+    pan: "S32YY3213",
+  },
 
-    const form = <InvoiceForm/>;
+  //todo: fix this shit
+  jwtToken: localStorage.getItem("authorization"),
+};
 
-    return (
-        <div>
-            <MaterialTable
-                title="Clients"
-                icons={tableIcons}
-                columns={state.columns}
-                data={state.data}
-                options={{
-                    actionsColumnIndex: -1
-                }}
-                actions={[
-                    {
-                        tooltip: 'Fill TTN',
-                        icon: tableIcons.Check,
-                        onClick: (evt, data) => handleClickOpenTtn()
-                    }
-                ]}
-                editable={{
-                    onRowAdd: (newData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data.push(newData);
-                                    return { ...prevState, data };
-                                });
-                            }, 500);
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                if (oldData) {
-                                    setState((prevState) => {
-                                        const data = [...prevState.data];
-                                        data[data.indexOf(oldData)] = newData;
-                                        return { ...prevState, data };
-                                    });
-                                }
-                            }, 500);
-                        }),
-                    onRowDelete: (oldData) =>
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve();
-                                setState((prevState) => {
-                                    const data = [...prevState.data];
-                                    data.splice(data.indexOf(oldData), 1);
-                                    return { ...prevState, data };
-                                });
-                            }, 500);
-                        }),
-                }}
-            />
-            <DialogWindow
-                dialogTitle="Fill TTN:"
-                handleClose={handleCloseTtn}
-                openDialog={openTtnDialog}
-                form={form}/>
-        </div>
-    );
+const EMPTY_INVOICE = {
+  clientCompany: {},
+  registrationUser: {
+    name: user.name,
+    lastName: user.lastName,
+    patronymic: user.patronymic,
+  },
+  index: "",
+  fromAddress: "",
+  toAddress: "",
+  carrierCompany: user.company,
+  driver: {},
+  products: [],
+};
+
+export default function MainBodyDispatcher() {
+  const [clients, setClients] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+  const [rejectedInvoices, setRejectedInvoices] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      setClients(await getProductOwners());
+      setDrivers(await getDrivers());
+      setRejectedInvoices(await getRejectedInvoices());
+    }
+    fetchData();
+  }, []);
+
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(EMPTY_INVOICE);
+
+  const handleRegisterInvoiceClick = (invoice) => {
+    setInvoiceDialogOpen(false);
+    alert("Registered");
+  };
+
+  const handleOnClientsTableRowClick = (clientData) => {
+    setSelectedInvoice({
+      clientCompany: clientData,
+      registrationUser: {
+        name: user.name,
+        lastName: user.lastName,
+        patronymic: user.patronymic,
+      },
+      number: "",
+      departurePlace: "",
+      deliveryPlace: "",
+      carrierCompany: user.company,
+      driver: { id: -1, name: "", surname: "", passport: "" },
+      products: [],
+    });
+    setInvoiceDialogOpen(true);
+  };
+
+  return (
+    <div
+      style={{ width: 1000, display: "flex", justifyContent: "space-between" }}
+    >
+      <div>
+        <MaterialTable
+          onRowClick={(event, rowData) => {
+            handleOnClientsTableRowClick(rowData);
+          }}
+          title="Clients"
+          columns={columns}
+          data={clients}
+        />
+      </div>
+      <div>
+        <InvoiceCreatingForm
+          open={invoiceDialogOpen}
+          onCloseClick={() => setInvoiceDialogOpen(false)}
+          onRegisterClick={handleRegisterInvoiceClick}
+          invoice={selectedInvoice}
+          drivers={drivers}
+        />
+      </div>
+      <ItemList
+        onRowClick={(item) => {
+          setSelectedInvoice(item.invoice);
+          setInvoiceDialogOpen(true);
+        }}
+        listName="Rejected delivery notes"
+        items={rejectedInvoices.map((invoice) => {
+          return {
+            invoice,
+            name: invoice.index + " --- " + invoice.registrationDate,
+          };
+        })}
+      />
+    </div>
+  );
 }
