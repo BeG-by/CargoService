@@ -1,6 +1,6 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.waybill.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,6 @@ package by.itechart.cargo.exception;
 public class NotFoundException extends Exception {
 
     public NotFoundException() {
-        super();
     }
 
     public NotFoundException(String message) {
@@ -18,7 +17,7 @@ public class NotFoundException extends Exception {
         super(cause);
     }
 
-    protected NotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public NotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 

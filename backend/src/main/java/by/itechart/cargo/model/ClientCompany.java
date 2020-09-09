@@ -3,15 +3,16 @@ package by.itechart.cargo.model;
 import by.itechart.cargo.model.enumeration.CompanyType;
 import by.itechart.cargo.model.freight.Auto;
 import by.itechart.cargo.model.freight.Driver;
-import by.itechart.cargo.model.freight.ProductOwner;
 import by.itechart.cargo.model.freight.Invoice;
+import by.itechart.cargo.model.freight.ProductOwner;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,11 +58,9 @@ public class ClientCompany implements Serializable, Cloneable {
     @JsonManagedReference(value = "client_company")
     private List<User> users;
 
-    // TODO fix contracts
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_client_company")
-    private List<Contract> contracts = new ArrayList<>();
+    private List<Contract> contracts;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonManagedReference(value = "owners_company")

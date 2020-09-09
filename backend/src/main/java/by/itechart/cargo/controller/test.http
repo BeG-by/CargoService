@@ -10,29 +10,29 @@ Content-Type: application/json
 
 GET localhost:8080/v1/api/invoices
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
 
 ###
 
 GET localhost:8080/v1/api/owners
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
 
 ###
 
 GET localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
 
 ###
 
 POST localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
 
 {
-  "login": "test login",
-  "password": "test password",
+  "login": "test 13loginddddd",
+  "password": "test passworddddddddddddddddd",
   "name": "Ivan",
   "surname": "Ivanov",
   "patronymic": "Ivanovich",
@@ -41,16 +41,15 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
     "city": "Minsk"
   },
   "email": "test@mail.com",
-  "roles": ["ADMIN"]
+  "roles": ["SYSADMIN"]
 }
 
 ###
 
 
-
 POST localhost:8080/v1/api/invoices
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
 
 {
   "invoiceNumber": "TTN321332",
@@ -72,5 +71,11 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 ###
 
+
+GET localhost:8080/v1/api/
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
+
+###
 
 

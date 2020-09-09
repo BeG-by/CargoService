@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @EnableWebSecurity
@@ -41,6 +44,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // TODO create config directory
+    @Bean
+    public CommonsRequestLoggingFilter logFilter() {
+
+        CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
+
+        filter.setIncludeQueryString(true);
+        filter.setIncludePayload(true);
+        filter.setIncludeHeaders(true);
+        filter.setMaxPayloadLength(10000);
+        return filter;
+    }
+
+
     // TODO roles configurations
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -53,7 +70,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/api/auth/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(jwtTokenFilterBean() , UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 
 }

@@ -1,7 +1,7 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.ClientCompanyDto;
-import by.itechart.cargo.dto.model_dto.mapper.ClientCompanyMapper;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDto;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyMapper;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.repository.ClientCompanyRepository;

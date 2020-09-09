@@ -19,8 +19,6 @@ import java.util.Set;
 @Table(name = "user", schema = "public")
 public class User implements Serializable, Cloneable {
 
-    private static final long serialVersionUID = 2888798985824900383L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", nullable = false, updatable = false)

@@ -1,4 +1,4 @@
-package by.itechart.cargo.dto.model_dto;
+package by.itechart.cargo.dto.model_dto.client_company;
 
 import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.Contract;
@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ClientCompanyDto implements Serializable, Cloneable {
-    private static final long serialVersionUID = 1238695483261000456L;
 
     @NotNull
     private Long id;

@@ -1,6 +1,5 @@
-package by.itechart.cargo.dto.model_dto.mapper;
+package by.itechart.cargo.dto.model_dto.client_company;
 
-import by.itechart.cargo.dto.model_dto.ClientCompanyDto;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.CompanyType;
 
