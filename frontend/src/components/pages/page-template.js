@@ -87,8 +87,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "5px",
     paddingRight: "5px",
     margin: "20px auto",
-    // color: "white",
-    // background: "rgba(0, 0, 0, 0.4)",
+    color: "white",
+    background: "rgba(0, 0, 0, 0.4)",
     maxWidth: "1000px",
     borderRadius: "30px",
   },
@@ -160,7 +160,7 @@ export default function PageTemplate(props) {
       );
       break;
     case "main":
-      localStorage.setItem("role", "dispatcher"); //fixme передать роль в параметрах?
+      localStorage.setItem("role", "manager"); //fixme передать роль в параметрах?
       body = (
         <MainBody
           classes={classes}
@@ -168,7 +168,7 @@ export default function PageTemplate(props) {
           openDialog={openDialog}
           handleClose={handleClose}
           tableIcons={tableIcons}
-          role={"dispatcher"}
+          role={"manager"}
         />
       );
       headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку

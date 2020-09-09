@@ -1,4 +1,4 @@
-package by.itechart.cargo.dto.model_dto.waybill;
+package by.itechart.cargo.dto.model_dto;
 
 import by.itechart.cargo.model.freight.Product;
 import by.itechart.cargo.model.freight.Invoice;
@@ -21,7 +21,7 @@ public class InvoiceRequest {
     private Long driverId;
     private List<Product> products;
 
-    public Invoice toWayBill() {
+    public Invoice toInvoice() {
         return Invoice.builder()
                 .number(invoiceNumber)
                 .registrationDate(registrationDate)

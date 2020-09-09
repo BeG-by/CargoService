@@ -34,11 +34,6 @@ public class Driver implements Serializable, Cloneable {
     @Column(name = "passport", nullable = false)
     private String passport;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_auto")
-    @JsonManagedReference
-    private Auto auto;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "driver")
     @JsonBackReference
     @ToString.Exclude

@@ -63,6 +63,9 @@ public class Invoice implements Serializable, Cloneable {
     @JsonManagedReference
     private Driver driver;
 
+    @OneToOne(mappedBy = "invoice")
+    private Waybill waybill;
+
     @JoinColumn(name = "id_user_registration", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "reg_invoice")

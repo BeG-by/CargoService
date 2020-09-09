@@ -1,13 +1,13 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.waybill.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.InvoiceRequest;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/api/invoices")
@@ -25,6 +25,11 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.findAll());
     }
 
+    @GetMapping
+    @RequestMapping(value = "/{id}")
+    public ResponseEntity<Optional<Invoice>> findById(@PathVariable (value = "id") long id) {
+        return ResponseEntity.ok(invoiceService.findById(id));
+    }
     @PostMapping
     public ResponseEntity<String> saveOne(@RequestBody InvoiceRequest invoiceRequest) {
         invoiceService.saveOne(invoiceRequest);

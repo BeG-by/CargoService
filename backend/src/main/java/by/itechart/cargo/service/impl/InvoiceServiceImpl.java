@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.waybill.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.InvoiceRequest;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.Status;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,10 +52,15 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
+    @Override
+    public Optional<Invoice> findById(long id) {
+        return invoiceRepository.findById(id);
+    }
+
 
     @Override
     public void saveOne(InvoiceRequest invoiceRequest) {
-        final Invoice invoice = invoiceRequest.toWayBill();
+        final Invoice invoice = invoiceRequest.toInvoice();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();

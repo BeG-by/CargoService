@@ -123,9 +123,9 @@ export function showWaybillForm(object) {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{color: 'black', textAlign: 'center'}}>
-                                Products Table
-                            </div>
+                            {/*<div style={{color: 'black', textAlign: 'center'}}>*/}
+                            {/*    Products Table*/}
+                            {/*</div>*/}
                         </div>
                         <br/>
                         <div className='btn-row'>

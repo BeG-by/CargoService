@@ -1,9 +1,10 @@
 package by.itechart.cargo.model.freight;
 
 import by.itechart.cargo.model.ClientCompany;
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-
+import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -11,8 +12,13 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@TypeDef(
+        name = "auto_enum",
+        typeClass = EnumTypePostgreSql.class
+)
 @Table(name = "auto")
 public class Auto implements Serializable, Cloneable {
 
@@ -32,14 +38,14 @@ public class Auto implements Serializable, Cloneable {
     @JsonBackReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Driver> drivers;
+    private List<Waybill> waybills;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
     @JsonBackReference (value = "auto_company")
     @NotNull
     private ClientCompany clientCompany;
-
+    
     public enum AutoType {
         EURO_TRACK,
         JUMBO,
