@@ -36,7 +36,7 @@ public class ClientCompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<String> findById(@RequestBody @Valid ClientCompanyRequest companyRequest) throws AlreadyExistException {
+    public ResponseEntity<String> saveOne(@RequestBody @Valid ClientCompanyRequest companyRequest) throws AlreadyExistException {
         clientCompanyService.saveOne(companyRequest);
         return ResponseEntity.ok("Client company has been saved");
     }
