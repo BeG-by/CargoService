@@ -1,6 +1,6 @@
 package by.itechart.cargo.service;
 
-import by.itechart.cargo.dto.PointRequest;
+import by.itechart.cargo.dto.model_dto.PointRequest;
 import by.itechart.cargo.model.freight.Point;
 import java.util.List;
 import java.util.Optional;

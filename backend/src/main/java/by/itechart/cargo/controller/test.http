@@ -8,6 +8,36 @@ Content-Type: application/json
 
 ###
 
+GET localhost:8080/v1/api/waybills/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
+
+POST localhost:8080/v1/api/waybills
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+{
+  "invoiceNumber": "TTN321332",
+  "registrationDate": "2020-01-01",
+  "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
+  "consignee": "OOO 'Test warehouse', Smolensk, Lenina 5 ",
+  "driverId": 1,
+  "products": [
+    {
+      "name": "test product",
+      "quantity": 5,
+      "measure": "bochka",
+      "price": 100,
+      "sum": 500,
+      "mass": "100 kg"
+    }
+  ]
+}
+
+###
+
 GET localhost:8080/v1/api/invoices
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI

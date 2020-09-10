@@ -2,11 +2,13 @@ package by.itechart.cargo.model.freight;
 
 import by.itechart.cargo.model.ClientCompany;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -38,16 +40,19 @@ public class Waybill implements Serializable, Cloneable {
     private Auto auto;
 
     @JoinColumn(name = "id_invoice")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonManagedReference (value = "invoice_waybill")
+    @JsonIgnore
     private Invoice invoice;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "waybill")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "waybill")
+    @JsonManagedReference
     private List<Point> points;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
-    @JsonBackReference(value = "waybill_company")
+//    @JsonBackReference(value = "waybill_company")
+    @JsonIgnore
     private ClientCompany clientCompany;
 
 }

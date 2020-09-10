@@ -1,5 +1,6 @@
 package by.itechart.cargo.model.freight;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public class Point implements Serializable, Cloneable {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_waybill")
-    @JsonIgnore
+    @JsonBackReference
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Waybill waybill;
