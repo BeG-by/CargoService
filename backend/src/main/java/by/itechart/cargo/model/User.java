@@ -2,6 +2,7 @@ package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.freight.Invoice;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -18,8 +19,6 @@ import java.util.Set;
 @Builder
 @Table(name = "user", schema = "public")
 public class User implements Serializable, Cloneable {
-
-    private static final long serialVersionUID = 2888798985824900383L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +51,7 @@ public class User implements Serializable, Cloneable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
-    @JsonBackReference(value = "client_user")
+    @JsonIgnore
     private ClientCompany clientCompany;
 
     @JsonManagedReference (value = "user_role")

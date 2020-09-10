@@ -13,17 +13,20 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
+
+    @Size(max = 64, message = "Country is too long (max is 64)")
     private String country;
-    
-    @Size(max = 64)
+
+    @Size(max = 64, message = "City is too long (max is 64)")
     private String city;
-    
-    @Size(max = 64)
+
+    @Size(max = 64, message = "Street is too long (max is 64)")
     private String street;
-    
-    @Size(max = 64)
-    private String flat;
-    
-    @Size(max = 64)
+
+    @Size(max = 64, message = "House is too long (max is 64)")
     private String house;
+
+    @Size(max = 64, message = "Flat is too long (max is 64)")
+    private String flat;
+
 }

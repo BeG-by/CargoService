@@ -52,12 +52,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
+
     @Override
     public Optional<Invoice> findById(long id) {
         return invoiceRepository.findById(id);
     }
 
 
+    // TODO invoice with Number exists
     @Override
     public void saveOne(InvoiceRequest invoiceRequest) {
         final Invoice invoice = invoiceRequest.toInvoice();

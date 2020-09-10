@@ -1,6 +1,7 @@
 package by.itechart.cargo.service;
 
 import by.itechart.cargo.dto.model_dto.user.UserRequest;
+import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
 
@@ -12,5 +13,5 @@ public interface UserService {
 
     List<User> findAll();
     
-    void saveOne(UserRequest userRequest);
+    void saveOne(UserRequest userRequest) throws AlreadyExistException;
 }
