@@ -1,4 +1,4 @@
-package by.itechart.cargo.dto.model_dto;
+package by.itechart.cargo.dto.model_dto.auto;
 
 import by.itechart.cargo.model.freight.Auto;
 import lombok.AllArgsConstructor;

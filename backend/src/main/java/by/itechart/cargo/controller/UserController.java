@@ -1,6 +1,6 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.UserRequest;
+import by.itechart.cargo.dto.model_dto.user.UserRequest;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;

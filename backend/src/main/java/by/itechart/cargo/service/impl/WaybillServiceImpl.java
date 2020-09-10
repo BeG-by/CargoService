@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.WaybillRequest;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.freight.Auto;
 import by.itechart.cargo.model.freight.Invoice;

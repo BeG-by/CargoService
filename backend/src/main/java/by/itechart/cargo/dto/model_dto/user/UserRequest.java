@@ -1,4 +1,4 @@
-package by.itechart.cargo.dto.model_dto;
+package by.itechart.cargo.dto.model_dto.user;
 
 import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.Role;

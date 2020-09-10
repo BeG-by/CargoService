@@ -1,6 +1,6 @@
 package by.itechart.cargo.service;
 
-import by.itechart.cargo.dto.model_dto.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.model.freight.Invoice;
 import java.util.List;
 import java.util.Optional;

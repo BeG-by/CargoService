@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.PointRequest;
+import by.itechart.cargo.dto.model_dto.point.PointRequest;
 import by.itechart.cargo.model.freight.Point;
 import by.itechart.cargo.model.freight.Waybill;
 import by.itechart.cargo.repository.*;

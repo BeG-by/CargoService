@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.Status;

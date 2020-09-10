@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.UserRequest;
+import by.itechart.cargo.dto.model_dto.user.UserRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.ClientCompanyRepository;
