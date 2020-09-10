@@ -8,6 +8,7 @@ Content-Type: application/json
 
 ###
 
+// --- Waybills ---
 
 GET localhost:8080/v1/api/waybills/1
 Content-Type: application/json
@@ -39,11 +40,6 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 ###
 
-GET localhost:8080/v1/api/invoices
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
-
-###
 
 GET localhost:8080/v1/api/owners
 Content-Type: application/json
@@ -116,7 +112,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Clients test ---
 
-GET localhost:8080/v1/api/clients
+GET localhost:8080/v1/api/clients/1
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
