@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.waybill.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.Status;
@@ -51,7 +51,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
-
+    // TODO invoice with Number exists
     @Override
     public void saveOne(InvoiceRequest invoiceRequest) {
         final Invoice invoice = invoiceRequest.toWayBill();

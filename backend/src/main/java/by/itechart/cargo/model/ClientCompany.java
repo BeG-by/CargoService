@@ -1,17 +1,23 @@
 package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.CompanyType;
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import by.itechart.cargo.model.freight.Auto;
 import by.itechart.cargo.model.freight.Driver;
-import by.itechart.cargo.model.freight.ProductOwner;
 import by.itechart.cargo.model.freight.Invoice;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import by.itechart.cargo.model.freight.ProductOwner;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,19 +25,26 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "client_company")
+@TypeDef(
+        name = "client_company_type",
+        typeClass = EnumTypePostgreSql.class
+)
 public class ClientCompany implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_client_company", nullable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Type(type = "client_company_type")
     private CompanyType type;
 
     @Column(name = "pan", nullable = false)
@@ -54,34 +67,29 @@ public class ClientCompany implements Serializable, Cloneable {
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference(value = "client_company")
+    @JsonIgnore
     private List<User> users;
 
-    // TODO fix contracts
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_client_company")
-    private List<Contract> contracts = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonIgnore
+    private List<Contract> contracts;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference(value = "owners_company")
+    @JsonIgnore
     private List<ProductOwner> productOwners;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference(value = "invoice_company")
+    @JsonIgnore
     private List<Invoice> invoices;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference(value = "auto_company")
+    @JsonIgnore
     private List<Auto> autos;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonManagedReference(value = "driver_company")
+    @JsonIgnore
     private List<Driver> drivers;
 
-    public ClientCompany(Long id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {

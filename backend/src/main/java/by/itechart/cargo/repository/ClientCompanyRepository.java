@@ -7,5 +7,10 @@ import java.util.Optional;
 
 public interface ClientCompanyRepository extends JpaRepository<ClientCompany, Long> {
 
-    Optional<ClientCompany> findByName(String name);
+    Optional<ClientCompany> getByName(String name);
+
+    Optional<ClientCompany> getByPayerAccountNumber(String number);
+
+    Optional<ClientCompany> getByEmail(String email);
+
 }

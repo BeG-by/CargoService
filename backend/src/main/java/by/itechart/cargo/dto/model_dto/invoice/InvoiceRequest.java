@@ -1,4 +1,4 @@
-package by.itechart.cargo.dto.model_dto.waybill;
+package by.itechart.cargo.dto.model_dto.invoice;
 
 import by.itechart.cargo.model.freight.Product;
 import by.itechart.cargo.model.freight.Invoice;
