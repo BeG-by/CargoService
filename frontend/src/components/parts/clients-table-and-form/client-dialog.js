@@ -6,6 +6,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Formik, Form } from "formik";
 import FormikField from "./formik-field";
 import { getClientById, saveClient } from "./request-utils";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const EMPTY_CLIENT = {
   id: -1,
@@ -83,6 +86,7 @@ export default function ClientDialog(props) {
               registrationDate: client.registrationDate,
             }}
             onSubmit={handleSubmit}
+            // validationSchema={ClientFormValidationSchema}
           >
             {(formProps) => {
               return (
@@ -98,12 +102,6 @@ export default function ClientDialog(props) {
                     id={"payerAccountNumber"}
                     label={"Payer account number"}
                     formikFieldName={"payerAccountNumber"}
-                  />
-                  <FormikField
-                    formikProps={formProps}
-                    id={"companyType"}
-                    label={"Company type"}
-                    formikFieldName={"companyType"}
                   />
                   <FormikField
                     formikProps={formProps}
@@ -129,6 +127,18 @@ export default function ClientDialog(props) {
                     label={"Street"}
                     formikFieldName={"street"}
                   />
+                  <InputLabel style={{ fontSize: 13 }} id="company-type-label">
+                    Company type
+                  </InputLabel>
+                  <Select
+                    name="companyType"
+                    onChange={formProps.handleChange}
+                    value={formProps.values.companyType}
+                    fullWidth
+                  >
+                    <MenuItem value={"SP"}>Sole proprietorship</MenuItem>
+                    <MenuItem value={"JP"}>Juridical person</MenuItem>
+                  </Select>
                   <FormikField
                     formikProps={formProps}
                     id={"house"}
