@@ -8,27 +8,23 @@ Content-Type: application/json
 
 ###
 
-GET localhost:8080/v1/api/invoices
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
-
-###
-
 GET localhost:8080/v1/api/owners
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 ###
+
+// --- Users ---
 
 GET localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 ###
 
 POST localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 {
   "login": "test 13loginddddd",
@@ -41,15 +37,25 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
     "city": "Minsk"
   },
   "email": "test@mail.com",
-  "roles": ["SYSADMIN"]
+  "roles": [
+    "SYSADMIN"
+  ]
 }
+
+###
+
+// --- Invoices ---
+
+GET localhost:8080/v1/api/invoices
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 ###
 
 
 POST localhost:8080/v1/api/invoices
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 {
   "invoiceNumber": "TTN321332",
@@ -71,11 +77,29 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 ###
 
+// --- Clients test ---
 
-GET localhost:8080/v1/api/
+GET localhost:8080/v1/api/clients
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NjU0MTQ3LCJleHAiOjE4MDE1OTk2NTQxNDd9.vbJtAYd-EsC-3FepSo8kEZCE42ejqXTtToN9T8hv9p0
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 ###
 
+POST localhost:8080/v1/api/clients
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
+{
+  "name": "Подвезём",
+  "type": "SP",
+  "payerAccountNumber": "123456787",
+  "country": "Belarus",
+  "city": "Minsk",
+  "street": "street test",
+  "house": "45",
+  "flat": "1",
+  "registrationDate": "2020-01-01",
+  "email": "test2@mail.ru"
+}
+
+###

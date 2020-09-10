@@ -28,6 +28,8 @@ public class JwtTokenUtil {
     private String secretKey;
 
     @Value("${jwt.token.expiration}")
+    private long validityInMinutes;
+
     private long validityInMs;
 
     @Value("${jwt.token.header}")
@@ -42,6 +44,7 @@ public class JwtTokenUtil {
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        validityInMs = validityInMinutes * 60000;
     }
 
 
@@ -53,6 +56,7 @@ public class JwtTokenUtil {
         claims.put("roles", rolesName);
 
         Date now = new Date();
+        System.out.println(validityInMs);
         Date periodOfValidity = new Date(now.getTime() + validityInMs);
 
         return Jwts.builder()
@@ -81,7 +85,7 @@ public class JwtTokenUtil {
             return claims.getBody().getExpiration().after(new Date());
 
         } catch (JwtException | IllegalArgumentException e) {
-            return false;
+            throw new IllegalArgumentException("JWT token is expired or invalid");
         }
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,14 +38,24 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(message);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+
+        String message = ex.getMessage();
+
+        log.error("Data is not valid: {}", message);
+        return ResponseEntity.badRequest().body(message);
+    }
+
+
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> notFound(NotFoundException e) {
+    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(AlreadyExistException.class)
-    public ResponseEntity<String> alreadyExist(AlreadyExistException e) {
+    public ResponseEntity<String> handleAlreadyExistException(AlreadyExistException e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }

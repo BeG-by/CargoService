@@ -51,7 +51,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
-
+    // TODO invoice with Number exists
     @Override
     public void saveOne(InvoiceRequest invoiceRequest) {
         final Invoice invoice = invoiceRequest.toWayBill();

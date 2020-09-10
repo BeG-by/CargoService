@@ -1,14 +1,18 @@
 package by.itechart.cargo.service;
 
-import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDto;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyRequest;
+import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.model.ClientCompany;
+
+import java.util.List;
 
 public interface ClientCompanyService {
-    ClientCompanyDto findByName(String name) throws NotFoundException;
 
-    ClientCompanyDto findByName(String name, int mappingFlags) throws NotFoundException;
+    ClientCompany findById(Long id) throws NotFoundException;
 
-    ClientCompanyDto findById(Long id) throws NotFoundException;
+    List<ClientCompany> findAll();
 
-    ClientCompanyDto findById(Long id, int mappingFlags) throws NotFoundException;
+    void saveOne(ClientCompanyRequest clientCompanyRequest) throws AlreadyExistException;
+
 }
