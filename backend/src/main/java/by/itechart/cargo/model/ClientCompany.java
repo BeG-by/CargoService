@@ -1,19 +1,17 @@
 package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.CompanyType;
+
+import by.itechart.cargo.model.freight.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
-import by.itechart.cargo.model.freight.Auto;
-import by.itechart.cargo.model.freight.Driver;
-import by.itechart.cargo.model.freight.Invoice;
-import by.itechart.cargo.model.freight.ProductOwner;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -81,6 +79,10 @@ public class ClientCompany implements Serializable, Cloneable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonIgnore
     private List<Invoice> invoices;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonIgnore
+    private List<Waybill> waybills;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonIgnore

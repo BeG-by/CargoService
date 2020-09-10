@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -50,6 +51,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<Invoice> findAll() {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
+
+
+    @Override
+    public Optional<Invoice> findById(long id) {
+        return invoiceRepository.findById(id);
+    }
+
 
     // TODO invoice with Number exists
     @Override
