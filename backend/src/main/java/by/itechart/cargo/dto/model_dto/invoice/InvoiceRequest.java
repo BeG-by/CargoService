@@ -21,7 +21,7 @@ public class InvoiceRequest {
     private Long driverId;
     private List<Product> products;
 
-    public Invoice toWayBill() {
+    public Invoice toInvoice() {
         return Invoice.builder()
                 .number(invoiceNumber)
                 .registrationDate(registrationDate)

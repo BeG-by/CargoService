@@ -24,9 +24,9 @@ export function showError(object) {
 
 export function showWaybillForm(object) {
     // let options = [<option value='0'/>]; //fixme включить при отправке запроса
-    let options = [<option value='0'/>,
-        <option value='1'>John Smith</option>,
-        <option value='2'>Peter Blacksmith</option>];
+    let options = [<option key='0' value='0'/>,
+        <option key='1'  value='1'>John Smith</option>,
+        <option key='2'  value='2'>Peter Blacksmith</option>];
     let products = [];
 
     const getDrivers = () => {
@@ -123,9 +123,9 @@ export function showWaybillForm(object) {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{color: 'black', textAlign: 'center'}}>
-                                Products Table
-                            </div>
+                            {/*<div style={{color: 'black', textAlign: 'center'}}>*/}
+                            {/*    Products Table*/}
+                            {/*</div>*/}
                         </div>
                         <br/>
                         <div className='btn-row'>
