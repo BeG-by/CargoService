@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PointRequest {
 
-    @NotNull(message = "Place is mandatory")
     @NotBlank(message = "Place is mandatory")
     @Size(max = 255, message = "Place length has oversize")
     private String place;
