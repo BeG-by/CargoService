@@ -7,6 +7,8 @@ public interface MessageConstant {
 
     String CLIENT_NOT_FOUND_MESSAGE = "Client not found";
 
+    String INVOICE_NOT_FOUND_MESSAGE = "Invoice not found";
+
     String DRIVER_NOT_FOUND_MESSAGE = "Diver not found";
 
 

@@ -27,7 +27,7 @@ public class ClientCompanyRequest implements Serializable, Cloneable {
     @EnumNamePattern(regexp = "SP|JP", message = "Type must be \"SP\" or \"JP\"")
     private CompanyType type;
 
-    @Pattern(regexp = "\\d{9}", message = "Payer account number must be 9 digits")
+    @Pattern(regexp = "[a-zA-z0-9]{9}", message = "Payer account number must be 9 digits")
     private String payerAccountNumber;
 
     @NotBlank(message = "Country is mandatory")
