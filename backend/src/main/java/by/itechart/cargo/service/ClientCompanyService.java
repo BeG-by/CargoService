@@ -15,4 +15,7 @@ public interface ClientCompanyService {
 
     void saveOne(ClientCompanyRequest clientCompanyRequest) throws AlreadyExistException;
 
+    void update(ClientCompanyRequest companyRequest) throws NotFoundException;
+
+    void delete(Long id) throws NotFoundException;
 }
