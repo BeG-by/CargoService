@@ -3,7 +3,7 @@ import * as Yup from "yup";
 export const ClientFormValidationSchema = Yup.object({
     name: Yup.string().max(64, "Name is too long").required("Name is required"),
     payerAccountNumber: Yup.string()
-        .max(9, "Payer account number must be 9 symbols")
+        .length(9, "Payer account number must be 9 symbols")
         .required("Payer account number is required"),
     country: Yup.string()
         .max(64, "Country is too long (max is 64)")
