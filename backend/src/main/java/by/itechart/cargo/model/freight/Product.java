@@ -3,11 +3,16 @@ package by.itechart.cargo.model.freight;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import by.itechart.cargo.model.enumeration.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -24,24 +29,34 @@ public class Product implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product", nullable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(name = "name", nullable = false)
+    @NotBlank(message = "Name is mandatory")
+    @Size(max = 64 , message = "Name is too long (max is 64)")
     private String name;
 
     @Column(name = "quantity", nullable = false)
+    @Positive(message = "Quantity must be more than 1")
     private Integer quantity;
 
     @Column(name = "measure", nullable = false)
+    @NotBlank(message = "Measure is mandatory")
+    @Size(max = 12 , message = "Measure is too long (max is 12)")
     private String measure;
 
     @Column(name = "price", nullable = false)
+    @Positive(message = "Price must be more than 1")
     private Long price;
 
     @Column(name = "sum", nullable = false)
+    @Positive(message = "Sum must be more than 1")
     private Long sum;
 
     @Column(name = "mass", nullable = false)
+    @NotBlank(message = "Mass is mandatory")
+    @Size(max = 16 , message = "Mass is too long (max is 16)")
     private String mass;
 
     @Column(name = "status", nullable = false)

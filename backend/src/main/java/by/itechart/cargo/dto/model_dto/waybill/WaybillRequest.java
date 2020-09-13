@@ -7,6 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+<<<<<<< HEAD
+=======
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+>>>>>>> master
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,11 +28,14 @@ public class WaybillRequest {
     private LocalDate arrivalDate;
 
     @NotNull (message = "Auto id is mandatory")
+    @Positive(message = "Id cannot be negative or zero")
     private Long autoId;
 
     @NotNull (message = "Invoice id is mandatory")
+    @Positive(message = "Id cannot be negative or zero")
     private Long invoiceId;
 
+    // TODO validations
     private List<Point> points;
 
     public Waybill toWaybill() {

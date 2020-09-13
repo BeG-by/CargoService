@@ -14,12 +14,11 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class AutoRequest {
 
-    @NotNull (message = "Auto mark is mandatory")
+
     @NotBlank(message = "Auto mark is mandatory")
-    @Size(max = 64, message = "Mark length has oversize")
+    @Size(max = 64, message = "Mark length has oversize (max is 64)")
     private String mark;
 
-    @NotNull(message = "Auto type is mandatory")
     @NotBlank(message = "Auto type is mandatory")
     private String type;
 

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,33 +22,37 @@ import java.util.stream.Collectors;
 public class UserRequest {
 
     @NotBlank(message = "Login is mandatory")
-    @Size(max = 64)
+    @Size(max = 64, message = "Login is too long (max is 64)")
     private String login;
 
     @NotBlank(message = "Password is mandatory")
-    @Size(max = 64)
+    @Size(max = 64, message = "Password is too long (max is 64)")
     private String password;
 
     @NotBlank(message = "Name is mandatory")
-    @Size(max = 64)
+    @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
 
     @NotBlank(message = "Surname is mandatory")
-    @Size(max = 64)
+    @Size(max = 64, message = "Surname is too long (max is 64)")
     private String surname;
 
     @NotBlank(message = "Patronymic is mandatory")
-    @Size(max = 64)
+    @Size(max = 64, message = "Patronymic is too long (max is 64)")
     private String patronymic;
 
+    // TODO date validation - ?
     private LocalDate birthday;
+
+    @Valid
     private Address address;
 
-    @Email
-    @Size(max = 64)
+    @Email(message = "Email is not valid")
+    @Size(max = 64, message = "Patronymic is too long (max is 64)")
     private String email;
 
     @NotNull
+    // TODO Enum validations - ?
     private Set<String> roles;
 
     public User toUser() {
@@ -60,7 +65,6 @@ public class UserRequest {
                 .birthday(birthday)
                 .address(address)
                 .email(email)
-                .roles(roles.stream().map(r -> new Role(Role.RoleType.valueOf(r))).collect(Collectors.toSet()))
                 .build();
     }
 
