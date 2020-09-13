@@ -14,7 +14,7 @@ import Button from "@material-ui/core/Button";
 
 const columns = [
     {id: "name", label: "Name", minWidth: 170},
-    {id: "type", label: "Company type", minWidth: 100},
+    {id: "type", label: "Company type", minWidth: 170},
     {
         id: "payerAccountNumber",
         label: "Payer account number",
@@ -25,6 +25,27 @@ const columns = [
     {
         id: "address.country",
         label: "Country",
+        minWidth: 170,
+        align: "center",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+        id: "address.city",
+        label: "City",
+        minWidth: 170,
+        align: "center",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+        id: "address.street",
+        label: "Street",
+        minWidth: 170,
+        align: "center",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    {
+        id: "address.house",
+        label: "House",
         minWidth: 170,
         align: "center",
         format: (value) => value.toLocaleString("en-US"),
@@ -51,12 +72,12 @@ function fetchFieldFromObject(obj, prop) {
 }
 
 const useStyles = makeStyles({
-    // root: {
-    //     width: "100%",
-    // },
-    // container: {
-    //     maxHeight: 440,
-    // },
+    root: {
+        width: "100%",
+    },
+    container: {
+        maxHeight: 440,
+    },
 });
 
 export default function ClientsTable() {
@@ -129,7 +150,12 @@ export default function ClientsTable() {
                                             key={client.id}
                                         >
                                             {columns.map((column) => {
-                                                const value = fetchFieldFromObject(client, column.id);
+                                                let value = fetchFieldFromObject(client, column.id);
+                                                if (value === "SP"){
+                                                    value = "Sole proprietorship"
+                                                }else if (value === "JP"){
+                                                    value = "Juridical person"
+                                                }
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
                                                         {column.format && typeof value === "number"
