@@ -30,13 +30,26 @@ public class ClientCompanyController {
         return ResponseEntity.ok(clientCompanyService.findAll());
     }
 
+    @PutMapping
+    public ResponseEntity<String> update(@RequestBody @Valid ClientCompanyRequest companyRequest) throws NotFoundException {
+        clientCompanyService.update(companyRequest);
+        return ResponseEntity.ok("Client company has been updated");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) throws NotFoundException {
+        clientCompanyService.delete(id);
+        return ResponseEntity.ok("Client company has been deleted");
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<ClientCompany> findById(@PathVariable Long id) throws NotFoundException {
         return ResponseEntity.ok(clientCompanyService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid ClientCompanyRequest companyRequest) throws AlreadyExistException {
+    public ResponseEntity<String> save(@RequestBody @Valid ClientCompanyRequest companyRequest) throws AlreadyExistException {
         clientCompanyService.saveOne(companyRequest);
         return ResponseEntity.ok("Client company has been saved");
     }
