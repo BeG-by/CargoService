@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -20,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "waybill")
-
 public class Waybill implements Serializable, Cloneable {
 
     @Id
@@ -40,9 +38,7 @@ public class Waybill implements Serializable, Cloneable {
     private Auto auto;
 
     @JoinColumn(name = "id_invoice")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonManagedReference (value = "invoice_waybill")
-    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
     private Invoice invoice;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "waybill")
@@ -51,8 +47,7 @@ public class Waybill implements Serializable, Cloneable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
-//    @JsonBackReference(value = "waybill_company")
-    @JsonIgnore
+    @JsonBackReference(value = "waybill_company")
     private ClientCompany clientCompany;
 
 }

@@ -23,6 +23,8 @@ export const SigninButton = (props) => {
                 Sign in
             </Button>
             <DialogWindow
+                fullWidth="true"
+                maxWidth="xs"
                 dialogTitle="Entry:"
                 handleClose={props.handleClose}
                 openDialog={props.openDialog}

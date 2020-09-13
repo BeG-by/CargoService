@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "20px auto",
     color: "white",
     background: "rgba(0, 0, 0, 0.4)",
-    maxWidth: "3000px",
+    maxWidth: '100%',
     borderRadius: "30px",
   },
   mainParagraph: {
@@ -160,7 +160,6 @@ export default function PageTemplate(props) {
       );
       break;
     case "main":
-      localStorage.setItem("role", "sysadmin"); //fixme передать роль в параметрах?
       body = (
         <MainBody
           classes={classes}
@@ -168,13 +167,12 @@ export default function PageTemplate(props) {
           openDialog={openDialog}
           handleClose={handleClose}
           tableIcons={tableIcons}
-          role={"sysadmin"}
+          role={role}
         />
       );
-      headerText = <i>Hello, {role}!</i>; //fixme исправить заголовок, добавить иконку
+      headerText = <i>Hello, {role}!</i>;
       break;
     case "invoice":
-      localStorage.setItem("role", "manager");
       body = (
         <InvoiceBody
           classes={classes}
@@ -189,7 +187,6 @@ export default function PageTemplate(props) {
       headerText = <i>Hello, {role}!</i>;
       break;
     case "waybill":
-      localStorage.setItem("role", "manager");
       body = (
         <WaybillBody
           classes={classes}

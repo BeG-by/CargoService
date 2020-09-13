@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {validationSchema} from "../../../validation/validation-schema";
+import {validationSchemaLogin} from "../../../validation/validation-schema";
 import {Form, Formik} from "formik";
 import React from "react";
 import {FormikField, LoginField, PasswordField} from "../../parts/formik-field";
@@ -24,24 +24,24 @@ export function showLoginForm(object) {
                 username: user.login,
                 password: user.password
             }}
-            validationSchema={validationSchema}
+            validationSchema={validationSchemaLogin}
             onSubmit={object.searchByLoginPass}>
             {formProps => {
                 return (
                     <Form className="form-signin">
-                        <div className="form-group">
+
                             <FormikField obj={object.onChangeLogin}
                                          name={LoginField.name}
                                          label={LoginField.label}
                                          type={LoginField.type}
                             />
-                        </div>
-                        <div className="form-group">
+
+
                             <FormikField obj={object.onChangePassword}
                                          name={PasswordField.name}
                                          label={PasswordField.label}
                                          type={PasswordField.type}/>
-                        </div>
+
                         <br/>
                         <SubmitButton
                             listener={formProps.isSubmitting}

@@ -5,7 +5,6 @@ import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.freight.Invoice;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface InvoiceService {
 

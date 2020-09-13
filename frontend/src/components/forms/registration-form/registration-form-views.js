@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {validationSchema} from "../../../validation/validation-schema";
+import {validationSchemaLogin} from "../../../validation/validation-schema";
 import {Form, Formik} from "formik";
 import React from "react";
 import {CompanyNameField, FormikField} from "../../parts/formik-field";
@@ -31,7 +31,7 @@ export function showRegistrationForm(object) {
                 email: '',
                 phone: '',
             }}
-            validationSchema={validationSchema}
+            validationSchema={validationSchemaLogin}
             onSubmit={object.saveClient}>
             {formProps => {
                 return (

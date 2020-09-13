@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WaybillRequest {
+
+    @Positive(message = "Id cannot be negative or zero")
+    private Long id;
 
     @NotNull(message = "Departure date is mandatory")
     private LocalDate departureDate;
@@ -33,11 +36,13 @@ public class WaybillRequest {
     @Positive(message = "Id cannot be negative or zero")
     private Long invoiceId;
 
-    // TODO validations
+    @NotNull(message = "Points are mandatory")
+    @Valid
     private List<Point> points;
 
     public Waybill toWaybill() {
         return Waybill.builder()
+                .id(id)
                 .departureDate(departureDate)
                 .arrivalDate(arrivalDate)
                 .points(points)

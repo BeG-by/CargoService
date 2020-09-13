@@ -53,17 +53,21 @@ public class WaybillServiceImpl implements WaybillService {
     @Override
     public void saveOne(WaybillRequest waybillRequest) {
         final Waybill waybill = waybillRequest.toWaybill();
+
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long invoiceId = waybillRequest.getInvoiceId();
         final Long autoId = waybillRequest.getAutoId();
+
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         waybill.setClientCompany(clientCompany);
         final Invoice invoice = invoiceRepository.getOne(invoiceId);
         waybill.setInvoice(invoice);
         final Auto auto = autoRepository.getOne(autoId);
         waybill.setAuto(auto);
+
         waybill.getPoints().forEach(p -> p.setWaybill(waybill));
+
         final Waybill waybillDb = waybillRepository.save(waybill);
         log.info("Waybill has been saved {}", waybillDb);
     }

@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {validationSchema} from "../../../validation/validation-schema";
+import {validationSchemaLogin} from "../../../validation/validation-schema";
 import {Field, Form, Formik} from "formik";
 import React from "react";
 import {
@@ -75,7 +75,7 @@ export function showWaybillForm(object) {
                 consignee: waybill.consignee,
                 driverId: waybill.driverId,
             }}
-            validationSchema={validationSchema}
+            validationSchema={validationSchemaLogin}
             onSubmit={object.saveWaybill}>
             {formProps => {
                 return (

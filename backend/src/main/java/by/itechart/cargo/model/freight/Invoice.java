@@ -5,6 +5,7 @@ import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,7 +65,7 @@ public class Invoice implements Serializable, Cloneable {
     private Driver driver;
 
     @OneToOne(mappedBy = "invoice")
-//    @JsonBackReference(value = )
+    @JsonIgnore
     private Waybill waybill;
 
     @JoinColumn(name = "id_user_registration", nullable = false)
