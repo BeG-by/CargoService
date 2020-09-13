@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/api/waybills")
-@Validated
+//@Validated
 public class WaybillController {
 
     private final WaybillService waybillService;
@@ -35,7 +35,7 @@ public class WaybillController {
         return ResponseEntity.ok(waybillService.findById(id));
     }
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid WaybillRequest waybillRequest) {
+    public ResponseEntity<String> saveOne(@RequestBody WaybillRequest waybillRequest) {
         waybillService.saveOne(waybillRequest);
         return ResponseEntity.ok("Waybill has been saved");
     }

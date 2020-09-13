@@ -13,14 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PointRequest {
 
-    @NotNull(message = "Place is mandatory")
     @NotBlank(message = "Place is mandatory")
     @Size(max = 255, message = "Place length has oversize")
     private String place;
 
     private boolean isPassed;
 
-    @PastOrPresent(message = "Passage date must be past or present date")
+//    @PastOrPresent(message = "Passage date must be past or present date")
     private LocalDateTime passageDate;
 
     @NotNull (message = "Waybill id is mandatory")
