@@ -1,6 +1,7 @@
 import Button from "@material-ui/core/Button";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     sectionDesktop: {
@@ -11,6 +12,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function handleLogout() {
+//     const endpoint = "/v1/api/auth/logout";
+//     axios.get(endpoint)
+//         .then(res => {
+//                 if (res.data === "success") {
+//                     this.props.history.push("/");
+//                     localStorage.clear();
+//                 }
+//             },
+//             error => {
+//                alert("Cannot log out")
+//             });
+// }
     localStorage.clear();
     window.location.href = "/";
 }
