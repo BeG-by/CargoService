@@ -7,10 +7,7 @@ import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -66,6 +63,8 @@ public class Invoice implements Serializable, Cloneable {
 
     @OneToOne(mappedBy = "invoice")
     @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Waybill waybill;
 
     @JoinColumn(name = "id_user_registration", nullable = false)
