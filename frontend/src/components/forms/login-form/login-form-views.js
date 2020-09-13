@@ -15,7 +15,7 @@ export function showError(object) {
         </div>);
 }
 
-export function showLoginForm(object) {
+export function FormLogin(object) {
     const {user} = object.state;
     return (
         <Formik
@@ -29,19 +29,15 @@ export function showLoginForm(object) {
             {formProps => {
                 return (
                     <Form className="form-signin">
-
                             <FormikField obj={object.onChangeLogin}
                                          name={LoginField.name}
                                          label={LoginField.label}
                                          type={LoginField.type}
                             />
-
-
                             <FormikField obj={object.onChangePassword}
                                          name={PasswordField.name}
                                          label={PasswordField.label}
                                          type={PasswordField.type}/>
-
                         <br/>
                         <SubmitButton
                             listener={formProps.isSubmitting}

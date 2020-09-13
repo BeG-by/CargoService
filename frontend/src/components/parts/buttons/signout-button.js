@@ -12,20 +12,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function handleLogout() {
-//     const endpoint = "/v1/api/auth/logout";
-//     axios.get(endpoint)
-//         .then(res => {
-//                 if (res.data === "success") {
-//                     this.props.history.push("/");
-//                     localStorage.clear();
-//                 }
-//             },
-//             error => {
-//                alert("Cannot log out")
-//             });
-// }
-    localStorage.clear();
-    window.location.href = "/";
+    const endpoint = "/v1/api/auth/logout";
+    axios.get(endpoint)
+        .then(res => {
+                window.location.href = "/";
+                localStorage.clear();
+            },
+            error => {
+                console.log("Cannot log out: " + error);
+            });
 }
 
 export const SignoutButton = () => {
