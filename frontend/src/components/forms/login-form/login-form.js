@@ -35,10 +35,10 @@ export default class LoginForm extends Component {
         axios.post(endpoint, user_object)
             .then(res => {
                     this.setState({
-                        roles: res.data.role
+                        roles: res.data.roles
                     });
                     localStorage.setItem("authorization", res.data.token);
-                    // localStorage.setItem("role", res.data.role);//fixme как лучше сохранить роль?
+                    localStorage.setItem("role", this.state.roles);
                     return this.showMainPage();
                 },
                 error => {
@@ -50,19 +50,8 @@ export default class LoginForm extends Component {
     }
 
     showMainPage() {
-        const endpoint = "/mainPage";
-        axios.get(endpoint)
-            .then(res => {
-                    if (res.data === "success") {
-                        this.props.history.push("/mainPage");
-                    }
-                },
-                error => {
-                    this.setState({
-                        errorText: "Authentication failure",
-                        error
-                    });
-                });
+        window.location.href = "/mainPage";
+        this.props.history.push("/mainPage");
     }
 
     onChangePassword(event) {

@@ -5,6 +5,9 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import useTheme from "@material-ui/core/styles/useTheme";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import DialogContent from "@material-ui/core/DialogContent";
 
 const styles = (theme) => ({
     root: {
@@ -36,17 +39,25 @@ const DialogTitle = withStyles(styles)((props) => {
     );
 });
 
+
+
+
 export const DialogWindow = (props) => {
+
     return (
-        <Dialog onClose={props.handleClose}
-                aria-labelledby="simple-dialog-title"
+        <Dialog fullWidth={props.fullWidth}
+                maxWidth={props.maxWidth}
+                onClose={props.handleClose}
+                aria-labelledby="form-dialog-title"
                 open={props.openDialog}>
-            <DialogTitle style={{color:'#3f51b5'}}
+            <DialogTitle style={{color:'#3f51b5', textAlign: "center"}}
                          id="customized-dialog-title"
                          onClose={props.handleClose}>
                 {props.dialogTitle}
             </DialogTitle>
+            <DialogContent>
             {props.form}
+            </DialogContent>
         </Dialog>
     );
 }

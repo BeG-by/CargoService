@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-
 import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
 
 @Service
@@ -57,7 +56,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice findById(long id) throws NotFoundException {
-        return invoiceRepository.findById(id).orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        return invoiceRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
     }
 
 
@@ -83,7 +83,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setInvoice(invoice);
             p.setProductStatus(Status.ACCEPTED);
         });
-        invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
+
+        if (invoiceRequest.getStatus() == null || invoiceRequest.getStatus().isEmpty()) {
+            invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
+        } else {
+            invoice.setInvoiceStatus(InvoiceStatus.valueOf(invoiceRequest.getStatus()));
+        }
 
         final Invoice invoiceDb = invoiceRepository.save(invoice);
 

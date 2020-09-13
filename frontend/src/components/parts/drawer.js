@@ -36,15 +36,15 @@ let components = [];
 
 //todo для каждого свои кнопки
 switch (role) {
-    case 'sysadmin':
+    case 'SYSADMIN':
         break;
-    case 'admin':
+    case 'ADMIN':
 
         break;
-    case 'dispatcher':
+    case 'DISPATCHER':
 
         break;
-    case 'manager':
+    case 'MANAGER':
         const deliveryNotesList = <ItemInvoiceList key='Invoices'/>;
         const waybillList = <ItemWaybillList key='Waybills'/>;
         const divider = <Divider key='Divider'/>;
@@ -52,10 +52,10 @@ switch (role) {
         components.push(waybillList);
         components.push(divider);
         break;
-    case 'driver':
+    case 'DRIVER':
 
         break;
-    case 'owner':
+    case 'OWNER':
 
         break;
     default:

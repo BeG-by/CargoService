@@ -7,29 +7,28 @@ import MainBodyManager from "./main-body-manager";
 import MainBodyDriver from "./main-body-driver";
 import MainBodyOwner from "./main-body-owner";
 
-//fixme исправить содержимое тела главной страницы
 export const MainBody = (props) => {
     const tableIcons = props.tableIcons;
     const classes = props.classes;
     let content;
     let role = props.role;
     switch (role) {
-        case 'sysadmin':
-            content = <MainBodySysadmin classes={classes} tableIcons={tableIcons}/>
-            break;
-        case 'admin':
-            content = <MainBodyAdmin classes={classes} tableIcons={tableIcons}/>
-            break;
-        case 'dispatcher':
-            content = <MainBodyDispatcher classes={classes} tableIcons={tableIcons}/>
-            break;
-        case 'manager':
+        case 'SYSADMIN': //fixme вернуть сисадмина
             content = <MainBodyManager classes={classes} tableIcons={tableIcons}/>
             break;
-        case 'driver':
+        case 'ADMIN':
+            content = <MainBodyAdmin classes={classes} tableIcons={tableIcons}/>
+            break;
+        case 'DISPATCHER':
+            content = <MainBodyDispatcher classes={classes} tableIcons={tableIcons}/>
+            break;
+        case 'MANAGER':
+            content = <MainBodyManager classes={classes} tableIcons={tableIcons}/>
+            break;
+        case 'DRIVER':
             content = <MainBodyDriver classes={classes} tableIcons={tableIcons}/>
             break;
-        case 'owner':
+        case 'OWNER':
             content = <MainBodyOwner classes={classes} tableIcons={tableIcons}/>
             break;
         default:
