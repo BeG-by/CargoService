@@ -53,7 +53,7 @@ public class WaybillServiceImpl implements WaybillService {
     @Override
     public void saveOne(WaybillRequest waybillRequest) {
         final Waybill waybill = waybillRequest.toWaybill();
-        System.out.println(waybill);
+
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long invoiceId = waybillRequest.getInvoiceId();
@@ -65,9 +65,9 @@ public class WaybillServiceImpl implements WaybillService {
         waybill.setInvoice(invoice);
         final Auto auto = autoRepository.getOne(autoId);
         waybill.setAuto(auto);
-        System.out.println(waybill);
+
         waybill.getPoints().forEach(p -> p.setWaybill(waybill));
-        System.out.println(waybill);
+
         final Waybill waybillDb = waybillRepository.save(waybill);
         log.info("Waybill has been saved {}", waybillDb);
     }

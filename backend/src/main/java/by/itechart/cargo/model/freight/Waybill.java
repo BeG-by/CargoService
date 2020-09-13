@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "waybill")
-
 public class Waybill implements Serializable, Cloneable {
 
     @Id

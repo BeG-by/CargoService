@@ -8,34 +8,7 @@ Content-Type: application/json
 
 ###
 
-// --- Waybills ---
-
-GET localhost:8080/v1/api/waybills/1
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
-
-###
-
-POST localhost:8080/v1/api/waybills
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
-
-{
-  "autoId": 1,
-  "invoiceId": 2,
-  "departureDate": "2020-09-10",
-  "arrivalDate": "2020-09-15",
-  "points": [
-    {
-      "place": "Vitebsk",
-      "passageDate": null,
-      "isPassed": false
-    }
-  ]
-}
-
-###
-
+// --- Owners ---
 
 GET localhost:8080/v1/api/owners
 Content-Type: application/json
@@ -87,19 +60,17 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 {
-<<<<<<< HEAD
-  "invoiceNumber": "TTN321338",
-=======
-  "invoiceNumber": "TTN32133233333333333333",
->>>>>>> master
-  "registrationDate": "2020-01-01",
+  "id": 1,
+  "status": "ACCEPTED",
+  "invoiceNumber": "TTN327775",
+  "registrationDate": "2020-01-03",
   "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
   "consignee": "OOO 'Test warehouse', Smolensk, Lenina 5 ",
   "driverId": 1,
   "products": [
     {
       "name": "test product",
-      "quantity": 3213,
+      "quantity": 5,
       "measure": "bochka",
       "price": 100,
       "sum": 13,
@@ -136,3 +107,31 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 }
 
 ###
+
+###
+
+// --- Waybills ---
+
+GET localhost:8080/v1/api/waybills/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
+
+POST localhost:8080/v1/api/waybills
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+{
+  "autoId": 1,
+  "invoiceId": 2,
+  "departureDate": "2020-09-10",
+  "arrivalDate": "2020-09-15",
+  "points": [
+    {
+      "place": "Vitebsk",
+      "passageDate": "2020-09-13",
+      "isPassed": true
+    }
+  ]
+}
