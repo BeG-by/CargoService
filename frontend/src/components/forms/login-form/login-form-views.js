@@ -29,19 +29,19 @@ export function showLoginForm(object) {
             {formProps => {
                 return (
                     <Form className="form-signin">
-                        <div className="form-group">
+
                             <FormikField obj={object.onChangeLogin}
                                          name={LoginField.name}
                                          label={LoginField.label}
                                          type={LoginField.type}
                             />
-                        </div>
-                        <div className="form-group">
+
+
                             <FormikField obj={object.onChangePassword}
                                          name={PasswordField.name}
                                          label={PasswordField.label}
                                          type={PasswordField.type}/>
-                        </div>
+
                         <br/>
                         <SubmitButton
                             listener={formProps.isSubmitting}

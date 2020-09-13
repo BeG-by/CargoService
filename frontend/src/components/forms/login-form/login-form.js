@@ -50,8 +50,8 @@ export default class LoginForm extends Component {
     }
 
     showMainPage() {
+        window.location.href = "/mainPage";
         this.props.history.push("/mainPage");
-        window.location.href = "/mainPage"
     }
 
     onChangePassword(event) {

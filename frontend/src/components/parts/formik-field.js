@@ -5,7 +5,6 @@ import {ErrorMsg} from "./error-message";
 
 export const FormikField = (props) => {
     return (
-        <div className="FormikField">
             <TextField variant="standard"
                        label={props.label}
                        name={props.name}
@@ -13,9 +12,10 @@ export const FormikField = (props) => {
                        className="form-control"
                        onChange={props.obj}
                        helperText={<ErrorMsg name={props.name} />}
-                       style={{minWidth: 250}}
+                       autoFocus
+                       margin="dense"
+                       fullWidth="true"
             />
-        </div>
     )
 }
 
