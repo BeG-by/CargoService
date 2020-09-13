@@ -3,6 +3,7 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.service.ClientCompanyService;
@@ -41,7 +42,6 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     @Override
     public void saveOne(ClientCompanyRequest clientCompanyRequest) throws AlreadyExistException {
-
         final ClientCompany clientCompany = clientCompanyRequest.toClientCompany();
         final String name = clientCompany.getName();
         final String payerAccountNumber = clientCompany.getPayerAccountNumber();
@@ -54,13 +54,42 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
         if (clientCompanyRepository.getByPayerAccountNumber(payerAccountNumber).isPresent()) {
             throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", payerAccountNumber));
         }
-
         if (clientCompanyRepository.getByEmail(email).isPresent()) {
             throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", email));
         }
 
-        final ClientCompany clientDb = clientCompanyRepository.save(clientCompanyRequest.toClientCompany());
-        log.info("Client company has benn saved {}", clientDb);
+        final ClientCompany clientDb = clientCompanyRepository.save(clientCompany);
+        log.info("Client company has been saved {}", clientDb);
+    }
+
+    @Override
+    public void update(ClientCompanyRequest clientCompanyRequest) throws NotFoundException {
+        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyRequest.getId())
+                .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
+
+        clientCompany.setName(clientCompanyRequest.getName());
+        clientCompany.setPayerAccountNumber(clientCompanyRequest.getPayerAccountNumber());
+        clientCompany.setType(clientCompanyRequest.getType());
+        clientCompany.setEmail(clientCompanyRequest.getEmail());
+        clientCompany.setRegistrationDate(clientCompanyRequest.getRegistrationDate());
+
+        Address address = clientCompany.getAddress();
+
+        address.setCountry(clientCompanyRequest.getCountry());
+        address.setCity(clientCompanyRequest.getCity());
+        address.setStreet(clientCompanyRequest.getStreet());
+        address.setHouse(clientCompanyRequest.getHouse());
+        address.setFlat(clientCompanyRequest.getFlat());
+
+        log.info("Client company has been updated {}", clientCompany);
+    }
+
+    @Override
+    public void delete(Long id) throws NotFoundException {
+        ClientCompany clientCompany = clientCompanyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
+        clientCompanyRepository.delete(clientCompany);
+        log.info("Client company has been deleted {}", clientCompany);
     }
 
 }

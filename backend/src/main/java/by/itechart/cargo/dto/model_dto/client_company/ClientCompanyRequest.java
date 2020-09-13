@@ -15,6 +15,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ClientCompanyRequest implements Serializable, Cloneable {
 
+    @Positive(message = "Id cannot be negative or zero")
+    private Long id;
+
     @NotBlank(message = "Name is mandatory")
     @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
