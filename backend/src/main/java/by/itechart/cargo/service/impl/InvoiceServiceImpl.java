@@ -1,6 +1,8 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
+import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
 
 @Service
@@ -51,6 +55,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<Invoice> findAll() {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
+    }
+
+    @Override
+    public List<InvoiceTableResponse> findAllTableData() {
+        return findAll().stream()
+                .map(invoice -> new InvoiceTableResponse().toInvoiceTableResponse(invoice))
+                .collect(Collectors.toList());
     }
 
 
@@ -96,5 +107,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+    @Override
+    public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) {
+        final Invoice invoice = invoiceRequest.toInvoice();
+        Invoice foundInvoice = invoiceRepository.getOne(invoice.getId());
+        foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
+        final Invoice invoiceDb = invoiceRepository.save(foundInvoice);
+        log.info("Invoice has been verified {}", invoiceDb);
+    }
 
 }
