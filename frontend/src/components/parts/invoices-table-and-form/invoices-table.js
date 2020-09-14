@@ -11,6 +11,8 @@ import WaybillDialog from "./waybill-dialog";
 import {getAllInvoices} from "./request-utils";
 import {assignFillingWaybill} from "../dialogs/fill-waybill";
 import {DialogWindow} from "../dialog";
+import Button from "@material-ui/core/Button";
+import InvoiceDialog from "./invoice-dialog";
 
 const columns = [
     {id: "number", label: "#", minWidth: 150},
@@ -43,6 +45,7 @@ export default function InvoicesTable() {
     const [form, setForm] = React.useState(null);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
+    const [invoiceDialogOpen, setInvoiceDialogOpen] = React.useState(false);
     const [selectedInvoiceId, setSelectedInvoiceId] = React.useState(0);
 
     async function fetchInvoices() {
@@ -79,6 +82,10 @@ export default function InvoicesTable() {
 
     const handleClose = () => {
         setOpenDialog(false);
+    };
+
+    const handleCreateNewInvoiceCLick = () => {
+        setInvoiceDialogOpen(true);
     };
 
     return (
@@ -155,6 +162,30 @@ export default function InvoicesTable() {
                     }}
                 />
 
+                <InvoiceDialog
+                    open={invoiceDialogOpen}
+
+                    onDelete={() => {
+                        setInvoiceDialogOpen(false);
+                        fetchInvoices();
+                    }}
+                    onClose={() => {
+                        setInvoiceDialogOpen(false);
+                        fetchInvoices();
+                    }}
+                    onSubmit={() => {
+                        setInvoiceDialogOpen(false);
+                        fetchInvoices();
+                    }}
+                />
+
+                <Button
+                    onClick={handleCreateNewInvoiceCLick}
+                    variant="contained"
+                    color="primary"
+                >
+                    Add new invoice
+                </Button>
                 <DialogWindow
                         dialogTitle="Confirmation"
                         handleClose={handleClose}
@@ -165,3 +196,4 @@ export default function InvoicesTable() {
         </div>
     );
 }
+//fixme (связать InvoiceDialog с invoice-creating-form.js, которая сейчас возвращает диалог)
