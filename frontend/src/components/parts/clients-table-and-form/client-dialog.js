@@ -10,18 +10,19 @@ import FormikField from "./formik-field";
 import ClientCompanyTypeSelector from "./client-company-type-selector";
 import {Formik, Form} from "formik";
 import {
-    getClientById,
-    saveClient,
-    updateClient,
-    deleteClient,
+    makeDeleteClientRequest,
+    makeSaveClientRequest,
+    makeGetClientByIdRequest,
+    makeUpdateClientRequest,
 } from "./request-utils";
 import {ClientFormValidationSchema} from "./validation-schema";
+import {ToastNotification} from "../toast-notification";
 
 const EMPTY_CLIENT = {
     id: -1,
     name: "",
     payerAccountNumber: "",
-    type: "",
+    type: "SP",
     email: "",
     address: {country: "", city: "", street: "", house: "", flat: ""},
     registrationDate: new Date(),
@@ -46,15 +47,83 @@ export default function ClientDialog(props) {
     const {onSubmit, onDelete, onClose, open} = props;
     const [client, setClient] = useState(EMPTY_CLIENT);
 
-    useEffect(() => {
-        async function fetchClient() {
-            setClient(await getClientById(props.clientCompanyId));
-        }
+    const [toastNotificationOpen, setToastNotificationOpen] = useState(false);
+    const [toastNotificationText, setToastNotificationText] = useState("");
+    const [toastNotificationSeverity, setToastNotificationSeverity] = useState("success");
 
-        if (props.clientCompanyId >= 0) {
-            fetchClient();
+    const openNotificationToast = (text, severity) => {
+        setToastNotificationOpen(true);
+        setToastNotificationText(text);
+        setToastNotificationSeverity(severity);
+    }
+
+    const closeNotificationToast = () => {
+        setToastNotificationOpen(false);
+    }
+
+    function getClientById(id) {
+        makeGetClientByIdRequest(id)
+            .then((response) => {
+                setClient(response.data);
+            })
+            .catch((error) => {
+                handleRequestError(error);
+                onClose();
+            })
+    }
+
+
+    function saveClient(client) {
+        makeSaveClientRequest(client)
+            .then(() => {
+                openNotificationToast("Client has been saved", "success")
+                setClient(EMPTY_CLIENT);
+                onSubmit();
+            })
+            .catch((error) => {
+                handleRequestError(error);
+            });
+    }
+
+    function updateClient(client) {
+        client.id = props.clientCompanyId;
+        makeUpdateClientRequest(client)
+            .then(() => {
+                openNotificationToast("Client has been updated", "success")
+                setClient(EMPTY_CLIENT);
+                onSubmit();
+            })
+            .catch((error) => {
+                handleRequestError(error);
+            });
+    }
+
+    function deleteClient() {
+        makeDeleteClientRequest(props.clientCompanyId)
+            .then(() => {
+                openNotificationToast("Client has been deleted", "success")
+                setClient(EMPTY_CLIENT);
+                onDelete();
+            })
+            .catch((error) => {
+                handleRequestError(error);
+            });
+    }
+
+    function handleRequestError(error) {
+        if (error.response) {
+            openNotificationToast(error.response.data, "error")
+        } else {
+            openNotificationToast("Cannot get response from server", "error")
+        }
+    }
+
+    useEffect(() => {
+        if (props.clientCompanyId !== -1) {
+            getClientById(props.clientCompanyId);
         }
     }, [props.clientCompanyId]);
+
 
     const handleClose = () => {
         setClient(EMPTY_CLIENT);
@@ -64,30 +133,18 @@ export default function ClientDialog(props) {
     const handleSubmit = (values) => {
         const client = parseClient(values);
         if (props.clientCompanyId === -1) {
-            saveClient(client).then(() => {
-                alert("Client was saved!");
-                setClient(EMPTY_CLIENT);
-                onSubmit();
-            });
+            saveClient(client);
         } else {
-            client.id = props.clientCompanyId;
-            updateClient(client).then(() => {
-                alert("Client was updated!");
-                setClient(EMPTY_CLIENT);
-                onSubmit();
-            });
+            updateClient(client);
         }
     };
 
-    const handleDeleteClick = () => {
+    const handleDelete = () => {
         if (props.clientCompanyId !== -1) {
-            deleteClient(props.clientCompanyId).then(() => {
-                alert("Client was deleted");
-                setClient(EMPTY_CLIENT);
-                onDelete();
-            });
+            deleteClient();
         }
     };
+
 
     return (
         <div>
@@ -197,7 +254,7 @@ export default function ClientDialog(props) {
                                         <Button
                                             variant="contained"
                                             color="secondary"
-                                            onClick={handleDeleteClick}
+                                            onClick={handleDelete}
                                         >
                                             Delete
                                         </Button>
@@ -211,6 +268,11 @@ export default function ClientDialog(props) {
                     </Formik>
                 </DialogContent>
             </Dialog>
+
+            <ToastNotification text={toastNotificationText} severity={toastNotificationSeverity}
+                               open={toastNotificationOpen} onClose={() => {
+                closeNotificationToast()
+            }}/>
         </div>
     );
 }

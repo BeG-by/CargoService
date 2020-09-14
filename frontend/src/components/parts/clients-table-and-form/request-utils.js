@@ -1,53 +1,46 @@
 import axios from "axios";
 
-/* TODO: add error handling, refactor */
-export async function getClientById(id) {
+/* TODO: refactor */
+export function makeGetClientByIdRequest(id) {
     const endpoint = `/v1/api/clients/${id}`;
-    return await axios({
+    return axios({
         method: "get",
         url: endpoint,
         headers: {
             Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwMTE4MjU5LCJleHAiOjE2MDA5ODIyNTl9.4TrjecDbyND38UvVltvxlrcD5muamAX5LYCCNcOUShM",
         },
-    }).then((res) => {
-        return res.data;
     });
 }
 
-export async function updateClient(client) {
-    console.log(client);
+export function makeUpdateClientRequest(client) {
     const endpoint = `/v1/api/clients`;
-    return await axios({
+    return axios({
         method: "put",
         url: endpoint,
         headers: {
             Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwMTE4MjU5LCJleHAiOjE2MDA5ODIyNTl9.4TrjecDbyND38UvVltvxlrcD5muamAX5LYCCNcOUShM",
         },
         data: client,
-    }).then((res) => {
-        return true;
     });
 }
 
-export async function getAllClients() {
+export function makeGetAllClientsRequest() {
     const endpoint = `/v1/api/clients`;
-    return await axios({
+    return axios({
         method: "get",
         url: endpoint,
         headers: {
             Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwMTE4MjU5LCJleHAiOjE2MDA5ODIyNTl9.4TrjecDbyND38UvVltvxlrcD5muamAX5LYCCNcOUShM",
         },
-    }).then((res) => {
-        return res.data;
-    });
+    })
 }
 
-export async function saveClient(client) {
+export function makeSaveClientRequest(client) {
     const endpoint = `/v1/api/clients`;
-    return await axios({
+    return axios({
         method: "post",
         url: endpoint,
         headers: {
@@ -55,21 +48,17 @@ export async function saveClient(client) {
                 "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
         },
         data: client,
-    }).then((res) => {
-        return true;
     });
 }
 
-export async function deleteClient(clientId) {
+export function makeDeleteClientRequest(clientId) {
     const endpoint = `/v1/api/clients/` + clientId;
-    return await axios({
+    return axios({
         method: "delete",
         url: endpoint,
         headers: {
             Authorization:
                 "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
         },
-    }).then((res) => {
-        return true;
     });
 }

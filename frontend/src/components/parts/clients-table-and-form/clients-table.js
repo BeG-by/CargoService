@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -9,8 +9,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import ClientDialog from "./client-dialog";
-import {getAllClients} from "./request-utils";
+import {makeGetAllClientsRequest} from "./request-utils";
 import Button from "@material-ui/core/Button";
+import {ToastNotification} from "../toast-notification";
 
 const columns = [
     {id: "name", label: "Name", minWidth: 170},
@@ -60,7 +61,7 @@ const columns = [
 ];
 
 function fetchFieldFromObject(obj, prop) {
-    var index = prop.indexOf(".");
+    let index = prop.indexOf(".");
     if (index > -1) {
         return fetchFieldFromObject(
             obj[prop.substring(0, index)],
@@ -90,13 +91,40 @@ export default function ClientsTable() {
     const [selectedClientCompanyId, setSelectedClientCompanyId] = React.useState(
         -1
     );
+    const [toastNotificationOpen, setToastNotificationOpen] = useState(false);
+    const [toastNotificationText, setToastNotificationText] = useState("");
+    const [toastNotificationSeverity, setToastNotificationSeverity] = useState("success");
 
-    async function fetchClientsCompanies() {
-        setClients(await getAllClients());
+    const openNotificationToast = (text, severity) => {
+        setToastNotificationOpen(true);
+        setToastNotificationText(text);
+        setToastNotificationSeverity(severity);
+    }
+
+    const closeNotificationToast = () => {
+        setToastNotificationOpen(false);
+    }
+
+    function handleRequestError(error) {
+        if (error.response) {
+            openNotificationToast(error.response.data, "error")
+        } else {
+            openNotificationToast("Cannot get response from server", "error")
+        }
+    }
+
+    const updateTable = () => {
+        makeGetAllClientsRequest()
+            .then((response) => {
+                setClients(response.data)
+            })
+            .catch((error) => {
+                handleRequestError(error);
+            })
     }
 
     useEffect(() => {
-        fetchClientsCompanies();
+        updateTable();
     }, []);
 
     const handleChangePage = (event, newPage) => {
@@ -151,9 +179,9 @@ export default function ClientsTable() {
                                         >
                                             {columns.map((column) => {
                                                 let value = fetchFieldFromObject(client, column.id);
-                                                if (value === "SP"){
+                                                if (value === "SP") {
                                                     value = "Sole proprietorship"
-                                                }else if (value === "JP"){
+                                                } else if (value === "JP") {
                                                     value = "Juridical person"
                                                 }
                                                 return (
@@ -187,17 +215,17 @@ export default function ClientsTable() {
                     onDelete={() => {
                         setClientDialogOpen(false);
                         setSelectedClientCompanyId(-1);
-                        fetchClientsCompanies();
+                        updateTable();
                     }}
                     onClose={() => {
                         setClientDialogOpen(false);
                         setSelectedClientCompanyId(-1);
-                        fetchClientsCompanies();
+                        updateTable();
                     }}
                     onSubmit={() => {
                         setClientDialogOpen(false);
                         setSelectedClientCompanyId(-1);
-                        fetchClientsCompanies();
+                        updateTable();
                     }}
                 />
             </Paper>
@@ -208,6 +236,12 @@ export default function ClientsTable() {
             >
                 Add new client
             </Button>
+
+
+            <ToastNotification text={toastNotificationText} severity={toastNotificationSeverity}
+                               open={toastNotificationOpen} onClose={() => {
+                closeNotificationToast()
+            }}/>
         </div>
     );
 }
