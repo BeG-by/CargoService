@@ -11,6 +11,7 @@ import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,15 +31,14 @@ public class UserServiceImpl implements UserService {
     private final ClientCompanyRepository clientCompanyRepository;
     private final RoleRepository roleRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           ClientCompanyRepository clientCompanyRepository,
-                           RoleRepository roleRepository,
-                           JwtTokenUtil jwtTokenUtil) {
+    public UserServiceImpl(UserRepository userRepository, ClientCompanyRepository clientCompanyRepository, RoleRepository roleRepository, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.roleRepository = roleRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
         final User user = userRequest.toUser();
         user.setRoles(rolesDb);
         user.setClientCompany(clientCompanyRepository.getOne(companyId));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User userDb = userRepository.save(user);
         log.info("User has been saved {}", userDb);
