@@ -68,14 +68,14 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
 
         if (clientCompanyRepository.getByName(clientCompany.getName()).isPresent()) {
-            throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompany.getName()));
+            throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompanyRequest.getName()));
         }
 
         if (clientCompanyRepository.getByPayerAccountNumber(clientCompany.getPayerAccountNumber()).isPresent()) {
-            throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompany.getPayerAccountNumber()));
+            throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompanyRequest.getPayerAccountNumber()));
         }
         if (clientCompanyRepository.getByEmail(clientCompany.getEmail()).isPresent()) {
-            throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompany.getEmail()));
+            throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompanyRequest.getEmail()));
         }
 
         clientCompany.setName(clientCompanyRequest.getName());
