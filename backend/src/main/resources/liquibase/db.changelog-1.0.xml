@@ -625,7 +625,7 @@
     </changeSet>
 
     <!--Data for test-->
-    <changeSet id="1.0.7" author="marianna.patrusova">
+    <changeSet id="1.0.9" author="marianna.patrusova">
 
         <insert tableName="waybill">
             <column name="id_waybill" value="1"/>

@@ -20,7 +20,8 @@ export const InvoiceBody = (props) => {
     }
 
     let number = localStorage.getItem('number');
-    let status = localStorage.getItem('status');
+    // let status = localStorage.getItem('status');
+    let status = "registered";
     let button;
     let style;
 

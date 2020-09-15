@@ -1,15 +1,14 @@
 package by.itechart.cargo.model.freight;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -34,12 +33,11 @@ public class Point implements Serializable, Cloneable {
 
     @PastOrPresent(message = "Passage date must be past or present date")
     @Column(name = "passage_date")
-    private LocalDateTime passageDate;
+    private LocalDate passageDate;
 
-    @NotNull(message = "Waybill id is mandatory")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_waybill", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Waybill waybill;
