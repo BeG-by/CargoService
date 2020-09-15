@@ -18,23 +18,14 @@ import java.io.IOException;
 public class JwtTokenFilter extends GenericFilterBean {
 
     private JwtTokenUtil jwtTokenUtil;
-    private boolean isRequest;
 
     @Autowired
     public JwtTokenFilter(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
-        isRequest = true;
     }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
-
-
-        if (!isRequest) {
-            isRequest = true;
-            filterChain.doFilter(req, resp);
-            return;
-        }
 
         final String token = jwtTokenUtil.resolveToken((HttpServletRequest) req);
 
@@ -47,7 +38,6 @@ public class JwtTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
 
-                isRequest = false;
 
             }
 

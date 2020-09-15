@@ -8,7 +8,7 @@ export function makeGetClientByIdRequest(id) {
     url: endpoint,
     headers: {
       Authorization:
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwMTE4MjU5LCJleHAiOjE2MDA5ODIyNTl9.4TrjecDbyND38UvVltvxlrcD5muamAX5LYCCNcOUShM",
+        localStorage.getItem("authorization"),
     },
   });
 }
@@ -20,7 +20,7 @@ export function makeUpdateClientRequest(client) {
     url: endpoint,
     headers: {
       Authorization:
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwMTE4MjU5LCJleHAiOjE2MDA5ODIyNTl9.4TrjecDbyND38UvVltvxlrcD5muamAX5LYCCNcOUShM",
+        localStorage.getItem("authorization"),
     },
     data: client,
   });
@@ -33,7 +33,7 @@ export function makeGetAllClientsRequest() {
     url: endpoint,
     headers: {
       Authorization:
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwMTE4MjU5LCJleHAiOjE2MDA5ODIyNTl9.4TrjecDbyND38UvVltvxlrcD5muamAX5LYCCNcOUShM",
+        localStorage.getItem("authorization"),
     },
   });
 }
@@ -45,7 +45,7 @@ export function makeSaveClientRequest(client) {
     url: endpoint,
     headers: {
       Authorization:
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+        localStorage.getItem("authorization"),
     },
     data: client,
   });
@@ -58,7 +58,8 @@ export function makeDeleteClientRequest(clientId) {
     url: endpoint,
     headers: {
       Authorization:
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+        localStorage.getItem("authorization"),
     },
   });
+
 }

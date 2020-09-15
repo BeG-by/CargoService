@@ -28,11 +28,11 @@ public class WaybillController {
         return ResponseEntity.ok(waybillService.findAll());
     }
 
-    @GetMapping
-    @RequestMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<Waybill>> findById(@PathVariable(value = "id") long id) {
         return ResponseEntity.ok(waybillService.findById(id));
     }
+
     @PostMapping
     public ResponseEntity<String> saveOne(@RequestBody @Valid WaybillRequest waybillRequest) {
         waybillService.saveOne(waybillRequest);
