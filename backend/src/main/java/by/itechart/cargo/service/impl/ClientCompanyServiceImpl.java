@@ -63,9 +63,20 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public void update(ClientCompanyRequest clientCompanyRequest) throws NotFoundException {
+    public void update(ClientCompanyRequest clientCompanyRequest) throws NotFoundException, AlreadyExistException {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyRequest.getId())
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
+
+        if (clientCompanyRepository.getByName(clientCompany.getName()).isPresent()) {
+            throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompany.getName()));
+        }
+
+        if (clientCompanyRepository.getByPayerAccountNumber(clientCompany.getPayerAccountNumber()).isPresent()) {
+            throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompany.getPayerAccountNumber()));
+        }
+        if (clientCompanyRepository.getByEmail(clientCompany.getEmail()).isPresent()) {
+            throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompany.getEmail()));
+        }
 
         clientCompany.setName(clientCompanyRequest.getName());
         clientCompany.setPayerAccountNumber(clientCompanyRequest.getPayerAccountNumber());
