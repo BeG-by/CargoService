@@ -16,7 +16,7 @@ import {
   makeUpdateClientRequest,
 } from "./request-utils";
 import { ClientFormValidationSchema } from "./validation-schema";
-import useToast from "./hooks/useToast";
+import useToast from "../toast-notification/useToast";
 
 const EMPTY_CLIENT = {
   id: -1,
@@ -250,5 +250,4 @@ export default function ClientDialog(props) {
       {toast}
     </div>
   );
-
 }
