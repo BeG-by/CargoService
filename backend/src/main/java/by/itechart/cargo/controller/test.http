@@ -48,12 +48,17 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Invoices ---
 
-GET localhost:8080/v1/api/invoices
+GET localhost:8080/v1/api/invoices/1
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 ###
 
+GET localhost:8080/v1/api/invoices
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+
+###
 
 POST localhost:8080/v1/api/invoices
 Content-Type: application/json
@@ -77,6 +82,17 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
       "mass": "100 kg"
     }
   ]
+}
+
+####
+
+POST localhost:8080/v1/api/invoices/status
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+
+{
+"id": 1,
+"status": "REGISTERED"
 }
 
 ###

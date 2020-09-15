@@ -9,53 +9,57 @@ import {getInvoiceById} from "../../parts/invoices-table-and-form/request-utils"
 export const InvoiceBody = (props) => {
     const classes = props.classes;
     const [form, setForm] = React.useState(null);
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const [invoice, setInvoice] = React.useState({id: props.id});
+    const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
+    const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
+    const [invoice, setInvoice] = React.useState({id: 0, invoiceStatus: ""});
 
     const handleClose = () => {
-        setOpenDialog(false);
+        setOpenVerifyDialog(false);
+        setOpenRejectDialog(false);
     };
 
     const handleVerifyOpen = () => {
         const form = <AssignVerificationInvoice handleClose={handleClose} invoice={invoice}/>
         setForm(form);
-        setOpenDialog(true);
+        setOpenVerifyDialog(true);
     }
 
     const handleRejectOpen = () => {
         const form = <RejectVerificationInvoice handleClose={handleClose} invoice={invoice}/>
         setForm(form);
-        setOpenDialog(true);
+        setOpenRejectDialog(true);
     }
 
-    async function fetchInvoice(id) {
-        setInvoice(await getInvoiceById(id));
+    async function fetchInvoice() {
+        let selected = await getInvoiceById(localStorage.getItem("invoice"));
+        setInvoice({id: selected.id, invoiceStatus: selected.invoiceStatus});
     }
 
     useEffect(() => {
-        fetchInvoice(invoice.id);
-    }, null);
+        fetchInvoice();
+    });
 
-    let status = invoice.status;
+    let status = invoice.invoiceStatus;
     let buttonVerify;
     let buttonReject;
     let style;
 
     if (status.trim() === 'REGISTERED') {
-        buttonVerify = <OkButton content={'Verify invoice'} handleClick={handleVerifyOpen}/>
-        buttonReject = <OkButton content={'Reject invoice'} handleClick={handleRejectOpen}/>
+        buttonVerify = <OkButton content={'Verify'} handleClick={handleVerifyOpen}/>
+        buttonReject = <OkButton content={'Reject'} handleClick={handleRejectOpen}/>
         style = 'btn-row';
     } else {
         style = 'btn'
     }
 
+    //fixme сделать показ формы или просто показать инфо?
     const content = <div>
-        Invoice fields
+        Invoice fields for user's observing
         <div className={style}>
             {buttonVerify}
             {buttonReject}
-            <ReturnButton buttonText="Main Page" returnHandler="BackToMain"/>
         </div>
+        <ReturnButton buttonText="Main Page" returnHandler="BackToMain"/>
     </div>
 
     return (
@@ -71,9 +75,14 @@ export const InvoiceBody = (props) => {
                 </div>
             </main>
             <DialogWindow
-                dialogTitle="Confirmation"
+                dialogTitle="Verification"
                 handleClose={handleClose}
-                openDialog={openDialog}
+                openDialog={openVerifyDialog}
+                form={form}/>
+            <DialogWindow
+                dialogTitle="Rejection"
+                handleClose={handleClose}
+                openDialog={openRejectDialog}
                 form={form}/>
         </div>
     );

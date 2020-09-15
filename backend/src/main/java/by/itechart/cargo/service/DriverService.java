@@ -8,4 +8,6 @@ public interface DriverService {
 
     List<Driver> findAll();
 
+    Driver findById(long id);
+
 }

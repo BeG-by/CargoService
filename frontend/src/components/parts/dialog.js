@@ -37,11 +37,7 @@ const DialogTitle = withStyles(styles)((props) => {
     );
 });
 
-
-
-
 export const DialogWindow = (props) => {
-
     return (
         <Dialog fullWidth={props.fullWidth}
                 maxWidth={props.maxWidth}

@@ -1,6 +1,7 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.NotFoundException;
@@ -64,13 +65,12 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
-    public Invoice findById(long id) throws NotFoundException {
-        return invoiceRepository.findById(id).orElseThrow(() ->
+    public InvoiceResponse findById(long id) throws NotFoundException {
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        return new InvoiceResponse().toInvoiceResponse(invoice);
     }
-
 
     // TODO invoice with Number exists
     @Override

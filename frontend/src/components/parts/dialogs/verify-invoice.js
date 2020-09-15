@@ -3,26 +3,22 @@ import React from "react";
 import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../invoices-table-and-form/request-utils";
 
-const handleVerify = (invoice) => {
-    invoice.status = "ACCEPTED";
-    updateInvoiceStatus(invoice);
-    window.location.href = "/mainPage";
-}
-
-const handleReject = (invoice) => {
-    invoice.status = "REJECTED";
-    updateInvoiceStatus(invoice);
-    window.location.href = "/mainPage";
-}
-
 export const AssignVerificationInvoice = (props) => {
-    let invoice = props.invoice;
+    let i = props.invoice;
+    const [invoice, setInvoice] = React.useState({id: i.id, status: "ACCEPTED"});
+
+    const handleVerify = () => {
+        alert(invoice.id + invoice.status);
+        updateInvoiceStatus(invoice);
+        window.location.href = "/mainPage";
+    }
+
     return (
         <div className="form-signin">
             <div>
                 <i style={{fontSize: 16}}>Assign the status as "verified"?</i>
                 <div className='btn-row'>
-                    <OkButton content='OK' handleClick={handleVerify(invoice)}/>
+                    <OkButton content='OK' handleClick={handleVerify}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>
                 </div>
             </div>
@@ -30,13 +26,21 @@ export const AssignVerificationInvoice = (props) => {
 }
 
 export const RejectVerificationInvoice = (props) => {
-    let invoice = props.invoice;
+    let i = props.invoice;
+    const [invoice, setInvoice] = React.useState({id: i.id, status: "REJECTED"});
+
+    const handleReject = async () => {
+        alert(invoice.id + invoice.status);
+        await updateInvoiceStatus(invoice);
+        window.location.href = "/mainPage";
+    }
+
     return (
         <div className="form-signin">
             <div>
                 <i style={{fontSize: 16}}>Reject the invoice?</i>
                 <div className='btn-row'>
-                    <OkButton content='OK' handleClick={handleReject(invoice)}/>
+                    <OkButton content='OK' handleClick={handleReject}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>
                 </div>
             </div>

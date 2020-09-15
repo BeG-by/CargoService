@@ -1,6 +1,7 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.NotFoundException;
@@ -32,7 +33,7 @@ public class InvoiceController {
 
     @GetMapping
     @RequestMapping(value = "/{id}")
-    public ResponseEntity<Invoice> findById(@PathVariable (value = "id") long id) throws NotFoundException {
+    public ResponseEntity<InvoiceResponse> findById(@PathVariable (value = "id") long id) throws NotFoundException {
         return ResponseEntity.ok(invoiceService.findById(id));
     }
 
@@ -43,7 +44,7 @@ public class InvoiceController {
     }
 
     @PostMapping
-    @RequestMapping(value = "/{id}")
+    @RequestMapping(value = "/status")
     public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) {
         invoiceService.updateStatus(invoiceRequest);
         return ResponseEntity.ok("Invoice status has been updated");

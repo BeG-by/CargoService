@@ -34,7 +34,7 @@ public class InvoiceRequest {
     private String consignee;
 
     @NotBlank
-    @InvoiceStatusType
+//    @InvoiceStatusType(message = "Status must be the one of InvoiceStatus type")
     private String status;
 
     @NotNull(message = "Driver id number is mandatory")

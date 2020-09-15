@@ -29,5 +29,9 @@ public class DriverServiceImpl implements DriverService {
         return driverRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
+    @Override
+    public Driver findById(long id) {
+        return driverRepository.getOne(id);
+    }
 
 }

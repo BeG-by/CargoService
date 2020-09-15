@@ -8,11 +8,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices} from "./request-utils";
+import {getAllInvoices, getDriverById, getInvoiceById} from "./request-utils";
 import {assignFillingWaybill} from "../dialogs/fill-waybill";
 import {DialogWindow} from "../dialog";
 import Button from "@material-ui/core/Button";
 import InvoiceDialog from "./invoice-dialog";
+import {setIn} from "formik";
 
 const columns = [
     {id: "number", label: "#", minWidth: 150},
@@ -21,7 +22,6 @@ const columns = [
         id: "date",
         label: "Registration Date",
         minWidth: 200,
-        align: "center",
         format: (value) => value.toFixed(2),
     },
     {id: "waybill", label: "Waybill", minWidth: 150},
@@ -42,11 +42,11 @@ export default function InvoicesTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
+    const [invoice, setInvoice] = React.useState({id: 0, waybillId: "", invoiceStatus: ""});
     const [form, setForm] = React.useState(null);
-    const [openDialog, setOpenDialog] = React.useState(false);
+    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = React.useState(false);
-    const [selectedInvoiceId, setSelectedInvoiceId] = React.useState(0);
 
     async function fetchInvoices() {
         setInvoices(await getAllInvoices());
@@ -60,18 +60,24 @@ export default function InvoicesTable() {
         setPage(newPage);
     };
 
-    const handleTableRowClick = (invoice) => {
-        setSelectedInvoiceId(invoice.id);
-        if (invoice.status === "ACCEPTED" && !invoice.waybill.trim()) {
+    const handleTableRowClick = async (inv) => {
+        let selected = await getInvoiceById(inv.id);
+        setInvoice({
+            id: selected.id,
+            invoiceStatus: selected.invoiceStatus,
+            waybillId: selected.waybillId,
+        });
+        localStorage.setItem("invoice", selected.id); //fixme передать в общем стэйте
+        if (invoice.invoiceStatus === "ACCEPTED" && !invoice.waybillId.trim()) {
             setForm(assignFillingWaybill(handleWaybillFormOpen));
-            setOpenDialog(true);
+            setWaybillFillDialogOpen(true);
         } else {
             window.location.href = "/invoice";
         }
     };
 
     const handleWaybillFormOpen = () => {
-        setOpenDialog(false);
+        setWaybillFillDialogOpen(false);
         setWaybillDialogOpen(true);
     }
 
@@ -81,7 +87,7 @@ export default function InvoicesTable() {
     };
 
     const handleClose = () => {
-        setOpenDialog(false);
+        setWaybillFillDialogOpen(false);
     };
 
     const handleCreateNewInvoiceCLick = () => {
@@ -98,8 +104,7 @@ export default function InvoicesTable() {
                                 {columns.map((column) => (
                                     <TableCell
                                         key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth}}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -123,7 +128,7 @@ export default function InvoicesTable() {
                                             {columns.map((column) => {
                                                 const value = fetchFieldFromObject(invoice, column.id);
                                                 return (
-                                                    <TableCell key={column.id} align={column.align}>
+                                                    <TableCell key={column.id}>
                                                         {column.format && typeof value === "number"
                                                             ? column.format(value)
                                                             : value}
@@ -149,32 +154,15 @@ export default function InvoicesTable() {
 
                 <WaybillDialog
                     open={waybillDialogOpen}
-                    invoiceId={selectedInvoiceId}
+                    invoiceId={invoice.id}
                     onClose={() => {
                         setWaybillDialogOpen(false);
-                        setSelectedInvoiceId(0);
+                        setInvoice({id: 0, invoiceStatus: "", waybillId: ""});
                         fetchInvoices();
                     }}
                     onSubmit={() => {
                         setWaybillDialogOpen(false);
-                        setSelectedInvoiceId(0);
-                        fetchInvoices();
-                    }}
-                />
-
-                <InvoiceDialog
-                    open={invoiceDialogOpen}
-
-                    onDelete={() => {
-                        setInvoiceDialogOpen(false);
-                        fetchInvoices();
-                    }}
-                    onClose={() => {
-                        setInvoiceDialogOpen(false);
-                        fetchInvoices();
-                    }}
-                    onSubmit={() => {
-                        setInvoiceDialogOpen(false);
+                        setInvoice({id: 0, invoiceStatus: "", waybillId: ""});
                         fetchInvoices();
                     }}
                 />
@@ -183,13 +171,15 @@ export default function InvoicesTable() {
                     onClick={handleCreateNewInvoiceCLick}
                     variant="contained"
                     color="primary"
+                    style={{margin: 20}}
                 >
                     Add new invoice
                 </Button>
+
                 <DialogWindow
                         dialogTitle="Confirmation"
                         handleClose={handleClose}
-                        openDialog={openDialog}
+                        openDialog={waybillFillDialogOpen}
                         form={form}
                       />
             </Paper>
@@ -197,3 +187,20 @@ export default function InvoicesTable() {
     );
 }
 //fixme (связать InvoiceDialog с invoice-creating-form.js, которая сейчас возвращает диалог)
+
+// <InvoiceDialog
+//     open={invoiceDialogOpen}
+//     invoice={invoice}
+//     onDelete={() => {
+//         setInvoiceDialogOpen(false);
+//         fetchInvoices();
+//     }}
+//     onClose={() => {
+//         setInvoiceDialogOpen(false);
+//         fetchInvoices();
+//     }}
+//     onSubmit={() => {
+//         setInvoiceDialogOpen(false);
+//         fetchInvoices();
+//     }}
+// />

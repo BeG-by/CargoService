@@ -1,6 +1,7 @@
 package by.itechart.cargo.service;
 
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.NotFoundException;
@@ -13,7 +14,7 @@ public interface InvoiceService {
 
     List<InvoiceTableResponse> findAllTableData();
 
-    Invoice findById(long id) throws NotFoundException;
+    InvoiceResponse findById(long id) throws NotFoundException;
 
     void saveOne(InvoiceRequest invoiceRequest);
 
