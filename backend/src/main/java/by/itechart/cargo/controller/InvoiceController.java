@@ -45,7 +45,7 @@ public class InvoiceController {
 
     @PostMapping
     @RequestMapping(value = "/status")
-    public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) {
+    public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         invoiceService.updateStatus(invoiceRequest);
         return ResponseEntity.ok("Invoice status has been updated");
     }

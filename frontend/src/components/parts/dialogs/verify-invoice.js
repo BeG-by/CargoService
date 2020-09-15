@@ -4,12 +4,11 @@ import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../invoices-table-and-form/request-utils";
 
 export const AssignVerificationInvoice = (props) => {
-    let i = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: i.id, status: "ACCEPTED"});
+    let inv = props.invoice;
+    const [invoice, setInvoice] = React.useState({id: inv.id, status: "ACCEPTED"});
 
-    const handleVerify = () => {
-        alert(invoice.id + invoice.status);
-        updateInvoiceStatus(invoice);
+    const handleVerify = async () => {
+        await updateInvoiceStatus(invoice);
         window.location.href = "/mainPage";
     }
 
@@ -26,11 +25,10 @@ export const AssignVerificationInvoice = (props) => {
 }
 
 export const RejectVerificationInvoice = (props) => {
-    let i = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: i.id, status: "REJECTED"});
+    let inv = props.invoice;
+    const [invoice, setInvoice] = React.useState({id: inv.id, status: "REJECTED"});
 
     const handleReject = async () => {
-        alert(invoice.id + invoice.status);
         await updateInvoiceStatus(invoice);
         window.location.href = "/mainPage";
     }
@@ -38,7 +36,7 @@ export const RejectVerificationInvoice = (props) => {
     return (
         <div className="form-signin">
             <div>
-                <i style={{fontSize: 16}}>Reject the invoice?</i>
+                <i style={{fontSize: 16}}>Reject the incorrect invoice?</i>
                 <div className='btn-row'>
                     <OkButton content='OK' handleClick={handleReject}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>

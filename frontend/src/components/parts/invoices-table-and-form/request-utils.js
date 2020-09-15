@@ -23,7 +23,6 @@ export async function getDriverById(id) {
 
 export async function updateInvoiceStatus(invoice) {
     const endpoint = `/v1/api/invoices/status`;
-    alert(endpoint);
     return await axios({
         method: "post",
         url: endpoint,

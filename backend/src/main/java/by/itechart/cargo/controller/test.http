@@ -92,7 +92,8 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 {
 "id": 1,
-"status": "REGISTERED"
+"status": "ACCEPTED",
+  "checkingUserId": 1
 }
 
 ###

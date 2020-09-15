@@ -14,6 +14,8 @@ public class InvoiceTableResponse {
     private String status;
     private String number;
     private String date;
+    private String shipper;
+    private String consignee;
 
     public InvoiceTableResponse toInvoiceTableResponse(Invoice invoice) {
         InvoiceTableResponse response = new InvoiceTableResponse();
@@ -21,6 +23,8 @@ public class InvoiceTableResponse {
         response.setStatus(invoice.getInvoiceStatus().name());
         response.setNumber(invoice.getNumber());
         response.setDate(invoice.getRegistrationDate().toString());
+        response.setShipper(invoice.getShipper());
+        response.setConsignee(invoice.getConsignee());
         return response;
     }
 }

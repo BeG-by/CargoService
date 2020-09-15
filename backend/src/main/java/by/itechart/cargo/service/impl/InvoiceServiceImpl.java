@@ -21,12 +21,12 @@ import by.itechart.cargo.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -108,11 +108,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) {
+    public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
-        Invoice foundInvoice = invoiceRepository.getOne(invoice.getId());
+        Invoice foundInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow(() ->
+                new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        if (invoice.getInvoiceStatus().equals(InvoiceStatus.ACCEPTED)) {
+            foundInvoice.setCheckingDate(LocalDate.now());
+//            foundInvoice.setCheckingUser(userRepository.findById(invoiceRequest.getCheckingUserId()).orElseThrow(() ->
+//                    new NotFoundException(USER_NOT_FOUND_MESSAGE)));
+        }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-        final Invoice invoiceDb = invoiceRepository.save(foundInvoice);
+        Invoice invoiceDb = invoiceRepository.save(foundInvoice);
         log.info("Invoice has been verified {}", invoiceDb);
     }
 

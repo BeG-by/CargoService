@@ -404,6 +404,8 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="id_waybill" type="BIGSERIAL"/>
+
             <column name="id_user_checking" type="BIGSERIAL"/>
 
             <column name="id_client_company" type="BIGSERIAL"/>

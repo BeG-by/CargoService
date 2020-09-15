@@ -42,7 +42,7 @@ public class InvoiceResponse {
         response.setRegistrationUser(invoice.getRegistrationUser());
         response.setCheckingUser(invoice.getCheckingUser());
         response.setProducts(invoice.getProducts());
-        response.setWaybillId(invoice.getWaybill().getId());
+        response.setWaybillId(invoice.getWaybill() == null ? null : invoice.getWaybill().getId());
         return response;
     }
 

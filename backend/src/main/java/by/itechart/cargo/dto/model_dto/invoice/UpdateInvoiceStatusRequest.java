@@ -1,5 +1,6 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
+import by.itechart.cargo.dto.validation.EnumNamePattern;
 import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.freight.Invoice;
 import lombok.AllArgsConstructor;
@@ -18,8 +19,11 @@ public class UpdateInvoiceStatusRequest {
     private Long id;
 
     @NotBlank
-//    @InvoiceStatusType(message = "Status must be the one of InvoiceStatus type")
+//    @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED",
+//            message = "Type must be one of InvoiceStatus types")
     private String status;
+
+//    private Long checkingUserId;
 
     public Invoice toInvoice() {
         return Invoice.builder()

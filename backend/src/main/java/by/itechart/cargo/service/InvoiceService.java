@@ -18,6 +18,6 @@ public interface InvoiceService {
 
     void saveOne(InvoiceRequest invoiceRequest);
 
-    void updateStatus(UpdateInvoiceStatusRequest invoiceRequest);
+    void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException;
 
 }

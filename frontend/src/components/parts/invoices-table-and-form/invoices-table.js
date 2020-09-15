@@ -8,23 +8,23 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices, getDriverById, getInvoiceById} from "./request-utils";
+import {getAllInvoices, getInvoiceById} from "./request-utils";
 import {assignFillingWaybill} from "../dialogs/fill-waybill";
 import {DialogWindow} from "../dialog";
-import Button from "@material-ui/core/Button";
-import InvoiceDialog from "./invoice-dialog";
-import {setIn} from "formik";
+import {Typography} from "@material-ui/core";
 
 const columns = [
-    {id: "number", label: "#", minWidth: 150},
-    {id: "status", label: "Status", minWidth: 200},
+    {id: "number", label: "Invoice #", minWidth: 100},
+    {id: "status", label: "Status", minWidth: 100},
     {
         id: "date",
         label: "Registration Date",
-        minWidth: 200,
+        minWidth: 150,
         format: (value) => value.toFixed(2),
     },
-    {id: "waybill", label: "Waybill", minWidth: 150},
+    {id: "shipper", label: "Shipper", minWidth: 300},
+    {id: "consignee", label: "Consignee", minWidth: 300},
+    {id: "waybill", label: "Waybill", minWidth: 100},
 ];
 
 function fetchFieldFromObject(obj, prop) {
@@ -46,7 +46,6 @@ export default function InvoicesTable() {
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
-    const [invoiceDialogOpen, setInvoiceDialogOpen] = React.useState(false);
 
     async function fetchInvoices() {
         setInvoices(await getAllInvoices());
@@ -90,14 +89,13 @@ export default function InvoicesTable() {
         setWaybillFillDialogOpen(false);
     };
 
-    const handleCreateNewInvoiceCLick = () => {
-        setInvoiceDialogOpen(true);
-    };
-
     return (
         <div>
             <Paper>
                 <TableContainer>
+                    <Typography variant="h5" gutterBottom style={{textAlign: "left", margin: 15}}>
+                        Invoices
+                    </Typography>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -143,7 +141,7 @@ export default function InvoicesTable() {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
+                    rowsPerPageOptions={[10, 25, 50]}
                     component="div"
                     count={invoices.length}
                     rowsPerPage={rowsPerPage}
@@ -167,15 +165,6 @@ export default function InvoicesTable() {
                     }}
                 />
 
-                <Button
-                    onClick={handleCreateNewInvoiceCLick}
-                    variant="contained"
-                    color="primary"
-                    style={{margin: 20}}
-                >
-                    Add new invoice
-                </Button>
-
                 <DialogWindow
                         dialogTitle="Confirmation"
                         handleClose={handleClose}
@@ -186,21 +175,3 @@ export default function InvoicesTable() {
         </div>
     );
 }
-//fixme (связать InvoiceDialog с invoice-creating-form.js, которая сейчас возвращает диалог)
-
-// <InvoiceDialog
-//     open={invoiceDialogOpen}
-//     invoice={invoice}
-//     onDelete={() => {
-//         setInvoiceDialogOpen(false);
-//         fetchInvoices();
-//     }}
-//     onClose={() => {
-//         setInvoiceDialogOpen(false);
-//         fetchInvoices();
-//     }}
-//     onSubmit={() => {
-//         setInvoiceDialogOpen(false);
-//         fetchInvoices();
-//     }}
-// />

@@ -4,14 +4,32 @@ import ReturnButton from "../../parts/buttons/return-button";
 import {OkButton} from "../../parts/buttons/ok-button";
 import {DialogWindow} from "../../parts/dialog";
 import {AssignVerificationInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
-import {getInvoiceById} from "../../parts/invoices-table-and-form/request-utils";
+import {getDriverById, getInvoiceById} from "../../parts/invoices-table-and-form/request-utils";
+import ProductsTable from "../../parts/crud-products-table";
+import {Typography} from "@material-ui/core";
+import InvoiceContent from "../../parts/invoices-table-and-form/invoice-content";
+import ListItem from "@material-ui/core/ListItem";
 
 export const InvoiceBody = (props) => {
     const classes = props.classes;
     const [form, setForm] = React.useState(null);
     const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
     const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
-    const [invoice, setInvoice] = React.useState({id: 0, invoiceStatus: ""});
+    const [invoice, setInvoice] = React.useState({
+        id: 0,
+        invoiceStatus: "",
+        products: [],
+        number: "",
+        registrationDate: "",
+        checkingDate: "",
+        closeDate: "",
+        shipper: "",
+        consignee: "",
+        driver: {id: 0, name: "", surname: ""},
+        registrationUser: {id: 0},
+        checkingUser: {id: 0},
+        waybillId: "",
+    });
 
     const handleClose = () => {
         setOpenVerifyDialog(false);
@@ -32,7 +50,21 @@ export const InvoiceBody = (props) => {
 
     async function fetchInvoice() {
         let selected = await getInvoiceById(localStorage.getItem("invoice"));
-        setInvoice({id: selected.id, invoiceStatus: selected.invoiceStatus});
+        setInvoice({
+            id: selected.id,
+            invoiceStatus: selected.invoiceStatus,
+            products: selected.products,
+            number: selected.number,
+            registrationDate: selected.registrationDate,
+            checkingDate: selected.checkingDate,
+            closeDate: selected.closeDate,
+            shipper: selected.shipper,
+            consignee: selected.consignee,
+            driver: {id: selected.driver.id, name: selected.driver.name, surname: selected.driver.surname},
+            registrationUser: {id: selected.registrationUser.id, name: selected.registrationUser.name, surname: selected.registrationUser.surname},
+            checkingUser: selected.checkingUser === null ? null : {id: selected.checkingUser.id, name: selected.checkingUser.name, surname: selected.checkingUser.surname},
+            waybillId: selected.waybillId,
+        });
     }
 
     useEffect(() => {
@@ -52,14 +84,17 @@ export const InvoiceBody = (props) => {
         style = 'btn'
     }
 
-    //fixme сделать показ формы или просто показать инфо?
-    const content = <div>
-        Invoice fields for user's observing
-        <div className={style}>
-            {buttonVerify}
-            {buttonReject}
-        </div>
+    let buttons = <div className={style}>
+        {buttonVerify}
+        {buttonReject}
         <ReturnButton buttonText="Main Page" returnHandler="BackToMain"/>
+    </div>
+
+    const content = <div>
+
+        <InvoiceContent invoice={invoice} buttons={buttons}/>
+
+
     </div>
 
     return (
