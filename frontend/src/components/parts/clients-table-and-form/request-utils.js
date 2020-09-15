@@ -7,8 +7,7 @@ export async function getClientById(id) {
         method: "get",
         url: endpoint,
         headers: {
-            Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+            Authorization: localStorage.getItem("authorization"),
         },
     }).then((res) => {
         return res.data;
@@ -22,8 +21,7 @@ export async function updateClient(client) {
         method: "put",
         url: endpoint,
         headers: {
-            Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+            Authorization: localStorage.getItem("authorization"),
         },
         data: client,
     }).then((res) => {
@@ -37,8 +35,7 @@ export async function getAllClients() {
         method: "get",
         url: endpoint,
         headers: {
-            Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+            Authorization: localStorage.getItem("authorization"),
         },
     }).then((res) => {
         return res.data;
@@ -51,8 +48,7 @@ export async function saveClient(client) {
         method: "post",
         url: endpoint,
         headers: {
-            Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+            Authorization: localStorage.getItem("authorization"),
         },
         data: client,
     }).then((res) => {
@@ -66,8 +62,7 @@ export async function deleteClient(clientId) {
         method: "delete",
         url: endpoint,
         headers: {
-            Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5NzUzODI2LCJleHAiOjE2MDA2MTc4MjZ9.lNXu6BUqKywE2G5CxCnMpam3c76kSLElNeaDTY-pZjA",
+            Authorization: localStorage.getItem("authorization"),
         },
     }).then((res) => {
         return true;

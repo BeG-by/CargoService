@@ -91,126 +91,126 @@ export default function ClientDialog(props) {
 
     return (
         <div>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="form-dialog-title"
-            >
-                <DialogTitle id="form-dialog-title">{client.name}</DialogTitle>
-                <DialogContent>
-                    <Formik
-                        enableReinitialize
-                        initialValues={{
-                            name: client.name,
-                            payerAccountNumber: client.payerAccountNumber,
-                            companyType: client.type,
-                            email: client.email,
-                            country: client.address.country,
-                            city: client.address.city,
-                            street: client.address.street,
-                            house: client.address.house,
-                            flat: client.address.flat,
-                            registrationDate: client.registrationDate,
-                        }}
-                        onSubmit={handleSubmit}
-                        validationSchema={ClientFormValidationSchema}
-                    >
-                        {(formProps) => {
-                            return (
-                                <Form className="form-signin">
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"name"}
-                                        label={"Name"}
-                                        formikFieldName={"name"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"payerAccountNumber"}
-                                        label={"Payer account number"}
-                                        formikFieldName={"payerAccountNumber"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"email"}
-                                        label={"Email"}
-                                        formikFieldName={"email"}
-                                    />
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">{client.name}</DialogTitle>
+                    <DialogContent>
+                        <Formik
+                            enableReinitialize
+                            initialValues={{
+                                name: client.name,
+                                payerAccountNumber: client.payerAccountNumber,
+                                companyType: client.type,
+                                email: client.email,
+                                country: client.address.country,
+                                city: client.address.city,
+                                street: client.address.street,
+                                house: client.address.house,
+                                flat: client.address.flat,
+                                registrationDate: client.registrationDate,
+                            }}
+                            onSubmit={handleSubmit}
+                            validationSchema={ClientFormValidationSchema}
+                        >
+                            {(formProps) => {
+                                return (
+                                    <Form className="form-signin">
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"name"}
+                                            label={"Name"}
+                                            formikFieldName={"name"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"payerAccountNumber"}
+                                            label={"Payer account number"}
+                                            formikFieldName={"payerAccountNumber"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"email"}
+                                            label={"Email"}
+                                            formikFieldName={"email"}
+                                        />
 
-                                    <ClientDialogDatePicker
-                                        formikProps={formProps}
-                                        id="registrationDate"
-                                        formikFieldName="registrationDate"
-                                        label="Registration date"
-                                    />
-                                    <ClientCompanyTypeSelector
-                                        formikProps={formProps}
-                                        id="companyType"
-                                        formikFieldName="companyType"
-                                        label="Company type"
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"country"}
-                                        label={"Country"}
-                                        formikFieldName={"country"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"city"}
-                                        label={"City"}
-                                        formikFieldName={"city"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"street"}
-                                        label={"Street"}
-                                        formikFieldName={"street"}
-                                    />
+                                        <ClientDialogDatePicker
+                                            formikProps={formProps}
+                                            id="registrationDate"
+                                            formikFieldName="registrationDate"
+                                            label="Registration date"
+                                        />
+                                        <ClientCompanyTypeSelector
+                                            formikProps={formProps}
+                                            id="companyType"
+                                            formikFieldName="companyType"
+                                            label="Company type"
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"country"}
+                                            label={"Country"}
+                                            formikFieldName={"country"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"city"}
+                                            label={"City"}
+                                            formikFieldName={"city"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"street"}
+                                            label={"Street"}
+                                            formikFieldName={"street"}
+                                        />
 
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"house"}
-                                        label={"House"}
-                                        formikFieldName={"house"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"flat"}
-                                        label={"Flat"}
-                                        formikFieldName={"flat"}
-                                    />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"house"}
+                                            label={"House"}
+                                            formikFieldName={"house"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"flat"}
+                                            label={"Flat"}
+                                            formikFieldName={"flat"}
+                                        />
 
-                                    <Grid
-                                        style={{marginTop: 15}}
-                                        container
-                                        justify="space-around"
-                                    >
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            type="submit"
-                                            disabled={formProps.listener}
+                                        <Grid
+                                            style={{marginTop: 15}}
+                                            container
+                                            justify="space-around"
                                         >
-                                            Save
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={handleDeleteClick}
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Button variant="contained" onClick={handleClose}>
-                                            Close
-                                        </Button>
-                                    </Grid>
-                                </Form>
-                            );
-                        }}
-                    </Formik>
-                </DialogContent>
-            </Dialog>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
+                                                disabled={formProps.listener}
+                                            >
+                                                Save
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={handleDeleteClick}
+                                            >
+                                                Delete
+                                            </Button>
+                                            <Button variant="contained" onClick={handleClose}>
+                                                Close
+                                            </Button>
+                                        </Grid>
+                                    </Form>
+                                );
+                            }}
+                        </Formik>
+                    </DialogContent>
+                </Dialog>
         </div>
-    );
+);
 }
