@@ -63,23 +63,28 @@ export default function InvoicesTable() {
         setPage(newPage);
     };
 
+    let foundInvoice;
     const handleTableRowClick = async (inv) => {
-        let selected = await getInvoiceById(inv.id);
-        setInvoice({
-            id: selected.id,
-            invoiceStatus: selected.invoiceStatus,
-            waybillId: selected.waybillId,
-        });
-        if (invoice.invoiceStatus === "ACCEPTED"
-            && invoice.waybillId != null
-            && !invoice.waybillId.trim()) {
-            setForm(assignFillingWaybill(handleWaybillFormOpen));
+        foundInvoice = await getInvoiceById(inv.id);
+        setInvoice(() => ({
+            id: foundInvoice.id,
+            invoiceStatus: foundInvoice.invoiceStatus,
+            waybillId: foundInvoice.waybillId,
+        }));
+        if (foundInvoice.invoiceStatus === "ACCEPTED"
+            && foundInvoice.waybillId == null) {
+            setForm(assignFillingWaybill(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {
-            setForm(<InvoiceInfo invoiceId={invoice.id}/>);
-            setInvoiceInfoDialogOpen(true);
+            handleInvoiceInfoOpen();
         }
     };
+
+    const handleInvoiceInfoOpen = () => {
+        setForm(<InvoiceInfo invoiceId={foundInvoice.id}/>);
+        setWaybillFillDialogOpen(false);
+        setInvoiceInfoDialogOpen(true);
+    }
 
     const handleWaybillFormOpen = () => {
         setWaybillFillDialogOpen(false);
@@ -94,6 +99,7 @@ export default function InvoicesTable() {
     const handleClose = () => {
         setWaybillFillDialogOpen(false);
         setInvoiceInfoDialogOpen(false);
+        setWaybillDialogOpen(false);
     };
 
     return (

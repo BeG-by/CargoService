@@ -7,12 +7,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices, getInvoiceById} from "./request-utils";
-import {assignFillingWaybill} from "../dialogs/fill-waybill";
 import {DialogWindow} from "../dialog";
 import {Typography} from "@material-ui/core";
-import {InvoiceInfo} from "./invoice-info";
 import {WaybillInfo} from "./waybill-info";
 
 const columns = [
@@ -22,13 +18,11 @@ const columns = [
         id: "departureDate",
         label: "Departure Date",
         minWidth: 150,
-        format: (value) => value.toFixed(2),
     },
     {
         id: "arrivalDate",
         label: "Arrival Date",
         minWidth: 150,
-        format: (value) => value.toFixed(2),
     },
 ];
 
@@ -128,9 +122,7 @@ export default function WaybillsTable() {
                                                 const value = fetchFieldFromObject(invoice, column.id);
                                                 return (
                                                     <TableCell key={column.id}>
-                                                        {column.format && typeof value === "number"
-                                                            ? column.format(value)
-                                                            : value}
+                                                        {value}
                                                     </TableCell>
                                                 );
                                             })}
