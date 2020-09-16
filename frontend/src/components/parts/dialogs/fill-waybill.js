@@ -6,7 +6,7 @@ const handleInvoiceShow = () => {
     window.location.href = '/invoice';
 }
 
-export const assignFillingWaybill = (action) => {
+export const FillWaybillDialog = (action) => {
     return (
         <div className="form-signin">
             <i style={{fontSize: 16}}>Do you want to fill in the waybill

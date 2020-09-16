@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 
-//todo content
+//todo inner content
 export const SendMailBody = (props) => {
     const classes = props.classes;
     const content = <h2>

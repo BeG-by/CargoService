@@ -13,7 +13,6 @@ export default class LoginForm extends Component {
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        this.searchByLoginPass = this.searchByLoginPass.bind(this);
         this.goBack = this.goBack.bind(this);
     }
 
@@ -38,6 +37,8 @@ export default class LoginForm extends Component {
                     });
                     localStorage.setItem("authorization", res.data.token);
                     localStorage.setItem("role", this.state.roles);
+                    //redux.setValue("user")
+                    //redux.setValue("company")
                     return this.showMainPage();
                 },
                 error => {

@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {validationSchemaLogin} from "../../../validation/validation-schema";
+import {validationSchemaLogin} from "../login-form/validation";
 import {Field, Form, Formik} from "formik";
 import React from "react";
 import {
@@ -7,7 +7,7 @@ import {
     WbConsigneeField,
     WbNumberField,
     WbShipperField
-} from "../../parts/formik-field";
+} from "../login-form/formik-field";
 import {SubmitButton} from "../../parts/buttons/submit-button";
 import axios from "axios";
 import ReturnButton from "../../parts/buttons/return-button";

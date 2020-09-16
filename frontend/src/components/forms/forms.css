@@ -1,14 +1,14 @@
-/*.form-signin {*/
-/*    background-color: white;*/
-/*    padding-left: 40px;*/
-/*    padding-right: 40px;*/
-/*    padding-bottom: 40px;*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    font-size: calc(10px + 2vmin);*/
-/*}*/
+.form-signin {
+    background-color: white;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+}
 
 .btn-row {
     width: 100%;
