@@ -7,7 +7,6 @@ import interceptors from "../../src/security/Interceptors";
 import MainPage from "./pages/main-page/main-page";
 import WelcomePage from "./pages/welcome-page/welcome-page";
 import NotFound from "./pages/error-page/error-404";
-import InvoicePage from "./pages/invoice-page/invoice-page";
 import WaybillPage from "./pages/waybill-page/waybill-page";
 import InfoPage from "./pages/info-page";
 import ContactsPage from "./pages/contacts-page";
@@ -26,7 +25,6 @@ class App extends React.Component {
                         <Switch>
                             <Route exact path="/" component={WelcomePage}/>
                             <Route exact path="/mainPage" component={MainPage}/>
-                            <Route exact path="/invoice" component={InvoicePage}/>
                             <Route exact path="/waybill" component={WaybillPage}/>
                             <Route exact path="/info" component={InfoPage}/>
                             <Route exact path="/contacts" component={ContactsPage}/>

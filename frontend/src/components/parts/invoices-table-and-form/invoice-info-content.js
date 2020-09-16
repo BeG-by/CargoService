@@ -15,8 +15,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
-import ReturnButton from "../buttons/return-button";
-import Divider from "@material-ui/core/Divider";
 
 const columns = [
     {id: "name", label: "Name", minWidth: 200},
@@ -39,9 +37,9 @@ function fetchFieldFromObject(obj, prop) {
     return obj[prop];
 }
 
-export default function InvoiceContent(props) {
+export default function InvoiceInfoContent(props) {
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage] = React.useState(10);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -49,15 +47,9 @@ export default function InvoiceContent(props) {
     return (
         <div>
             <Paper>
-                <List>
-                    <ListItem style={{display: "flex", justifyContent: "space-between"}}>
-                        <Typography variant="h4" gutterBottom
-                                    style={{textAlign: "left", padding: 20, color: "#3f51b5"}}>
-                            Invoice
-                        </Typography>
-                        {props.buttons}
-                    </ListItem>
-                    <ListItem alignItems="flex-start">
+                <List style={{alignItems: "flex-start"}}>
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                         <ListItemIcon>
                             <CheckCircleIcon/>
                         </ListItemIcon>
@@ -92,10 +84,7 @@ export default function InvoiceContent(props) {
                             }
                         />
                     </ListItem>
-
-                    <Divider variant="fullWidth"/>
-
-                    <ListItem alignItems="flex-start">
+                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                         <ListItemIcon>
                             <DepartureBoardIcon/>
                         </ListItemIcon>
@@ -130,8 +119,7 @@ export default function InvoiceContent(props) {
                             }
                         />
                     </ListItem>
-                    <Divider variant="fullWidth"/>
-                    <ListItem alignItems="flex-start">
+                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}} >
                         <ListItemIcon>
                             <HowToRegIcon/>
                         </ListItemIcon>
@@ -167,9 +155,12 @@ export default function InvoiceContent(props) {
                             }
                         />
                     </ListItem>
+                    </div>
                 </List>
                 <TableContainer>
-                    <Typography variant="h6" gutterBottom style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
+                    <Typography variant="h6"
+                                gutterBottom
+                                style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
                         Products List:
                     </Typography>
                     <Table
@@ -220,6 +211,9 @@ export default function InvoiceContent(props) {
                     page={page}
                     onChangePage={handleChangePage}
                 />
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    {props.buttons}
+                </div>
             </Paper>
         </div>
     );

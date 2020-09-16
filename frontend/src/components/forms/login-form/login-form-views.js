@@ -5,18 +5,18 @@ import React from "react";
 import {FormikField, LoginField, PasswordField} from "../../parts/formik-field";
 import {SubmitButton} from "../../parts/buttons/submit-button";
 
-export function showError(object) {
+export function LoginFormError(form) {
     return (
         <div className="form-signin">
-            <p className="error-text">{object.state.errorText}</p>
-            <Button variant="contained" color="secondary" onClick={object.goBack}>
+            <p className="error-text">{form.state.errorText}</p>
+            <Button variant="contained" color="secondary" onClick={form.goBack}>
                 back
             </Button>
         </div>);
 }
 
-export function FormLogin(object) {
-    const {user} = object.state;
+export function LoginFormView(form) {
+    const {user} = form.state;
     return (
         <Formik
             enableReinitialize
@@ -25,16 +25,16 @@ export function FormLogin(object) {
                 password: user.password
             }}
             validationSchema={validationSchemaLogin}
-            onSubmit={object.searchByLoginPass}>
+            onSubmit={form.searchByLoginPass}>
             {formProps => {
                 return (
                     <Form className="form-signin">
-                            <FormikField obj={object.onChangeLogin}
+                            <FormikField obj={form.onChangeLogin}
                                          name={LoginField.name}
                                          label={LoginField.label}
                                          type={LoginField.type}
                             />
-                            <FormikField obj={object.onChangePassword}
+                            <FormikField obj={form.onChangePassword}
                                          name={PasswordField.name}
                                          label={PasswordField.label}
                                          type={PasswordField.type}/>

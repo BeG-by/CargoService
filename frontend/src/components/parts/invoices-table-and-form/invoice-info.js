@@ -1,17 +1,11 @@
 import React, {useEffect} from "react";
-import clsx from "clsx";
-import ReturnButton from "../../parts/buttons/return-button";
-import {OkButton} from "../../parts/buttons/ok-button";
-import {DialogWindow} from "../../parts/dialog";
-import {AssignVerificationInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
-import {getDriverById, getInvoiceById} from "../../parts/invoices-table-and-form/request-utils";
-import ProductsTable from "../../parts/crud-products-table";
-import {Typography} from "@material-ui/core";
-import InvoiceContent from "../../parts/invoices-table-and-form/invoice-content";
-import ListItem from "@material-ui/core/ListItem";
+import {OkButton} from "../buttons/ok-button";
+import {DialogWindow} from "../dialog";
+import {AssignVerificationInvoice, RejectVerificationInvoice} from "../dialogs/verify-invoice";
+import {getInvoiceById} from "./request-utils";
+import InvoiceInfoContent from "./invoice-info-content";
 
-export const InvoiceBody = (props) => {
-    const classes = props.classes;
+export const InvoiceInfo = (props) => {
     const [form, setForm] = React.useState(null);
     const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
     const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
@@ -48,9 +42,9 @@ export const InvoiceBody = (props) => {
         setOpenRejectDialog(true);
     }
 
-    async function fetchInvoice() {
-        let selected = await getInvoiceById(localStorage.getItem("invoice"));
-        setInvoice({
+    async function fetchInvoice(cleanupFunction) {
+        let selected = await getInvoiceById(props.invoiceId);
+        if(!cleanupFunction) setInvoice({
             id: selected.id,
             invoiceStatus: selected.invoiceStatus,
             products: selected.products,
@@ -61,15 +55,25 @@ export const InvoiceBody = (props) => {
             shipper: selected.shipper,
             consignee: selected.consignee,
             driver: {id: selected.driver.id, name: selected.driver.name, surname: selected.driver.surname},
-            registrationUser: {id: selected.registrationUser.id, name: selected.registrationUser.name, surname: selected.registrationUser.surname},
-            checkingUser: selected.checkingUser === null ? null : {id: selected.checkingUser.id, name: selected.checkingUser.name, surname: selected.checkingUser.surname},
+            registrationUser: {
+                id: selected.registrationUser.id,
+                name: selected.registrationUser.name,
+                surname: selected.registrationUser.surname
+            },
+            checkingUser: selected.checkingUser === null ? null : {
+                id: selected.checkingUser.id,
+                name: selected.checkingUser.name,
+                surname: selected.checkingUser.surname
+            },
             waybillId: selected.waybillId,
         });
     }
 
     useEffect(() => {
-        fetchInvoice();
-    });
+        let cleanupFunction = false;
+        fetchInvoice(cleanupFunction);
+        return () => cleanupFunction = true;
+    }, []);
 
     let status = invoice.invoiceStatus;
     let buttonVerify;
@@ -87,28 +91,15 @@ export const InvoiceBody = (props) => {
     let buttons = <div className={style}>
         {buttonVerify}
         {buttonReject}
-        <ReturnButton buttonText="Main Page" returnHandler="BackToMain"/>
     </div>
 
     const content = <div>
-
-        <InvoiceContent invoice={invoice} buttons={buttons}/>
-
-
+        <InvoiceInfoContent invoice={invoice} buttons={buttons}/>
     </div>
 
     return (
         <div>
-            <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: props.openMenu,
-                })}
-            >
-                <div className={classes.drawerHeader}/>
-                <div className={classes.mainField}>
-                    {content}
-                </div>
-            </main>
+            {content}
             <DialogWindow
                 dialogTitle="Verification"
                 handleClose={handleClose}

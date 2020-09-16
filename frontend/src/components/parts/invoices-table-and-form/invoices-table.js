@@ -12,6 +12,7 @@ import {getAllInvoices, getInvoiceById} from "./request-utils";
 import {assignFillingWaybill} from "../dialogs/fill-waybill";
 import {DialogWindow} from "../dialog";
 import {Typography} from "@material-ui/core";
+import {InvoiceInfo} from "./invoice-info";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -46,13 +47,16 @@ export default function InvoicesTable() {
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
+    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
 
-    async function fetchInvoices() {
-        setInvoices(await getAllInvoices());
+    async function fetchInvoices(cleanupFunction) {
+        if(!cleanupFunction) setInvoices(await getAllInvoices());
     }
 
     useEffect(() => {
-        fetchInvoices();
+        let cleanupFunction = false;
+        fetchInvoices(cleanupFunction);
+        return () => cleanupFunction = true;
     }, []);
 
     const handleChangePage = (event, newPage) => {
@@ -66,12 +70,14 @@ export default function InvoicesTable() {
             invoiceStatus: selected.invoiceStatus,
             waybillId: selected.waybillId,
         });
-        localStorage.setItem("invoice", selected.id); //fixme передать в общем стэйте
-        if (invoice.invoiceStatus === "ACCEPTED" && !invoice.waybillId.trim()) {
+        if (invoice.invoiceStatus === "ACCEPTED"
+            && invoice.waybillId != null
+            && !invoice.waybillId.trim()) {
             setForm(assignFillingWaybill(handleWaybillFormOpen));
             setWaybillFillDialogOpen(true);
         } else {
-            window.location.href = "/invoice";
+            setForm(<InvoiceInfo invoiceId={invoice.id}/>);
+            setInvoiceInfoDialogOpen(true);
         }
     };
 
@@ -87,6 +93,7 @@ export default function InvoicesTable() {
 
     const handleClose = () => {
         setWaybillFillDialogOpen(false);
+        setInvoiceInfoDialogOpen(false);
     };
 
     return (
@@ -166,11 +173,20 @@ export default function InvoicesTable() {
                 />
 
                 <DialogWindow
-                        dialogTitle="Confirmation"
-                        handleClose={handleClose}
-                        openDialog={waybillFillDialogOpen}
-                        form={form}
-                      />
+                    dialogTitle="Confirmation"
+                    handleClose={handleClose}
+                    openDialog={waybillFillDialogOpen}
+                    form={form}
+                />
+
+                <DialogWindow
+                    dialogTitle="Invoice Info"
+                    fullWidth={true}
+                    maxWidth="md"
+                    handleClose={handleClose}
+                    openDialog={invoiceInfoDialogOpen}
+                    form={form}
+                />
             </Paper>
         </div>
     );
