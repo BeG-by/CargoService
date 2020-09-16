@@ -65,7 +65,6 @@ export default function InvoicesTable() {
 
     let foundInvoice;
     const handleTableRowClick = async (inv) => {
-<<<<<<< HEAD:frontend/src/components/parts/invoices-table-and-info/invoices-table.js
         foundInvoice = await getInvoiceById(inv.id);
         setInvoice(() => ({
             id: foundInvoice.id,
@@ -74,19 +73,7 @@ export default function InvoicesTable() {
         }));
         if (foundInvoice.invoiceStatus === "ACCEPTED"
             && foundInvoice.waybillId == null) {
-            setForm(assignFillingWaybill(handleWaybillFormOpen, handleInvoiceInfoOpen));
-=======
-        let selected = await getInvoiceById(inv.id);
-        setInvoice({
-            id: selected.id,
-            invoiceStatus: selected.invoiceStatus,
-            waybillId: selected.waybillId,
-        });
-        if (invoice.invoiceStatus === "ACCEPTED"
-            && invoice.waybillId != null
-            && !invoice.waybillId.trim()) {
-            setForm(FillWaybillDialog(handleWaybillFormOpen));
->>>>>>> master:frontend/src/components/roles/manager/invoices-table.js
+            setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {
             handleInvoiceInfoOpen();
