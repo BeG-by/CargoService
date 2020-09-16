@@ -24,11 +24,6 @@ public class AuthorizationController {
         this.authorizationService = authorizationService;
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<IdResponse> getCurrentUserId() {
-        return ResponseEntity.ok(authorizationService.getUserId());
-    }
-
     @PostMapping("/login")
     public ResponseEntity<AuthorizationResponse> login(@RequestBody AuthorizationRequest authorizationRequest) throws NotFoundException {
         return ResponseEntity.ok(authorizationService.login(authorizationRequest));

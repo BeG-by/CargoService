@@ -14,6 +14,4 @@ public interface AuthorizationService {
 
     void logout(HttpServletRequest req, HttpServletResponse resp);
 
-    IdResponse getUserId();
-
 }

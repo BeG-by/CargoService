@@ -60,12 +60,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public IdResponse getUserId() {
-        return new IdResponse(new JwtTokenUtil(new JwtUserDetailServiceImpl(userRepository))
-                .getJwtUser().getId());
-    }
-
-    @Override
     public void logout(HttpServletRequest req, HttpServletResponse resp) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(req, resp, null);

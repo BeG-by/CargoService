@@ -18,13 +18,10 @@ public class UpdateInvoiceStatusRequest {
     @Positive(message = "Id cannot be negative or zero")
     private Long id;
 
-
     @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED",
             message = "Type must be one of InvoiceStatus types")
     @NotNull
     private InvoiceStatus status;
-
-//    private Long checkingUserId;
 
     public Invoice toInvoice() {
         return Invoice.builder()
