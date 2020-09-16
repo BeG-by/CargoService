@@ -9,8 +9,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
 import {getAllInvoices, getInvoiceById} from "./request-utils";
-import {assignFillingWaybill} from "../dialogs/fill-waybill";
-import {DialogWindow} from "../dialog";
+import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
+import {DialogWindow} from "../../parts/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 
@@ -65,6 +65,7 @@ export default function InvoicesTable() {
 
     let foundInvoice;
     const handleTableRowClick = async (inv) => {
+<<<<<<< HEAD:frontend/src/components/parts/invoices-table-and-info/invoices-table.js
         foundInvoice = await getInvoiceById(inv.id);
         setInvoice(() => ({
             id: foundInvoice.id,
@@ -74,6 +75,18 @@ export default function InvoicesTable() {
         if (foundInvoice.invoiceStatus === "ACCEPTED"
             && foundInvoice.waybillId == null) {
             setForm(assignFillingWaybill(handleWaybillFormOpen, handleInvoiceInfoOpen));
+=======
+        let selected = await getInvoiceById(inv.id);
+        setInvoice({
+            id: selected.id,
+            invoiceStatus: selected.invoiceStatus,
+            waybillId: selected.waybillId,
+        });
+        if (invoice.invoiceStatus === "ACCEPTED"
+            && invoice.waybillId != null
+            && !invoice.waybillId.trim()) {
+            setForm(FillWaybillDialog(handleWaybillFormOpen));
+>>>>>>> master:frontend/src/components/roles/manager/invoices-table.js
             setWaybillFillDialogOpen(true);
         } else {
             handleInvoiceInfoOpen();

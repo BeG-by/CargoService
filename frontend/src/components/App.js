@@ -11,6 +11,7 @@ import WaybillPage from "./pages/waybill-page/waybill-page";
 import InfoPage from "./pages/info-page";
 import ContactsPage from "./pages/contacts-page";
 import SendMailPage from "./pages/send-mail-page";
+import MainBodyDispatcher from "./pages/main-page/main-body-dispatcher";
 
 class App extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class App extends React.Component {
                             <Route exact path="/info" component={InfoPage}/>
                             <Route exact path="/contacts" component={ContactsPage}/>
                             <Route exact path="/sendMail" component={SendMailPage}/>
+                            <Route exact path="/dispatcher" component={MainBodyDispatcher}/>
                             <Route component={NotFound}/>
                         </Switch>
                     </BrowserRouter>

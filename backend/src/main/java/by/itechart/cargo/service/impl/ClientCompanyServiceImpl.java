@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static by.itechart.cargo.service.constant.MessageConstant.CLIENT_NOT_FOUND_MESSAGE;
 
@@ -63,9 +64,23 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public void update(ClientCompanyRequest clientCompanyRequest) throws NotFoundException {
+    public void update(ClientCompanyRequest clientCompanyRequest) throws NotFoundException, AlreadyExistException {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyRequest.getId())
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
+
+        Optional<ClientCompany> byName = clientCompanyRepository.getByName(clientCompanyRequest.getName());
+        if (byName.isPresent() && !byName.get().getId().equals(clientCompany.getId())) {
+            throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompanyRequest.getName()));
+        }
+
+        Optional<ClientCompany> byPayerAccountNumber = clientCompanyRepository.getByPayerAccountNumber(clientCompanyRequest.getPayerAccountNumber());
+        if (byPayerAccountNumber.isPresent() && !byPayerAccountNumber.get().getId().equals(clientCompany.getId())) {
+            throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompanyRequest.getPayerAccountNumber()));
+        }
+        Optional<ClientCompany> byEmail = clientCompanyRepository.getByEmail(clientCompanyRequest.getEmail());
+        if (byEmail.isPresent() && !byEmail.get().getId().equals(clientCompany.getId())) {
+            throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompanyRequest.getEmail()));
+        }
 
         clientCompany.setName(clientCompanyRequest.getName());
         clientCompany.setPayerAccountNumber(clientCompanyRequest.getPayerAccountNumber());

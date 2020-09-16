@@ -31,7 +31,7 @@ public class ClientCompanyController {
     }
 
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody @Valid ClientCompanyRequest companyRequest) throws NotFoundException {
+    public ResponseEntity<String> update(@RequestBody @Valid ClientCompanyRequest companyRequest) throws NotFoundException, AlreadyExistException {
         clientCompanyService.update(companyRequest);
         return ResponseEntity.ok("Client company has been updated");
     }

@@ -27,9 +27,8 @@ public class DriverController {
         return ResponseEntity.ok(driverService.findAll());
     }
 
-    @GetMapping
-    @RequestMapping(value = "/{id}")
-    public ResponseEntity<Driver> findById(@PathVariable(value = "id") long id) throws NotFoundException {
+    @GetMapping("/{id}")
+    public ResponseEntity<Driver> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(driverService.findById(id));
     }
 

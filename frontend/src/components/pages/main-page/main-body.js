@@ -13,8 +13,9 @@ export const MainBody = (props) => {
     let content;
     let role = props.role;
     switch (role) {
+
         case 'SYSADMIN':
-            content = <MainBodyManager classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodySysadmin classes={classes} tableIcons={tableIcons}/>
             break;
         case 'ADMIN':
             content = <MainBodyAdmin classes={classes} tableIcons={tableIcons}/>

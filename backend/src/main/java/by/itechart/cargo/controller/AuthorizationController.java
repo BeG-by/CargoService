@@ -29,6 +29,7 @@ public class AuthorizationController {
         return ResponseEntity.ok(authorizationService.login(authorizationRequest));
     }
 
+    //fixme eugene
     @GetMapping("/logout")
     public void logout(HttpServletRequest req, HttpServletResponse resp) {
         authorizationService.logout(req, resp);
