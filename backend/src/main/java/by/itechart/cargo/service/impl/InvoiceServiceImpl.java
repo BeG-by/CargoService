@@ -1,6 +1,9 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
+import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
@@ -18,10 +21,12 @@ import by.itechart.cargo.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -53,13 +58,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
-
     @Override
-    public Invoice findById(long id) throws NotFoundException {
-        return invoiceRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+    public List<InvoiceTableResponse> findAllTableData() {
+        return findAll().stream()
+                .map(invoice -> new InvoiceTableResponse().toInvoiceTableResponse(invoice))
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public InvoiceResponse findById(long id) throws NotFoundException {
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        return new InvoiceResponse().toInvoiceResponse(invoice);
+    }
 
     // TODO invoice with Number exists
     @Override
@@ -84,10 +95,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setProductStatus(Status.ACCEPTED);
         });
 
-        if (invoiceRequest.getStatus() == null || invoiceRequest.getStatus().isEmpty()) {
+        if (invoiceRequest.getStatus() == null) {
             invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
         } else {
-            invoice.setInvoiceStatus(InvoiceStatus.valueOf(invoiceRequest.getStatus()));
+            invoice.setInvoiceStatus(invoiceRequest.getStatus());
         }
 
         final Invoice invoiceDb = invoiceRepository.save(invoice);
@@ -96,5 +107,18 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+    @Override
+    public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
+        final Invoice invoice = invoiceRequest.toInvoice();
+        Invoice foundInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow(() ->
+                new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        if (invoice.getInvoiceStatus().equals(InvoiceStatus.ACCEPTED)) {
+            foundInvoice.setCheckingDate(LocalDate.now());
+            foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
+        }
+        foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
+        Invoice invoiceDb = invoiceRepository.save(foundInvoice);
+        log.info("Invoice has been verified {}", invoiceDb);
+    }
 
 }

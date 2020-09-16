@@ -6,7 +6,7 @@ import { WelcomeBody } from "./welcome-page/welcome-body";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Footer } from "../parts/footer";
 import { MainBody } from "./main-page/main-body";
-import { InvoiceBody } from "./invoice-page/invoice-body";
+import { InvoiceInfo } from "../parts/invoices-table-and-info/invoice-info";
 import { WaybillBody } from "./waybill-page/waybill-body";
 import AddBox from "@material-ui/icons/AddBox";
 import Check from "@material-ui/icons/Check";
@@ -165,20 +165,6 @@ export default function PageTemplate(props) {
           classes={classes}
           openMenu={openMenu}
           openDialog={openDialog}
-          handleClose={handleClose}
-          tableIcons={tableIcons}
-          role={role}
-        />
-      );
-      headerText = <i>Hello, {role}!</i>;
-      break;
-    case "invoice":
-      body = (
-        <InvoiceBody
-          classes={classes}
-          openMenu={openMenu}
-          openDialog={openDialog}
-          handleClickOpen={handleClickOpen}
           handleClose={handleClose}
           tableIcons={tableIcons}
           role={role}

@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import axios from 'axios';
-import {jwtToken} from '../../../security/Interceptors';
 import '../forms.css';
-import {showError, showLoginForm} from "./login-form-views";
+import {LoginFormError, LoginFormView} from "./login-form-views";
 
 export default class LoginForm extends Component {
     constructor(props) {
@@ -91,10 +90,10 @@ export default class LoginForm extends Component {
     render() {
         const {error} = this.state;
         if (error) {
-            let err = showError(this);
+            let err = LoginFormError(this);
             return <div>{err}</div>;
         } else {
-            let loginform = showLoginForm(this);
+            let loginform = LoginFormView(this);
             return <div>{loginform}</div>;
         }
     }

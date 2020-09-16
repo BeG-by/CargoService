@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import axios from 'axios';
-import {jwtToken} from '../../../security/Interceptors';
 import '../forms.css';
 import {showError, showWaybillForm} from "./waybill-form-views";
 
@@ -11,7 +10,7 @@ export default class WaybillForm extends Component {
             error: null,
             errorText: '',
             waybill: {
-                invoiceId: 1,// localStorage.getItem('invoiceId'), //fixme передать id ттн
+                invoiceId: 0,
                 number: '',
                 shipper: '',
                 consignee: '',

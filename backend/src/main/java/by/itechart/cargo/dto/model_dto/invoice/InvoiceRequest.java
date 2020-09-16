@@ -1,5 +1,7 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
+import by.itechart.cargo.dto.validation.EnumNamePattern;
+import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.freight.Product;
 import by.itechart.cargo.model.freight.Invoice;
 import lombok.AllArgsConstructor;
@@ -32,8 +34,10 @@ public class InvoiceRequest {
     @Size(max = 255, message = "Consignee is too long (max is 255)")
     private String consignee;
 
-    // TODO Enum validations - ?
-    private String status;
+    @NotNull
+    @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED",
+            message = "Type must be one of InvoiceStatus types")
+    private InvoiceStatus status;
 
     @NotNull(message = "Driver id number is mandatory")
     private Long driverId;
@@ -47,6 +51,7 @@ public class InvoiceRequest {
                 .id(id)
                 .number(invoiceNumber)
                 .registrationDate(registrationDate)
+                .invoiceStatus(status)
                 .shipper(shipper)
                 .consignee(consignee)
                 .products(products)

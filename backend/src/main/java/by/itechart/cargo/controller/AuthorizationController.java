@@ -3,6 +3,7 @@ package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.IdResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
