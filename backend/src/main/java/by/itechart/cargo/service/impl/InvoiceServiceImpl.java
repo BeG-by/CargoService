@@ -114,8 +114,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
         if (invoice.getInvoiceStatus().equals(InvoiceStatus.ACCEPTED)) {
             foundInvoice.setCheckingDate(LocalDate.now());
-            foundInvoice.setCheckingUser(userRepository.findById(jwtTokenUtil.getJwtUser().getId()).orElseThrow(() ->
-                    new NotFoundException(USER_NOT_FOUND_MESSAGE)));
+            foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
         }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
         Invoice invoiceDb = invoiceRepository.save(foundInvoice);

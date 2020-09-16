@@ -11,16 +11,6 @@ export async function getInvoiceById(id) {
     });
 }
 
-export async function getDriverById(id) {
-    const endpoint = `/v1/api/drivers/${id}`;
-    return await axios({
-        method: "get",
-        url: endpoint,
-    }).then((res) => {
-        return res.data;
-    });
-}
-
 export async function updateInvoiceStatus(invoice) {
     const endpoint = `/v1/api/invoices/status`;
     return await axios({
