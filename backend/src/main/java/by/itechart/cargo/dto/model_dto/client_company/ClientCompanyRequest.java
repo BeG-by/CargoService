@@ -57,7 +57,7 @@ public class ClientCompanyRequest implements Serializable, Cloneable {
     @Size(max = 64, message = "Email is too long (max is 64)")
     private String email;
 
-    //todo: build with id?
+
     public ClientCompany toClientCompany() {
         return ClientCompany.builder()
                 .name(name)

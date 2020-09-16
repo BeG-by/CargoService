@@ -16,7 +16,7 @@ import {
   makeUpdateClientRequest,
 } from "./request-utils";
 import { ClientFormValidationSchema } from "./validation-schema";
-import useToast from "../toast-notification/useToast";
+import useToast from "../../parts/toast-notification/useToast";
 
 const EMPTY_CLIENT = {
   id: -1,

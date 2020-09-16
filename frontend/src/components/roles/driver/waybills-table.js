@@ -9,23 +9,27 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
 import {getAllInvoices, getInvoiceById} from "./request-utils";
-import {assignFillingWaybill} from "../dialogs/fill-waybill";
-import {DialogWindow} from "../dialog";
+import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
+import {DialogWindow} from "../../parts/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
+import {WaybillInfo} from "./waybill-info";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
-    {id: "status", label: "Status", minWidth: 100},
+    {id: "driver", label: "Driver", minWidth: 100},
     {
-        id: "date",
-        label: "Registration Date",
+        id: "departureDate",
+        label: "Departure Date",
         minWidth: 150,
         format: (value) => value.toFixed(2),
     },
-    {id: "shipper", label: "Shipper", minWidth: 300},
-    {id: "consignee", label: "Consignee", minWidth: 300},
-    {id: "waybill", label: "Waybill", minWidth: 100},
+    {
+        id: "arrivalDate",
+        label: "Arrival Date",
+        minWidth: 150,
+        format: (value) => value.toFixed(2),
+    },
 ];
 
 function fetchFieldFromObject(obj, prop) {
@@ -39,7 +43,7 @@ function fetchFieldFromObject(obj, prop) {
     return obj[prop];
 }
 
-export default function InvoicesTable() {
+export default function WaybillsTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
@@ -47,10 +51,10 @@ export default function InvoicesTable() {
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
-    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
 
     async function fetchInvoices(cleanupFunction) {
-        if(!cleanupFunction) setInvoices(await getAllInvoices());
+        if (!cleanupFunction) setInvoices(await getAllInvoices());
     }
 
     useEffect(() => {
@@ -70,21 +74,12 @@ export default function InvoicesTable() {
             invoiceStatus: selected.invoiceStatus,
             waybillId: selected.waybillId,
         });
-        if (invoice.invoiceStatus === "ACCEPTED"
-            && invoice.waybillId != null
-            && !invoice.waybillId.trim()) {
-            setForm(assignFillingWaybill(handleWaybillFormOpen));
-            setWaybillFillDialogOpen(true);
-        } else {
-            setForm(<InvoiceInfo invoiceId={invoice.id}/>);
-            setInvoiceInfoDialogOpen(true);
-        }
+
+        setForm(<WaybillInfo waybillId={waybill.id}/>);
+        setWaybillInfoDialogOpen(true);
     };
 
-    const handleWaybillFormOpen = () => {
-        setWaybillFillDialogOpen(false);
-        setWaybillDialogOpen(true);
-    }
+
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -92,8 +87,7 @@ export default function InvoicesTable() {
     };
 
     const handleClose = () => {
-        setWaybillFillDialogOpen(false);
-        setInvoiceInfoDialogOpen(false);
+        setWaybillInfoDialogOpen(false);
     };
 
     return (

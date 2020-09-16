@@ -31,9 +31,8 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.findAllTableData());
     }
 
-    @GetMapping
-    @RequestMapping(value = "/{id}")
-    public ResponseEntity<InvoiceResponse> findById(@PathVariable (value = "id") long id) throws NotFoundException {
+    @GetMapping("/{id}")
+    public ResponseEntity<InvoiceResponse> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(invoiceService.findById(id));
     }
 
@@ -43,8 +42,7 @@ public class InvoiceController {
         return ResponseEntity.ok("Invoice has been saved");
     }
 
-    @PostMapping
-    @RequestMapping(value = "/status")
+    @PostMapping("/status")
     public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         invoiceService.updateStatus(invoiceRequest);
         return ResponseEntity.ok("Invoice status has been updated");
