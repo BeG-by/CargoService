@@ -34,10 +34,10 @@ public class InvoiceRequest {
     @Size(max = 255, message = "Consignee is too long (max is 255)")
     private String consignee;
 
-    @NotBlank
-//    @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED",
-//            message = "Type must be one of InvoiceStatus types")
-    private String status;
+    @NotNull
+    @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED",
+            message = "Type must be one of InvoiceStatus types")
+    private InvoiceStatus status;
 
     @NotNull(message = "Driver id number is mandatory")
     private Long driverId;
@@ -51,7 +51,7 @@ public class InvoiceRequest {
                 .id(id)
                 .number(invoiceNumber)
                 .registrationDate(registrationDate)
-                .invoiceStatus(InvoiceStatus.valueOf(status))
+                .invoiceStatus(status)
                 .shipper(shipper)
                 .consignee(consignee)
                 .products(products)

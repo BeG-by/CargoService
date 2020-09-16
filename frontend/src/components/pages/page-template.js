@@ -6,7 +6,7 @@ import { WelcomeBody } from "./welcome-page/welcome-body";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Footer } from "../parts/footer";
 import { MainBody } from "./main-page/main-body";
-import { InvoiceInfo } from "../parts/invoices-table-and-form/invoice-info";
+import { InvoiceInfo } from "../parts/invoices-table-and-info/invoice-info";
 import { WaybillBody } from "./waybill-page/waybill-body";
 import AddBox from "@material-ui/icons/AddBox";
 import Check from "@material-ui/icons/Check";

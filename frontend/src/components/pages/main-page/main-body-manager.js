@@ -85,7 +85,7 @@
 // }
 
 import React from "react";
-import InvoicesTable from "../../parts/invoices-table-and-form/invoices-table";
+import InvoicesTable from "../../parts/invoices-table-and-info/invoices-table";
 
 export default function MainBodyManager() {
     return <div>

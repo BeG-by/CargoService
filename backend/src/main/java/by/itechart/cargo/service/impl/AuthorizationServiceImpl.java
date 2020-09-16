@@ -2,10 +2,12 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.IdResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.jwt.JwtUserDetailServiceImpl;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -57,6 +59,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     }
 
+    @Override
+    public IdResponse getUserId() {
+        return new IdResponse(new JwtTokenUtil(new JwtUserDetailServiceImpl(userRepository))
+                .getJwtUser().getId());
+    }
 
     @Override
     public void logout(HttpServletRequest req, HttpServletResponse resp) {

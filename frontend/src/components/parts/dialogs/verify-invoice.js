@@ -1,7 +1,7 @@
 import {OkButton} from "../buttons/ok-button";
 import React from "react";
 import {CancelButton} from "../buttons/cancel-button";
-import {updateInvoiceStatus} from "../invoices-table-and-form/request-utils";
+import {updateInvoiceStatus} from "../invoices-table-and-info/request-utils";
 
 export const AssignVerificationInvoice = (props) => {
     let inv = props.invoice;

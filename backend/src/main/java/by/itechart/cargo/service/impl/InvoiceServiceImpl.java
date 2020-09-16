@@ -95,10 +95,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setProductStatus(Status.ACCEPTED);
         });
 
-        if (invoiceRequest.getStatus() == null || invoiceRequest.getStatus().isEmpty()) {
+        if (invoiceRequest.getStatus() == null) {
             invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
         } else {
-            invoice.setInvoiceStatus(InvoiceStatus.valueOf(invoiceRequest.getStatus()));
+            invoice.setInvoiceStatus(invoiceRequest.getStatus());
         }
 
         final Invoice invoiceDb = invoiceRepository.save(invoice);
