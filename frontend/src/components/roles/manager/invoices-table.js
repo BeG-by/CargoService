@@ -13,6 +13,7 @@ import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
 import {DialogWindow} from "../../parts/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
+import CheckIcon from '@material-ui/icons/Check';
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -25,7 +26,7 @@ const columns = [
     },
     {id: "shipper", label: "Shipper", minWidth: 300},
     {id: "consignee", label: "Consignee", minWidth: 300},
-    {id: "waybill", label: "Waybill", minWidth: 100},
+    {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
 function fetchFieldFromObject(obj, prop) {
@@ -43,7 +44,7 @@ export default function InvoicesTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
-    const [invoice, setInvoice] = React.useState({id: 0, waybillId: "", invoiceStatus: ""});
+    const [invoice, setInvoice] = React.useState({id: 0, waybillId: "", invoiceStatus: "", number: ""});
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
@@ -70,9 +71,10 @@ export default function InvoicesTable() {
             id: foundInvoice.id,
             invoiceStatus: foundInvoice.invoiceStatus,
             waybillId: foundInvoice.waybillId,
+            number: foundInvoice.number,
         }));
         if (foundInvoice.invoiceStatus === "ACCEPTED"
-            && foundInvoice.waybillId == null) {
+            && foundInvoice.waybillId === null) {
             setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {
@@ -140,8 +142,8 @@ export default function InvoicesTable() {
                                                 const value = fetchFieldFromObject(invoice, column.id);
                                                 return (
                                                     <TableCell key={column.id}>
-                                                        {column.format && typeof value === "number"
-                                                            ? column.format(value)
+                                                        {column.id === 'waybillId' && value !== null
+                                                            ? <CheckIcon/>
                                                             : value}
                                                     </TableCell>
                                                 );
@@ -165,7 +167,7 @@ export default function InvoicesTable() {
 
                 <WaybillDialog
                     open={waybillDialogOpen}
-                    invoiceId={invoice.id}
+                    invoice={invoice}
                     onClose={() => {
                         setWaybillDialogOpen(false);
                         setInvoice({id: 0, invoiceStatus: "", waybillId: ""});

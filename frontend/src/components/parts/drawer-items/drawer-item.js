@@ -2,6 +2,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import React from "react";
+import '../../App.css';
 
 export const DrawerItem = (props) => {
     return (

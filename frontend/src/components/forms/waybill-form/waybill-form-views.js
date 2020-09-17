@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {validationSchemaLogin} from "../../../validation/validation-schema";
+import {validationSchemaLogin} from "../login-form/validation";
 import {Field, Form, Formik} from "formik";
 import React from "react";
 import {
@@ -7,12 +7,12 @@ import {
     WbConsigneeField,
     WbNumberField,
     WbShipperField
-} from "../../parts/formik-field";
+} from "../login-form/formik-field";
 import {SubmitButton} from "../../parts/buttons/submit-button";
 import axios from "axios";
 import ReturnButton from "../../parts/buttons/return-button";
 
-export function showError(object) {
+export function WaybillError(object) {
     return (
         <div className="form-signin">
             <p className="error-text">{object.state.errorText}</p>
@@ -22,7 +22,7 @@ export function showError(object) {
         </div>);
 }
 
-export function showWaybillForm(object) {
+export function WaybillFormView(object) {
     // let options = [<option value='0'/>]; //fixme включить при отправке запроса
     let options = [<option key='0' value='0'/>,
         <option key='1'  value='1'>John Smith</option>,
@@ -124,7 +124,7 @@ export function showWaybillForm(object) {
                                 </div>
                             </div>
                             {/*<div style={{color: 'black', textAlign: 'center'}}>*/}
-                            {/*    Products Table*/}
+                            {/*    Control Points*/}
                             {/*</div>*/}
                         </div>
                         <br/>

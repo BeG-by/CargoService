@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import axios from 'axios';
 import '../forms.css';
-import {showError, showWaybillForm} from "./waybill-form-views";
+import {WaybillError, WaybillFormView} from "./waybill-form-views";
 
 export default class WaybillForm extends Component {
     constructor(props) {
@@ -142,10 +142,10 @@ export default class WaybillForm extends Component {
 
         const {error} = this.state;
         if (error) {
-            let err = showError(this);
+            let err = WaybillError(this);
             return <div>{err}</div>;
         } else {
-            let wbForm = showWaybillForm(this);
+            let wbForm = WaybillFormView(this);
             return <div>{wbForm}</div>;
         }
     }

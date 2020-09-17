@@ -1,14 +1,13 @@
 import React from "react";
 import {DrawerItem} from "./drawer-item";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-
-const handleClick = () => {
-    window.location.href = '/waybill'; //fixme отрисовка таблицы путевых заметок
-}
+import { Link } from 'react-router-dom';
 
 export const ItemWaybillList = () => {
     const icon = <AssignmentIcon color='primary'/>;
     return (
-        <DrawerItem text='Waybills' icon={icon} handleClick={handleClick}/>
+        <Link className="link-item-black" to='/waybill' style={{textDecoration: "none"}}>
+            <DrawerItem text='Waybills' icon={icon}/>
+        </Link>
     )
 }

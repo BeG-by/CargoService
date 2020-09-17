@@ -1,14 +1,13 @@
 import React from "react";
 import {DrawerItem} from "./drawer-item";
 import InfoIcon from "@material-ui/icons/Info";
-
-const handleClick = () => {
-    window.location.href = '/info';
-}
+import {Link} from "react-router-dom";
 
 export const ItemInfo = () => {
     const icon = <InfoIcon color='primary'/>;
     return (
-        <DrawerItem text='Info' icon={icon} handleClick={handleClick}/>
+        <Link className="link-item-black" to='/info' style={{textDecoration: "none"}}>
+            <DrawerItem text='Info' icon={icon}/>
+        </Link>
     )
 }

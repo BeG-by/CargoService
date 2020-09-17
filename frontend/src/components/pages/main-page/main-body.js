@@ -8,29 +8,27 @@ import MainBodyDriver from "./main-body-driver";
 import MainBodyOwner from "./main-body-owner";
 
 export const MainBody = (props) => {
-    const tableIcons = props.tableIcons;
     const classes = props.classes;
     let content;
     let role = props.role;
     switch (role) {
-
         case 'SYSADMIN':
-            content = <MainBodySysadmin classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodySysadmin classes={classes} />
             break;
         case 'ADMIN':
-            content = <MainBodyAdmin classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodyAdmin classes={classes} />
             break;
         case 'DISPATCHER':
-            content = <MainBodyDispatcher classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodyDispatcher classes={classes} />
             break;
         case 'MANAGER':
-            content = <MainBodyManager classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodyManager classes={classes}/>
             break;
         case 'DRIVER':
-            content = <MainBodyDriver classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodyDriver classes={classes} />
             break;
         case 'OWNER':
-            content = <MainBodyOwner classes={classes} tableIcons={tableIcons}/>
+            content = <MainBodyOwner classes={classes} />
             break;
         default:
     }

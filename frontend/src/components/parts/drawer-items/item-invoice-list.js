@@ -1,14 +1,13 @@
 import React from "react";
 import {DrawerItem} from "./drawer-item";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-
-const handleClick = () => {
-    window.location.href = '/mainPage';
-}
+import {Link} from "react-router-dom";
 
 export const ItemInvoiceList = () => {
     const icon = <AssignmentIcon color='primary'/>;
     return (
-        <DrawerItem text='Invoices' icon={icon} handleClick={handleClick}/>
+        <Link className="link-item-black" to='/mainPage' style={{textDecoration: "none"}}>
+            <DrawerItem text='Invoices' icon={icon}/>
+        </Link>
     )
 }

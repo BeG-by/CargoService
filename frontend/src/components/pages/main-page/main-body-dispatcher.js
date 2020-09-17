@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import InvoiceCreatingForm from "../../forms/invoice-form/invoice-creating-form";
 import ItemList from "../../parts/lists/item-list";
-import {
-  getDrivers,
-  getProductOwners,
-  getRejectedInvoices,
-} from "../../../request-api/utils";
+// import {
+//   getDrivers,
+//   getProductOwners,
+//   getRejectedInvoices,
+// } from "../../../request-api/utils";
 
 const columns = [
   { title: "Name", field: "name" },
@@ -50,14 +50,14 @@ export default function MainBodyDispatcher() {
   const [drivers, setDrivers] = useState([]);
   const [rejectedInvoices, setRejectedInvoices] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      setClients(await getProductOwners());
-      setDrivers(await getDrivers());
-      setRejectedInvoices(await getRejectedInvoices());
-    }
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     setClients(await getProductOwners());
+  //     setDrivers(await getDrivers());
+  //     setRejectedInvoices(await getRejectedInvoices());
+  //   }
+  //   fetchData();
+  // }, []);
 
   const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(EMPTY_INVOICE);

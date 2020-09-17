@@ -1,8 +1,8 @@
 import Button from '@material-ui/core/Button';
-import {validationSchemaLogin} from "../../../validation/validation-schema";
+import {validationSchemaLogin} from "./validation";
 import {Form, Formik} from "formik";
 import React from "react";
-import {FormikField, LoginField, PasswordField} from "../../parts/formik-field";
+import {FormikField, LoginField, PasswordField} from "./formik-field";
 import {SubmitButton} from "../../parts/buttons/submit-button";
 
 export function LoginFormError(form) {

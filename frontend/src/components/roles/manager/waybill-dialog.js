@@ -13,7 +13,7 @@ export default function WaybillDialog(props) {
                 onClose={props.onClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">{props.invoiceId}</DialogTitle>
+                <DialogTitle id="form-dialog-title">{props.invoice.number}</DialogTitle>
                 <DialogContent>
                     <WaybillForm/>
                 </DialogContent>

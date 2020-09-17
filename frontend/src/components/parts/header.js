@@ -8,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import {SignoutButton} from "./buttons/signout-button";
 import {SigninButton} from "./buttons/signin-button";
+import {Link} from "react-router-dom";
+import '../App.css';
 
 let drawerWidth;
 
@@ -66,14 +68,18 @@ export const Header = (props) => {
         setOpenDialog(false);
     };
 
+    const backToMain = () => {
+        window.location.href = "/mainPage";
+    }
+
     const headerButton = (localStorage.getItem('authorization') != null
-                         && localStorage.getItem('authorization').trim())
-                         || (localStorage.getItem('role') != null //fixme удалить это условие после подключения авторизации
-                         && localStorage.getItem('role').trim())
-                         ? <SignoutButton/>
-                         : <SigninButton openDialog={openDialog}
-                                         handleClickOpen={handleClickOpen}
-                                         handleClose={handleClose}/>;
+        && localStorage.getItem('authorization').trim())
+    || (localStorage.getItem('role') != null
+        && localStorage.getItem('role').trim())
+        ? <SignoutButton/>
+        : <SigninButton openDialog={openDialog}
+                        handleClickOpen={handleClickOpen}
+                        handleClose={handleClose}/>;
     return (
         <AppBar className={clsx(classes.appBar, {
             [classes.appBarShift]: props.openMenu,
@@ -89,9 +95,13 @@ export const Header = (props) => {
                 >
                     <MenuIcon/>
                 </IconButton>
-                <Typography className={classes.title} variant="h6" noWrap>
-                    CARGO APP
-                </Typography>
+
+                    <Typography className={classes.title} variant="h6" noWrap>
+                        <Link to='/mainPage' className="link-item-white">
+                        CARGO APP
+                        </Link>
+                    </Typography>
+
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
                     {props.headerText}
