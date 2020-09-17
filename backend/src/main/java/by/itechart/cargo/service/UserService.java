@@ -1,6 +1,8 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
 import by.itechart.cargo.dto.model_dto.user.UserRequest;
+import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
@@ -9,9 +11,10 @@ import java.util.List;
 
 public interface UserService {
     
-    User findByLogin(String login) throws NotFoundException;
+    UserInfoResponse findInfo();
 
-    List<User> findAll();
+    List<UserResponse> findAll();
     
     void saveOne(UserRequest userRequest) throws AlreadyExistException;
+
 }

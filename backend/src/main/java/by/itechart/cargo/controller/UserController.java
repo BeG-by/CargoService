@@ -1,6 +1,8 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
 import by.itechart.cargo.dto.model_dto.user.UserRequest;
+import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.service.UserService;
@@ -26,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> findAll() {
+    public List<UserResponse> findAll() {
         return userService.findAll();
     }
 
@@ -36,5 +38,9 @@ public class UserController {
         return ResponseEntity.ok("User has been saved");
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<UserInfoResponse> findInfo() {
+        return ResponseEntity.ok(userService.findInfo());
+    }
 
 }

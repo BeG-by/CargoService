@@ -2,21 +2,16 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
-import by.itechart.cargo.dto.authorization_dto.IdResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
-import by.itechart.cargo.security.jwt.JwtUserDetailServiceImpl;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,10 +54,5 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     }
 
-    @Override
-    public void logout(HttpServletRequest req, HttpServletResponse resp) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(req, resp, null);
-    }
 
 }
