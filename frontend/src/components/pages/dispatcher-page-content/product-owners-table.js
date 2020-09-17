@@ -51,7 +51,7 @@ const useStyles = makeStyles({
   },
 });
 
-const DEFAULT_PRODUCT_OWNER = {
+const EMPTY_PRODUCT_OWNER = {
   name: "",
   type: "SP",
   phone: "",
@@ -64,12 +64,9 @@ export default function ProductOwnersTable() {
 
   const [productOwners, setProductOwners] = useState([]);
   const [selectedProductOwner, setSelectedProductOwner] = useState(
-    DEFAULT_PRODUCT_OWNER
+    EMPTY_PRODUCT_OWNER
   );
   const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
-
-  // const [clientDialogOpen, setClientDialogOpen] = useState(false);
-  // const [selectedClientCompanyId, setSelectedClientCompanyId] = useState(-1);
 
   // const [toastComponent, showToastComponent] = useToast();
 

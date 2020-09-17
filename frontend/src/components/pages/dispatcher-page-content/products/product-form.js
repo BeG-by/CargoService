@@ -3,9 +3,18 @@ import { Formik, Form } from "formik";
 import FormikField from "../../common/formik-field";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import { ProductFormValidationSchema } from "./validation";
 
 export default (props) => {
-  const { initProductState, onSubmit, onClose } = props;
+  const { initProductState, onSubmit, onClose, onDelete } = props;
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const handleDelete = () => {
+    onDelete(initProductState.id);
+  };
 
   const handleSubmit = (values) => {
     const product = {
@@ -22,8 +31,9 @@ export default (props) => {
   return (
     <Formik
       enableReinitialize
-      initialValues={initProductState} //todo: check id on init state
+      initialValues={initProductState}
       onSubmit={handleSubmit}
+      validationSchema={ProductFormValidationSchema}
     >
       {(formProps) => (
         <Form>
@@ -66,8 +76,16 @@ export default (props) => {
             >
               Save
             </Button>
-            <Button variant="contained" onClick={onClose}>
+
+            <Button variant="contained" onClick={handleClose}>
               Close
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDelete}
+            >
+              Delete
             </Button>
           </Grid>
         </Form>

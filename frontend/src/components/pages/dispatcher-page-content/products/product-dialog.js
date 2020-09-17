@@ -5,7 +5,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import ProductForm from "./product-form";
 
 export default (props) => {
-  const { open, onClose, initProductState, onSubmit } = props;
+  const { open, onClose, onSubmit, onDelete, initProductState } = props;
 
   const handleClose = () => {
     onClose();
@@ -21,6 +21,7 @@ export default (props) => {
       <DialogContent>
         <ProductForm
           initProductState={initProductState}
+          onDelete={onDelete}
           onSubmit={onSubmit}
           onClose={handleClose}
         />
