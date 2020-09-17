@@ -2,8 +2,12 @@ import React, {Component} from "react";
 import axios from 'axios';
 import '../forms.css';
 import {LoginFormError, LoginFormView} from "./login-form-views";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {changeUserAndCompany} from "../../store/actions";
 
-export default class LoginForm extends Component {
+
+class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,6 +18,10 @@ export default class LoginForm extends Component {
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.goBack = this.goBack.bind(this);
+    }
+
+    componentDidMount() {
+        console.log(this.props);
     }
 
     searchByLoginPass = (values, {
@@ -37,9 +45,8 @@ export default class LoginForm extends Component {
                     });
                     localStorage.setItem("authorization", res.data.token);
                     localStorage.setItem("role", this.state.roles);
-                    //redux.setValue("user")
-                    //redux.setValue("company")
-                    return this.showMainPage();
+                    props.changeUserAndCompany({name: "TEST"}, {name: "TEST"});
+                    // this.showMainPage();
                 },
                 error => {
                     this.setState({
@@ -47,10 +54,10 @@ export default class LoginForm extends Component {
                         error
                     });
                 });
-    }
+    };
 
     showMainPage() {
-        window.location.href = "/mainPage";
+        window.location.href = "/mainPage"; // After href /mainPage store will be clear.
         this.props.history.push("/mainPage");
     }
 
@@ -99,3 +106,16 @@ export default class LoginForm extends Component {
         }
     }
 }
+
+
+const putStateToProps = () => {
+    return {}
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+        changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
+    }
+};
+
+export default connect(putStateToProps, putActionsToProps)(LoginForm)
