@@ -12,15 +12,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function handleLogout() {
-    const endpoint = "/v1/api/auth/logout";
-    axios.get(endpoint)
-        .then(res => {
-                window.location.href = "/";
-                localStorage.clear();
-            },
-            error => {
-                console.log("Cannot log out: " + error);
-            });
+    window.location.href = "/";
+    localStorage.clear();
 }
 
 export const SignoutButton = () => {

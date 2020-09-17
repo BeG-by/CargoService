@@ -11,6 +11,7 @@ import {ItemWaybillList} from "./drawer-items/item-waybill-list";
 import {ItemInfo} from "./drawer-items/item-info";
 import {ItemContacts} from "./drawer-items/item-contacts";
 import {ItemSendMail} from "./drawer-items/item-send-mail";
+import {ItemClientTable} from "./drawer-items/item-clients-company";
 
 let drawerWidth;
 
@@ -37,6 +38,8 @@ let components = [];
 //todo для каждого свои кнопки
 switch (role) {
     case 'SYSADMIN':
+        components.push(<ItemClientTable key="Client table"/>);
+        components.push(<Divider key='Divider'/>);
         break;
     case 'ADMIN':
 
@@ -45,12 +48,9 @@ switch (role) {
 
         break;
     case 'MANAGER':
-        const deliveryNotesList = <ItemInvoiceList key='Invoices'/>;
-        const waybillList = <ItemWaybillList key='Waybills'/>;
-        const divider = <Divider key='Divider'/>;
-        components.push(deliveryNotesList);
-        components.push(waybillList);
-        components.push(divider);
+        components.push(<ItemInvoiceList key='Invoices'/>);
+        components.push(<ItemWaybillList key='Waybills'/>);
+        components.push(<Divider key='Divider'/>);
         break;
     case 'DRIVER':
 

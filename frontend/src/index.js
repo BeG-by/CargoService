@@ -15,12 +15,12 @@ const test = () => {
 };
 
 ReactDOM.render(
-    <Provider store={store}>
-        <MuiThemeProvider>
+    <MuiThemeProvider>
+        <Provider store={store}>
             <App/>
-            <button onClick={test}>Button for test</button>
-        </MuiThemeProvider>
-    </Provider>,
+        </Provider>
+        <button onClick={test}>Button for checking store</button>
+    </MuiThemeProvider>,
     document.getElementById('root')
 );
 

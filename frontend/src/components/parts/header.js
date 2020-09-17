@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import React from "react";
+import axios from "axios";
+import React, {useEffect} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,6 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import {SignoutButton} from "./buttons/signout-button";
 import {SigninButton} from "./buttons/signin-button";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {changeUserAndCompany} from "../store/actions";
 
 let drawerWidth;
 
@@ -54,10 +58,53 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = (props) => {
+const putStateToProps = () => {
+    return {}
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+        changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
+    }
+};
+
+const getUserInfoRequest = () => {
+
+    const endpoint = "/v1/api/users/info";
+    return axios({
+        method: "GET",
+        url: endpoint,
+    })
+
+};
+
+
+export const Header = connect(putStateToProps, putActionsToProps)((props) => {
     drawerWidth = props.drawerWidth;
+    const headerText = "Manage your cargo with convenient digital tools";
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [text, setText] = React.useState(headerText);
+
+    async function getUserInfo() {
+        try {
+            const response = await getUserInfoRequest();
+            const user = response.data.userResponse;
+            const clientCompany = response.data.clientCompany;
+            setText(user.name + " " + user.surname);
+            props.changeUserAndCompany(user, clientCompany);
+        } catch (error) {
+            alert(error); // TODO notification
+        }
+    }
+
+
+    useEffect(() => {
+        const token = localStorage.getItem("authorization");
+        if (token != null) {
+            getUserInfo();
+        }
+    }, []);
 
     const handleClickOpen = () => {
         setOpenDialog(true);
@@ -66,14 +113,20 @@ export const Header = (props) => {
         setOpenDialog(false);
     };
 
-    const headerButton = (localStorage.getItem('authorization') != null
-                         && localStorage.getItem('authorization').trim())
-                         || (localStorage.getItem('role') != null //fixme удалить это условие после подключения авторизации
-                         && localStorage.getItem('role').trim())
-                         ? <SignoutButton/>
-                         : <SigninButton openDialog={openDialog}
-                                         handleClickOpen={handleClickOpen}
-                                         handleClose={handleClose}/>;
+
+    const LoginButton = () => {
+
+        if (localStorage.getItem("authorization") === null) {
+            return <SigninButton openDialog={openDialog}
+                                 handleClickOpen={handleClickOpen}
+                                 handleClose={handleClose}/>;
+        } else {
+            return <SignoutButton/>;
+        }
+
+    };
+
+
     return (
         <AppBar className={clsx(classes.appBar, {
             [classes.appBarShift]: props.openMenu,
@@ -94,11 +147,11 @@ export const Header = (props) => {
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
-                    {props.headerText}
+                    {text}
                 </Typography>
                 <div className={classes.grow}/>
-                {headerButton}
+                <LoginButton/>
             </Toolbar>
         </AppBar>
     );
-}
+});

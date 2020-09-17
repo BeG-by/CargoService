@@ -20,9 +20,6 @@ class LoginForm extends Component {
         this.goBack = this.goBack.bind(this);
     }
 
-    componentDidMount() {
-        console.log(this.props);
-    }
 
     searchByLoginPass = (values, {
         props = this.props,
@@ -45,8 +42,9 @@ class LoginForm extends Component {
                     });
                     localStorage.setItem("authorization", res.data.token);
                     localStorage.setItem("role", this.state.roles);
-                    props.changeUserAndCompany({name: "TEST"}, {name: "TEST"});
-                    // this.showMainPage();
+                    props.changeUserAndCompany({name: "TEST"}, {name: "TEST"}); // TODO
+                    window.location.href = "/mainPage";
+                    this.props.history.push("/mainPage");
                 },
                 error => {
                     this.setState({
@@ -56,10 +54,6 @@ class LoginForm extends Component {
                 });
     };
 
-    showMainPage() {
-        window.location.href = "/mainPage"; // After href /mainPage store will be clear.
-        this.props.history.push("/mainPage");
-    }
 
     onChangePassword(event) {
         this.setState({
@@ -108,7 +102,9 @@ class LoginForm extends Component {
 }
 
 
-const putStateToProps = () => {
+// TODO
+
+const putStateToProps = (store) => {
     return {}
 };
 
