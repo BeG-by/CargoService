@@ -14,12 +14,11 @@ export const FormikField = (props) => {
                        helperText={<ErrorMsg name={props.name} />}
                        autoFocus
                        margin="dense"
-                       fullWidth="true"
+                       fullWidth
             />
     )
 }
 
-////////////////////////////
 // LOGIN
 export const LoginField = {
     name: 'username',
@@ -31,90 +30,4 @@ export const PasswordField = {
     name: 'password',
     label: 'Password',
     type: 'password'
-}
-
-//////////////////////////////
-// REGISTRATION
-export const CompanyTypeField = {
-    name: 'companyType',
-    label: 'Type',
-    type: 'text'
-}
-
-export const CompanyPanField = {
-    name: 'companyPan',
-    label: 'PAN',
-    type: 'text'
-}
-
-export const CompanyNameField = {
-    name: 'companyName',
-    label: 'Name',
-    type: 'text'
-}
-
-export const CompanyCountryField = {
-    name: 'companyCountry',
-    label: 'Country',
-    type: 'text'
-}
-
-export const CompanyCityField = {
-    name: 'companyCity',
-    label: 'City',
-    type: 'text'
-}
-
-export const CompanyStreetField = {
-    name: 'companyStreet',
-    label: 'Street',
-    type: 'text'
-}
-
-export const CompanyHouseField = {
-    name: 'companyHouse',
-    label: 'House',
-    type: 'text'
-}
-
-export const CompanyEmailField = {
-    name: 'companyEmail',
-    label: 'Email',
-    type: 'text'
-}
-
-export const CompanyPhoneField = {
-    name: 'companyPhone',
-    label: 'Phone',
-    type: 'text'
-}
-
-/////////////////////////////////////
-// INVOICE
-
-export const InvoiceNumberField = {
-    name: 'invoiceNumber',
-    label: 'Number',
-    type: 'text'
-}
-
-////////////////////////////////////////
-// WAYBILL
-
-export const WbNumberField = {
-    name: 'wbNumber',
-    label: 'Number',
-    type: 'text'
-}
-
-export const WbShipperField = {
-    name: 'wbShipper',
-    label: 'Shipper',
-    type: 'text'
-}
-
-export const WbConsigneeField = {
-    name: 'wbConsignee',
-    label: 'Consignee',
-    type: 'text'
 }

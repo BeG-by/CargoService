@@ -12,6 +12,7 @@ import ClientDialog from "./client-dialog";
 import { makeGetAllClientsRequest } from "./request-utils";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
+import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },
@@ -59,21 +60,6 @@ const columns = [
     format: (value) => value.toFixed(2),
   },
 ];
-
-function fetchFieldFromObject(obj, prop) {
-  if (obj === undefined || obj === null) {
-    return;
-  }
-  let index = prop.indexOf(".");
-  if (index > -1) {
-    return fetchFieldFromObject(
-      obj[prop.substring(0, index)],
-      prop.substr(index + 1)
-    );
-  }
-
-  return obj[prop];
-}
 
 const useStyles = makeStyles({
   root: {

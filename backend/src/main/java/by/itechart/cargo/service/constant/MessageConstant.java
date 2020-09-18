@@ -11,5 +11,7 @@ public interface MessageConstant {
 
     String DRIVER_NOT_FOUND_MESSAGE = "Driver not found";
 
+    String AUTO_NOT_FOUND_MESSAGE = "Auto not found";
+
 
 }

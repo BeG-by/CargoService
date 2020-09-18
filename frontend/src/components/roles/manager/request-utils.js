@@ -32,6 +32,16 @@ export async function getAllInvoices() {
     });
 }
 
+export async function getAllAutos() {
+    const endpoint = `/v1/api/autos`;
+    return await axios({
+        method: "get",
+        url: endpoint
+    }).then((res) => {
+        return res.data;
+    });
+}
+
 export async function saveWaybill(waybill) {
     const endpoint = `/v1/api/waybills`;
     return await axios({

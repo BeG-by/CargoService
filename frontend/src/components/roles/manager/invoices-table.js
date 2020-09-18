@@ -8,12 +8,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices, getInvoiceById} from "./request-utils";
+import {getAllInvoices, getInvoiceById, saveWaybill} from "./request-utils";
 import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
 import {DialogWindow} from "../../parts/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
+import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import {WaybillError} from "../../forms/waybill-form/waybill-form-error";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -29,17 +31,6 @@ const columns = [
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
-function fetchFieldFromObject(obj, prop) {
-    let index = prop.indexOf(".");
-    if (index > 0) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-    return obj[prop];
-}
-
 export default function InvoicesTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -51,7 +42,7 @@ export default function InvoicesTable() {
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
 
     async function fetchInvoices(cleanupFunction) {
-        if(!cleanupFunction) setInvoices(await getAllInvoices());
+        if (!cleanupFunction) setInvoices(await getAllInvoices());
     }
 
     useEffect(() => {
@@ -64,7 +55,7 @@ export default function InvoicesTable() {
         setPage(newPage);
     };
 
-    let foundInvoice;
+    let foundInvoice = {};
     const handleTableRowClick = async (inv) => {
         foundInvoice = await getInvoiceById(inv.id);
         setInvoice(() => ({
@@ -166,17 +157,11 @@ export default function InvoicesTable() {
                 />
 
                 <WaybillDialog
-                    open={waybillDialogOpen}
                     invoice={invoice}
+                    open={waybillDialogOpen}
                     onClose={() => {
                         setWaybillDialogOpen(false);
-                        setInvoice({id: 0, invoiceStatus: "", waybillId: ""});
-                        fetchInvoices();
-                    }}
-                    onSubmit={() => {
-                        setWaybillDialogOpen(false);
-                        setInvoice({id: 0, invoiceStatus: "", waybillId: ""});
-                        fetchInvoices();
+                        fetchInvoices(false);
                     }}
                 />
 
