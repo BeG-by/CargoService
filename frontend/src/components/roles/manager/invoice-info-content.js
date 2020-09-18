@@ -54,34 +54,34 @@ export default function InvoiceInfoContent(props) {
                             <CheckCircleIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Invoice #"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.number}
                                 </React.Fragment>
                             }
+                            secondary="Invoice #"
                         />
                         <ListItemIcon>
                             <CheckCircleIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Invoice status"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.invoiceStatus}
                                 </React.Fragment>
                             }
+                            secondary="Invoice status"
                         />
                         <ListItemIcon>
                             <CheckCircleIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Waybill #"
-                            secondary={
+                            primary={
                                 <React.Fragment>
-                                    {props.invoice.waybillId}
+                                    {props.invoice.waybillId !== null ? "Filled" : "Empty"}
                                 </React.Fragment>
                             }
+                            secondary="Waybill"
                         />
                     </ListItem>
                     <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
@@ -89,34 +89,34 @@ export default function InvoiceInfoContent(props) {
                             <DepartureBoardIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Registration Date"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.registrationDate}
                                 </React.Fragment>
                             }
+                            secondary="Registration Date"
                         />
                         <ListItemIcon>
                             <DepartureBoardIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Checking Date"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.checkingDate}
                                 </React.Fragment>
                             }
+                            secondary="Checking Date"
                         />
                         <ListItemIcon>
                             <DepartureBoardIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Closing Date"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.closeDate}
                                 </React.Fragment>
                             }
+                            secondary="Closing Date"
                         />
                     </ListItem>
                     <ListItem style={{flexDirection: "column", alignItems: "flex-start"}} >
@@ -124,35 +124,34 @@ export default function InvoiceInfoContent(props) {
                             <HowToRegIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Driver"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.driver.name} {props.invoice.driver.surname}
                                 </React.Fragment>
                             }
+                            secondary="Driver"
                         />
                         <ListItemIcon>
                             <HowToRegIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Registering User"
-                            secondary={
+                            primary={
                                 <React.Fragment>
                                     {props.invoice.registrationUser.name} {props.invoice.registrationUser.surname}
                                 </React.Fragment>
                             }
+                            secondary="Dispatcher"
                         />
                         <ListItemIcon>
                             <HowToRegIcon/>
                         </ListItemIcon>
                         <ListItemText
-                            primary="Checking User"
-                            secondary={
+                            primary={
                                 <React.Fragment>
-                                    {props.invoice.checkingUser === null ? null : props.invoice.checkingUser.name}
-                                    {props.invoice.checkingUser === null ? null : props.invoice.checkingUser.surname}
+                                    {props.invoice.checkingUser === null ? null : props.invoice.checkingUser.name} {props.invoice.checkingUser === null ? null : props.invoice.checkingUser.surname}
                                 </React.Fragment>
                             }
+                            secondary="Manager"
                         />
                     </ListItem>
                     </div>

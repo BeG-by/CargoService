@@ -29,7 +29,7 @@ export default function ClientDialogDatePicker(props) {
                     />
                 </MuiPickersUtilsProvider>
             </div>
-            <label style={{ color: "red" }}>
+            <label style={{ color: "#f50057" }}>
                 <ErrorMessage name={"registrationDate"} />
             </label>
         </React.Fragment>

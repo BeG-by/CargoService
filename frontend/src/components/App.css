@@ -1,3 +1,13 @@
 .App {
     text-align: center;
 }
+
+.link-item-black {
+    text-decoration: none;
+    color: black;
+}
+
+.link-item-white {
+    text-decoration: none;
+    color: white;
+}
