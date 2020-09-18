@@ -48,21 +48,26 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Invoices ---
 
+GET localhost:8080/v1/api/invoices/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+
+###
+
 GET localhost:8080/v1/api/invoices
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 ###
 
-
 POST localhost:8080/v1/api/invoices
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 {
-  "id": 1,
-  "status": "ACCEPTED",
-  "invoiceNumber": "TTN327775",
+
+  "status": "REGISTERED",
+  "invoiceNumber": "TTN327788",
   "registrationDate": "2020-01-03",
   "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
   "consignee": "OOO 'Test warehouse', Smolensk, Lenina 5 ",
@@ -70,13 +75,24 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
   "products": [
     {
       "name": "test product",
-      "quantity": 5,
-      "measure": "bochka",
-      "price": 100,
+      "quantity": 10,
+      "measure": "barrel",
+      "price": 56,
       "sum": 13,
       "mass": "100 kg"
     }
   ]
+}
+
+####
+
+POST localhost:8080/v1/api/invoices/status
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+
+{
+"id": 1,
+"status": "ACCEPTED"
 }
 
 ###

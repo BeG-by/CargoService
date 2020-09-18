@@ -179,7 +179,6 @@
     <!-- Insert data for tests -->
     <changeSet id="1.0.4" author="vladislav.mironuk">
         <insert tableName="client_company">
-            <column name="id_client_company" value="1"/>
             <column name="name" value="Google"/>
             <column name="type" value="SP"/>
             <column name="pan" value="123456789"/>
@@ -403,6 +402,8 @@
             <column name="id_user_registration" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="id_waybill" type="BIGSERIAL"/>
 
             <column name="id_user_checking" type="BIGSERIAL"/>
 

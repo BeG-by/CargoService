@@ -11,7 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import ClientDialog from "./client-dialog";
 import { makeGetAllClientsRequest } from "./request-utils";
 import Button from "@material-ui/core/Button";
-import useToast from "./hooks/useToast";
+import useToast from "../../parts/toast-notification/useToast";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },

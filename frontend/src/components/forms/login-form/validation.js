@@ -11,16 +11,3 @@ export const validationSchemaLogin = Yup.object({
         .required("password is required"),
 
 });
-
-export const validationSchemaWaybill = Yup.object({
-    departure_date: Yup.date()
-        .default(function() {
-        return new Date();
-    }),
-    arrival_date: Yup.date()
-        .min(Yup.ref('departure_date'),
-            'Arrival date should be equal or greater than departure date')
-        .default(function() {
-            return new Date();
-        })
-});

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToastNotification } from "../../toast-notification";
+import { ToastNotification } from "./toast-notification";
 
 export default () => {
   const [open, setOpen] = useState(false);

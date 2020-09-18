@@ -1,6 +1,9 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
+import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
+import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.service.InvoiceService;
@@ -24,19 +27,25 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Invoice>> findAll() {
-        return ResponseEntity.ok(invoiceService.findAll());
+    public ResponseEntity<List<InvoiceTableResponse>> findAll() {
+        return ResponseEntity.ok(invoiceService.findAllTableData());
     }
 
-    @GetMapping
-    @RequestMapping(value = "/{id}")
-    public ResponseEntity<Invoice> findById(@PathVariable (value = "id") long id) throws NotFoundException {
+    @GetMapping("/{id}")
+    public ResponseEntity<InvoiceResponse> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(invoiceService.findById(id));
     }
+
     @PostMapping
     public ResponseEntity<String> saveOne(@RequestBody @Valid InvoiceRequest invoiceRequest) {
         invoiceService.saveOne(invoiceRequest);
         return ResponseEntity.ok("Invoice has been saved");
+    }
+
+    @PostMapping("/status")
+    public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
+        invoiceService.updateStatus(invoiceRequest);
+        return ResponseEntity.ok("Invoice status has been updated");
     }
 
 }

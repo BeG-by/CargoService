@@ -9,7 +9,7 @@ public interface MessageConstant {
 
     String INVOICE_NOT_FOUND_MESSAGE = "Invoice not found";
 
-    String DRIVER_NOT_FOUND_MESSAGE = "Diver not found";
+    String DRIVER_NOT_FOUND_MESSAGE = "Driver not found";
 
 
 }
