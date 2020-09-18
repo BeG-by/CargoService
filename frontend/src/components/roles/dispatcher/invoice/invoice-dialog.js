@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dialog } from "@material-ui/core";
 import InvoiceForm from "./invoice-form";
 import AppBar from "@material-ui/core/AppBar";
@@ -15,7 +15,7 @@ export default (props) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog fullScreen open={open} onClose={handleClose}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>

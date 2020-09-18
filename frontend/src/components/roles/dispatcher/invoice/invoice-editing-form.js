@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import FormikField from "../../common/formik-field";
+import FormikField from "../formik-field";
 import { Formik, Form } from "formik";
-import ItemList from "../../common/item-list";
+import ItemList from "../item-list";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
 import { InvoiceFormValidation } from "./validation";

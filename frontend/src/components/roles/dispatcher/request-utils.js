@@ -5,9 +5,9 @@ export function makeGetAllProductOwnersRequest() {
   return axios({
     method: "get",
     url: endpoint,
-    headers: {
-      Authorization: localStorage.getItem("authorization"),
-    },
+    // headers: {
+    //   Authorization: localStorage.getItem("authorization"),
+    // },
   });
 }
 
@@ -16,9 +16,9 @@ export function makeSaveInvoiceRequest(invoice) {
   return axios({
     method: "post",
     url: endpoint,
-    headers: {
-      Authorization: localStorage.getItem("authorization"),
-    },
+    // headers: {
+    //   Authorization: localStorage.getItem("authorization"),
+    // },
     data: invoice,
   });
 }
@@ -28,8 +28,8 @@ export function makeGetAllDriversRequest() {
   return axios({
     method: "get",
     url: endpoint,
-    headers: {
-      Authorization: localStorage.getItem("authorization"),
-    },
+    // headers: {
+    //   Authorization: localStorage.getItem("authorization"),
+    // },
   });
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import FormikField from "../../common/formik-field";
+import FormikField from "../formik-field";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { ProductFormValidationSchema } from "./validation";
