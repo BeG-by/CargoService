@@ -8,7 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-import ItemList from "../../parts/lists/item-list";
+import ItemList from "../../roles/dispatcher/item-list";
 import ProductsTable from "../../parts/crud-products-table";
 import useStyles from "./styles";
 import { convertInvoiceToNecessaryApi, Transition } from "./utils";

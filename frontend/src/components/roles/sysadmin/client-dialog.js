@@ -93,7 +93,7 @@ export default function ClientDialog(props) {
   }
 
   function handleRequestError(error) {
-    if (error.response) {
+    if (error.response && !error.response.status === 500) {
       openToast(error.response.data, "error");
     } else {
       openToast("Cannot get response from server", "error");
