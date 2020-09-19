@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponse {
 
-    private UserResponse userResponse;
-    private ClientCompany clientCompany;
+    private UserResponse user;
+    private ClientCompany company;
 
 }

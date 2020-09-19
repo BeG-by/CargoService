@@ -4,6 +4,8 @@ import by.itechart.cargo.dto.validation.EnumNamePattern;
 import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.CompanyType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +15,9 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class ClientCompanyRequest implements Serializable, Cloneable {
+@AllArgsConstructor
+@Builder
+public class ClientCompanyDTO implements Serializable, Cloneable {
 
     @Positive(message = "Id cannot be negative or zero")
     private Long id;
@@ -68,5 +72,22 @@ public class ClientCompanyRequest implements Serializable, Cloneable {
                 .email(email)
                 .build();
     }
+
+    public static ClientCompanyDTO fromClientCompany(ClientCompany clientCompany) {
+        return ClientCompanyDTO.builder()
+                .id(clientCompany.getId())
+                .name(clientCompany.getName())
+                .type(clientCompany.getType())
+                .payerAccountNumber(clientCompany.getPayerAccountNumber())
+                .country(clientCompany.getAddress().getCountry())
+                .city(clientCompany.getAddress().getCity())
+                .street(clientCompany.getAddress().getStreet())
+                .house(clientCompany.getAddress().getHouse())
+                .flat(clientCompany.getAddress().getFlat())
+                .registrationDate(clientCompany.getRegistrationDate())
+                .email(clientCompany.getEmail())
+                .build();
+    }
+
 
 }

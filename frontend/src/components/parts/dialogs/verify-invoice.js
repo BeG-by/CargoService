@@ -9,7 +9,7 @@ export const AssignVerificationInvoice = (props) => {
 
     const handleVerify = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/mainPage";
+        window.location.href = "/main";
     }
 
     return (
@@ -30,7 +30,7 @@ export const RejectVerificationInvoice = (props) => {
 
     const handleReject = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/mainPage";
+        window.location.href = "/main";
     }
 
     return (

@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import WaybillForm from "../../forms/waybill-form/waybill-form";
+import WaybillForm from "../forms/waybill-form/waybill-form";
 
 export const WaybillBody = (props) => {
     const classes = props.classes;

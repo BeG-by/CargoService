@@ -1,17 +1,16 @@
 package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.CompanyType;
-
-import by.itechart.cargo.model.freight.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
-
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
+import by.itechart.cargo.model.freight.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-
 
 import javax.persistence.*;
 import java.io.Serializable;

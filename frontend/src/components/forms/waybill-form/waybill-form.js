@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import PointsDialog from "./points-dialog";
 import PointsTable from "./points-table";
 import {Formik, Form} from "formik";
-import ItemList from "../../parts/lists/item-list";
+import ItemList from "../../roles/dispatcher/item-list"; // TODO fix path
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "./waybill-form-validation";

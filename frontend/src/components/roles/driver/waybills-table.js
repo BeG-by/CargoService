@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import interceptors from "../../src/security/Interceptors";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,14 +8,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-<<<<<<< HEAD:frontend/src/components/parts/waybill-table-and-info/waybills-table.js
-import {DialogWindow} from "../dialog";
-=======
-import WaybillDialog from "./waybill-dialog";
+import WaybillDialog from "../manager/waybill-dialog";
 import {getAllInvoices, getInvoiceById} from "./request-utils";
-import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
 import {DialogWindow} from "../../parts/dialog";
->>>>>>> master:frontend/src/components/roles/driver/waybills-table.js
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
 

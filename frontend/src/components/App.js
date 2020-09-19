@@ -1,19 +1,20 @@
 import React from "react";
 import "./App.css";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
 import interceptors from "../../src/security/Interceptors";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import NotFound from "./pages/error-page/error-404";
 import {Header} from "./parts/header";
 import {makeStyles} from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {DrawerMenu} from "./parts/drawer";
-import {WelcomeBody} from "./pages/welcome-page/welcome-body";
+import {WelcomeBody} from "./pages/welcome-body";
 import {Footer} from "./parts/footer";
-import {MainBody} from "./pages/main-page/main-body";
-import {WaybillBody} from "./pages/waybill-page/waybill-body";
-import {InfoBody} from "./pages/info-page/info-body";
-import {SendMailBody} from "./pages/send-mail-page/send-mail-body";
-import {ContactsBody} from "./pages/contacts-page/contacts-body";
+import {MainBody} from "./pages/main-body";
+import {WaybillBody} from "./pages/waybill-body";
+import {InfoBody} from "./pages/info-body";
+import {SendMailBody} from "./pages/send-mail-body";
+import {ContactsBody} from "./pages/contacts-body";
+import InvoicesTable from "./roles/manager/invoices-table";
 
 const drawerWidth = 240;
 
@@ -92,40 +93,39 @@ export default function App() {
                     openMenu={openMenu}
                     handleDrawerOpen={handleMenuOpen}
                 />
-                <BrowserRouter>
-                    <DrawerMenu
-                        drawerWidth={drawerWidth}
-                        openMenu={openMenu}
-                        handleDrawerClose={handleMenuClose}
-                    />
-                    <Switch>
-                        <Route exact path="/"
-                               component={() => <WelcomeBody classes={classes} openMenu={openMenu}/>}/>
-                        <Route exact path="/info"
-                               component={() => <InfoBody classes={classes} openMenu={openMenu}/>}/>
-                        <Route exact path="/sendEmail"
-                               component={() => <SendMailBody classes={classes} openMenu={openMenu}/>}/>
-                        <Route exact path="/contacts"
-                               component={() => <ContactsBody classes={classes} openMenu={openMenu}/>}/>
-                        <Route exact path="/mainPage" component={() =>
-                            <MainBody
-                                classes={classes}
-                                openMenu={openMenu}
-                                openDialog={openDialog}
-                                handleClose={handleClose}
-                                role={role}
-                            />}/>
-                        <Route exact path="/waybill" component={() =>
-                            <WaybillBody
-                                classes={classes}
-                                openMenu={openMenu}
-                                openDialog={openDialog}
-                                handleClose={handleClose}
-                                role={role}
-                            />}/>
-                        <Route component={NotFound}/>
-                    </Switch>
-                </BrowserRouter>
+                <DrawerMenu
+                    drawerWidth={drawerWidth}
+                    openMenu={openMenu}
+                    handleDrawerClose={handleMenuClose}
+                />
+                <Switch>
+                    <Route exact path="/"
+                           component={() => <WelcomeBody classes={classes} openMenu={openMenu}/>}/>
+                    <Route exact path="/info"
+                           component={() => <InfoBody classes={classes} openMenu={openMenu}/>}/>
+                    <Route exact path="/email"
+                           component={() => <SendMailBody classes={classes} openMenu={openMenu}/>}/>
+                    <Route exact path="/contacts"
+                           component={() => <ContactsBody classes={classes} openMenu={openMenu}/>}/>
+                    <Route exact path="/main" component={() =>
+                        <MainBody
+                            classes={classes}
+                            openMenu={openMenu}
+                            openDialog={openDialog}
+                            handleClose={handleClose}
+                            role={role}
+                        />}/>
+                    <Route exact path="/waybill" component={() =>
+                        <WaybillBody
+                            classes={classes}
+                            openMenu={openMenu}
+                            openDialog={openDialog}
+                            handleClose={handleClose}
+                            role={role}
+                        />}/>
+                    <Route exact path={"/invoice"} component={InvoicesTable}/> // TODO fix
+                    <Route component={NotFound}/>
+                </Switch>
                 <CssBaseline/>
                 <Footer drawerWidth={drawerWidth} openMenu={openMenu}/>
             </div>

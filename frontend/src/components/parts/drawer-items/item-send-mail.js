@@ -2,7 +2,7 @@ import React from "react";
 import {DrawerItem} from "./drawer-item";
 import EmailIcon from "@material-ui/icons/Email";
 
-const path = "/sendEmail"
+const path = "/email";
 
 export const ItemSendMail = () => {
     const icon = <EmailIcon color='primary'/>;

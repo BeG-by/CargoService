@@ -5,6 +5,7 @@ import {LoginFormError, LoginFormView} from "./login-form-views";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
+import {withRouter} from "react-router-dom"
 
 
 class LoginForm extends Component {
@@ -21,10 +22,7 @@ class LoginForm extends Component {
     }
 
 
-    searchByLoginPass = (values, {
-        props = this.props,
-        setSubmitting
-    }) => {
+    searchByLoginPass = (values, {props = this.props, setSubmitting}) => {
         setSubmitting(false);
 
         const endpoint = "/v1/api/auth/login";
@@ -37,14 +35,9 @@ class LoginForm extends Component {
 
         axios.post(endpoint, user_object)
             .then(res => {
-                    this.setState({
-                        roles: res.data.roles
-                    });
                     localStorage.setItem("authorization", res.data.token);
-                    localStorage.setItem("role", this.state.roles);
-                    props.changeUserAndCompany({name: "TEST"}, {name: "TEST"}); // TODO
-                    window.location.href = "/mainPage";
-                    this.props.history.push("/mainPage");
+                    props.changeUserAndCompany(res.data.user, res.data.company);
+                    this.props.history.push("/main");
                 },
                 error => {
                     this.setState({
@@ -102,16 +95,10 @@ class LoginForm extends Component {
 }
 
 
-// TODO
-
-const putStateToProps = (store) => {
-    return {}
-};
-
-const putActionsToProps = (dispatch) => {
+const mapActionsToProps = (dispatch) => {
     return {
         changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
     }
 };
 
-export default connect(putStateToProps, putActionsToProps)(LoginForm)
+export default withRouter(connect(null, mapActionsToProps)(LoginForm))

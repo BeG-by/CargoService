@@ -58,11 +58,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const putStateToProps = () => {
-    return {}
+const mapStateToProps = (store) => {
+    return {
+        user: store.user
+    }
 };
 
-const putActionsToProps = (dispatch) => {
+const mapActionsToProps = (dispatch) => {
     return {
         changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
     }
@@ -79,29 +81,30 @@ const getUserInfoRequest = () => {
 };
 
 
-export const Header = connect(putStateToProps, putActionsToProps)((props) => {
+export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
+
     drawerWidth = props.drawerWidth;
+    const user = props.user;
+    const isAuthenticate = localStorage.getItem("authorization") !== null;
     const headerText = "Manage your cargo with convenient digital tools";
+
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
-    const [text, setText] = React.useState(headerText);
 
-    async function getUserInfo() {
+    const getUserInfo = async () => {
         try {
             const response = await getUserInfoRequest();
-            const user = response.data.userResponse;
-            const clientCompany = response.data.clientCompany;
-            setText(user.name + " " + user.surname);
+            const user = response.data.user;
+            const clientCompany = response.data.company;
             props.changeUserAndCompany(user, clientCompany);
         } catch (error) {
             alert(error); // TODO notification
         }
-    }
+    };
 
 
     useEffect(() => {
-        const token = localStorage.getItem("authorization");
-        if (token != null) {
+        if (isAuthenticate) {
             getUserInfo();
         }
     }, []);
@@ -113,17 +116,17 @@ export const Header = connect(putStateToProps, putActionsToProps)((props) => {
         setOpenDialog(false);
     };
 
+    const renderHeaderText = () => {
+        return isAuthenticate ? user.name + " " + user.surname + ", " + user.roles : headerText
+    };
+
 
     const LoginButton = () => {
-
-        if (localStorage.getItem("authorization") === null) {
-            return <SigninButton openDialog={openDialog}
-                                 handleClickOpen={handleClickOpen}
-                                 handleClose={handleClose}/>;
-        } else {
-            return <SignoutButton/>;
-        }
-
+        return isAuthenticate ?
+            <SignoutButton/> :
+            <SigninButton openDialog={openDialog}
+                          handleClickOpen={handleClickOpen}
+                          handleClose={handleClose}/>;
     };
 
 
@@ -147,7 +150,7 @@ export const Header = connect(putStateToProps, putActionsToProps)((props) => {
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
-                    {text}
+                    {renderHeaderText()}
                 </Typography>
                 <div className={classes.grow}/>
                 <LoginButton/>

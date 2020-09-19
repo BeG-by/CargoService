@@ -2,6 +2,8 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
+import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
@@ -13,8 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
@@ -40,7 +40,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public AuthorizationResponse login(AuthorizationRequest request) throws NotFoundException {
-        
+
         final String login = request.getLogin();
         final String password = request.getPassword();
 
@@ -48,9 +48,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         final String token = jwtTokenUtil.createToken(login, user.getRoles());
 
-        final Set<String> rolesNames = user.getRoles().stream().map(r -> r.getRole().toString()).collect(Collectors.toSet());
+        final UserResponse userResponse = UserResponse.toUserResponse(user);
 
-        return new AuthorizationResponse(rolesNames, token);
+        return new AuthorizationResponse(token, userResponse, ClientCompanyDTO.fromClientCompany(user.getClientCompany()));
 
     }
 
