@@ -13,6 +13,7 @@ import {ItemContacts} from "./drawer-items/item-contacts";
 import {ItemSendMail} from "./drawer-items/item-send-mail";
 import {ItemClientTable} from "./drawer-items/item-clients-company";
 import {connect} from "react-redux";
+import {ItemUserTable} from "./drawer-items/item-user-list";
 
 let drawerWidth;
 
@@ -53,7 +54,8 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             components.push(<Divider key='Divider'/>);
             break;
         case 'ADMIN':
-
+            components.push(<ItemUserTable key="Users"/>);
+            components.push(<Divider key='Divider'/>);
             break;
         case 'DISPATCHER':
             components.push(<ItemClientTable key="Client table"/>);

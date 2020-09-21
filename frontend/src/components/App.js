@@ -15,6 +15,8 @@ import {InfoBody} from "./pages/info-body";
 import {SendMailBody} from "./pages/send-mail-body";
 import {ContactsBody} from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
+import UserTable from "./roles/admin/user-table";
+import {BodyWrapper} from "./pages/body-wrapper";
 
 const drawerWidth = 240;
 
@@ -64,8 +66,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const role = localStorage.getItem("role");
-
 export default function App() {
 
     const classes = useStyles();
@@ -113,7 +113,6 @@ export default function App() {
                             openMenu={openMenu}
                             openDialog={openDialog}
                             handleClose={handleClose}
-                            role={role}
                         />}/>
                     <Route exact path="/waybill" component={() =>
                         <WaybillBody
@@ -121,9 +120,9 @@ export default function App() {
                             openMenu={openMenu}
                             openDialog={openDialog}
                             handleClose={handleClose}
-                            role={role}
                         />}/>
-                    <Route exact path={"/invoice"} component={InvoicesTable}/> // TODO fix
+                    <Route exact path={"/invoice"} component={InvoicesTable}/>
+                    <Route exact path={"/users"} component={UserTable}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>

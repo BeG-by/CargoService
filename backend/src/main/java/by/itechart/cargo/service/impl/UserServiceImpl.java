@@ -4,6 +4,7 @@ import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
 import by.itechart.cargo.dto.model_dto.user.UserRequest;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.AlreadyExistException;
+import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
@@ -21,8 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.EMAIL_EXIST_MESSAGE;
-import static by.itechart.cargo.service.constant.MessageConstant.LOGIN_ALREADY_EXISTS;
+import static by.itechart.cargo.service.constant.MessageConstant.*;
 
 @Service
 @Transactional
@@ -84,6 +84,13 @@ public class UserServiceImpl implements UserService {
 
         User userDb = userRepository.save(user);
         log.info("User has been saved {}", userDb);
+    }
+
+    @Override
+    public UserResponse findById(long id) throws NotFoundException {
+        return userRepository.findById(id)
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
 }

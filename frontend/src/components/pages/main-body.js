@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import ProductOwnersTable from "../roles/dispatcher/product-owners-table";
 import InvoicesTable from "../roles/manager/invoices-table";
 import ClientsTable from "../roles/sysadmin/clients-table";
+import UserTable from "../roles/admin/user-table";
 import {connect} from "react-redux";
 
 const mapStateToProps = (store) => {
@@ -22,10 +23,7 @@ export const MainBody = connect(mapStateToProps)((props) => {
             content = <ClientsTable/>;
             break;
         case 'ADMIN':
-            content = <Typography
-                className={classes.mainParagraph}
-                paragraph>WELCOME TO CARGO MANAGER!
-            </Typography>;
+            content = <UserTable/>;
             break;
         case 'DISPATCHER':
             content = <ProductOwnersTable/>;

@@ -11,9 +11,6 @@ import {BrowserRouter} from "react-router-dom";
 
 const store = createStore(rootReducer);
 
-const test = () => {
-    console.log(store.getState());
-};
 
 ReactDOM.render(
     <MuiThemeProvider>
@@ -22,7 +19,6 @@ ReactDOM.render(
                 <App/>
             </BrowserRouter>
         </Provider>
-        <button onClick={test}>Button for checking store</button>
     </MuiThemeProvider>,
     document.getElementById('root')
 );

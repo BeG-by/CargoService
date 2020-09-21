@@ -6,7 +6,7 @@ import {NavLink} from "react-router-dom";
 
 export const DrawerItem = (props) => {
     return (
-        <NavLink to={props.path}>
+        <NavLink to={props.path} className="nav-link-item">
             <ListItem button key={props.text}>
                 <ListItemIcon>{props.icon}</ListItemIcon>
                 <ListItemText primary={props.text}/>
