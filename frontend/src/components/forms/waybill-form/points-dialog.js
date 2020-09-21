@@ -5,7 +5,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import PointsForm from "./points-form";
 
 export default (props) => {
-    const { open, onClose, initPointState, onSubmit } = props;
+    const { open, onClose, initPointState, onSubmit, onDelete } = props;
 
     const handleClose = () => {
         onClose();
@@ -23,6 +23,7 @@ export default (props) => {
                     initPointState={initPointState}
                     onSubmit={onSubmit}
                     onClose={handleClose}
+                    onDelete={onDelete}
                 />
             </DialogContent>
         </Dialog>

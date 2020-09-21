@@ -137,17 +137,19 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
 
 {
-  "departureDate": "2020-01-01",
-  "arrivalDate": "2021-01-03",
-  "autoId": 1,
-  "invoiceId": 1,
   "points": [
     {
-      "place": "Vitebsk",
-      "isPassed": true,
-      "passageDate": "2020-01-01"
+      "place": "Orsha",
+      "passed": false,
+      "passageDate": "",
+      "waybillId": "",
+      "id": null
     }
-  ]
+  ],
+  "invoiceId": 2,
+  "autoId": 1,
+  "departureDate": "2020-09-21",
+  "arrivalDate": "2020-09-21"
 }
 
 ###

@@ -5,16 +5,23 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 export default (props) => {
-    const { initPointState, onSubmit, onClose } = props;
+    const { initPointState, onSubmit, onClose, onDelete } = props;
 
     const handleSubmit = (values) => {
+        let pointId;
+        if (initPointState.id === 0) {
+            pointId = null;
+        } else {
+            pointId = initPointState.id;
+        }
         const point = {
             place: values.place,
             passed: values.passed,
             passageDate: values.passageDate,
             waybillId: values.waybillId,
+            id: pointId
         };
-        point.id = initPointState.id;
+        point.idx = initPointState.idx;
         onSubmit(point);
     };
 
@@ -38,8 +45,12 @@ export default (props) => {
                             color="primary"
                             type="submit"
                         >
-                            Save
+                            Add
                         </Button>
+                        <Button
+                            variant="outlined"
+                            color='primary'
+                            onClick={onDelete}>Delete point</Button>
                         <Button variant="contained" onClick={onClose}>
                             Cancel
                         </Button>
