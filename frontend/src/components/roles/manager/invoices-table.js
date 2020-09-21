@@ -15,7 +15,6 @@ import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {WaybillError} from "../../forms/waybill-form/waybill-form-error";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},

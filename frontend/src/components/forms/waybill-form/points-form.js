@@ -25,6 +25,10 @@ export default (props) => {
         onSubmit(point);
     };
 
+    const handleDelete = () => {
+        onDelete(initPointState.idx);
+    }
+
     return (
         <Formik
             enableReinitialize
@@ -50,7 +54,7 @@ export default (props) => {
                         <Button
                             variant="outlined"
                             color='primary'
-                            onClick={onDelete}>Delete point</Button>
+                            onClick={handleDelete}>Delete point</Button>
                         <Button variant="contained" onClick={onClose}>
                             Cancel
                         </Button>

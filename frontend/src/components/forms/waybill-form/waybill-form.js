@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from "react";
 import PointsDialog from "./points-dialog";
 import PointsTable from "./points-table";
-import {Formik, Form, Field} from "formik";
+import {Formik, Form} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "./waybill-form-validation";
-import ClientDialogDatePicker from "../../roles/sysadmin/client-dialog-date-picker";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import ProductsTable from "../../parts/crud-products-table";
+import DatePickerField from "../../parts/date-picker";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 const EMPTY_AUTO = {
     id: 0,
@@ -155,13 +156,16 @@ export default (props) => {
         options.push({value: auto.id, label: label});
     })
 
+    let date = new Date();
+    let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
+
     return (
         <React.Fragment>
             <Formik
                 enableReinitialize
                 initialValues={{
-                    departureDate: "",
-                    arrivalDate: "",
+                    departureDate: today,
+                    arrivalDate: today,
                     autoId: selectedAuto.id,
                     invoiceId: invoice.id,
                 }}
@@ -192,31 +196,40 @@ export default (props) => {
                             </Select>
                         </FormControl>
 
-                        <FormControl className={classes.formControl}>
-                            <ClientDialogDatePicker
-                                formikProps={formProps}
-                                id="departureDate"
-                                formikFieldName="departureDate"
-                                label="Departure date"
-                            />
-                        </FormControl>
+                        <Grid container spacing={3}>
+                            <Grid item xs={6}>
+                                <DatePickerField
+                                    formikProps={formProps}
+                                    id="departureDate"
+                                    formikFieldName="departureDate"
+                                    label="Departure date"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <DatePickerField
+                                    formikProps={formProps}
+                                    id="arrivalDate"
+                                    formikFieldName="arrivalDate"
+                                    label="Arrival date"
+                                />
+                            </Grid>
+                        </Grid>
+                        <br/>
 
                         <FormControl className={classes.formControl}>
-                            <ClientDialogDatePicker
-                                formikProps={formProps}
-                                id="arrivalDate"
-                                formikFieldName="arrivalDate"
-                                label="Arrival date"
-                            />
-                        </FormControl>
+                            <Grid container spacing={3}>
+                                <Grid item xs={6}>
+                                    <Typography>Control points:</Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Button
+                                        variant="outlined"
+                                        color='primary'
+                                        style={{display: "block", marginLeft: "auto"}}
+                                        onClick={handleCreateNewPointClick}>Add control point</Button>
+                                </Grid>
+                            </Grid>
 
-                        <Button
-                            variant="outlined"
-                            color='primary'
-                            onClick={handleCreateNewPointClick}>Add point</Button>
-
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-label">Control points</InputLabel>
                             <PointsTable
                                 editable={true}
                                 points={points}
@@ -231,13 +244,23 @@ export default (props) => {
                         </FormControl>
                         <br/>
 
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                        >
-                            Save waybill
-                        </Button>
+                        <div className='btn-row'>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+
+                            >
+                                Save waybill
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={props.onClose}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
                     </Form>
                 )}
             </Formik>
