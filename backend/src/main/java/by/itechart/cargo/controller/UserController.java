@@ -5,7 +5,6 @@ import by.itechart.cargo.dto.model_dto.user.UserRequest;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.User;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid UserRequest userRequest) throws AlreadyExistException {
-        userService.saveOne(userRequest);
+    public ResponseEntity<String> save(@RequestBody @Valid UserRequest userRequest) throws AlreadyExistException {
+        userService.save(userRequest);
         return ResponseEntity.ok("User has been saved");
     }
 

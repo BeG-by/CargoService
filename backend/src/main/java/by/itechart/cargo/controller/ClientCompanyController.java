@@ -50,7 +50,7 @@ public class ClientCompanyController {
 
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid ClientCompanyDTO companyRequest) throws AlreadyExistException {
-        clientCompanyService.saveOne(companyRequest);
+        clientCompanyService.save(companyRequest);
         return ResponseEntity.ok("Client company has been saved");
     }
 

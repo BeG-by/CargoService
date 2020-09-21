@@ -12,6 +12,6 @@ public interface AutoService {
 
     Auto findById(long id) throws NotFoundException;
 
-    void saveOne(AutoRequest autoRequest);
+    void save(AutoRequest autoRequest);
 
 }

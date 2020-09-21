@@ -13,7 +13,7 @@ public interface ClientCompanyService {
 
     List<ClientCompany> findAll();
 
-    void saveOne(ClientCompanyDTO clientCompanyDTO) throws AlreadyExistException;
+    void save(ClientCompanyDTO clientCompanyDTO) throws AlreadyExistException;
 
     void update(ClientCompanyDTO companyRequest) throws NotFoundException, AlreadyExistException;
 

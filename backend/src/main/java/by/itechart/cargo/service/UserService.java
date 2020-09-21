@@ -15,7 +15,7 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
-    void saveOne(UserRequest userRequest) throws AlreadyExistException;
+    void save(UserRequest userRequest) throws AlreadyExistException;
 
     UserResponse findById(long id) throws NotFoundException;
 

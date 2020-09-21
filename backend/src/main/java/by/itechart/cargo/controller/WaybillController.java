@@ -34,8 +34,8 @@ public class WaybillController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid WaybillRequest waybillRequest) {
-        waybillService.saveOne(waybillRequest);
+    public ResponseEntity<String> save(@RequestBody @Valid WaybillRequest waybillRequest) {
+        waybillService.save(waybillRequest);
         return ResponseEntity.ok("Waybill has been saved");
     }
 

@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveOne(UserRequest userRequest) throws AlreadyExistException {
+    public void save(UserRequest userRequest) throws AlreadyExistException {
 
         final Long companyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
         final String login = userRequest.getLogin();
