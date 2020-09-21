@@ -1,8 +1,9 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
-import by.itechart.cargo.dto.model_dto.user.UserRequest;
+import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
+import by.itechart.cargo.dto.model_dto.user.UserUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,11 +60,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveOne(UserRequest userRequest) throws AlreadyExistException {
+    public void saveOne(UserSaveRequest userSaveRequest) throws AlreadyExistException {
 
         final Long companyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
-        final String login = userRequest.getLogin();
-        final String email = userRequest.getEmail();
+        final String login = userSaveRequest.getLogin();
+        final String email = userSaveRequest.getEmail();
 
         if (userRepository.getByLogin(login).isPresent()) {
             throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
@@ -72,12 +74,12 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
         }
 
-        Set<Role> rolesDb = userRequest.getRoles()
+        Set<Role> rolesDb = userSaveRequest.getRoles()
                 .stream()
                 .map(r -> roleRepository.getByRole(Role.RoleType.valueOf(r)))
                 .collect(Collectors.toSet());
 
-        final User user = userRequest.toUser();
+        final User user = userSaveRequest.toUser();
         user.setRoles(rolesDb);
         user.setClientCompany(clientCompanyRepository.getOne(companyId));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -91,6 +93,46 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(UserResponse::toUserResponse)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public void update(UserUpdateRequest request) throws NotFoundException, AlreadyExistException {
+
+        User user = userRepository
+                .findById(request.getId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        if (userRepository.getByLogin(request.getLogin()).isPresent()) {
+            throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
+        }
+
+        if (userRepository.getByEmail(request.getEmail()).isPresent()) {
+            throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
+        }
+
+        user.setLogin(request.getLogin());
+
+        if (!request.getPassword().trim().isEmpty()) {
+            String password = request.getPassword();
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        user.setPatronymic(request.getPatronymic());
+
+        Set<Role> rolesDb = request.getRoles()
+                .stream()
+                .map(r -> roleRepository.getByRole(Role.RoleType.valueOf(r)))
+                .collect(Collectors.toSet());
+
+        user.setRoles(rolesDb);
+        user.setBirthday(request.getBirthday());
+        user.setAddress(request.getAddress());
+
+        log.info("User has been updated {}", user);
+
+
     }
 
 }

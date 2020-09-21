@@ -15,3 +15,12 @@ export const getAllUsers = () => {
         url: endpoint,
     })
 };
+
+export const updateUser = (user) => {
+    const endpoint = "/v1/api/users";
+    return axios({
+        method: "put",
+        url: endpoint,
+        data: user
+    })
+};
