@@ -56,7 +56,6 @@ public class JwtTokenUtil {
         claims.put("roles", rolesName);
 
         Date now = new Date();
-        System.out.println(validityInMs);
         Date periodOfValidity = new Date(now.getTime() + validityInMs);
 
         return Jwts.builder()

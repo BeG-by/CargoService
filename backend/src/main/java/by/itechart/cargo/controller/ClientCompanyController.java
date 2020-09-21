@@ -1,6 +1,6 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyRequest;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
@@ -31,7 +31,7 @@ public class ClientCompanyController {
     }
 
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody @Valid ClientCompanyRequest companyRequest) throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<String> update(@RequestBody @Valid ClientCompanyDTO companyRequest) throws NotFoundException, AlreadyExistException {
         clientCompanyService.update(companyRequest);
         return ResponseEntity.ok("Client company has been updated");
     }
@@ -49,7 +49,7 @@ public class ClientCompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody @Valid ClientCompanyRequest companyRequest) throws AlreadyExistException {
+    public ResponseEntity<String> save(@RequestBody @Valid ClientCompanyDTO companyRequest) throws AlreadyExistException {
         clientCompanyService.saveOne(companyRequest);
         return ResponseEntity.ok("Client company has been saved");
     }

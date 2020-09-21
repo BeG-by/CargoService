@@ -11,6 +11,9 @@ import {ItemWaybillList} from "./drawer-items/item-waybill-list";
 import {ItemInfo} from "./drawer-items/item-info";
 import {ItemContacts} from "./drawer-items/item-contacts";
 import {ItemSendMail} from "./drawer-items/item-send-mail";
+import {ItemClientTable} from "./drawer-items/item-clients-company";
+import {connect} from "react-redux";
+import {ItemUserTable} from "./drawer-items/item-user-list";
 
 let drawerWidth;
 
@@ -31,40 +34,49 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const role = localStorage.getItem('role');
-let components = [];
 
-//todo для каждого свои кнопки
-switch (role) {
-    case 'SYSADMIN':
-        break;
-    case 'ADMIN':
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
-        break;
-    case 'DISPATCHER':
 
-        break;
-    case 'MANAGER':
-        const deliveryNotesList = <ItemInvoiceList key='Invoices'/>;
-        const waybillList = <ItemWaybillList key='Waybills'/>;
-        const divider = <Divider key='Divider'/>;
-        components.push(deliveryNotesList);
-        components.push(waybillList);
-        components.push(divider);
-        break;
-    case 'DRIVER':
-
-        break;
-    case 'OWNER':
-
-        break;
-    default:
-}
-
-export const DrawerMenu = (props) => {
+export const DrawerMenu = connect(mapStateToProps)((props) => {
     drawerWidth = props.drawerWidth;
     const classes = useStyles();
     const theme = useTheme();
+    const components = [];
+
+    switch (props.role) {
+        case 'SYSADMIN':
+            components.push(<ItemClientTable key="Client table"/>);
+            components.push(<Divider key='Divider'/>);
+            break;
+        case 'ADMIN':
+            components.push(<ItemUserTable key="Users"/>);
+            components.push(<Divider key='Divider'/>);
+            break;
+        case 'DISPATCHER':
+            components.push(<ItemClientTable key="Client table"/>);
+            components.push(<Divider key='Divider'/>);
+
+            break;
+        case 'MANAGER':
+            components.push(<ItemInvoiceList key='Invoices'/>);
+            components.push(<ItemWaybillList key='Waybills'/>);
+            components.push(<Divider key='Divider'/>);
+            break;
+        case 'DRIVER':
+
+            break;
+        case 'OWNER':
+
+            break;
+        default:
+    }
+
+
     return (
         <Drawer
             className={classes.drawer}
@@ -94,4 +106,4 @@ export const DrawerMenu = (props) => {
             </List>
         </Drawer>
     );
-}
+});

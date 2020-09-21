@@ -16,6 +16,7 @@ public class InvoiceTableResponse {
     private String date;
     private String shipper;
     private String consignee;
+    private String waybillId;
 
     public InvoiceTableResponse toInvoiceTableResponse(Invoice invoice) {
         InvoiceTableResponse response = new InvoiceTableResponse();
@@ -25,6 +26,7 @@ public class InvoiceTableResponse {
         response.setDate(invoice.getRegistrationDate().toString());
         response.setShipper(invoice.getShipper());
         response.setConsignee(invoice.getConsignee());
+        response.setWaybillId(invoice.getWaybill() == null ? null : invoice.getWaybill().getId().toString());
         return response;
     }
 }

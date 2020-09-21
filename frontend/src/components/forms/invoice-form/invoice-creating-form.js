@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import ItemList from "../../parts/lists/item-list";
 import ProductsTable from "../../parts/crud-products-table";
 import useStyles from "./styles";
+// import { saveInvoice } from "../../../request-api/utils";
 import { convertInvoiceToNecessaryApi, Transition } from "./utils";
 
 const initDriverState = {
@@ -83,7 +84,7 @@ export default function InvoiceForm(props) {
     console.log("SEND INVOICE");
     console.log(necessaryInvoice);
 
-    saveInvoice(necessaryInvoice);
+    // saveInvoice(necessaryInvoice);
     props.onRegisterClick(invoice);
   };
 

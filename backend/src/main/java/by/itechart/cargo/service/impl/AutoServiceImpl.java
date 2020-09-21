@@ -1,6 +1,7 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.auto.AutoRequest;
+import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.freight.Auto;
 import by.itechart.cargo.repository.*;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import static by.itechart.cargo.service.constant.MessageConstant.AUTO_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -39,8 +41,9 @@ public class AutoServiceImpl implements AutoService {
     }
 
     @Override
-    public Optional<Auto> findById(long id) {
-        return autoRepository.findById(id);
+    public Auto findById(long id) throws NotFoundException {
+        return autoRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
     }
 
     @Override

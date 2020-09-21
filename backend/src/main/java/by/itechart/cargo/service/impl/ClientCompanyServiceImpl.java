@@ -1,6 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyRequest;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Address;
@@ -42,8 +42,8 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public void saveOne(ClientCompanyRequest clientCompanyRequest) throws AlreadyExistException {
-        final ClientCompany clientCompany = clientCompanyRequest.toClientCompany();
+    public void saveOne(ClientCompanyDTO clientCompanyDTO) throws AlreadyExistException {
+        final ClientCompany clientCompany = clientCompanyDTO.toClientCompany();
         final String name = clientCompany.getName();
         final String payerAccountNumber = clientCompany.getPayerAccountNumber();
         final String email = clientCompany.getEmail();
@@ -64,37 +64,37 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public void update(ClientCompanyRequest clientCompanyRequest) throws NotFoundException, AlreadyExistException {
-        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyRequest.getId())
+    public void update(ClientCompanyDTO clientCompanyDTO) throws NotFoundException, AlreadyExistException {
+        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyDTO.getId())
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
 
-        Optional<ClientCompany> byName = clientCompanyRepository.getByName(clientCompanyRequest.getName());
+        Optional<ClientCompany> byName = clientCompanyRepository.getByName(clientCompanyDTO.getName());
         if (byName.isPresent() && !byName.get().getId().equals(clientCompany.getId())) {
-            throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompanyRequest.getName()));
+            throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompanyDTO.getName()));
         }
 
-        Optional<ClientCompany> byPayerAccountNumber = clientCompanyRepository.getByPayerAccountNumber(clientCompanyRequest.getPayerAccountNumber());
+        Optional<ClientCompany> byPayerAccountNumber = clientCompanyRepository.getByPayerAccountNumber(clientCompanyDTO.getPayerAccountNumber());
         if (byPayerAccountNumber.isPresent() && !byPayerAccountNumber.get().getId().equals(clientCompany.getId())) {
-            throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompanyRequest.getPayerAccountNumber()));
+            throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompanyDTO.getPayerAccountNumber()));
         }
-        Optional<ClientCompany> byEmail = clientCompanyRepository.getByEmail(clientCompanyRequest.getEmail());
+        Optional<ClientCompany> byEmail = clientCompanyRepository.getByEmail(clientCompanyDTO.getEmail());
         if (byEmail.isPresent() && !byEmail.get().getId().equals(clientCompany.getId())) {
-            throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompanyRequest.getEmail()));
+            throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompanyDTO.getEmail()));
         }
 
-        clientCompany.setName(clientCompanyRequest.getName());
-        clientCompany.setPayerAccountNumber(clientCompanyRequest.getPayerAccountNumber());
-        clientCompany.setType(clientCompanyRequest.getType());
-        clientCompany.setEmail(clientCompanyRequest.getEmail());
-        clientCompany.setRegistrationDate(clientCompanyRequest.getRegistrationDate());
+        clientCompany.setName(clientCompanyDTO.getName());
+        clientCompany.setPayerAccountNumber(clientCompanyDTO.getPayerAccountNumber());
+        clientCompany.setType(clientCompanyDTO.getType());
+        clientCompany.setEmail(clientCompanyDTO.getEmail());
+        clientCompany.setRegistrationDate(clientCompanyDTO.getRegistrationDate());
 
         Address address = clientCompany.getAddress();
 
-        address.setCountry(clientCompanyRequest.getCountry());
-        address.setCity(clientCompanyRequest.getCity());
-        address.setStreet(clientCompanyRequest.getStreet());
-        address.setHouse(clientCompanyRequest.getHouse());
-        address.setFlat(clientCompanyRequest.getFlat());
+        address.setCountry(clientCompanyDTO.getCountry());
+        address.setCity(clientCompanyDTO.getCity());
+        address.setStreet(clientCompanyDTO.getStreet());
+        address.setHouse(clientCompanyDTO.getHouse());
+        address.setFlat(clientCompanyDTO.getFlat());
 
         log.info("Client company has been updated {}", clientCompany);
     }
