@@ -404,10 +404,6 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="sum" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="mass" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
@@ -648,7 +644,6 @@
             <column name="quantity" value="5"/>
             <column name="measure" value="bochka"/>
             <column name="price" value="100"/>
-            <column name="sum" value="500"/>
             <column name="mass" value="100 kg"/>
             <column name="status" value="ACCEPTED"/>
             <column name="id_invoice" value="1"/>

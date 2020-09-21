@@ -17,6 +17,9 @@ import {ContactsBody} from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
 import {BodyWrapper} from "./pages/body-wrapper";
+import ProductOwnersTable from "./roles/dispatcher/product-owners-table";
+import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
+
 
 const drawerWidth = 240;
 
@@ -123,6 +126,8 @@ export default function App() {
                         />}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
                     <Route exact path={"/users"} component={UserTable}/>
+                    <Route exact path={"/owners"} component={ProductOwnersTable}/>
+                    <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>

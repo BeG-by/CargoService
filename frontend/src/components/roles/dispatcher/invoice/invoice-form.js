@@ -9,14 +9,21 @@ import {Button} from "@material-ui/core";
 import {
     makeGetAllDriversRequest,
     makeSaveInvoiceRequest,
+    makeUpdateInvoiceRequest,
+    makeGetInvoiceByIdRequest,
 } from "../request-utils";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
 
 const EMPTY_DRIVER = {
     name: "",
     surname: "",
     passport: "",
+};
+
+const EMPTY_PRODUCT_OWNER = {
+    name: "",
+    type: "SP",
+    phone: "",
 };
 
 const EMPTY_PRODUCT = {
@@ -28,13 +35,22 @@ const EMPTY_PRODUCT = {
     price: "",
 };
 
-export default (props) => {
-    const [selectedDriver, setSelectedDriver] = useState(EMPTY_DRIVER);
+const INIT_INVOICE_STATE = {
+    number: "",
+    shipper: "",
+    consignee: "",
+    registrationDate: "",
+    driver: EMPTY_DRIVER,
+    productOwner: EMPTY_PRODUCT_OWNER,
+    products: [],
+};
+
+export default function InvoiceForm(props) {
+    const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
+    const [drivers, setDrivers] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [productIndex, setProductIndex] = useState(0);
-    const [drivers, setDrivers] = useState([]);
-    const [products, setProducts] = useState([]);
 
     const updateDriversList = async () => {
         try {
@@ -46,9 +62,51 @@ export default (props) => {
         }
     };
 
+    const sendInvoiceForSave = async (invoice) => {
+        try {
+            makeSaveInvoiceRequest(invoice);
+        } catch (error) {
+            handleRequestError(error);
+        }
+    };
+
+    const sendInvoiceForUpdate = async (invoice) => {
+        try {
+            makeUpdateInvoiceRequest(invoice);
+        } catch (error) {
+            handleRequestError(error);
+        }
+    };
+
+    const updateInitInvoiceState = async (id) => {
+        try {
+            const res = await makeGetInvoiceByIdRequest(id);
+            setInitInvoice((prevState) => {
+                return {
+                    ...res.data,
+                    productOwner: EMPTY_PRODUCT_OWNER,
+                };
+            });
+        } catch (error) {
+            setInitInvoice(INIT_INVOICE_STATE);
+            handleRequestError(error);
+        }
+    };
+
     useEffect(() => {
         updateDriversList();
-    }, []);
+        if (props.invoiceId !== null && props.invoiceId !== undefined) {
+            updateInitInvoiceState(props.invoiceId);
+        } else {
+            setInitInvoice((prevState) => {
+                return {
+                    ...prevState,
+                    registrationDate: new Date().toISOString().slice(0, 10),
+                    productOwner: props.productOwner,
+                };
+            });
+        }
+    }, [props.invoiceId, props.productOwner]);
 
     const handleProductDialogClose = () => {
         setSelectedProduct(EMPTY_PRODUCT);
@@ -77,7 +135,7 @@ export default (props) => {
         setProductDialogOpen(true);
     };
 
-    const handleTableRowClick = (product) => {
+    const handleProductTableClick = (product) => {
         setSelectedProduct(product);
         setProductDialogOpen(true);
     };
@@ -85,16 +143,16 @@ export default (props) => {
     const addProduct = (product) => {
         product.id = productIndex;
         setProductIndex(product.id + 1);
-        setProducts((prevState) => {
-            const temp = [...prevState];
+        setInitInvoice((prevState) => {
+            const temp = [...prevState.products];
             temp.push(product);
-            return temp;
+            return {...prevState, products: temp};
         });
     };
 
     const updateProduct = (newProduct) => {
-        setProducts((prevState) => {
-            const temp = [...prevState];
+        setInitInvoice((prevState) => {
+            const temp = [...prevState.products];
             for (let el of temp) {
                 if (el.id === newProduct.id) {
                     el.name = newProduct.name;
@@ -104,19 +162,19 @@ export default (props) => {
                     el.price = newProduct.price;
                 }
             }
-            return temp;
+            return {...prevState, products: temp};
         });
     };
 
     const deleteProductById = (id) => {
-        setProducts((prevState) => {
-            const temp = [...prevState];
+        setInitInvoice((prevState) => {
+            const temp = [...prevState.products];
             for (let i = 0; i < temp.length; i++) {
                 if (temp[i].id === id) {
                     temp.splice(i, 1);
                 }
             }
-            return temp;
+            return {...prevState, products: temp};
         });
     };
 
@@ -131,43 +189,24 @@ export default (props) => {
         }
     };
 
-    const deleteIdAttribute = (products) => {
-        let productsWithoutId = [];
-        for (let product of products) {
-            let newProduct = {};
-            newProduct.name = product.name;
-            newProduct.mass = product.mass;
-            newProduct.quantity = product.quantity;
-            newProduct.measure = product.measure;
-            newProduct.price = product.price;
-            //todo: fix sum (add formik field)
-            newProduct.sum = newProduct.price;
-            productsWithoutId.push(newProduct);
-        }
-        return productsWithoutId;
-    }
-
     const handleSubmit = (values) => {
-        const invoice = {};
-        invoice.products = deleteIdAttribute(products);
-        invoice.driverId = selectedDriver.id;
+        let invoice = {};
         invoice.invoiceNumber = values.invoiceNumber;
         invoice.shipper = values.shipper;
         invoice.consignee = values.consignee;
-        invoice.status = "REGISTERED";
-        invoice.registrationDate = new Date().toISOString().slice(0, 10);
 
-        const saveInvoice = async (invoice) => {
-            try {
-                await makeSaveInvoiceRequest(invoice);
-                alert("Saved");
-                props.onClose();
-            } catch (error) {
-                handleRequestError(error);
-            }
-        };
-        console.log(invoice);
-        saveInvoice(invoice);
+        invoice.productOwner = initInvoice.productOwner;
+        invoice.products = initInvoice.products;
+        invoice.registrationDate = initInvoice.registrationDate;
+        invoice.driverId = initInvoice.driver.id;
+        invoice.status = "REGISTERED";
+
+        if (props.invoiceId !== null && props.invoiceId !== undefined) {
+            invoice.id = props.invoiceId;
+            sendInvoiceForUpdate(invoice);
+        } else {
+            sendInvoiceForSave(invoice);
+        }
     };
 
     return (
@@ -175,9 +214,9 @@ export default (props) => {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    invoiceNumber: "",
-                    shipper: "",
-                    consignee: "",
+                    invoiceNumber: initInvoice.number,
+                    shipper: initInvoice.shipper,
+                    consignee: initInvoice.consignee,
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={InvoiceFormValidation}
@@ -188,27 +227,33 @@ export default (props) => {
                             disabled={true}
                             id={"productOwnerName"}
                             label={"Product owner name"}
-                            value={props.productOwner.name}
+                            value={initInvoice.productOwner.name}
                         />
                         <TextField
                             disabled={true}
                             id="productOwnerType"
                             label="Product owner type"
-                            value={props.productOwner.type}
+                            value={initInvoice.productOwner.type}
                         />
                         <TextField
                             disabled={true}
                             id={"productOwnerPhone"}
                             label={"Product owner phone"}
-                            value={props.productOwner.phone}
+                            value={initInvoice.productOwner.phone}
                         />
-
+                        <TextField
+                            disabled={true}
+                            id={"invoiceRegistrationDate"}
+                            label={"Invoice registration date"}
+                            value={initInvoice.registrationDate}
+                        />
                         <FormikField
                             formikProps={formProps}
                             id={"invoiceNumber"}
                             label={"Invoice number"}
                             formikFieldName={"invoiceNumber"}
                         />
+
                         <FormikField
                             formikProps={formProps}
                             id={"shipper"}
@@ -225,49 +270,44 @@ export default (props) => {
 
                         <TextField
                             disabled={true}
-                            id={"invoiceRegistrationDate"}
-                            label={"Invoice registration date"}
-                            value={new Date().toISOString().slice(0, 10)}
-                        />
-                        <TextField
-                            disabled={true}
                             id={"driverName"}
                             label={"Driver name"}
-                            value={selectedDriver.name}
+                            value={initInvoice.driver.name}
                         />
                         <TextField
                             disabled={true}
                             id={"driverSurname"}
                             label={"Driver surname"}
-                            value={selectedDriver.surname}
+                            value={initInvoice.driver.surname}
                         />
                         <TextField
                             disabled={true}
                             id={"driverPassport"}
                             label={"Driver passport"}
-                            value={selectedDriver.passport}
+                            value={initInvoice.driver.passport}
                         />
                         <ItemList
                             items={drivers}
                             onRowClick={(item) => {
-                                setSelectedDriver(item);
+                                setInitInvoice((prevState) => {
+                                    return {...prevState, driver: item};
+                                });
                             }}
                         />
-
-                        <div style={{marginBottom: 20}}>
-                            <ProductsTable
-                                products={products}
-                                onRowClick={handleTableRowClick}
-                            />
-
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleCreateNewProductClick}>
-                                Add new product
-                            </Button>
-                        </div>
-
+                        <ProductsTable
+                            products={initInvoice.products}
+                            onRowClick={handleProductTableClick}
+                        />
+                        <ProductDialog
+                            open={productDialogOpen}
+                            initProductState={selectedProduct}
+                            onSubmit={handleProductDialogSubmit}
+                            onDelete={handleProductDelete}
+                            onClose={handleProductDialogClose}
+                        />
+                        <Button onClick={handleCreateNewProductClick}>
+                            Add new product
+                        </Button>
                         <Button
                             variant="contained"
                             color="primary"
@@ -276,14 +316,6 @@ export default (props) => {
                         >
                             Register invoice
                         </Button>
-
-                        <ProductDialog
-                            open={productDialogOpen}
-                            initProductState={selectedProduct}
-                            onSubmit={handleProductDialogSubmit}
-                            onDelete={handleProductDelete}
-                            onClose={handleProductDialogClose}
-                        />
                     </Form>
                 )}
             </Formik>
