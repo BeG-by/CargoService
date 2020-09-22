@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import interceptors from "../../src/security/Interceptors";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import NotFound from "./pages/error-page/error-404";
 import {Header} from "./parts/header";
 import {makeStyles} from "@material-ui/core/styles";
@@ -16,7 +16,6 @@ import {SendMailBody} from "./pages/send-mail-body";
 import {ContactsBody} from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
-import {BodyWrapper} from "./pages/body-wrapper";
 
 const drawerWidth = 240;
 
