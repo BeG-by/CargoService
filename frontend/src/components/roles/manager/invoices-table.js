@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
 import {getAllInvoices, getInvoiceById, saveWaybill} from "./request-utils";
 import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
-import {DialogWindow} from "../../parts/dialog";
+import {DialogWindow} from "../../parts/layout/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';

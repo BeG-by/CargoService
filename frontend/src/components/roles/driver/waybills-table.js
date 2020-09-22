@@ -10,7 +10,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "../manager/waybill-dialog";
 import {getAllInvoices, getInvoiceById} from "./request-utils";
-import {DialogWindow} from "../../parts/dialog";
+import {DialogWindow} from "../../parts/layout/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
 

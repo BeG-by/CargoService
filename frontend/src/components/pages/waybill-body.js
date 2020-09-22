@@ -1,23 +1,13 @@
 import React from "react";
-import clsx from "clsx";
 import WaybillForm from "../forms/waybill-form/waybill-form";
+import {BodyWrapper} from "./body-wrapper";
 
-export const WaybillBody = (props) => {
-    const classes = props.classes;
+export const WaybillBody = () => {
     const content = <div style={{minWidth: 350}}>
         <WaybillForm/>
     </div>
 
-    return (
-        <main
-            className={clsx(classes.content, {
-                [classes.contentShift]: props.openMenu,
-            })}
-        >
-            <div className={classes.drawerHeader}/>
-            <div className={classes.mainField}>
-                {content}
-            </div>
-        </main>
-    );
+    return content;
 }
+
+export default () => <BodyWrapper content={WaybillBody}/>

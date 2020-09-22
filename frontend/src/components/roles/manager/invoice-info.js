@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {OkButton} from "../../parts/buttons/ok-button";
-import {DialogWindow} from "../../parts/dialog";
+import {DialogWindow} from "../../parts/layout/dialog";
 import {AssignVerificationInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
 import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
