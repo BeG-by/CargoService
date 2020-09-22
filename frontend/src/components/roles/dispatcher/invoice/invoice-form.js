@@ -14,6 +14,7 @@ import {
 } from "../request-utils";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import useToast from "../../../parts/toast-notification/useToast";
 
 const EMPTY_DRIVER = {
     name: "",
@@ -52,6 +53,7 @@ export default function InvoiceForm(props) {
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [productIndex, setProductIndex] = useState(0);
+    const [toastComponent, showToastComponent] = useToast();
 
     const updateDriversList = async () => {
         try {
@@ -85,7 +87,7 @@ export default function InvoiceForm(props) {
             setInitInvoice((prevState) => {
                 return {
                     ...res.data,
-                    productOwner: EMPTY_PRODUCT_OWNER,
+                    productOwner: res.data.productOwnerDTO,
                 };
             });
         } catch (error) {
@@ -182,11 +184,9 @@ export default function InvoiceForm(props) {
     const handleRequestError = (error) => {
         console.log(error.response);
         if (error.response && error.response.status !== 500) {
-            alert(error.response.data);
-            // openToast(error.response.data, "error");
+            showToastComponent(error.response.data, "error");
         } else {
-            alert("Cannot get response from server");
-            // openToast("Cannot get response from server", "error");
+            showToastComponent("Cannot get response from server", "error");
         }
     };
 
@@ -196,7 +196,7 @@ export default function InvoiceForm(props) {
         invoice.shipper = values.shipper;
         invoice.consignee = values.consignee;
 
-        invoice.productOwner = initInvoice.productOwner;
+        invoice.productOwnerId = initInvoice.productOwner.id;
         invoice.products = initInvoice.products;
         invoice.registrationDate = initInvoice.registrationDate;
         invoice.driverId = initInvoice.driver.id;
@@ -332,6 +332,7 @@ export default function InvoiceForm(props) {
                     </Form>
                 )}
             </Formik>
+            {toastComponent}
         </React.Fragment>
     );
 };
