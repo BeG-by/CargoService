@@ -8,24 +8,21 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {makeGetAllProductOwnersRequest} from "./request-utils";
-import InvoiceDialog from "./invoice/invoice-dialog";
-import {BodyWrapper} from "../../pages/body-wrapper";
+import InvoiceDialog from "./invoice-dialog";
+import {BodyWrapper} from "../../../pages/body-wrapper";
+import {makeGetAllInvoicesRequest} from "../request-utils";
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 170},
-    {id: "type", label: "Company type", minWidth: 170},
-    {id: "phone", label: "Phone", minWidth: 170, align: "center"},
-    {id: "address.country", label: "Country", minWidth: 170, align: "center"},
-    {id: "address.city", label: "City", minWidth: 170, align: "center"},
-    {id: "address.street", label: "Street", minWidth: 170, align: "center"},
-    {id: "address.house", label: "House", minWidth: 170, align: "center"},
+    {id: "number", label: "Invoice #", minWidth: 100},
+    {id: "status", label: "Status", minWidth: 100},
     {
-        id: "registrationDate",
-        label: "RegistrationDate",
-        minWidth: 170,
-        align: "center",
+        id: "date",
+        label: "Registration Date",
+        minWidth: 150,
     },
+    {id: "shipper", label: "Shipper", minWidth: 300},
+    {id: "consignee", label: "Consignee", minWidth: 300},
+    {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
 function fetchFieldFromObject(obj, prop) {
@@ -39,7 +36,6 @@ function fetchFieldFromObject(obj, prop) {
             prop.substr(index + 1)
         );
     }
-
     return obj[prop];
 }
 
@@ -52,26 +48,20 @@ const useStyles = makeStyles({
     },
 });
 
-const EMPTY_PRODUCT_OWNER = {
-    name: "",
-    type: "SP",
-    phone: "",
-};
 
-export function ProductOwnersTable() {
+export function InvoiceTable() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const [productOwners, setProductOwners] = useState([]);
-    const [selectedProductOwner, setSelectedProductOwner] = useState(
-        EMPTY_PRODUCT_OWNER
-    );
+    const [invoices, setInvoices] = useState([]);
+    const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
 
     // const [toastComponent, showToastComponent] = useToast();
 
     function handleRequestError(error) {
+        console.log(invoices)
         if (error.response && !error.response.status === 500) {
             // showToastComponent(error.response.data, "error");
             alert("ERROR");
@@ -85,27 +75,26 @@ export function ProductOwnersTable() {
 
     async function updateTable() {
         try {
-            const response = await makeGetAllProductOwnersRequest();
-            setProductOwners(response.data);
+            const response = await makeGetAllInvoicesRequest();
+            setInvoices(response.data);
         } catch (error) {
-            setProductOwners([]);
+            setInvoices([]);
             handleRequestError(error);
         }
     }
 
-
     useEffect(() => {
-        let mounted = true
-        // updateTable();
-        makeGetAllProductOwnersRequest()
-            .then((response) => {
-                if (mounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but doesn't change state)
-                    setProductOwners(response.data)
+        let mounted = true;
+        makeGetAllInvoicesRequest()
+            .then((res) => {
+                    if (mounted) {
+                        setInvoices(res.data)
+                    }
                 }
-            })
+            )
             .catch((err) => {
-                setProductOwners([]);
-                handleRequestError(err);
+                setInvoices([]);
+                handleRequestError(err)
             })
         return () => mounted = false;
     }, []);
@@ -114,9 +103,11 @@ export function ProductOwnersTable() {
         setPage(newPage);
     };
 
-    const handleTableRowClick = (productOwner) => {
-        setSelectedProductOwner(productOwner);
-        setInvoiceDialogOpen(true);
+    const handleTableRowClick = (invoice) => {
+        if (invoice.status === "REJECTED") {
+            setSelectedInvoiceId(invoice.id);
+            setInvoiceDialogOpen(true);
+        }
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -143,7 +134,7 @@ export function ProductOwnersTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {productOwners
+                            {invoices
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((client) => {
                                     return (
@@ -179,7 +170,7 @@ export function ProductOwnersTable() {
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={productOwners.length}
+                    count={invoices.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
@@ -187,7 +178,7 @@ export function ProductOwnersTable() {
                 />
 
                 <InvoiceDialog
-                    productOwner={selectedProductOwner}
+                    invoiceId={selectedInvoiceId}
                     open={invoiceDialogOpen}
                     onClose={() => {
                         setInvoiceDialogOpen(false);
@@ -200,4 +191,4 @@ export function ProductOwnersTable() {
     );
 }
 
-export default () => <BodyWrapper content={ProductOwnersTable}/>
+export default () => <BodyWrapper content={InvoiceTable}/>

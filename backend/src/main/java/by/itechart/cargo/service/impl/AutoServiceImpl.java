@@ -4,16 +4,18 @@ import by.itechart.cargo.dto.model_dto.auto.AutoRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.freight.Auto;
-import by.itechart.cargo.repository.*;
+import by.itechart.cargo.repository.AutoRepository;
+import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.security.jwt.JwtUserDetails;
 import by.itechart.cargo.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+
 import static by.itechart.cargo.service.constant.MessageConstant.AUTO_NOT_FOUND_MESSAGE;
 
 @Service
@@ -47,7 +49,7 @@ public class AutoServiceImpl implements AutoService {
     }
 
     @Override
-    public void saveOne(AutoRequest autoRequest) {
+    public void save(AutoRequest autoRequest) {
         final Auto auto = autoRequest.toAuto();
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();

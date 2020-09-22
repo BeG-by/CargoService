@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid UserSaveRequest userSaveRequest) throws AlreadyExistException {
-        userService.saveOne(userSaveRequest);
+    public ResponseEntity<String> save(@RequestBody @Valid UserRequest userRequest) throws AlreadyExistException {
+        userService.save(userRequest);
         return ResponseEntity.ok("User has been saved");
     }
 

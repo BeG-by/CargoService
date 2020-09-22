@@ -14,6 +14,7 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -77,7 +78,7 @@ public class Invoice implements Serializable, Cloneable {
     @JsonManagedReference(value = "check_invoice")
     private User checkingUser;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice", orphanRemoval = true)
     private List<Product> products;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

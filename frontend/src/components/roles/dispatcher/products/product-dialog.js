@@ -4,28 +4,29 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ProductForm from "./product-form";
 
-export default (props) => {
-  const { open, onClose, onSubmit, onDelete, initProductState } = props;
+export default function ProductDialog(props) {
+    const {open, onClose, onSubmit, onDelete, initProductState} = props;
 
-  const handleClose = () => {
-    onClose();
-  };
+    const handleClose = () => {
+        onClose();
+    };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Product</DialogTitle>
-      <DialogContent>
-        <ProductForm
-          initProductState={initProductState}
-          onDelete={onDelete}
-          onSubmit={onSubmit}
-          onClose={handleClose}
-        />
-      </DialogContent>
-    </Dialog>
-  );
-};
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+        >
+            <DialogTitle id="form-dialog-title">Product</DialogTitle>
+            <DialogContent>
+                <ProductForm
+                    initProductState={initProductState}
+                    onDelete={onDelete}
+                    onSubmit={onSubmit}
+                    onClose={handleClose}
+                />
+            </DialogContent>
+        </Dialog>
+    );
+}
+;

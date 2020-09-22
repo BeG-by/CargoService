@@ -42,7 +42,7 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public void saveOne(ClientCompanyDTO clientCompanyDTO) throws AlreadyExistException {
+    public void save(ClientCompanyDTO clientCompanyDTO) throws AlreadyExistException {
         final ClientCompany clientCompany = clientCompanyDTO.toClientCompany();
         final String name = clientCompany.getName();
         final String payerAccountNumber = clientCompany.getPayerAccountNumber();

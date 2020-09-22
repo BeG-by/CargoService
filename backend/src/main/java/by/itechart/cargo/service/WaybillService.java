@@ -11,6 +11,6 @@ public interface WaybillService {
 
     Optional<Waybill> findById(long id);
 
-    void saveOne(WaybillRequest waybillRequest);
+    void save(WaybillRequest waybillRequest);
 
 }

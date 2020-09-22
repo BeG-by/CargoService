@@ -4,6 +4,7 @@ import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
+import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
@@ -21,12 +22,14 @@ import by.itechart.cargo.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
-import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -72,16 +75,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         return new InvoiceResponse().toInvoiceResponse(invoice);
     }
 
-    // TODO invoice with Number exists
+
     @Override
-    public void saveOne(InvoiceRequest invoiceRequest) {
+    public void save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
+
+        if (invoiceRepository.findByNumber(invoice.getNumber()).isPresent()) {
+            throw new AlreadyExistException(String.format("Invoice with number \"%s\" exists", invoice.getNumber()));
+        }
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = invoiceRequest.getDriverId();
 
-        final Driver driver = driverRepository.getOne(driverId);
+        Driver driver = driverRepository
+                .findById(driverId)
+                .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
+
         invoice.setDriver(driver);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
@@ -106,6 +116,54 @@ public class InvoiceServiceImpl implements InvoiceService {
         log.info("Invoice has been saved {}", invoiceDb);
 
     }
+
+    @Override
+    public void updateInvoice(InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException {
+        final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
+        final Long companyId = currentUser.getClientCompany().getId();
+        final Long driverId = invoiceRequest.getDriverId();
+
+        Invoice invoice = invoiceRepository
+                .findById(invoiceRequest.getId())
+                .orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+
+        Driver driver = driverRepository
+                .findById(driverId)
+                .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
+
+        Optional<Invoice> invoiceByNumber = invoiceRepository.findByNumber(invoiceRequest.getInvoiceNumber());
+        if (invoiceByNumber.isPresent() && !invoiceByNumber.get().getId().equals(invoiceRequest.getId())) {
+            throw new AlreadyExistException(String.format("Invoice with number \"%s\" exists", invoiceRequest.getInvoiceNumber()));
+        }
+
+        invoice.setDriver(driver);
+
+        final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
+        invoice.setClientCompany(clientCompany);
+
+        final User user = userRepository.getOne(currentUser.getId());
+        invoice.setRegistrationUser(user);
+
+        invoice.setNumber(invoiceRequest.getInvoiceNumber());
+        if (invoiceRequest.getStatus() == null) {
+            invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
+        } else {
+            invoice.setInvoiceStatus(invoiceRequest.getStatus());
+        }
+        invoice.setShipper(invoiceRequest.getShipper());
+        invoice.setConsignee(invoiceRequest.getConsignee());
+
+        invoice.getProducts().forEach(p -> p.setInvoice(null));
+        invoice.getProducts().clear();
+        invoice.getProducts().addAll(invoiceRequest.getProducts());
+        invoiceRequest.getProducts().forEach(p -> {
+            p.setInvoice(invoice);
+            p.setProductStatus(Status.ACCEPTED);
+        });
+
+        log.info("Invoice has been updated {}", invoiceRequest);
+    }
+
 
     @Override
     public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {

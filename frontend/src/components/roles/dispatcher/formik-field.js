@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import {ErrorMessage} from "formik";
 
-export default (props) => {
+export default function FormikField(props) {
     const {formikProps, formikFieldName, id, label} = props;
     return (
         <React.Fragment>

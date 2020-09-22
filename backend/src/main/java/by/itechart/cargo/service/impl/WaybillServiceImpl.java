@@ -51,7 +51,7 @@ public class WaybillServiceImpl implements WaybillService {
     }
 
     @Override
-    public void saveOne(WaybillRequest waybillRequest) {
+    public void save(WaybillRequest waybillRequest) {
         final Waybill waybill = waybillRequest.toWaybill();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
