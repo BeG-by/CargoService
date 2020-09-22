@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import InvoiceDialog from "./invoice-dialog";
 import {BodyWrapper} from "../../../pages/body-wrapper";
 import {makeGetAllInvoicesRequest} from "../request-utils";
+import useToast from "../../../parts/toast-notification/useToast";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -58,28 +59,14 @@ export function InvoiceTable() {
     const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
 
-    // const [toastComponent, showToastComponent] = useToast();
+    const [toastComponent, showToastComponent] = useToast();
 
     function handleRequestError(error) {
         console.log(invoices)
         if (error.response && !error.response.status === 500) {
-            // showToastComponent(error.response.data, "error");
-            alert("ERROR");
-            console.log(error);
+            showToastComponent(error.response.data, "error");
         } else {
-            // showToastComponent("Cannot get response from server", "error");
-            alert("ERROR");
-            console.log(error);
-        }
-    }
-
-    async function updateTable() {
-        try {
-            const response = await makeGetAllInvoicesRequest();
-            setInvoices(response.data);
-        } catch (error) {
-            setInvoices([]);
-            handleRequestError(error);
+            showToastComponent("Cannot get response from server", "error");
         }
     }
 
@@ -186,7 +173,7 @@ export function InvoiceTable() {
                 />
             </Paper>
 
-            {/* {toastComponent} */}
+             {toastComponent}
         </div>
     );
 }

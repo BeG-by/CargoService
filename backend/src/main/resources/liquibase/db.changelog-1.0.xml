@@ -450,6 +450,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="id_product_owner" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="id_driver" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
@@ -526,92 +530,102 @@
     <!-- Waybill, Point -->
     <changeSet id="1.0.6" author="marianna.patrusova">
 
-    <!--Waybill-->
-    <createTable tableName="waybill" >
+        <!--Waybill-->
+        <createTable tableName="waybill">
 
-        <column name="id_waybill" type="BIGSERIAL" autoIncrement="true">
-            <constraints primaryKey="true"/>
-        </column>
+            <column name="id_waybill" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
 
-        <column name="id_invoice" type="BIGSERIAL">
-            <constraints nullable="false"/>
-        </column>
+            <column name="id_invoice" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="id_auto" type="BIGSERIAL">
-            <constraints nullable="false"/>
-        </column>
+            <column name="id_auto" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="departure_date" type="DATE" defaultValue="NOW">
-            <constraints nullable="false"/>
-        </column>
+            <column name="departure_date" type="DATE" defaultValue="NOW">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="arrival_date" type="DATE" defaultValue="NOW">
-            <constraints nullable="false"/>
-        </column>
+            <column name="arrival_date" type="DATE" defaultValue="NOW">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="id_client_company" type="BIGSERIAL"/>
+            <column name="id_client_company" type="BIGSERIAL"/>
 
-    </createTable>
+        </createTable>
 
-    <!-- Point -->
-    <createTable tableName="point">
+        <!-- Point -->
+        <createTable tableName="point">
 
-        <column name="id_point" type="BIGSERIAL" autoIncrement="true">
-            <constraints primaryKey="true"/>
-        </column>
+            <column name="id_point" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
 
-        <column name="id_waybill" type="BIGSERIAL">
-            <constraints nullable="false"/>
-        </column>
+            <column name="id_waybill" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="place" type="VARCHAR(255)">
-            <constraints nullable="false"/>
-        </column>
+            <column name="place" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="passed" type="BOOlEAN" defaultValue="FALSE">
-            <constraints nullable="false"/>
-        </column>
+            <column name="passed" type="BOOlEAN" defaultValue="FALSE">
+                <constraints nullable="false"/>
+            </column>
 
-        <column name="passage_date" type="DATE" />
+            <column name="passage_date" type="DATE"/>
 
-    </createTable>
+        </createTable>
 
-    <addForeignKeyConstraint baseTableName="waybill"
-                             baseColumnNames="id_client_company"
-                             constraintName="fk_client_company_waybill"
-                             onDelete="CASCADE"
-                             referencedTableName="client_company"
-                             referencedColumnNames="id_client_company"/>
+        <addForeignKeyConstraint baseTableName="waybill"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_waybill"
+                                 onDelete="CASCADE"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
 
-    <addForeignKeyConstraint baseTableName="waybill"
-                             baseColumnNames="id_auto"
-                             constraintName="fk_waybill_auto"
-                             onDelete="RESTRICT"
-                             referencedTableName="auto"
-                             referencedColumnNames="id_auto"/>
+        <addForeignKeyConstraint baseTableName="waybill"
+                                 baseColumnNames="id_auto"
+                                 constraintName="fk_waybill_auto"
+                                 onDelete="RESTRICT"
+                                 referencedTableName="auto"
+                                 referencedColumnNames="id_auto"/>
 
-    <addForeignKeyConstraint baseTableName="waybill"
-                             baseColumnNames="id_invoice"
-                             constraintName="fk_waybill_invoice"
-                             onDelete="CASCADE"
-                             referencedTableName="invoice"
-                             referencedColumnNames="id_invoice"/>
+        <addForeignKeyConstraint baseTableName="waybill"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_waybill_invoice"
+                                 onDelete="CASCADE"
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
 
-    <addForeignKeyConstraint baseTableName="point"
-                             baseColumnNames="id_waybill"
-                             constraintName="fk_point_waybill"
-                             onDelete="CASCADE"
-                             referencedTableName="waybill"
-                             referencedColumnNames="id_waybill"/>
+        <addForeignKeyConstraint baseTableName="point"
+                                 baseColumnNames="id_waybill"
+                                 constraintName="fk_point_waybill"
+                                 onDelete="CASCADE"
+                                 referencedTableName="waybill"
+                                 referencedColumnNames="id_waybill"/>
 
     </changeSet>
 
 
-
-
-
     <!--Data for test-->
     <changeSet id="1.0.7" author="eugene.begun">
+
+        <insert tableName="product_owner">
+            <column name="name" value="Подвезем"/>
+            <column name="type" value="SP"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Street"/>
+            <column name="house" value="100"/>
+            <column name="flat" value="33"/>
+            <column name="registration_date" value="2020-01-01"/>
+            <column name="phone" value="+3753233213"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
 
         <insert tableName="auto">
             <column name="mark" value="VAZ2107"/>
@@ -637,6 +651,7 @@
             <column name="id_driver" value="1"/>
             <column name="id_user_registration" value="1"/>
             <column name="id_client_company" value="1"/>
+            <column name="id_product_owner" value="1"/>
         </insert>
 
         <insert tableName="product">
@@ -647,19 +662,6 @@
             <column name="mass" value="100 kg"/>
             <column name="status" value="ACCEPTED"/>
             <column name="id_invoice" value="1"/>
-        </insert>
-
-        <insert tableName="product_owner">
-            <column name="name" value="Подвезем"/>
-            <column name="type" value="SP"/>
-            <column name="country" value="Belarus"/>
-            <column name="city" value="Minsk"/>
-            <column name="street" value="Street"/>
-            <column name="house" value="100"/>
-            <column name="flat" value="33"/>
-            <column name="registration_date" value="2020-01-01"/>
-            <column name="phone" value="+3753233213"/>
-            <column name="id_client_company" value="1"/>
         </insert>
 
     </changeSet>

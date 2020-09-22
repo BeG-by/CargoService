@@ -14,7 +14,6 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -56,6 +55,10 @@ public class Invoice implements Serializable, Cloneable {
 
     @Column(name = "consignee", nullable = false)
     private String consignee;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_product_owner", nullable = false)
+    private ProductOwner productOwner;
 
     @JoinColumn(name = "id_driver", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
