@@ -1,11 +1,15 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerDTO;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.freight.Driver;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.model.freight.Product;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,6 +19,7 @@ import java.util.List;
 public class InvoiceResponse {
 
     private Long id;
+    private ProductOwnerDTO productOwnerDTO;
     private String number;
     private InvoiceStatus invoiceStatus;
     private LocalDate registrationDate;
@@ -42,6 +47,7 @@ public class InvoiceResponse {
         response.setRegistrationUser(invoice.getRegistrationUser());
         response.setCheckingUser(invoice.getCheckingUser());
         response.setProducts(invoice.getProducts());
+        response.setProductOwnerDTO(ProductOwnerDTO.fromProductOwner(invoice.getProductOwner()));
         response.setWaybillId(invoice.getWaybill() == null ? null : invoice.getWaybill().getId());
         return response;
     }

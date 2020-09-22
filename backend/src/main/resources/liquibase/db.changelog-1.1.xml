@@ -12,6 +12,44 @@
             <column name="id_driver" value="1"/>
             <column name="id_user_registration" value="1"/>
             <column name="id_client_company" value="1"/>
+            <column name="id_product_owner" value="1"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.2.0" author="vladislav.mironuk">
+        <createTable tableName="storage">
+            <column name="id_storage" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="country" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.3.0" author="vladislav.mironuk">
+        <insert tableName="storage">
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Gikalo"/>
+            <column name="house" value="3"/>
+            <column name="email" value="tractor@email.com"/>
+            <column name="phone" value="37532338990"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -34,7 +34,8 @@ public class InvoiceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<InvoiceResponse> findById(@PathVariable long id) throws NotFoundException {
-        return ResponseEntity.ok(invoiceService.findById(id));
+        InvoiceResponse byId = invoiceService.findById(id);
+        return ResponseEntity.ok(byId);
     }
 
     @PostMapping

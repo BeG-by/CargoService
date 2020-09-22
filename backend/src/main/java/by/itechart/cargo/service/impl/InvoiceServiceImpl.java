@@ -12,10 +12,8 @@ import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.enumeration.Status;
 import by.itechart.cargo.model.freight.Driver;
 import by.itechart.cargo.model.freight.Invoice;
-import by.itechart.cargo.repository.ClientCompanyRepository;
-import by.itechart.cargo.repository.DriverRepository;
-import by.itechart.cargo.repository.InvoiceRepository;
-import by.itechart.cargo.repository.UserRepository;
+import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.repository.*;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.security.jwt.JwtUserDetails;
 import by.itechart.cargo.service.InvoiceService;
@@ -41,9 +39,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final ClientCompanyRepository clientCompanyRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final ProductOwnerRepository productOwnerRepository;
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
+                              ProductOwnerRepository productOwnerRepository,
                               DriverRepository driverRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               UserRepository userRepository,
@@ -54,6 +54,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.clientCompanyRepository = clientCompanyRepository;
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.productOwnerRepository = productOwnerRepository;
     }
 
     @Override
@@ -87,10 +88,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = invoiceRequest.getDriverId();
+        final Long productOwnerId = invoiceRequest.getProductOwnerId();
+
+        ProductOwner productOwner = productOwnerRepository
+                .findById(productOwnerId)
+                .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
+        invoice.setProductOwner(productOwner);
 
         Driver driver = driverRepository
                 .findById(driverId)
                 .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
+
 
         invoice.setDriver(driver);
 

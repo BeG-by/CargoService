@@ -2,11 +2,13 @@ package by.itechart.cargo.dto.model_dto.invoice;
 
 import by.itechart.cargo.dto.validation.EnumNamePattern;
 import by.itechart.cargo.model.enumeration.InvoiceStatus;
-import by.itechart.cargo.model.freight.Product;
 import by.itechart.cargo.model.freight.Invoice;
+import by.itechart.cargo.model.freight.Product;
+import by.itechart.cargo.model.freight.ProductOwner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,10 +29,15 @@ public class InvoiceRequest {
     @Size(max = 64, message = "Invoice number is too long (max is 64)")
     private String invoiceNumber;
 
+    //todo: validate?
     private LocalDate registrationDate;
+
+    @NotNull
+    private Long productOwnerId;
 
     @Size(max = 255, message = "Shipper is too long (max is 255)")
     private String shipper;
+
     @Size(max = 255, message = "Consignee is too long (max is 255)")
     private String consignee;
 
