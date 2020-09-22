@@ -1,8 +1,9 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
-import by.itechart.cargo.dto.model_dto.user.UserRequest;
+import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
+import by.itechart.cargo.dto.model_dto.user.UserUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.UserService;
@@ -43,6 +44,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
+    @PutMapping
+    public ResponseEntity<String> update(@RequestBody UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
+        userService.update(userUpdateRequest);
+        return ResponseEntity.ok("User has been updated");
+    }
 
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponse> findInfo() {

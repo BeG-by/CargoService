@@ -5,16 +5,23 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
 import FormikField from "./formik-field";
-import {getUserById} from "./request-util";
+import {getUserById, updateUser} from "./request-util";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import UserDatePicker from "./user-date-picker";
+import UserTypeSelector from "./user-role-selector";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
 
 
 const EMPTY_USER = {
     id: -1,
+    login: "",
+    password: "",
     name: "",
     surname: "",
     patronymic: "",
+    roles: "",
     birthday: "",
     address: {
         country: "",
@@ -26,8 +33,8 @@ const EMPTY_USER = {
 };
 
 
-export default (props) => {
-    const {open, onClose} = props;
+const UserDialog = (props) => {
+    const {open, onClose, userId} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
     useEffect(() => {
@@ -42,6 +49,7 @@ export default (props) => {
                             house: "",
                         }
                     }
+                    console.log(res.data)
                     setUser(res.data);
                 })
         }
@@ -72,24 +80,65 @@ export default (props) => {
                     <Formik
                         enableReinitialize
                         initialValues={{
+                            id: userId,
+                            login: user.login,
+                            password: "",
                             name: user.name,
                             surname: user.surname,
                             patronymic: user.patronymic,
+                            role: user.roles,
+                            birthday: user.birthday,
                             email: user.email,
                             country: user.address.country,
                             city: user.address.city,
                             street: user.address.street,
                             house: user.address.house,
-                            // registration_date: user.registrationDate,
                         }}
                         onSubmit={(values) => {
-                            console.log("Submitted");
-                            console.log(values);
+
+                            const user = {
+                                id: values.id,
+                                login: values.login,
+                                password: "",
+                                name: values.name,
+                                surname: values.surname,
+                                patronymic: values.patronymic,
+                                roles: values.role,
+                                birthday: values.birthday,
+                                email: values.email,
+                                address: {
+                                    country: values.country,
+                                    city: values.city,
+                                    street: values.street,
+                                    house: values.house
+                                }
+                            }
+
+                            console.log(user)
+
+                            updateUser(user)
+                                .then(props.history.push("/main"))
+                                .catch(error => alert(error + error.data))
+
+
                         }}
                     >
                         {(formProps) => {
                             return (
                                 <Form>
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"login"}
+                                        label={"Login"}
+                                        formikFieldName={"login"}
+                                    />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"password"}
+                                        label={"Password"}
+                                        formikFieldName={"password"}
+                                        type={"password"}
+                                    />
                                     <FormikField
                                         formikProps={formProps}
                                         id={"name"}
@@ -108,6 +157,17 @@ export default (props) => {
                                         label={"Patronymic"}
                                         formikFieldName={"patronymic"}
                                     />
+                                    <UserTypeSelector
+                                        formikProps={formProps}
+                                        id={"role"}
+                                        label={"Role"}
+                                        formikFieldName={"role"}
+                                    />
+                                    <UserDatePicker
+                                        formikProps={formProps}
+                                        id={"birthday"}
+                                        label={"Date of birth"}
+                                        formikFieldName={"birthday"}/>
                                     <FormikField
                                         formikProps={formProps}
                                         id={"email"}
@@ -134,16 +194,10 @@ export default (props) => {
                                     />
                                     <FormikField
                                         formikProps={formProps}
-                                        id={"House"}
+                                        id={"house"}
                                         label={"House"}
                                         formikFieldName={"house"}
                                     />
-                                    {/*<FormikField*/}
-                                    {/*    formikProps={formProps}*/}
-                                    {/*    id={"registration_date"}*/}
-                                    {/*    label={"Registration date"}*/}
-                                    {/*    formikFieldName={"registration_date"}*/}
-                                    {/*/>*/}
                                     <Button
                                         variant="contained"
                                         color="primary"
@@ -161,3 +215,6 @@ export default (props) => {
         </div>
     );
 }
+
+
+export default withRouter(UserDialog)
