@@ -96,19 +96,17 @@ export function ProductOwnersTable() {
 
     useEffect(() => {
         let mounted = true
-        if (mounted) {
-            // updateTable();
-            makeGetAllProductOwnersRequest()
-                .then((response) => {
-                    if (mounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but doesn't change state)
-                        setProductOwners(response.data)
-                    }
-                })
-                .catch((err) => {
-                    setProductOwners([]);
-                    handleRequestError(err);
-                })
-        }
+        // updateTable();
+        makeGetAllProductOwnersRequest()
+            .then((response) => {
+                if (mounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but doesn't change state)
+                    setProductOwners(response.data)
+                }
+            })
+            .catch((err) => {
+                setProductOwners([]);
+                handleRequestError(err);
+            })
         return () => mounted = false;
     }, []);
 

@@ -13,6 +13,7 @@ import {
     makeGetInvoiceByIdRequest,
 } from "../request-utils";
 import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
 
 const EMPTY_DRIVER = {
     name: "",
@@ -247,57 +248,71 @@ export default function InvoiceForm(props) {
                             label={"Invoice registration date"}
                             value={initInvoice.registrationDate}
                         />
-                        <FormikField
-                            formikProps={formProps}
-                            id={"invoiceNumber"}
-                            label={"Invoice number"}
-                            formikFieldName={"invoiceNumber"}
-                        />
 
-                        <FormikField
-                            formikProps={formProps}
-                            id={"shipper"}
-                            label={"Shipper"}
-                            formikFieldName={"shipper"}
-                        />
+                        <Grid container justify={"space-evenly"}>
+                            <Grid item xs={4}
+                                  justify="space-between"
+                                  alignItems="center">
+                                <FormikField
+                                    formikProps={formProps}
+                                    id={"invoiceNumber"}
+                                    label={"Invoice number"}
+                                    formikFieldName={"invoiceNumber"}
+                                />
 
-                        <FormikField
-                            formikProps={formProps}
-                            id={"consignee"}
-                            label={"Consignee"}
-                            formikFieldName={"consignee"}
-                        />
+                                <FormikField
+                                    formikProps={formProps}
+                                    id={"shipper"}
+                                    label={"Shipper"}
+                                    formikFieldName={"shipper"}
+                                />
 
-                        <TextField
-                            disabled={true}
-                            id={"driverName"}
-                            label={"Driver name"}
-                            value={initInvoice.driver.name}
-                        />
-                        <TextField
-                            disabled={true}
-                            id={"driverSurname"}
-                            label={"Driver surname"}
-                            value={initInvoice.driver.surname}
-                        />
-                        <TextField
-                            disabled={true}
-                            id={"driverPassport"}
-                            label={"Driver passport"}
-                            value={initInvoice.driver.passport}
-                        />
-                        <ItemList
-                            items={drivers}
-                            onRowClick={(item) => {
-                                setInitInvoice((prevState) => {
-                                    return {...prevState, driver: item};
-                                });
-                            }}
-                        />
+                                <FormikField
+                                    formikProps={formProps}
+                                    id={"consignee"}
+                                    label={"Consignee"}
+                                    formikFieldName={"consignee"}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    disabled={true}
+                                    id={"driverName"}
+                                    label={"Driver name"}
+                                    value={initInvoice.driver.name}
+                                />
+                                <TextField
+                                    disabled={true}
+                                    id={"driverSurname"}
+                                    label={"Driver surname"}
+                                    value={initInvoice.driver.surname}
+                                />
+                                <TextField
+                                    disabled={true}
+                                    id={"driverPassport"}
+                                    label={"Driver passport"}
+                                    value={initInvoice.driver.passport}
+                                />
+                                <ItemList
+                                    items={drivers}
+                                    onRowClick={(item) => {
+                                        setInitInvoice((prevState) => {
+                                            return {...prevState, driver: item};
+                                        });
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Button variant="contained"
+                                color="primary"
+                                onClick={handleCreateNewProductClick}>
+                            +
+                        </Button>
                         <ProductsTable
                             products={initInvoice.products}
                             onRowClick={handleProductTableClick}
                         />
+
                         <ProductDialog
                             open={productDialogOpen}
                             initProductState={selectedProduct}
@@ -305,9 +320,7 @@ export default function InvoiceForm(props) {
                             onDelete={handleProductDelete}
                             onClose={handleProductDialogClose}
                         />
-                        <Button onClick={handleCreateNewProductClick}>
-                            Add new product
-                        </Button>
+
                         <Button
                             variant="contained"
                             color="primary"
