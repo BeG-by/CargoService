@@ -8,13 +8,15 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices, getInvoiceById, saveWaybill} from "./request-utils";
+import {getAllInvoices, getInvoiceById} from "./request-utils";
 import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
 import {DialogWindow} from "../../parts/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+// import {WaybillError} from "../../forms/waybill-form/waybill-form-error";
+import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -30,7 +32,7 @@ const columns = [
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
-export default function InvoicesTable() {
+function InvoicesTableContent() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
@@ -183,3 +185,5 @@ export default function InvoicesTable() {
         </div>
     );
 }
+
+export default () => <BodyWrapper content={InvoicesTableContent}/>

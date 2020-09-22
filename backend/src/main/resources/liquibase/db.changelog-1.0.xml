@@ -193,9 +193,36 @@
         <insert tableName="user">
             <column name="login" value="root"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
-            <column name="name" value="sysadmin"/>
-            <column name="patronymic" value="sysadmin-patronymic"/>
-            <column name="surname" value="sysadmin-surname"/>
+            <column name="name" value="Robert"/>
+            <column name="patronymic" value="patronymic"/>
+            <column name="surname" value="Stark"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="dispatcher"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Jessika"/>
+            <column name="patronymic" value="Ivanovna"/>
+            <column name="surname" value="Parker"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="manager"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Natasha"/>
+            <column name="patronymic" value="Viktorovna"/>
+            <column name="surname" value="Romanovna"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="admin"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Eugene"/>
+            <column name="patronymic" value="Bib"/>
+            <column name="surname" value="Admin"/>
             <column name="id_client_company" value="1"/>
         </insert>
 
@@ -203,9 +230,41 @@
             <column name="role" value="SYSADMIN"/>
         </insert>
 
+        <insert tableName="role">
+            <column name="role" value="DISPATCHER"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="MANAGER"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="ADMIN"/>
+        </insert>
+
         <insert tableName="user_role">
             <column name="id_user" value="1"/>
             <column name="id_role" value="1"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="2"/>
+            <column name="id_role" value="2"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="3"/>
+            <column name="id_role" value="3"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="3"/>
+            <column name="id_role" value="3"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="4"/>
+            <column name="id_role" value="4"/>
         </insert>
     </changeSet>
 

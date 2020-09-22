@@ -3,15 +3,14 @@ package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
-import by.itechart.cargo.dto.authorization_dto.IdResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/api/auth")
@@ -29,10 +28,5 @@ public class AuthorizationController {
         return ResponseEntity.ok(authorizationService.login(authorizationRequest));
     }
 
-    //fixme eugene
-    @GetMapping("/logout")
-    public void logout(HttpServletRequest req, HttpServletResponse resp) {
-        authorizationService.logout(req, resp);
-    }
 
 }

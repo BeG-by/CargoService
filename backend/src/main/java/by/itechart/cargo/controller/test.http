@@ -18,7 +18,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Users ---
 
-GET localhost:8080/v1/api/users
+GET localhost:8080/v1/api/users/info
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
@@ -26,19 +26,50 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 POST localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwNjkyNTg1LCJleHAiOjE2MDE1NTY1ODV9.IS6oFE36ybMUjmaB9VEo6RBu14LfhAnz2XFeHV1dNUw
 
 {
-  "login": "manager1",
-  "password": "manager1",
+  "login": "admin3",
+  "password": "root",
   "name": "Ivan",
   "surname": "Ivanov",
   "patronymic": "Ivanovich",
   "birthday": "2020-01-01",
   "address": {
-    "city": "Minsk"
+    "country": "Belarus",
+    "city": "Minsk",
+    "street": "Nemiga",
+    "house": "32",
+    "flat": "13"
   },
-  "email": "test@mail.com",
+  "email": "test3@mail.com",
+  "roles": [
+    "ADMIN"
+  ]
+}
+
+###
+
+PUT localhost:8080/v1/api/users
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwNjkyNTg1LCJleHAiOjE2MDE1NTY1ODV9.IS6oFE36ybMUjmaB9VEo6RBu14LfhAnz2XFeHV1dNUw
+
+{
+  "id": 6,
+  "login": "adm3321",
+  "password": "root",
+  "name": "Ivan",
+  "surname": "Ivanov",
+  "patronymic": "Ivanovich",
+  "birthday": "2020-01-01",
+  "address": {
+    "country": "Belarus",
+    "city": "Minsk",
+    "street": "Nemiga",
+    "house": "32",
+    "flat": "13"
+  },
+  "email": "test7@mail.com",
   "roles": [
     "MANAGER"
   ]
@@ -65,7 +96,6 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 {
-
   "status": "REGISTERED",
   "invoiceNumber": "TTN327788",
   "registrationDate": "2020-01-03",
@@ -91,8 +121,8 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
 
 {
-"id": 1,
-"status": "ACCEPTED"
+  "id": 1,
+  "status": "ACCEPTED"
 }
 
 ###
@@ -157,5 +187,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 GET localhost:8080/v1/api/autos
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
 
 

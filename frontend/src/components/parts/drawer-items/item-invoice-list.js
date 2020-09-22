@@ -1,13 +1,12 @@
 import React from "react";
 import {DrawerItem} from "./drawer-item";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import {Link} from "react-router-dom";
+
+const path = "/main";
 
 export const ItemInvoiceList = () => {
     const icon = <AssignmentIcon color='primary'/>;
     return (
-        <Link className="link-item-black" to='/mainPage' style={{textDecoration: "none"}}>
-            <DrawerItem text='Invoices' icon={icon}/>
-        </Link>
+        <DrawerItem text='Invoices' icon={icon} path={path}/>
     )
 }

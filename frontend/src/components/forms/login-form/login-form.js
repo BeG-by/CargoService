@@ -2,8 +2,13 @@ import React, {Component} from "react";
 import axios from 'axios';
 import '../forms.css';
 import {LoginFormError, LoginFormView} from "./login-form-views";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {changeUserAndCompany} from "../../store/actions";
+import {withRouter} from "react-router-dom"
 
-export default class LoginForm extends Component {
+
+class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,14 +18,11 @@ export default class LoginForm extends Component {
         };
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        this.searchByLoginPass = this.searchByLoginPass.bind(this);
         this.goBack = this.goBack.bind(this);
     }
 
-    searchByLoginPass = (values, {
-        props = this.props,
-        setSubmitting
-    }) => {
+
+    searchByLoginPass = (values, {props = this.props, setSubmitting}) => {
         setSubmitting(false);
 
         const endpoint = "/v1/api/auth/login";
@@ -33,12 +35,9 @@ export default class LoginForm extends Component {
 
         axios.post(endpoint, user_object)
             .then(res => {
-                    this.setState({
-                        roles: res.data.roles
-                    });
                     localStorage.setItem("authorization", res.data.token);
-                    localStorage.setItem("role", this.state.roles);
-                    return this.showMainPage();
+                    props.changeUserAndCompany(res.data.user, res.data.company);
+                    this.props.history.push("/main");
                 },
                 error => {
                     this.setState({
@@ -46,12 +45,8 @@ export default class LoginForm extends Component {
                         error
                     });
                 });
-    }
+    };
 
-    showMainPage() {
-        window.location.href = "/mainPage";
-        this.props.history.push("/mainPage");
-    }
 
     onChangePassword(event) {
         this.setState({
@@ -98,3 +93,12 @@ export default class LoginForm extends Component {
         }
     }
 }
+
+
+const mapActionsToProps = (dispatch) => {
+    return {
+        changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
+    }
+};
+
+export default withRouter(connect(null, mapActionsToProps)(LoginForm))

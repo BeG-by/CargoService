@@ -1,6 +1,6 @@
 package by.itechart.cargo.service;
 
-import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyRequest;
+import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
@@ -13,9 +13,9 @@ public interface ClientCompanyService {
 
     List<ClientCompany> findAll();
 
-    void saveOne(ClientCompanyRequest clientCompanyRequest) throws AlreadyExistException;
+    void saveOne(ClientCompanyDTO clientCompanyDTO) throws AlreadyExistException;
 
-    void update(ClientCompanyRequest companyRequest) throws NotFoundException, AlreadyExistException;
+    void update(ClientCompanyDTO companyRequest) throws NotFoundException, AlreadyExistException;
 
     void delete(Long id) throws NotFoundException;
 }

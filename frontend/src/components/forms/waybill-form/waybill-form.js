@@ -12,10 +12,7 @@ import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/date-picker";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import FormikField from "../../roles/sysadmin/formik-field";
-import {ErrorMsg} from "../../parts/error-message";
 
 const EMPTY_AUTO = {
     id: 0,

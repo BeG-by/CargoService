@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import React from "react";
+import axios from "axios";
+import React, {useEffect} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,8 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import {SignoutButton} from "./buttons/signout-button";
 import {SigninButton} from "./buttons/signin-button";
-import {Link} from "react-router-dom";
-import '../App.css';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {changeUserAndCompany} from "../store/actions";
 
 let drawerWidth;
 
@@ -56,10 +58,56 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = (props) => {
+const mapStateToProps = (store) => {
+    return {
+        user: store.user
+    }
+};
+
+const mapActionsToProps = (dispatch) => {
+    return {
+        changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
+    }
+};
+
+const getUserInfoRequest = () => {
+
+    const endpoint = "/v1/api/users/info";
+    return axios({
+        method: "GET",
+        url: endpoint,
+    })
+
+};
+
+
+export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
+
     drawerWidth = props.drawerWidth;
+    const user = props.user;
+    const isAuthenticate = localStorage.getItem("authorization") !== null;
+    const headerText = "Manage your cargo with convenient digital tools";
+
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
+
+    const getUserInfo = async () => {
+        try {
+            const response = await getUserInfoRequest();
+            const user = response.data.user;
+            const clientCompany = response.data.company;
+            props.changeUserAndCompany(user, clientCompany);
+        } catch (error) {
+            alert(error); // TODO notification
+        }
+    };
+
+
+    useEffect(() => {
+        if (isAuthenticate) {
+            getUserInfo();
+        }
+    }, []);
 
     const handleClickOpen = () => {
         setOpenDialog(true);
@@ -68,18 +116,20 @@ export const Header = (props) => {
         setOpenDialog(false);
     };
 
-    const backToMain = () => {
-        window.location.href = "/mainPage";
-    }
+    const renderHeaderText = () => {
+        return isAuthenticate ? user.name + " " + user.surname + ", " + user.roles : headerText
+    };
 
-    const headerButton = (localStorage.getItem('authorization') != null
-        && localStorage.getItem('authorization').trim())
-    || (localStorage.getItem('role') != null
-        && localStorage.getItem('role').trim())
-        ? <SignoutButton/>
-        : <SigninButton openDialog={openDialog}
-                        handleClickOpen={handleClickOpen}
-                        handleClose={handleClose}/>;
+
+    const LoginButton = () => {
+        return isAuthenticate ?
+            <SignoutButton/> :
+            <SigninButton openDialog={openDialog}
+                          handleClickOpen={handleClickOpen}
+                          handleClose={handleClose}/>;
+    };
+
+
     return (
         <AppBar className={clsx(classes.appBar, {
             [classes.appBarShift]: props.openMenu,
@@ -95,20 +145,16 @@ export const Header = (props) => {
                 >
                     <MenuIcon/>
                 </IconButton>
-
-                    <Typography className={classes.title} variant="h6" noWrap>
-                        <Link to='/mainPage' className="link-item-white">
-                        CARGO APP
-                        </Link>
-                    </Typography>
-
-                <div className={classes.grow}/>
-                <Typography className={classes.welcome}>
-                    {props.headerText}
+                <Typography className={classes.title} variant="h6" noWrap>
+                    CARGO APP
                 </Typography>
                 <div className={classes.grow}/>
-                {headerButton}
+                <Typography className={classes.welcome}>
+                    {renderHeaderText()}
+                </Typography>
+                <div className={classes.grow}/>
+                <LoginButton/>
             </Toolbar>
         </AppBar>
     );
-}
+});

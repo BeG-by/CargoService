@@ -11,3 +11,28 @@
     text-decoration: none;
     color: white;
 }
+
+/*Reset default styles for <NavLink>*/
+
+.nav-link-item {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* User table styles (Eugene)*/
+
+#form-dialog-title h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#form-dialog-title #form-title {
+    flex-basis: 95%;
+    text-align: center;
+    padding-left: 8%;
+}
+
+.close-user-dialog-btn {
+    right: 0;
+}

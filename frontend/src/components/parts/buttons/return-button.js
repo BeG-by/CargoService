@@ -22,7 +22,7 @@ export default class ReturnButton extends Component {
                 break;
             case 'NotFound':
             case 'BackToMain':
-                href = "/mainPage";
+                href = "/main";
                 break;
             case 'NoRights':
                 handler = this.goBackHandler;
