@@ -14,9 +14,9 @@ export default function WaybillDialog(props) {
                 onClose={props.onClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitleCustomized style={{color: '#3f51b5', textAlign: "center"}}
-                                    id="customized-dialog-title"
-                                    onClose={props.onClose}>{"Waybill to invoice # "}{props.invoice.number}
+                <DialogTitleCustomized
+                                    onClose={props.onClose}>
+                    {"Waybill to invoice # "}{props.invoice.number}
                 </DialogTitleCustomized>
                 <DialogContent>
                     <WaybillForm invoice={props.invoice} onClose={props.onClose}/>

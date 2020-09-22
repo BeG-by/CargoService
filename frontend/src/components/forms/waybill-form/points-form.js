@@ -1,8 +1,8 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import FormikField from "../../roles/sysadmin/formik-field";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import {PointFormValidation} from "./waybill-form-validation";
 
 export default (props) => {
     const { initPointState, onSubmit, onClose, onDelete } = props;
@@ -34,6 +34,7 @@ export default (props) => {
             enableReinitialize
             initialValues={initPointState}
             onSubmit={handleSubmit}
+            validationSchema={PointFormValidation}
         >
             {(formProps) => (
                 <Form>
@@ -43,7 +44,7 @@ export default (props) => {
                         label={"Place"}
                         formikFieldName={"place"}
                     />
-                    <Grid style={{ marginTop: 15 }} container justify="space-around">
+                    <div className="btn-row">
                         <Button
                             variant="contained"
                             color="primary"
@@ -52,13 +53,17 @@ export default (props) => {
                             Add
                         </Button>
                         <Button
+                            variant="contained"
+                            color="secondary"
+
+                            onClick={handleDelete}>Delete</Button>
+                        <Button
                             variant="outlined"
                             color='primary'
-                            onClick={handleDelete}>Delete point</Button>
-                        <Button variant="contained" onClick={onClose}>
+                            onClick={onClose}>
                             Cancel
                         </Button>
-                    </Grid>
+                    </div>
                 </Form>
             )}
         </Formik>

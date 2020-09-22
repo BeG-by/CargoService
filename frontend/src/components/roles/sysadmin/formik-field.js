@@ -16,7 +16,6 @@ export default (props) => {
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 value={formikProps.values[formikFieldName]}
-                // helperText={<ErrorMsg name={formikFieldName}/>}
                 fullWidth
             />
             <label style={{color: "crimson"}}>

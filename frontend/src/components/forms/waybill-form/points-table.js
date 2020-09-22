@@ -39,6 +39,7 @@ export default (props) => {
     };
 
     const handleTableRowClick = (point) => {
+        alert(point.idx);
         onRowClick(point);
     };
 

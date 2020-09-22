@@ -22,7 +22,11 @@ const styles = (theme) => ({
 export const DialogTitleCustomized = withStyles(styles)((props) => {
     const {children, classes, onClose, ...other} = props;
     return (
-        <MuiDialogTitle disableTypography className={classes.root} {...other}>
+        <MuiDialogTitle
+            disableTypography
+            className={classes.root} {...other}
+            style={{color: '#3f51b5', textAlign: "center"}}
+            id="customized-dialog-title">
             <Typography variant="h5">{children}</Typography>
             {onClose ? (
                 <IconButton aria-label="close"

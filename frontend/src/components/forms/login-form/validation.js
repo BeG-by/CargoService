@@ -2,12 +2,12 @@ import * as Yup from 'yup';
 
 export const validationSchemaLogin = Yup.object({
     username: Yup.string()
-        .min(4, "login is too short")
-        .max(16, "login is too long")
-        .required("login is required"),
+        .min(4, "Login is too short")
+        .max(16, "Login is too long")
+        .required("Login is required"),
     password: Yup.string()
-        .min(4, "password is too short")
-        .max(16, "password is too long")
-        .required("password is required"),
+        .min(4, "Password is too short")
+        .max(16, "Password is too long")
+        .required("Password is required"),
 
 });

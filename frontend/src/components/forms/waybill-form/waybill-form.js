@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import PointsDialog from "./points-dialog";
 import PointsTable from "./points-table";
-import {Formik, Form} from "formik";
+import {Formik, Form, ErrorMessage} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "./waybill-form-validation";
@@ -13,6 +13,9 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/date-picker";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import FormikField from "../../roles/sysadmin/formik-field";
+import {ErrorMsg} from "../../parts/error-message";
 
 const EMPTY_AUTO = {
     id: 0,
@@ -22,7 +25,7 @@ const EMPTY_AUTO = {
 
 const EMPTY_POINT = {
     id: null,
-    idx: 0,
+    idx: -1,
     waybillId: "",
     place: "",
     passed: false,
@@ -71,7 +74,7 @@ export default (props) => {
     };
 
     const handlePointDialogSubmit = (point) => {
-        if (point.id === null) {
+        if (point.idx === -1) {
             addPoint(point);
         } else {
             updatePoint(point);
@@ -111,7 +114,7 @@ export default (props) => {
     };
 
     const handlePointDelete = (idx) => {
-        if (idx !== 0) {
+        if (idx > -1) {
             deletePointById(idx);
             handlePointDialogClose();
         }
@@ -168,6 +171,7 @@ export default (props) => {
                     arrivalDate: today,
                     autoId: selectedAuto.id,
                     invoiceId: invoice.id,
+                    points: points.length
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={WaybillFormValidation}
@@ -194,6 +198,9 @@ export default (props) => {
                                     )
                                 })}
                             </Select>
+                            <label style={{color: "#f50057"}}>
+                                <ErrorMessage name={"autoId"}/>
+                            </label>
                         </FormControl>
 
                         <Grid container spacing={3}>
@@ -219,7 +226,7 @@ export default (props) => {
                         <FormControl className={classes.formControl}>
                             <Grid container spacing={3}>
                                 <Grid item xs={6}>
-                                    <Typography>Control points:</Typography>
+                                    <InputLabel id="demo-simple-select-label">Control points</InputLabel>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Button
@@ -234,6 +241,14 @@ export default (props) => {
                                 editable={true}
                                 points={points}
                                 onRowClick={handleTableRowClick}/>
+                            <TextField name="points"
+                                       type="hidden"
+                                       onChange={formProps.handleChange}
+                            />
+                            <label style={{color: "#f50057"}}>
+                                <ErrorMessage name={"points"}/>
+                            </label>
+
                             <PointsDialog
                                 open={pointDialogOpen}
                                 initPointState={selectedPoint}
