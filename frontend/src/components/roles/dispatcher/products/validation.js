@@ -2,9 +2,6 @@ import * as Yup from "yup";
 
 export const ProductFormValidationSchema = Yup.object({
   name: Yup.string().max(64, "Name is too long").required("Name is required"),
-  measure: Yup.string()
-    .max(64, "Name is too long")
-    .required("Measure is required"),
   mass: Yup.number()
     .positive("Mass must be positive integer")
     .integer("Mass must be positive integer")

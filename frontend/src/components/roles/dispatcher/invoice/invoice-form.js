@@ -31,10 +31,12 @@ const EMPTY_PRODUCT_OWNER = {
 const EMPTY_PRODUCT = {
     id: -1,
     name: "",
-    measure: "",
-    mass: "",
+    quantityMeasure: "PIECE",
     quantity: "",
+    massMeasure: "KG",
+    mass: "",
     price: "",
+    currency: "BYN",
 };
 
 const INIT_INVOICE_STATE = {
@@ -159,10 +161,12 @@ export default function InvoiceForm(props) {
             for (let el of temp) {
                 if (el.id === newProduct.id) {
                     el.name = newProduct.name;
-                    el.measure = newProduct.measure;
+                    el.massMeasure = newProduct.massMeasure;
                     el.mass = newProduct.mass;
+                    el.quantityMeasure = newProduct.quantityMeasure;
                     el.quantity = newProduct.quantity;
                     el.price = newProduct.price;
+                    el.currency = newProduct.currency;
                 }
             }
             return {...prevState, products: temp};
@@ -312,15 +316,6 @@ export default function InvoiceForm(props) {
                             products={initInvoice.products}
                             onRowClick={handleProductTableClick}
                         />
-
-                        <ProductDialog
-                            open={productDialogOpen}
-                            initProductState={selectedProduct}
-                            onSubmit={handleProductDialogSubmit}
-                            onDelete={handleProductDelete}
-                            onClose={handleProductDialogClose}
-                        />
-
                         <Button
                             variant="contained"
                             color="primary"
@@ -333,6 +328,14 @@ export default function InvoiceForm(props) {
                 )}
             </Formik>
             {toastComponent}
+            <ProductDialog
+                open={productDialogOpen}
+                initProductState={selectedProduct}
+                onSubmit={handleProductDialogSubmit}
+                onDelete={handleProductDelete}
+                onClose={handleProductDialogClose}
+            />
+
         </React.Fragment>
     );
 };
