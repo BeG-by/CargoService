@@ -380,44 +380,6 @@
 
         </createTable>
 
-        <!--Product-->
-        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
-        <createTable tableName="product">
-
-            <column name="id_product" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
-
-            <column name="name" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="quantity" type="INT">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="measure" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="price" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="mass" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="status" type="product_status" defaultValue="ACCEPTED">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="id_invoice" type="BIGSERIAL">
-                <constraints nullable="false"/>
-            </column>
-
-        </createTable>
-
         <!--Invoice-->
         <sql>CREATE TYPE invoice_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED')</sql>
         <createTable tableName="invoice">
@@ -483,13 +445,6 @@
                                  onDelete="CASCADE"
                                  referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
-
-        <addForeignKeyConstraint baseTableName="product"
-                                 baseColumnNames="id_invoice"
-                                 constraintName="fk_product_invoice"
-                                 onDelete="CASCADE"
-                                 referencedTableName="invoice"
-                                 referencedColumnNames="id_invoice"/>
 
         <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_driver"
@@ -654,17 +609,8 @@
             <column name="id_product_owner" value="1"/>
         </insert>
 
-        <insert tableName="product">
-            <column name="name" value="beer"/>
-            <column name="quantity" value="5"/>
-            <column name="measure" value="bochka"/>
-            <column name="price" value="100"/>
-            <column name="mass" value="100 kg"/>
-            <column name="status" value="ACCEPTED"/>
-            <column name="id_invoice" value="1"/>
-        </insert>
-
     </changeSet>
+
     <!--Data for test-->
     <changeSet id="1.0.8" author="eugene.begun">
         <insert tableName="product_owner">
