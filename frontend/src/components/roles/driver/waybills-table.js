@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import {getAllWaybills, getWaybillById} from "./request-utils";
-import {DialogWindow} from "../../parts/dialog";
+import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
 import {BodyWrapper} from "../../pages/body-wrapper";

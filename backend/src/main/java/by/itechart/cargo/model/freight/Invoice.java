@@ -67,12 +67,7 @@ public class Invoice implements Serializable, Cloneable {
 
     @OneToOne(mappedBy = "invoice")
     @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Waybill waybill;
-
-    @Column(name = "id_waybill")
-    private Long waybillId;
 
     @JoinColumn(name = "id_user_registration", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -92,4 +87,31 @@ public class Invoice implements Serializable, Cloneable {
     @JsonBackReference(value = "invoice_company")
     private ClientCompany clientCompany;
 
+    @Override
+    public String toString() {
+
+        Long waybillId = null;
+
+        if (waybill != null) {
+            waybillId = waybill.getId();
+        }
+
+        return "Invoice{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", invoiceStatus=" + invoiceStatus +
+                ", registrationDate=" + registrationDate +
+                ", checkingDate=" + checkingDate +
+                ", closeDate=" + closeDate +
+                ", shipper='" + shipper + '\'' +
+                ", consignee='" + consignee + '\'' +
+                ", productOwner=" + productOwner +
+                ", driver=" + driver +
+                ", waybill=" + waybillId +
+                ", registrationUser=" + registrationUser +
+                ", checkingUser=" + checkingUser +
+                ", products=" + products +
+                ", clientCompany=" + clientCompany +
+                '}';
+    }
 }

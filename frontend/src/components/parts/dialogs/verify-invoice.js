@@ -2,14 +2,17 @@ import {OkButton} from "../buttons/ok-button";
 import React from "react";
 import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../../roles/manager/request-utils";
+import {withRouter} from "react-router-dom"
+
 
 export const AssignVerificationInvoice = (props) => {
+    console.log(props);
     let inv = props.invoice;
     const [invoice, setInvoice] = React.useState({id: inv.id, status: "ACCEPTED"});
 
     const handleVerify = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
+        props.history.push("/invoice")
     }
 
     return (
@@ -65,3 +68,5 @@ export const CloseInvoice = (props) => {
             </div>
         </div>);
 }
+
+export default withRouter(AssignVerificationInvoice)

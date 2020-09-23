@@ -9,7 +9,7 @@ import {DrawerMenu} from "./parts/layout/drawer";
 import WelcomeBody from "./pages/welcome-body";
 import {Footer} from "./parts/layout/footer";
 import {MainBody} from "./pages/main-body";
-import WaybillBody from "./pages/waybill-body";
+import WayBillTable from "./roles/driver/waybills-table";
 import InfoBody from "./pages/info-body";
 import SendMailBody from "./pages/send-mail-body";
 import ContactsBody from "./pages/contacts-body";
@@ -54,7 +54,7 @@ export default function App() {
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
                     <Route exact path="/main" component={MainBody}/>
-                    <Route exact path="/waybill" component={WaybillBody}/>
+                    <Route exact path="/waybill" component={WayBillTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
                     <Route exact path={"/users"} component={UserTable}/>
                     <Route exact path={"/owners"} component={ProductOwnersTable}/>

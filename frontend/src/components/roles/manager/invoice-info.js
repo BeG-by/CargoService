@@ -1,7 +1,8 @@
 import React, {useEffect} from "react";
 import {OkButton} from "../../parts/buttons/ok-button";
-import {DialogWindow} from "../../parts/dialog";
-import {AssignVerificationInvoice, CloseInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
+import {DialogWindow} from "../../parts/dialogs/dialog";
+import {CloseInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
+import AssignVerificationInvoice from "../../parts/dialogs/verify-invoice";
 import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
 import {getWaybillById} from "../driver/request-utils";
@@ -52,7 +53,7 @@ export const InvoiceInfo = (props) => {
 
     async function fetchInvoice(cleanupFunction) {
         let selected = await getInvoiceById(props.invoiceId);
-        if(!cleanupFunction) setInvoice({
+        if (!cleanupFunction) setInvoice({
             id: selected.id,
             invoiceStatus: selected.invoiceStatus,
             products: selected.products,
@@ -96,12 +97,12 @@ export const InvoiceInfo = (props) => {
     let buttonReject;
     let buttonClose;
     let style;
-    
+
     if (status.trim() === 'REGISTERED') {
         buttonVerify = <OkButton content={'Verify'} handleClick={handleVerifyOpen}/>
         buttonReject = <OkButton content={'Reject'} handleClick={handleRejectOpen}/>
         style = 'btn-row';
-    }  else if (status.trim() === 'ACCEPTED' && checkPassage) {
+    } else if (status.trim() === 'ACCEPTED' && checkPassage) {
         buttonClose = <OkButton content={'Close'} handleClick={handleCloseOpen}/>;
         style = 'btn-row';
     } else {

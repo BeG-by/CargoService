@@ -81,7 +81,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 GET localhost:8080/v1/api/invoices/1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwODc2OTM5LCJleHAiOjE2MDE3NDA5Mzl9.2ZpS6JvEI1-rt36ectazoxVanaMVzkZ9R11m-NkOC3A
 
 ###
 
@@ -93,16 +93,25 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 POST localhost:8080/v1/api/invoices
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwODgxNjgxLCJleHAiOjE2MDE3NDU2ODF9.oVWUaQZE031CJxLLf7S2sDBuH1g9M6WqPNryh524ahI
 
 {
   "status": "REGISTERED",
-  "invoiceNumber": "TTN327788",
+  "invoiceNumber": "TTN3277838",
   "registrationDate": "2020-01-03",
+  "productOwnerId": 1,
   "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
   "consignee": "OOO 'Test warehouse', Smolensk, Lenina 5 ",
   "driverId": 1,
   "products": [
+    {
+      "name": "test product",
+      "quantity": 10,
+      "measure": "barrel",
+      "price": 56,
+      "sum": 13,
+      "mass": "100 kg"
+    },
     {
       "name": "test product",
       "quantity": 10,
@@ -156,7 +165,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Waybills ---
 
-GET localhost:8080/v1/api/waybills/1
+GET localhost:8080/v1/api/waybills/2
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
 
@@ -176,7 +185,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
       "id": null
     }
   ],
-  "invoiceId": 3,
+  "invoiceId": 1,
   "autoId": 1,
   "departureDate": "2020-09-30",
   "arrivalDate": "2020-09-30"

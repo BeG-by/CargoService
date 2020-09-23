@@ -29,6 +29,7 @@ public class User implements Serializable, Cloneable {
     private String login;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(name = "name", nullable = false)
