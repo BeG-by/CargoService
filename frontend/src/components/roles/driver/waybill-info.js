@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {getWaybillById} from "./request-utils";
-import InvoiceInfoContent from "./invoice-info-content";
+import WaybillInfoContent from "./waybill-info-content";
 
 export const WaybillInfo = (props) => {
     const [waybill, setWaybill] = React.useState({
@@ -9,7 +9,10 @@ export const WaybillInfo = (props) => {
         arrivalDate: "",
         points: [],
         invoice: {id: 0, number: ""},
-        auto: {id: 0, mark: 0},
+        auto: {id: 0, mark: "", type: ""},
+        driver: {id: 0, name: "", surname: ""},
+        shipper: "",
+        consignee: "",
     });
 
     async function fetchWaybill(cleanupFunction) {
@@ -20,7 +23,13 @@ export const WaybillInfo = (props) => {
             arrivalDate: selected.arrivalDate,
             points: selected.points,
             invoice: {id: selected.invoice.id, number: selected.invoice.number},
-            auto: {id: selected.auto.id, mark: selected.auto.mark}
+            auto: {id: selected.auto.id, mark: selected.auto.mark, type: selected.auto.type},
+            driver: {
+                id: selected.invoice.driver.id,
+                name: selected.invoice.driver.name,
+                surname: selected.invoice.driver.surname},
+            shipper: selected.invoice.shipper,
+            consignee: selected.invoice.consignee,
         });
     }
 
@@ -31,7 +40,7 @@ export const WaybillInfo = (props) => {
     }, []);
 
     const content = <div>
-        <InvoiceInfoContent waybill={waybill} />
+        <WaybillInfoContent waybill={waybill} action={fetchWaybill}/>
     </div>
 
     return (

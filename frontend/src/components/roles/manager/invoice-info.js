@@ -1,9 +1,10 @@
 import React, {useEffect} from "react";
 import {OkButton} from "../../parts/buttons/ok-button";
-import {DialogWindow} from "../../parts/layout/dialog";
-import {AssignVerificationInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
+import {DialogWindow} from "../../parts/dialog";
+import {AssignVerificationInvoice, CloseInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
 import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
+import {getWaybillById} from "../driver/request-utils";
 
 export const InvoiceInfo = (props) => {
     const [form, setForm] = React.useState(null);
@@ -24,6 +25,7 @@ export const InvoiceInfo = (props) => {
         checkingUser: {id: 0},
         waybillId: "",
     });
+    const [checkPassage, setCheckPassage] = React.useState(true);
 
     const handleClose = () => {
         setOpenVerifyDialog(false);
@@ -38,6 +40,12 @@ export const InvoiceInfo = (props) => {
 
     const handleRejectOpen = () => {
         const form = <RejectVerificationInvoice handleClose={handleClose} invoice={invoice}/>
+        setForm(form);
+        setOpenRejectDialog(true);
+    }
+
+    const handleCloseOpen = () => {
+        const form = <CloseInvoice handleClose={handleClose} invoice={invoice}/>
         setForm(form);
         setOpenRejectDialog(true);
     }
@@ -67,6 +75,14 @@ export const InvoiceInfo = (props) => {
             },
             waybillId: selected.waybillId,
         });
+        if (selected.waybillId === null) {
+            setCheckPassage(false);
+        } else {
+            let foundWaybill = await getWaybillById(selected.waybillId);
+            foundWaybill.points.forEach(p => {
+                if (!p.passed) setCheckPassage(false);
+            })
+        }
     }
 
     useEffect(() => {
@@ -78,11 +94,15 @@ export const InvoiceInfo = (props) => {
     let status = invoice.invoiceStatus;
     let buttonVerify;
     let buttonReject;
+    let buttonClose;
     let style;
-
+    
     if (status.trim() === 'REGISTERED') {
         buttonVerify = <OkButton content={'Verify'} handleClick={handleVerifyOpen}/>
         buttonReject = <OkButton content={'Reject'} handleClick={handleRejectOpen}/>
+        style = 'btn-row';
+    }  else if (status.trim() === 'ACCEPTED' && checkPassage) {
+        buttonClose = <OkButton content={'Close'} handleClick={handleCloseOpen}/>;
         style = 'btn-row';
     } else {
         style = 'btn'
@@ -91,6 +111,7 @@ export const InvoiceInfo = (props) => {
     let buttons = <div className={style}>
         {buttonVerify}
         {buttonReject}
+        {buttonClose}
     </div>
 
     const content = <div>

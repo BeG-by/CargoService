@@ -71,6 +71,9 @@ public class Invoice implements Serializable, Cloneable {
     @EqualsAndHashCode.Exclude
     private Waybill waybill;
 
+    @Column(name = "id_waybill")
+    private Long waybillId;
+
     @JoinColumn(name = "id_user_registration", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "reg_invoice")

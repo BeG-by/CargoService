@@ -1,13 +1,18 @@
 import React, {useEffect, useState} from "react";
 import PointsDialog from "./points-dialog";
 import PointsTable from "./points-table";
-import {Formik, Form} from "formik";
-import ItemList from "../../roles/dispatcher/item-list"; // TODO fix path
+import {Formik, Form, ErrorMessage} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "./waybill-form-validation";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import DatePickerField from "../../parts/date-picker";
+import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import ClientDialogDatePicker from "../../roles/sysadmin/client-dialog-date-picker";
 
 const EMPTY_AUTO = {
     id: 0,
@@ -16,7 +21,8 @@ const EMPTY_AUTO = {
 };
 
 const EMPTY_POINT = {
-    id: 0,
+    id: null,
+    idx: -1,
     waybillId: "",
     place: "",
     passed: false,
@@ -31,6 +37,13 @@ export default (props) => {
     const [pointIndex, setPointIndex] = useState(0);
     const [points, setPoints] = useState([]);
     const [autos, setAutos] = useState([]);
+    const useStyles = makeStyles((theme) => ({
+        formControl: {
+            marginTop: 20,
+            minWidth: "100%",
+        }
+    }));
+    const classes = useStyles();
 
     useEffect(() => {
         setInvoice(props.invoice);
@@ -58,7 +71,7 @@ export default (props) => {
     };
 
     const handlePointDialogSubmit = (point) => {
-        if (point.id === 0) {
+        if (point.idx === -1) {
             addPoint(point);
         } else {
             updatePoint(point);
@@ -73,8 +86,8 @@ export default (props) => {
     };
 
     const addPoint = (point) => {
-        point.id = pointIndex;
-        setPointIndex(point.id + 1);
+        point.idx = pointIndex;
+        setPointIndex(point.idx + 1);
         setPoints((prevState) => {
             const temp = [...prevState];
             temp.push(point);
@@ -86,7 +99,7 @@ export default (props) => {
         setPoints((prevState) => {
             const temp = [...prevState];
             for (let el of temp) {
-                if (el.id === newPoint.id) {
+                if (el.idx === newPoint.idx) {
                     el.waibillId = newPoint.waybillId;
                     el.passed = newPoint.passed;
                     el.place = newPoint.place;
@@ -97,18 +110,18 @@ export default (props) => {
         });
     };
 
-    const handlePointDelete = (id) => {
-        if (id !== 0) {
-            deletePointById(id);
+    const handlePointDelete = (idx) => {
+        if (idx > -1) {
+            deletePointById(idx);
             handlePointDialogClose();
         }
     };
 
-    const deletePointById = (id) => {
+    const deletePointById = (idx) => {
         setPoints((prevState) => {
             const temp = [...prevState];
             for (let i = 0; i < temp.length; i++) {
-                if (temp[i].id === id) {
+                if (temp[i].idx === idx) {
                     temp.splice(i, 1);
                 }
             }
@@ -120,7 +133,7 @@ export default (props) => {
         const waybill = {};
         waybill.points = points;
         waybill.invoiceId = values.invoiceId;
-        waybill.autoId = selectedAuto.id;
+        waybill.autoId = values.autoId;
         waybill.departureDate = values.departureDate;
         waybill.arrivalDate = values.arrivalDate;
         const saveWaybillRequest = async (waybill) => {
@@ -130,74 +143,134 @@ export default (props) => {
         saveWaybillRequest(waybill);
     };
 
+    const handleAutoChange = (event) => {
+        event.preventDefault();
+        setSelectedAuto({id: event.target.value, autoType: "", mark: ""});
+    };
+
+    let options = [{value: "", label: ""}];
+    autos.forEach(auto => {
+        let label = auto.mark + " " + auto.autoType;
+        options.push({value: auto.id, label: label});
+    })
+
+    let date = new Date();
+    let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
 
     return (
         <React.Fragment>
             <Formik
                 enableReinitialize
                 initialValues={{
-                    departureDate: "",
-                    arrivalDate: "",
+                    departureDate: today,
+                    arrivalDate: today,
+                    autoId: selectedAuto.id,
                     invoiceId: invoice.id,
+                    points: points.length
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={WaybillFormValidation}
             >
                 {(formProps) => (
                     <Form>
-                        <ClientDialogDatePicker
-                            formikProps={formProps}
-                            id="departureDate"
-                            formikFieldName="departureDate"
-                            label="Departure date"
-                        />
-                        <ClientDialogDatePicker
-                            formikProps={formProps}
-                            id="arrivalDate"
-                            formikFieldName="arrivalDate"
-                            label="Arrival date"
-                        />
-                        <TextField
-                            disabled={true}
-                            id={"autoType"}
-                            label={"Auto type"}
-                            value={selectedAuto.autoType}
-                        />
-                        <TextField
-                            disabled={true}
-                            id={"autoMark"}
-                            label={"Auto mark"}
-                            value={selectedAuto.mark}
-                        />
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="demo-simple-select-label">Select auto</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={selectedAuto.id}
+                                onChange={handleAutoChange}
+                                name={"autoId"}
+                            >
+                                {options.map(option => {
+                                    return (
+                                        <MenuItem
+                                            key={option.value}
+                                            name={"autoId"}
+                                            value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    )
+                                })}
+                            </Select>
+                            <label style={{color: "#f50057"}}>
+                                <ErrorMessage name={"autoId"}/>
+                            </label>
+                        </FormControl>
 
-                        <ItemList
-                            items={autos}
-                            onRowClick={(item) => {
-                                setSelectedAuto(item);
-                            }}
-                        />
+                        <Grid container spacing={3}>
+                            <Grid item xs={6}>
+                                <DatePickerField
+                                    formikProps={formProps}
+                                    id="departureDate"
+                                    formikFieldName="departureDate"
+                                    label="Departure date"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <DatePickerField
+                                    formikProps={formProps}
+                                    id="arrivalDate"
+                                    formikFieldName="arrivalDate"
+                                    label="Arrival date"
+                                />
+                            </Grid>
+                        </Grid>
+                        <br/>
 
-                        <PointsTable
-                            points={points}
-                            onRowClick={handleTableRowClick}/>
+                        <FormControl className={classes.formControl}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={6}>
+                                    <InputLabel id="demo-simple-select-label">Control points</InputLabel>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Button
+                                        variant="outlined"
+                                        color='primary'
+                                        style={{display: "block", marginLeft: "auto"}}
+                                        onClick={handleCreateNewPointClick}>Add control point</Button>
+                                </Grid>
+                            </Grid>
 
-                        <PointsDialog
-                            open={pointDialogOpen}
-                            initPointState={selectedPoint}
-                            onSubmit={handlePointDialogSubmit}
-                            onClose={handlePointDialogClose}
-                            onDelete={handlePointDelete}
-                        />
+                            <PointsTable
+                                editable={true}
+                                points={points}
+                                onRowClick={handleTableRowClick}/>
+                            <TextField name="points"
+                                       type="hidden"
+                                       onChange={formProps.handleChange}
+                            />
+                            <label style={{color: "#f50057"}}>
+                                <ErrorMessage name={"points"}/>
+                            </label>
 
-                        <Button onClick={handleCreateNewPointClick}>Add point</Button>
+                            <PointsDialog
+                                open={pointDialogOpen}
+                                initPointState={selectedPoint}
+                                onSubmit={handlePointDialogSubmit}
+                                onClose={handlePointDialogClose}
+                                onDelete={handlePointDelete}
+                            />
+                        </FormControl>
+                        <br/>
 
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                        >
-                            Save waybill
-                        </Button>
+                        <div className='btn-row'>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+
+                            >
+                                Save waybill
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={props.onClose}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
                     </Form>
                 )}
             </Formik>
