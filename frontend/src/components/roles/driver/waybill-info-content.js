@@ -15,38 +15,33 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
-import {getPointById, updatePoints} from "./request-utils";
+import {getPointById, updatePoint} from "./request-utils";
+import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import CheckIcon from "@material-ui/icons/Check";
 
 const columns = [
-    {id: "place", label: "Place", minWidth: 300},
-    {id: "passageDate", label: "Passage Time", minWidth: 200},
+    {id: "place", label: "Place", minWidth: 200},
+    {id: "passageDate", label: "Passage Date", minWidth: 200},
+    {id: "passed", label: "Passed", minWidth: 200}
 ];
-
-function fetchFieldFromObject(obj, prop) {
-    let index = prop.indexOf(".");
-    if (index > 0) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-    return obj[prop];
-}
 
 export default function WaybillInfoContent(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
-    const [point, setPoint] = React.useState({id: 0, passed: false, passageDate: 0});
+    const [point, setPoint] = React.useState({id: 0, passed: false, passageDate: 0,});
 
     const handleTableRowClick = async (p) => {
         let selected = await getPointById(p.id);
-        //fixme вставить диалог подтвердить прохождение точки
-        setPoint({
-            id: selected.id,
-            passed: true,
-            passageDate: Date.now(),
-        });
-        await updatePoints(point);
+        //fixme вставить диалог подтвердить прохождение точки on
+        if (!selected.passed) {
+            setPoint({
+                id: selected.id,
+                passed: true,
+                passageDate: Date.now(),
+            });
+            await updatePoint(point);
+            props.action();
+        }
     };
 
     const handleChangePage = (event, newPage) => {
@@ -76,7 +71,7 @@ export default function WaybillInfoContent(props) {
                                 primary="Auto"
                                 secondary={
                                     <React.Fragment>
-                                        {props.waybill.auto.id}
+                                        {props.waybill.auto.mark} {props.waybill.auto.type}
                                     </React.Fragment>
                                 }
                             />
@@ -87,8 +82,7 @@ export default function WaybillInfoContent(props) {
                                 primary="Driver"
                                 secondary={
                                     <React.Fragment>
-                                        {props.waybill.invoice.driver.name}
-                                        {props.waybill.invoice.driver.surname}
+                                        {props.waybill.driver.name} {props.waybill.driver.surname}
                                     </React.Fragment>
                                 }
                             />
@@ -117,7 +111,7 @@ export default function WaybillInfoContent(props) {
                                 }
                             />
                         </ListItem>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}} >
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
@@ -125,7 +119,7 @@ export default function WaybillInfoContent(props) {
                                 primary="Shipper"
                                 secondary={
                                     <React.Fragment>
-                                        {props.waybill.invoice.shipper}
+                                        {props.waybill.shipper}
                                     </React.Fragment>
                                 }
                             />
@@ -136,7 +130,7 @@ export default function WaybillInfoContent(props) {
                                 primary="Consignee"
                                 secondary={
                                     <React.Fragment>
-                                        {props.waybill.invoice.consignee}
+                                        {props.waybill.consignee}
                                     </React.Fragment>
                                 }
                             />
@@ -181,8 +175,13 @@ export default function WaybillInfoContent(props) {
                                                 const value = fetchFieldFromObject(point, column.id);
                                                 return (
                                                     <TableCell key={column.id}>
-                                                        {value}
+                                                        {column.id === 'passed' && value === true
+                                                            ? <CheckIcon/>
+                                                            : column.id === 'passed' && value === false
+                                                                ? ""
+                                                                : value}
                                                     </TableCell>
+
                                                 );
                                             })}
                                         </TableRow>

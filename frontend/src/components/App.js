@@ -10,7 +10,7 @@ import {DrawerMenu} from "./parts/drawer";
 import {WelcomeBody} from "./pages/welcome-body";
 import {Footer} from "./parts/footer";
 import {MainBody} from "./pages/main-body";
-import {WaybillBody} from "./pages/waybill-body";
+import WaybillsTable from "./roles/driver/waybills-table";
 import {InfoBody} from "./pages/info-body";
 import {SendMailBody} from "./pages/send-mail-body";
 import {ContactsBody} from "./pages/contacts-body";
@@ -113,13 +113,7 @@ export default function App() {
                             openDialog={openDialog}
                             handleClose={handleClose}
                         />}/>
-                    <Route exact path="/waybill" component={() =>
-                        <WaybillBody
-                            classes={classes}
-                            openMenu={openMenu}
-                            openDialog={openDialog}
-                            handleClose={handleClose}
-                        />}/>
+                    <Route exact path="/waybill" component={WaybillsTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
                     <Route exact path={"/users"} component={UserTable}/>
                     <Route component={NotFound}/>

@@ -116,6 +116,9 @@ public class InvoiceServiceImpl implements InvoiceService {
             foundInvoice.setCheckingDate(LocalDate.now());
             foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
         }
+        if (invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED)) {
+            foundInvoice.setCloseDate(LocalDate.now());
+        }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
         Invoice invoiceDb = invoiceRepository.save(foundInvoice);
         log.info("Invoice has been verified {}", invoiceDb);

@@ -130,8 +130,6 @@ export default (props) => {
     };
 
     const handleSubmit = (values) => {
-        alert(selectedAuto.id);
-        alert(values.autoId);
         const waybill = {};
         waybill.points = points;
         waybill.invoiceId = values.invoiceId;

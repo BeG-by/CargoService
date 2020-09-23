@@ -154,7 +154,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
-                    {renderHeaderText()}
+                    {renderHeaderText}
                 </Typography>
                 <div className={classes.grow}/>
                 <LoginButton/>

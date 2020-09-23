@@ -176,10 +176,10 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
       "id": null
     }
   ],
-  "invoiceId": 2,
+  "invoiceId": 3,
   "autoId": 1,
-  "departureDate": "2020-09-21",
-  "arrivalDate": "2020-09-21"
+  "departureDate": "2020-09-30",
+  "arrivalDate": "2020-09-30"
 }
 
 ###

@@ -15,7 +15,6 @@ import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-// import {WaybillError} from "../../forms/waybill-form/waybill-form-error";
 import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
@@ -148,7 +147,7 @@ function InvoicesTableContent() {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
                     count={invoices.length}
                     rowsPerPage={rowsPerPage}

@@ -7,15 +7,19 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import WaybillDialog from "../manager/waybill-dialog";
 import {getAllWaybills, getWaybillById} from "./request-utils";
 import {DialogWindow} from "../../parts/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
+import {BodyWrapper} from "../../pages/body-wrapper";
+import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import {getInvoiceById} from "../manager/request-utils";
+import {FillActDialog} from "../../parts/dialogs/fill-act";
+import ActDialog from "./act-dialog";
 
 const columns = [
-    {id: "number", label: "Invoice #", minWidth: 100},
-    {id: "driver", label: "Driver", minWidth: 100},
+    {id: "invoiceNumber", label: "Invoice #", minWidth: 100},
+    {id: "auto", label: "Auto", minWidth: 100},
     {
         id: "departureDate",
         label: "Departure Date",
@@ -28,34 +32,23 @@ const columns = [
     },
 ];
 
-function fetchFieldFromObject(obj, prop) {
-    let index = prop.indexOf(".");
-    if (index > 0) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-    return obj[prop];
-}
-
-export default function WaybillsTable() {
+function WaybillsTableContent() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [invoices, setInvoices] = React.useState([]);
-    const [invoice, setInvoice] = React.useState({id: 0, waybillId: "", invoiceStatus: ""});
+    const [waybills, setWaybills] = React.useState([]);
+    const [waybill, setWaybill] = React.useState({id: 0, invoice: null});
     const [form, setForm] = React.useState(null);
-    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
-    const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
+    const [actFillDialogOpen, setActFillDialogOpen] = React.useState(false);
+    const [actDialogOpen, setActDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
 
-    async function fetchInvoices(cleanupFunction) {
-        if (!cleanupFunction) setInvoices(await getAllInvoices());
+    async function fetchWaybills(cleanupFunction) {
+        if (!cleanupFunction) setWaybills(await getAllWaybills());
     }
 
     useEffect(() => {
         let cleanupFunction = false;
-        fetchInvoices(cleanupFunction);
+        fetchWaybills(cleanupFunction);
         return () => cleanupFunction = true;
     }, []);
 
@@ -63,19 +56,37 @@ export default function WaybillsTable() {
         setPage(newPage);
     };
 
-    const handleTableRowClick = async (inv) => {
-        let selected = await getInvoiceById(inv.id);
-        setInvoice({
-            id: selected.id,
-            invoiceStatus: selected.invoiceStatus,
-            waybillId: selected.waybillId,
-        });
-
-        setForm(<WaybillInfo waybillId={waybill.id}/>);
-        setWaybillInfoDialogOpen(true);
+    let foundWaybill = {};
+    let foundInvoice = {};
+    let checkPassage = true;
+    const handleTableRowClick = async (wb) => {
+        foundWaybill = await getWaybillById(wb.id);
+        foundInvoice = await getInvoiceById(wb.invoiceId);
+        foundWaybill.points.forEach(p => {
+            if (!p.passed) checkPassage = false;
+        })
+        setWaybill(() => ({
+            id: foundWaybill.id,
+            invoice: foundInvoice,
+        }));
+        if (checkPassage) {
+            setForm(FillActDialog(handleActFormOpen, handleWaybillInfoOpen));
+            setActFillDialogOpen(true);
+        } else {
+            handleWaybillInfoOpen();
+        }
     };
 
+    const handleWaybillInfoOpen = () => {
+        setForm(<WaybillInfo waybillId={foundWaybill.id}/>);
+        setActFillDialogOpen(false);
+        setWaybillInfoDialogOpen(true);
+    }
 
+    const handleActFormOpen = () => {
+        setActFillDialogOpen(false);
+        setActDialogOpen(true);
+    }
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -83,7 +94,9 @@ export default function WaybillsTable() {
     };
 
     const handleClose = () => {
+        setActFillDialogOpen(false);
         setWaybillInfoDialogOpen(false);
+        setActDialogOpen(false);
     };
 
     return (
@@ -91,7 +104,7 @@ export default function WaybillsTable() {
             <Paper>
                 <TableContainer>
                     <Typography variant="h5" gutterBottom style={{textAlign: "left", margin: 15}}>
-                        Invoices
+                        Waybills
                     </Typography>
                     <Table aria-label="sticky table">
                         <TableHead>
@@ -107,21 +120,21 @@ export default function WaybillsTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {invoices
+                            {waybills
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((invoice) => {
+                                .map((waybill) => {
                                     return (
                                         <TableRow
                                             onClick={() => {
-                                                handleTableRowClick(invoice);
+                                                handleTableRowClick(waybill);
                                             }}
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={invoice.id}
+                                            key={waybill.id}
                                         >
                                             {columns.map((column) => {
-                                                const value = fetchFieldFromObject(invoice, column.id);
+                                                const value = fetchFieldFromObject(waybill, column.id);
                                                 return (
                                                     <TableCell key={column.id}>
                                                         {value}
@@ -136,46 +149,42 @@ export default function WaybillsTable() {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={invoices.length}
+                    count={waybills.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
-                <WaybillDialog
-                    open={waybillDialogOpen}
-                    invoiceId={invoice.id}
+                <ActDialog
+                    waybill={waybill}
+                    open={actDialogOpen}
                     onClose={() => {
-                        setWaybillDialogOpen(false);
-                        setInvoice({id: 0, invoiceStatus: "", waybillId: ""});
-                        fetchInvoices();
-                    }}
-                    onSubmit={() => {
-                        setWaybillDialogOpen(false);
-                        setInvoice({id: 0, invoiceStatus: "", waybillId: ""});
-                        fetchInvoices();
+                        setActDialogOpen(false);
+                        fetchWaybills(false);
                     }}
                 />
 
                 <DialogWindow
                     dialogTitle="Confirmation"
                     handleClose={handleClose}
-                    openDialog={waybillFillDialogOpen}
+                    openDialog={actFillDialogOpen}
                     form={form}
                 />
 
                 <DialogWindow
-                    dialogTitle="Invoice Info"
+                    dialogTitle="Waybill Info"
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}
-                    openDialog={invoiceInfoDialogOpen}
+                    openDialog={waybillInfoDialogOpen}
                     form={form}
                 />
             </Paper>
         </div>
     );
 }
+
+export default () => <BodyWrapper content={WaybillsTableContent}/>
