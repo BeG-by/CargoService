@@ -16,6 +16,7 @@ import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import {BodyWrapper} from "../../pages/body-wrapper";
+import {connect} from "react-redux";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -31,7 +32,13 @@ const columns = [
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
-function InvoicesTableContent() {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const InvoicesTableContent = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
@@ -40,6 +47,7 @@ function InvoicesTableContent() {
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const role = props.role;
 
     async function fetchInvoices(cleanupFunction) {
         if (!cleanupFunction) setInvoices(await getAllInvoices());
@@ -183,6 +191,6 @@ function InvoicesTableContent() {
             </Paper>
         </div>
     );
-}
+})
 
-export default () => <BodyWrapper content={InvoicesTableContent}/>
+// export default () => <BodyWrapper content={InvoicesTableContent}/>

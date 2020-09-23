@@ -2,14 +2,15 @@ import {OkButton} from "../buttons/ok-button";
 import React from "react";
 import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../../roles/manager/request-utils";
+import {withRouter} from "react-router-dom";
 
-export const AssignVerificationInvoice = (props) => {
+export const AssignVerificationInvoice = withRouter((props) => {
     let inv = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: inv.id, status: "ACCEPTED"});
+    const [invoice] = React.useState({id: inv.id, status: "ACCEPTED"});
 
     const handleVerify = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
+        props.history.push("/success");
     }
 
     return (
@@ -22,15 +23,15 @@ export const AssignVerificationInvoice = (props) => {
                 </div>
             </div>
         </div>);
-}
+})
 
-export const RejectVerificationInvoice = (props) => {
+export const RejectVerificationInvoice = withRouter((props) => {
     let inv = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: inv.id, status: "REJECTED"});
+    const [invoice] = React.useState({id: inv.id, status: "REJECTED"});
 
     const handleReject = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
+        props.history.push("/success");
     }
 
     return (
@@ -43,15 +44,16 @@ export const RejectVerificationInvoice = (props) => {
                 </div>
             </div>
         </div>);
-}
+})
 
-export const CloseInvoice = (props) => {
+export const CloseInvoice = withRouter((props) => {
     let inv = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: inv.id, status: "CLOSED"});
+    const [invoice] = React.useState({id: inv.id, status: "CLOSED"});
 
     const handleClose = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
+        props.history.push("/success");
+
     }
 
     return (
@@ -64,4 +66,4 @@ export const CloseInvoice = (props) => {
                 </div>
             </div>
         </div>);
-}
+})

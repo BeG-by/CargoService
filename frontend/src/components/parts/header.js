@@ -73,23 +73,19 @@ const mapActionsToProps = (dispatch) => {
 };
 
 const getUserInfoRequest = () => {
-
     const endpoint = "/v1/api/users/info";
     return axios({
         method: "GET",
         url: endpoint,
     })
-
 };
 
 
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
-
     drawerWidth = props.drawerWidth;
     const user = props.user;
-    const isAuthenticate = localStorage.getItem("authorization") !== null;
+    const isAuthenticate = localStorage.getItem("authorization");
     const headerText = "Manage your cargo with convenient digital tools";
-
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -104,7 +100,6 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
         }
     };
 
-
     useEffect(() => {
         if (isAuthenticate) {
             getUserInfo();
@@ -118,10 +113,9 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
         setOpenDialog(false);
     };
 
-    const renderHeaderText = () => {
-        return isAuthenticate ? user.name + " " + user.surname + ", " + user.roles : headerText
-    };
-
+    const renderHeaderText = isAuthenticate
+        ? user.name + " " + user.surname + ", " + user.roles
+        : headerText;
 
     const LoginButton = () => {
         return isAuthenticate ?
@@ -130,7 +124,6 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                           handleClickOpen={handleClickOpen}
                           handleClose={handleClose}/>;
     };
-
 
     return (
         <AppBar className={clsx(classes.appBar, {

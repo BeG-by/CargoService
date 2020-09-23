@@ -28,18 +28,12 @@ const columns = [
 export default function WaybillInfoContent(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
-    const [point, setPoint] = React.useState({id: 0, passed: false, passageDate: 0,});
 
     const handleTableRowClick = async (p) => {
         let selected = await getPointById(p.id);
         //fixme вставить диалог подтвердить прохождение точки on
         if (!selected.passed) {
-            setPoint({
-                id: selected.id,
-                passed: true,
-                passageDate: Date.now(),
-            });
-            await updatePoint(point);
+            await updatePoint(selected);
             props.action();
         }
     };

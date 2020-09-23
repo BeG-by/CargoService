@@ -14,8 +14,9 @@ import WaybillsTable from "./roles/driver/waybills-table";
 import {InfoBody} from "./pages/info-body";
 import {SendMailBody} from "./pages/send-mail-body";
 import {ContactsBody} from "./pages/contacts-body";
-import InvoicesTable from "./roles/manager/invoices-table";
+import InvoicesTable, {InvoicesTableContent} from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
+import {SuccessBody} from "./pages/success-body";
 
 const drawerWidth = 240;
 
@@ -114,8 +115,9 @@ export default function App() {
                             handleClose={handleClose}
                         />}/>
                     <Route exact path="/waybill" component={WaybillsTable}/>
-                    <Route exact path={"/invoice"} component={InvoicesTable}/>
+                    <Route exact path={"/invoice"} component={InvoicesTableContent}/>
                     <Route exact path={"/users"} component={UserTable}/>
+                    <Route exact path={"/success"} component={() => <SuccessBody classes={classes} openMenu={openMenu}/>}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>

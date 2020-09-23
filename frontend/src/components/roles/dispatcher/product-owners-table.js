@@ -10,6 +10,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import {makeGetAllProductOwnersRequest} from "./request-utils";
 import InvoiceDialog from "./invoice/invoice-dialog";
+import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 
 const columns = [
     {id: "name", label: "Name", minWidth: 170},
@@ -26,21 +27,6 @@ const columns = [
         align: "center",
     },
 ];
-
-function fetchFieldFromObject(obj, prop) {
-    if (obj === undefined || obj === null) {
-        return;
-    }
-    let index = prop.indexOf(".");
-    if (index > -1) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-
-    return obj[prop];
-}
 
 const useStyles = makeStyles({
     root: {

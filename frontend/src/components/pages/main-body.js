@@ -2,11 +2,13 @@ import React from "react";
 import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
 import ProductOwnersTable from "../roles/dispatcher/product-owners-table";
-import InvoicesTable from "../roles/manager/invoices-table";
+import InvoicesTable, {InvoicesTableContent} from "../roles/manager/invoices-table";
+import WaybillsTable from "../roles/driver/waybills-table";
 import ClientsTable from "../roles/sysadmin/clients-table";
 import UserTable from "../roles/admin/user-table";
 import {connect} from "react-redux";
 import NotAuthorized from "./error-page/error-401";
+
 
 const mapStateToProps = (store) => {
     return {
@@ -28,13 +30,10 @@ export const MainBody = connect(mapStateToProps)((props) => {
             content = <ProductOwnersTable/>;
             break;
         case 'MANAGER':
-            content = <InvoicesTable/>;
+            content = <InvoicesTableContent/>;
             break;
         case 'DRIVER':
-            content = <Typography
-                className={classes.mainParagraph}
-                paragraph>WELCOME TO CARGO MANAGER!
-            </Typography>;
+            content = <WaybillsTable/>
             break;
         case 'OWNER':
             content = <Typography
@@ -54,7 +53,7 @@ export const MainBody = connect(mapStateToProps)((props) => {
             })}
         >
             <div className={classes.drawerHeader}/>
-            <div className={classes.mainField}>
+            <div className='main-body-field'>
                 {content}
             </div>
         </main>
