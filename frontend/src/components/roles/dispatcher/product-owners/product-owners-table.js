@@ -8,10 +8,13 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {makeGetAllProductOwnersRequest} from "./request-utils";
-import InvoiceDialog from "./invoice/invoice-dialog";
-import {BodyWrapper} from "../../pages/body-wrapper";
-import useToast from "../../parts/toast-notification/useToast";
+import {makeGetAllProductOwnersRequest} from "../request-utils";
+import InvoiceDialog from "../invoice/invoice-dialog";
+import {BodyWrapper} from "../../../pages/body-wrapper";
+import useToast from "../../../parts/toast-notification/useToast";
+import Button from "@material-ui/core/Button";
+import ProductOwnerDialog from "./product-owner-dialog";
+import EditIcon from '@material-ui/icons/Edit';
 
 const columns = [
     {id: "name", label: "Name", minWidth: 170},
@@ -63,6 +66,8 @@ export function ProductOwnersTable() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [productOwnerDialogOpen, setProductOwnerDialogOpen] = useState(false);
+    const [selectedProductOwnerId, setSelectedProductOwnerId] = useState(-1);
 
     const [productOwners, setProductOwners] = useState([]);
     const [selectedProductOwner, setSelectedProductOwner] = useState(
@@ -99,10 +104,20 @@ export function ProductOwnersTable() {
         setPage(newPage);
     };
 
+    const handleEditProductOwnerClick = (productOwner) => {
+        setProductOwnerDialogOpen(true);
+        setSelectedProductOwnerId(productOwner.id)
+    }
+
     const handleTableRowClick = (productOwner) => {
         setSelectedProductOwner(productOwner);
         setInvoiceDialogOpen(true);
     };
+
+    const handleCreateProductOwnerClick = () => {
+        setSelectedProductOwnerId(-1);
+        setProductOwnerDialogOpen(true);
+    }
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -111,6 +126,7 @@ export function ProductOwnersTable() {
 
     return (
         <div>
+
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
                     <Table aria-label="sticky table">
@@ -125,6 +141,12 @@ export function ProductOwnersTable() {
                                         {column.label}
                                     </TableCell>
                                 ))}
+                                <TableCell
+                                    key={"edit_product_owner"}
+                                    align={"center"}
+                                >
+                                    <EditIcon/>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -154,6 +176,15 @@ export function ProductOwnersTable() {
                                                     </TableCell>
                                                 );
                                             })}
+                                            <TableCell key={"edit_product_owner"}>
+                                                <Button
+                                                    color={"primary"}
+                                                    startIcon={<EditIcon/>}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleEditProductOwnerClick(client)
+                                                    }}/>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -170,17 +201,31 @@ export function ProductOwnersTable() {
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
-
-                <InvoiceDialog
-                    productOwner={selectedProductOwner}
-                    open={invoiceDialogOpen}
-                    onClose={() => {
-                        setInvoiceDialogOpen(false);
-                    }}
-                />
+                <Button variant="contained"
+                        color={"primary"}
+                        onClick={handleCreateProductOwnerClick}>
+                    Add product owner
+                </Button>
             </Paper>
 
-             {toastComponent}
+            {toastComponent}
+
+            <InvoiceDialog
+                productOwner={selectedProductOwner}
+                open={invoiceDialogOpen}
+                onClose={() => {
+                    setInvoiceDialogOpen(false);
+                }}
+            />
+
+            <ProductOwnerDialog
+                open={productOwnerDialogOpen}
+                productOwnerId={selectedProductOwnerId}
+                onClose={() => {
+                    setProductOwnerDialogOpen(false);
+                    setSelectedProductOwnerId(-1)
+                }}
+            />
         </div>
     );
 }

@@ -50,3 +50,39 @@ export function makeGetInvoiceByIdRequest(id) {
         url: endpoint,
     });
 }
+
+
+export function makeGetProductOwnerByIdRequest(id) {
+    const endpoint = `/v1/api/owners/${id}`;
+    return axios({
+        method: "get",
+        url: endpoint,
+    });
+}
+
+export function makeSaveProductOwnerRequest(productOwner) {
+    const endpoint = `/v1/api/owners`;
+    console.log(productOwner);
+    return axios({
+        method: "post",
+        url: endpoint,
+        data: productOwner,
+    });
+}
+
+export function makeUpdateProductOwnerRequest(productOwner) {
+    const endpoint = `/v1/api/owners`;
+    return axios({
+        method: "put",
+        url: endpoint,
+        data: productOwner,
+    });
+}
+
+export function makeDeleteProductOwnerRequest(id) {
+    const endpoint = `/v1/api/owners/${id}`;
+    return axios({
+        method: "delete",
+        url: endpoint,
+    });
+}
