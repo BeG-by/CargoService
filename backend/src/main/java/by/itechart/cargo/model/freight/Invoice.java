@@ -56,7 +56,7 @@ public class Invoice implements Serializable, Cloneable {
     @Column(name = "consignee", nullable = false)
     private String consignee;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_product_owner", nullable = false)
     private ProductOwner productOwner;
 

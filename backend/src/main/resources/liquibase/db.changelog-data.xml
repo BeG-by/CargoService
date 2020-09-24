@@ -1,0 +1,266 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Insert data for tests -->
+
+    <changeSet id="insert_client_company" author="eugene.begun">
+
+        <insert tableName="client_company">
+            <column name="name" value="iTechArt"/>
+            <column name="type" value="JP"/>
+            <column name="pan" value="111111111"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Tolstovo"/>
+            <column name="house" value="13"/>
+            <column name="flat" value="3"/>
+            <column name="email" value="example-itechart@gmail.com"/>
+        </insert>
+
+        <insert tableName="client_company">
+            <column name="name" value="Google"/>
+            <column name="type" value="JP"/>
+            <column name="pan" value="123456789"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Gikalo"/>
+            <column name="house" value="3"/>
+            <column name="flat" value="2"/>
+            <column name="email" value="google-ex@gmail.com"/>
+        </insert>
+
+        <insert tableName="client_company">
+            <column name="name" value="Yandex"/>
+            <column name="type" value="JP"/>
+            <column name="pan" value="987654321"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Nemiga"/>
+            <column name="house" value="53"/>
+            <column name="flat" value="31"/>
+            <column name="email" value="yandex-ex@yandex.com"/>
+        </insert>
+
+    </changeSet>
+
+
+    <changeSet id="insert_users" author="eugene.begun">
+
+        <insert tableName="user">
+            <column name="login" value="root"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Robert"/>
+            <column name="patronymic" value="patronymic"/>
+            <column name="surname" value="Stark"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="dispatcher"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Jessika"/>
+            <column name="patronymic" value="Ivanovna"/>
+            <column name="surname" value="Parker"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="manager"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Natasha"/>
+            <column name="patronymic" value="Viktorovna"/>
+            <column name="surname" value="Romanovna"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="admin"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Eugene"/>
+            <column name="patronymic" value="Bib"/>
+            <column name="surname" value="Admin"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="driver"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Petr"/>
+            <column name="patronymic" value="Petrovich"/>
+            <column name="surname" value="Petrov"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="owner"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Mark"/>
+            <column name="patronymic" value="Markovich"/>
+            <column name="surname" value="Markov"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="login" value="yandex_admin"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Vika"/>
+            <column name="patronymic" value="Ivanova"/>
+            <column name="surname" value="Vikova"/>
+            <column name="id_client_company" value="3"/>
+        </insert>
+
+
+        <insert tableName="role">
+            <column name="role" value="SYSADMIN"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="DISPATCHER"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="MANAGER"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="DRIVER"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="role" value="OWNER"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="1"/>
+            <column name="id_role" value="1"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="2"/>
+            <column name="id_role" value="2"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="3"/>
+            <column name="id_role" value="3"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="4"/>
+            <column name="id_role" value="4"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="5"/>
+            <column name="id_role" value="5"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="6"/>
+            <column name="id_role" value="6"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="7"/>
+            <column name="id_role" value="4"/>
+        </insert>
+
+    </changeSet>
+
+    <!--Data for test-->
+    <changeSet id="insert_product_owner" author="eugene.begun">
+
+        <insert tableName="product_owner">
+            <column name="name" value="Евроопт"/>
+            <column name="type" value="JP"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Street"/>
+            <column name="house" value="100"/>
+            <column name="flat" value="33"/>
+            <column name="registration_date" value="2020-01-01"/>
+            <column name="phone" value="+3753233213"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="auto">
+            <column name="mark" value="VAZ2107"/>
+            <column name="type" value="EURO_TRACK"/>
+            <column name="id_client_company" value="2"/>
+        </insert>
+
+        <insert tableName="driver">
+            <column name="name" value="driver-name-test"/>
+            <column name="surname" value="driver-surname-test"/>
+            <column name="patronymic" value="driver-pat-test"/>
+            <column name="passport" value="passport-test-тест"/>
+            <column name="id_auto" value="1"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
+        <insert tableName="invoice">
+            <column name="number" value="TTN321332"/>
+            <column name="status" value="REGISTERED"/>
+            <column name="registration_date" value="2020-01-01"/>
+            <column name="shipper" value="OOO 'Cool company', Minsk, Nemiga 3 "/>
+            <column name="consignee" value="OOO 'Cool warehouse', Smolensk, Lenina 5 "/>
+            <column name="id_driver" value="1"/>
+            <column name="id_user_registration" value="1"/>
+            <column name="id_client_company" value="1"/>
+            <column name="id_product_owner" value="1"/>
+        </insert>
+
+        <insert tableName="product">
+            <column name="name" value="beer"/>
+            <column name="quantity" value="5"/>
+            <column name="measure" value="bochka"/>
+            <column name="price" value="100"/>
+            <column name="mass" value="100 kg"/>
+            <column name="status" value="ACCEPTED"/>
+            <column name="id_invoice" value="1"/>
+        </insert>
+
+    </changeSet>
+    <!--Data for test-->
+    <changeSet id="1.0.8" author="eugene.begun">
+        <insert tableName="product_owner">
+            <column name="name" value="Подвезем"/>
+            <column name="type" value="SP"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Street"/>
+            <column name="house" value="100"/>
+            <column name="flat" value="33"/>
+            <column name="registration_date" value="2020-01-01"/>
+            <column name="phone" value="+3753233213"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+    </changeSet>
+
+    <!--Data for test-->
+    <changeSet id="1.0.9" author="marianna.patrusova">
+
+        <insert tableName="waybill">
+            <column name="id_invoice" value="1"/>
+            <column name="id_auto" value="1"/>
+            <column name="departure_date" value="2020-09-10"/>
+            <column name="arrival_date" value="2020-09-11"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+        <insert tableName="point">
+            <column name="id_waybill" value="1"/>
+            <column name="place" value="Smolensk"/>
+            <column name="passed" value="FALSE"/>
+            <column name="passage_date" value="null"/>
+        </insert>
+
+    </changeSet>
+
+
+</databaseChangeLog>
