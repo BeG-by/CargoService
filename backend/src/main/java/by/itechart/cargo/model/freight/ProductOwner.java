@@ -4,13 +4,10 @@ import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.CompanyType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product_owner")
+@Builder
 public class ProductOwner implements Serializable, Cloneable {
 
     @Id
@@ -28,13 +26,11 @@ public class ProductOwner implements Serializable, Cloneable {
     private Long id;
 
     @Column(name = "name")
-    @NotBlank(message = "Password is mandatory")
-    @Size(max = 64 , message = "Name is too long (max is 64)")
     private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    //todo: enum validation
+    @Type(type = "client_company_type")     //todo: rename on refactor stage;
     private CompanyType type;
 
     @Embedded
@@ -44,7 +40,6 @@ public class ProductOwner implements Serializable, Cloneable {
             @AttributeOverride(name = "street", column = @Column(nullable = false)),
             @AttributeOverride(name = "house", column = @Column(nullable = false)),
     })
-    @Valid
     private Address address;
 
     @Column(name = "registration_date", nullable = false)
@@ -52,7 +47,6 @@ public class ProductOwner implements Serializable, Cloneable {
     private LocalDate registrationDate;
 
     @Column(name = "phone")
-    @Size(max = 64 , message = "Phone is too long (max is 64)")
     private String phone;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

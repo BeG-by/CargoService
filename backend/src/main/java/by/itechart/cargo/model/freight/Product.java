@@ -22,22 +22,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product")
-@TypeDef(
-        name = "product_status",
-        typeClass = EnumTypePostgreSql.class
-)
-@TypeDef(
-        name = "mass_measure",
-        typeClass = EnumTypePostgreSql.class
-)
-@TypeDef(
-        name = "quantity_measure",
-        typeClass = EnumTypePostgreSql.class
-)
-@TypeDef(
-        name = "currency",
-        typeClass = EnumTypePostgreSql.class
-)
+@TypeDef(name = "product_status", typeClass = EnumTypePostgreSql.class)
+@TypeDef(name = "mass_measure", typeClass = EnumTypePostgreSql.class)
+@TypeDef(name = "quantity_measure", typeClass = EnumTypePostgreSql.class)
+@TypeDef(name = "currency", typeClass = EnumTypePostgreSql.class)
 public class Product implements Serializable, Cloneable {
 
     @Id

@@ -570,7 +570,7 @@
     <changeSet id="1.0.7" author="eugene.begun">
 
         <insert tableName="product_owner">
-            <column name="name" value="Подвезем"/>
+            <column name="name" value="Samsung"/>
             <column name="type" value="SP"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
@@ -612,9 +612,9 @@
     </changeSet>
 
     <!--Data for test-->
-    <changeSet id="1.0.8" author="eugene.begun">
+    <changeSet id="1.0.8" author="vladilav.mironuk">
         <insert tableName="product_owner">
-            <column name="name" value="Подвезем"/>
+            <column name="name" value="5-Element"/>
             <column name="type" value="SP"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>

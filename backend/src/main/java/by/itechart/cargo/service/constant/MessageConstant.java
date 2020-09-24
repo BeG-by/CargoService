@@ -14,5 +14,5 @@ public interface MessageConstant {
 
     String AUTO_NOT_FOUND_MESSAGE = "Auto not found";
 
-
+    String PRODUCT_OWNER_NOT_FOUND_MESSAGE = "Product owner not found";
 }
