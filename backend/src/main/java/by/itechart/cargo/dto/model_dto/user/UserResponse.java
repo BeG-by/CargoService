@@ -26,6 +26,8 @@ public class UserResponse {
     private LocalDate birthday;
     private Address address;
     private String email;
+    private String passport;
+    private String status;
     private Set<String> roles;
 
 
@@ -39,6 +41,8 @@ public class UserResponse {
                 .birthday(user.getBirthday())
                 .address(user.getAddress())
                 .email(user.getEmail())
+                .passport(user.getPassport())
+                .status(user.getStatus().toString())
                 .roles(user.getRoles()
                         .stream()
                         .map(r-> r.getRole().toString())

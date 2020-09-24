@@ -1,13 +1,14 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.Driver;
+
 import java.util.List;
 
 public interface DriverService {
 
-    List<Driver> findAll();
+    List<UserResponse> findAll();
 
-    Driver findById(long id) throws NotFoundException;
+    UserResponse findById(long id) throws NotFoundException;
 
 }

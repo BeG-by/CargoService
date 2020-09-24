@@ -10,7 +10,6 @@ import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.enumeration.Status;
-import by.itechart.cargo.model.freight.Driver;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.model.freight.ProductOwner;
 import by.itechart.cargo.repository.*;
@@ -35,7 +34,6 @@ import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOU
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
-    private final DriverRepository driverRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
@@ -44,13 +42,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               ProductOwnerRepository productOwnerRepository,
-                              DriverRepository driverRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               UserRepository userRepository,
                               JwtTokenUtil jwtTokenUtil) {
 
         this.invoiceRepository = invoiceRepository;
-        this.driverRepository = driverRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -95,7 +91,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
         invoice.setProductOwner(productOwner);
 
-        Driver driver = driverRepository
+        User driver = userRepository
                 .findById(driverId)
                 .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
 
@@ -135,7 +131,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .findById(invoiceRequest.getId())
                 .orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
 
-        Driver driver = driverRepository
+        User driver = userRepository
                 .findById(driverId)
                 .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
 

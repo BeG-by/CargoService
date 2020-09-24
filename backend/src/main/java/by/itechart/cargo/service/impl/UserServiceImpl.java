@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAll() {
         final Long companyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
-        return userRepository.findByClientCompanyId(companyId).stream().map(UserResponse::toUserResponse).collect(Collectors.toList());
+        return userRepository.findAllByClientCompanyId(companyId).stream().map(UserResponse::toUserResponse).collect(Collectors.toList());
     }
 
     @Override

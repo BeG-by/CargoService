@@ -38,6 +38,7 @@ public class UserSaveRequest {
     private String patronymic;
 
     // TODO date validation - ?
+    @NotNull(message = "Birthday is mandatory")
     private LocalDate birthday;
 
     @Valid
@@ -45,6 +46,7 @@ public class UserSaveRequest {
 
     @Email(message = "Email is not valid")
     @Size(max = 64, message = "Patronymic is too long (max is 64)")
+    @NotNull(message = "Email is mandatory")
     private String email;
 
     @NotNull

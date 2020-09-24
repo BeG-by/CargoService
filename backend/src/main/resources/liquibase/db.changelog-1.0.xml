@@ -5,7 +5,11 @@
 
     <!--  Create users table-->
     <changeSet id="1.0.0" author="vladislav.mironuk">
+
+        <sql>CREATE TYPE user_status AS ENUM('ACTIVE', 'BLOCKED')</sql>
+
         <createTable tableName="user">
+
             <column name="id_user" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -30,7 +34,7 @@
             </column>
 
             <column name="birthday" type="DATE">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="country" type="VARCHAR(64)"/>
@@ -42,6 +46,11 @@
             <column name="email" type="VARCHAR(64)">
                 <constraints nullable="false" unique="true"/>
             </column>
+
+            <column name="passport" type="VARCHAR(64)"/>
+
+            <column name="status" type="user_status" defaultValue="ACTIVE"/>
+
         </createTable>
     </changeSet>
 
@@ -91,6 +100,7 @@
     <!-- Create client company and contract table, add reference from user to company -->
     <changeSet id="1.0.3" author="vladislav.mironuk">
         <sql>CREATE TYPE client_company_type AS ENUM('SP', 'JP')</sql>
+        <sql>CREATE TYPE client_company_status AS ENUM('ACTIVE', 'BLOCKED')</sql>
 
         <createTable tableName="client_company">
             <column name="id_client_company" type="BIGSERIAL" autoIncrement="true">
@@ -125,9 +135,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="flat" type="VARCHAR(64)">
-                <constraints/>
-            </column>
+            <column name="flat" type="VARCHAR(64)"/>
 
             <column name="registration_date" type="DATE" defaultValue="NOW">
                 <constraints nullable="false"/>
@@ -136,6 +144,9 @@
             <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
+
+            <column name="status" type="client_company_status" defaultValue="ACTIVE"/>
+
         </createTable>
 
         <createTable tableName="contract">
@@ -192,7 +203,7 @@
             </column>
 
             <column name="name" type="VARCHAR(64)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="type" type="product_owner_type">
@@ -238,44 +249,12 @@
     </changeSet>
 
 
-    <!--TODO ///-->
-
-    <!--Driver, Product, Invoice, Auto-->
-    <changeSet id="1.0.6" author="eugene.begun">
-
-        <!--Driver-->
-        <createTable tableName="driver">
-
-            <column name="id_driver" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
-
-            <column name="name" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="surname" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="patronymic" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="passport" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="id_auto" type="BIGSERIAL"/>
-
-            <column name="id_client_company" type="BIGSERIAL">
-                <constraints nullable="false"/>
-            </column>
-
-        </createTable>
+    <!--Product, Invoice, Auto-->
+    <changeSet id="1.0.5" author="eugene.begun">
 
         <!--Auto-->
         <sql>CREATE TYPE auto_type AS ENUM('EURO_TRACK', 'JUMBO' , 'REFRIGERATOR')</sql>
+
         <createTable tableName="auto">
 
             <column name="id_auto" type="BIGSERIAL" autoIncrement="true">
@@ -384,19 +363,6 @@
 
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="driver"
-                                 baseColumnNames="id_auto"
-                                 constraintName="fk_driver_auto"
-                                 onDelete="CASCADE"
-                                 referencedTableName="auto"
-                                 referencedColumnNames="id_auto"/>
-
-        <addForeignKeyConstraint baseTableName="driver"
-                                 baseColumnNames="id_client_company"
-                                 constraintName="fk_client_company_driver"
-                                 onDelete="CASCADE"
-                                 referencedTableName="client_company"
-                                 referencedColumnNames="id_client_company"/>
 
         <addForeignKeyConstraint baseTableName="product"
                                  baseColumnNames="id_invoice"
@@ -409,8 +375,8 @@
                                  baseColumnNames="id_driver"
                                  constraintName="fk_driver_invoice"
                                  onDelete="CASCADE"
-                                 referencedTableName="driver"
-                                 referencedColumnNames="id_driver"/>
+                                 referencedTableName="user"
+                                 referencedColumnNames="id_user"/>
 
         <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_user_registration"
