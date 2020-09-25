@@ -569,19 +569,6 @@
     <!--Data for test-->
     <changeSet id="1.0.7" author="eugene.begun">
 
-        <insert tableName="product_owner">
-            <column name="name" value="Samsung"/>
-            <column name="type" value="SP"/>
-            <column name="country" value="Belarus"/>
-            <column name="city" value="Minsk"/>
-            <column name="street" value="Street"/>
-            <column name="house" value="100"/>
-            <column name="flat" value="33"/>
-            <column name="registration_date" value="2020-01-01"/>
-            <column name="phone" value="+3753233213"/>
-            <column name="id_client_company" value="1"/>
-        </insert>
-
         <insert tableName="auto">
             <column name="mark" value="VAZ2107"/>
             <column name="type" value="EURO_TRACK"/>
@@ -613,6 +600,20 @@
 
     <!--Data for test-->
     <changeSet id="1.0.8" author="vladilav.mironuk">
+
+        <insert tableName="product_owner">
+            <column name="name" value="IBA"/>
+            <column name="type" value="SP"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Street"/>
+            <column name="house" value="100"/>
+            <column name="flat" value="33"/>
+            <column name="registration_date" value="2020-01-01"/>
+            <column name="phone" value="+3753233213"/>
+            <column name="id_client_company" value="1"/>
+        </insert>
+
         <insert tableName="product_owner">
             <column name="name" value="5-Element"/>
             <column name="type" value="SP"/>

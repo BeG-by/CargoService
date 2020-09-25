@@ -70,9 +70,7 @@ export function ProductOwnersTable() {
     const [selectedProductOwnerId, setSelectedProductOwnerId] = useState(-1);
 
     const [productOwners, setProductOwners] = useState([]);
-    const [selectedProductOwner, setSelectedProductOwner] = useState(
-        EMPTY_PRODUCT_OWNER
-    );
+    const [selectedProductOwner, setSelectedProductOwner] = useState(EMPTY_PRODUCT_OWNER);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [toastComponent, showToastComponent] = useToast();
 
@@ -84,12 +82,10 @@ export function ProductOwnersTable() {
         }
     }
 
-
-    useEffect(() => {
-        let mounted = true
+    const updateTable = (isComponentMounted = true) => {
         makeGetAllProductOwnersRequest()
             .then((response) => {
-                if (mounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but doesn't change state)
+                if (isComponentMounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but dont change state)
                     setProductOwners(response.data)
                 }
             })
@@ -97,6 +93,11 @@ export function ProductOwnersTable() {
                 setProductOwners([]);
                 handleRequestError(err);
             })
+    }
+
+    useEffect(() => {
+        let mounted = true;
+        updateTable(mounted);
         return () => mounted = false;
     }, []);
 
@@ -126,7 +127,6 @@ export function ProductOwnersTable() {
 
     return (
         <div>
-
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
                     <Table aria-label="sticky table">
@@ -223,7 +223,8 @@ export function ProductOwnersTable() {
                 productOwnerId={selectedProductOwnerId}
                 onClose={() => {
                     setProductOwnerDialogOpen(false);
-                    setSelectedProductOwnerId(-1)
+                    setSelectedProductOwnerId(-1);
+                    updateTable();
                 }}
             />
         </div>

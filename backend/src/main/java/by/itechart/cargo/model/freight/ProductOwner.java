@@ -49,7 +49,7 @@ public class ProductOwner implements Serializable, Cloneable {
     @Column(name = "phone")
     private String phone;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_client_company", nullable = false)
     @JsonIgnore
     @ToString.Exclude

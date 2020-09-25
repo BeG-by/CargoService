@@ -4,6 +4,7 @@ import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.CompanyType;
 import by.itechart.cargo.model.freight.ProductOwner;
 import by.itechart.cargo.repository.ClientCompanyRepository;
@@ -87,6 +88,9 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     public void delete(Long id) throws NotFoundException {
         ProductOwner productOwner = productOwnerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product owner not found"));
+
+        ClientCompany clientCompany = productOwner.getClientCompany();
+        String name = clientCompany.getName();
         productOwnerRepository.delete(productOwner);
     }
 
