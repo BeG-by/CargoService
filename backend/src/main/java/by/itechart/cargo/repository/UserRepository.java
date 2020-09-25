@@ -11,11 +11,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByLogin(String login);
 
+    Optional<User> findByEmail(String email);
+
     List<User> findAllByClientCompanyId(Long clientCompanyId);
 
-    Optional<User> getByLogin(String login);
-
-    Optional<User> getByEmail(String email);
+    Optional<User> findByIdAndClientCompanyId(Long userId, Long clientCompanyId);
 
     List<User> findAllByClientCompanyIdAndRoles(Long clientCompanyId, Role role);
 

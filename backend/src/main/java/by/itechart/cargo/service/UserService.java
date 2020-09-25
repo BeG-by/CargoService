@@ -13,11 +13,11 @@ public interface UserService {
 
     UserInfoResponse findInfo();
 
+    UserResponse findById(long id) throws NotFoundException;
+
     List<UserResponse> findAll();
 
     void save(UserSaveRequest userRequest) throws AlreadyExistException;
-
-    UserResponse findById(long id) throws NotFoundException;
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
 

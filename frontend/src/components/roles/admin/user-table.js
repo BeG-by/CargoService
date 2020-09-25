@@ -31,8 +31,8 @@ const columns = [
         format: (value) => value.toFixed(2),
     },
     {
-        id: "address",
-        label: "Address",
+        id: "status",
+        label: "Status",
         minWidth: 170,
         align: "center",
     },
@@ -45,24 +45,6 @@ const columns = [
 ];
 
 
-const fullAddressString = (address) => {
-
-    if (address === null) {
-        return "";
-    }
-
-    let props = [];
-
-    for (let prop in address) {
-        if (address[prop] !== null) {
-            props.push(address[prop])
-        }
-    }
-
-    return props.join(", ")
-
-};
-
 const useStyles = makeStyles({
     root: {
         width: "100%",
@@ -72,7 +54,7 @@ const useStyles = makeStyles({
     },
 });
 
-function UserTableContent() {
+export function UserTable() {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -125,6 +107,10 @@ function UserTableContent() {
                         {users
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((user) => {
+
+                                let status = user.status.charAt(0) + user.status.substring(1).toLowerCase();
+                                let roles = user.roles.map(role => role.charAt(0) + role.substring(1).toLowerCase());
+                                
                                 return (
                                     <TableRow
                                         onClick={() => {
@@ -145,13 +131,13 @@ function UserTableContent() {
                                             {user.patronymic}
                                         </TableCell>
                                         <TableCell key={columns[3].id} align={columns[3].align}>
-                                            {user.roles}
+                                            {roles}
                                         </TableCell>
                                         <TableCell key={columns[4].id} align={columns[3].align}>
                                             {user.birthday}
                                         </TableCell>
                                         <TableCell key={columns[5].id} align={columns[4].align}>
-                                            {fullAddressString(user.address)}
+                                            {status}
                                         </TableCell>
                                         <TableCell key={columns[6].id} align={columns[5].align}>
                                             {user.email}
@@ -164,7 +150,7 @@ function UserTableContent() {
             </TableContainer>
 
             <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[10, 15, 20]}
                 component="div"
                 count={users.length}
                 rowsPerPage={rowsPerPage}
@@ -186,6 +172,4 @@ function UserTableContent() {
 }
 
 
-export default function UserTable() {
-    return <BodyWrapper content={UserTableContent}/>
-}
+export default () => <BodyWrapper content={UserTable}/>

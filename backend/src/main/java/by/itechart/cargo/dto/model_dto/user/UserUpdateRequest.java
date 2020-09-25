@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -47,6 +48,12 @@ public class UserUpdateRequest {
     @Email(message = "Email is not valid")
     @Size(max = 64, message = "Patronymic is too long (max is 64)")
     private String email;
+
+    @Size(max = 64, message = "Passport is too long (max is 64)")
+    private String passport;
+
+    //TODO Validation
+    private String status;
 
     @NotNull
     // TODO Enum validations - ?

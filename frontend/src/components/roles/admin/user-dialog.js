@@ -9,9 +9,8 @@ import {getUserById, updateUser} from "./request-util";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import UserDatePicker from "./user-date-picker";
-import UserTypeSelector from "./user-role-selector";
+import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
 import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
 
 
 const EMPTY_USER = {
@@ -21,6 +20,7 @@ const EMPTY_USER = {
     name: "",
     surname: "",
     patronymic: "",
+    passport: "",
     roles: "",
     birthday: "",
     address: {
@@ -29,7 +29,8 @@ const EMPTY_USER = {
         street: "",
         house: "",
     },
-    email: ""
+    email: "",
+    status: ""
 };
 
 
@@ -49,7 +50,6 @@ const UserDialog = (props) => {
                             house: "",
                         }
                     }
-                    console.log(res.data)
                     setUser(res.data);
                 })
         }
@@ -82,13 +82,15 @@ const UserDialog = (props) => {
                         initialValues={{
                             id: userId,
                             login: user.login,
-                            password: "",
+                            password: user.password,
                             name: user.name,
                             surname: user.surname,
                             patronymic: user.patronymic,
                             role: user.roles,
                             birthday: user.birthday,
                             email: user.email,
+                            passport: user.passport,
+                            status: user.status,
                             country: user.address.country,
                             city: user.address.city,
                             street: user.address.street,
@@ -99,27 +101,31 @@ const UserDialog = (props) => {
                             const user = {
                                 id: values.id,
                                 login: values.login,
-                                password: "",
+                                password: values.password,
                                 name: values.name,
                                 surname: values.surname,
                                 patronymic: values.patronymic,
                                 roles: values.role,
                                 birthday: values.birthday,
                                 email: values.email,
+                                passport: values.passport,
+                                status: values.status,
                                 address: {
                                     country: values.country,
                                     city: values.city,
                                     street: values.street,
-                                    house: values.house
+                                    house: values.house,
+                                    flat: values.flat
                                 }
-                            }
-
-                            console.log(user)
+                            };
 
                             updateUser(user)
-                                .then(props.history.push("/main"))
+                                .then(res => {
+                                    props.history.push("/info");
+                                    props.history.push("/users");
+                                    alert(res.data);
+                                })
                                 .catch(error => alert(error + error.data))
-
 
                         }}
                     >
@@ -157,11 +163,24 @@ const UserDialog = (props) => {
                                         label={"Patronymic"}
                                         formikFieldName={"patronymic"}
                                     />
+
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"passport"}
+                                        label={"Passport"}
+                                        formikFieldName={"passport"}
+                                    />
                                     <UserTypeSelector
                                         formikProps={formProps}
                                         id={"role"}
                                         label={"Role"}
                                         formikFieldName={"role"}
+                                    />
+                                    <UserStatusSelector
+                                        formikProps={formProps}
+                                        id={"status"}
+                                        label={"Status"}
+                                        formikFieldName={"status"}
                                     />
                                     <UserDatePicker
                                         formikProps={formProps}
@@ -197,6 +216,12 @@ const UserDialog = (props) => {
                                         id={"house"}
                                         label={"House"}
                                         formikFieldName={"house"}
+                                    />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"flat"}
+                                        label={"Flat"}
+                                        formikFieldName={"flat"}
                                     />
                                     <Button
                                         variant="contained"

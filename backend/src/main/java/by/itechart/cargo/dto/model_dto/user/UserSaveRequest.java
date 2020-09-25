@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserSaveRequest {
 
-
     @NotBlank(message = "Login is mandatory")
     @Size(max = 64, message = "Login is too long (max is 64)")
     private String login;
@@ -49,6 +48,9 @@ public class UserSaveRequest {
     @NotNull(message = "Email is mandatory")
     private String email;
 
+    @Size(max = 64, message = "Passport is too long (max is 64)")
+    private String passport;
+
     @NotNull
     // TODO Enum validations - ?
     private Set<String> roles;
@@ -63,6 +65,7 @@ public class UserSaveRequest {
                 .birthday(birthday)
                 .address(address)
                 .email(email)
+                .passport(passport)
                 .build();
     }
 
