@@ -137,6 +137,4 @@
             <column name="id_invoice" value="2"/>
         </insert>
     </changeSet>
-
-
 </databaseChangeLog>

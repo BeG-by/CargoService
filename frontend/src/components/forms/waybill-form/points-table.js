@@ -12,9 +12,9 @@ import CheckIcon from "@material-ui/icons/Check";
 import fetchFieldFromObject from "../fetch-field-from-object";
 
 const columns = [
-    { label: "Place", id: "place", minWidth: 200 },
-    { label: "Passage Date", id: "passageDate", minWidth: 250 },
-    { label: "Passed", id: "passed", minWidth: 200 },
+    { label: "Place", id: "place", minWidth: 150 },
+    { label: "Passage Date", id: "passageDate", minWidth: 150 },
+    { label: "Passed", id: "passed", minWidth: 150 },
 ];
 
 const useStyles = makeStyles({
@@ -39,6 +39,7 @@ export default (props) => {
     };
 
     const handleTableRowClick = (point) => {
+        alert(point.idx);
         onRowClick(point);
     };
 
@@ -80,7 +81,7 @@ export default (props) => {
                                         {columns.map((column) => {
                                             return (
                                                 <TableCell key={column.id}>
-                                                    {column.id === 'passed' && fetchFieldFromObject(point, column.id) !== null
+                                                    {column.id === 'passed' && fetchFieldFromObject(point, column.id)
                                                         ? <CheckIcon/>
                                                         : fetchFieldFromObject(point, column.id)}
                                                 </TableCell>

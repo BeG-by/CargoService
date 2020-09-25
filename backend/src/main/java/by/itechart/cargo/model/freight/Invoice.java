@@ -56,14 +56,14 @@ public class Invoice implements Serializable, Cloneable {
     @Column(name = "consignee", nullable = false)
     private String consignee;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_product_owner", nullable = false)
     private ProductOwner productOwner;
 
     @JoinColumn(name = "id_driver", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private Driver driver;
+    @JsonManagedReference(value = "driver_invoice")
+    private User driver;
 
     @OneToOne(mappedBy = "invoice")
     @JsonIgnore

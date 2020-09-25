@@ -7,13 +7,14 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {SignoutButton} from "./buttons/signout-button";
-import {SigninButton} from "./buttons/signin-button";
+import {SignoutButton} from "../buttons/signout-button";
+import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {changeUserAndCompany} from "../store/actions";
+import {changeUserAndCompany} from "../../store/actions";
+import {DRAWER_WITH} from "../../pages/body-wrapper";
 
-let drawerWidth;
+const drawerWidth = DRAWER_WITH;
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -83,7 +84,6 @@ const getUserInfoRequest = () => {
 
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
-    drawerWidth = props.drawerWidth;
     const user = props.user;
     const isAuthenticate = localStorage.getItem("authorization") !== null;
     const headerText = "Manage your cargo with convenient digital tools";

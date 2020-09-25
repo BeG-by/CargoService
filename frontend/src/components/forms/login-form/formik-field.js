@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import '../forms.css';
-import {ErrorMsg} from "../../parts/error-message";
+import {ErrorMsg} from "../../parts/layout/error-message";
 
 export const FormikField = (props) => {
     return (

@@ -1,28 +1,40 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import FormikField from "../../roles/sysadmin/formik-field";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import {PointFormValidation} from "./waybill-form-validation";
 
 export default (props) => {
-    const { initPointState, onSubmit, onClose } = props;
+    const { initPointState, onSubmit, onClose, onDelete } = props;
 
     const handleSubmit = (values) => {
+        let pointId;
+        if (initPointState.id === 0) {
+            pointId = null;
+        } else {
+            pointId = initPointState.id;
+        }
         const point = {
             place: values.place,
             passed: values.passed,
             passageDate: values.passageDate,
             waybillId: values.waybillId,
+            id: pointId
         };
-        point.id = initPointState.id;
+        point.idx = initPointState.idx;
         onSubmit(point);
     };
+
+    const handleDelete = () => {
+        onDelete(initPointState.idx);
+    }
 
     return (
         <Formik
             enableReinitialize
             initialValues={initPointState}
             onSubmit={handleSubmit}
+            validationSchema={PointFormValidation}
         >
             {(formProps) => (
                 <Form>
@@ -32,18 +44,26 @@ export default (props) => {
                         label={"Place"}
                         formikFieldName={"place"}
                     />
-                    <Grid style={{ marginTop: 15 }} container justify="space-around">
+                    <div className="btn-row">
                         <Button
                             variant="contained"
                             color="primary"
                             type="submit"
                         >
-                            Save
+                            Add
                         </Button>
-                        <Button variant="contained" onClick={onClose}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+
+                            onClick={handleDelete}>Delete</Button>
+                        <Button
+                            variant="outlined"
+                            color='primary'
+                            onClick={onClose}>
                             Cancel
                         </Button>
-                    </Grid>
+                    </div>
                 </Form>
             )}
         </Formik>

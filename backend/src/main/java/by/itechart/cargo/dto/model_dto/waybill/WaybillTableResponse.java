@@ -11,14 +11,20 @@ import lombok.NoArgsConstructor;
 public class WaybillTableResponse {
 
     private long id;
+    private long invoiceId;
+    private String invoiceNumber;
+    private String auto;
     private String departureDate;
     private String arrivalDate;
 
     public WaybillTableResponse toWaybillTableResponse(Waybill waybill) {
         WaybillTableResponse response = new WaybillTableResponse();
         response.setId(waybill.getId());
-        response.setDepartureDate(waybill.getDepartureDate().toString());
-        response.setArrivalDate(waybill.getArrivalDate().toString());
+        response.setInvoiceId(waybill.getInvoice().getId());
+        response.setInvoiceNumber(waybill.getInvoice().getNumber());
+        response.setAuto(waybill.getAuto().getMark() + " " + waybill.getAuto().getAutoType());
+        response.setDepartureDate(waybill.getDepartureDate() == null ? null : waybill.getDepartureDate().toString());
+        response.setArrivalDate(waybill.getArrivalDate() == null ? null : waybill.getArrivalDate().toString());
         return response;
     }
 }

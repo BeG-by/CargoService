@@ -2,7 +2,10 @@ package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.CompanyType;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
-import by.itechart.cargo.model.freight.*;
+import by.itechart.cargo.model.freight.Auto;
+import by.itechart.cargo.model.freight.Invoice;
+import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.freight.Waybill;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -28,6 +31,11 @@ import java.util.Objects;
         name = "client_company_type",
         typeClass = EnumTypePostgreSql.class
 )
+@TypeDef(
+        name = "client_company_status",
+        typeClass = EnumTypePostgreSql.class
+)
+
 public class ClientCompany implements Serializable, Cloneable {
 
     @Id
@@ -52,8 +60,7 @@ public class ClientCompany implements Serializable, Cloneable {
             @AttributeOverride(name = "country", column = @Column(nullable = false)),
             @AttributeOverride(name = "city", column = @Column(nullable = false)),
             @AttributeOverride(name = "street", column = @Column(nullable = false)),
-            @AttributeOverride(name = "house", column = @Column(nullable = false)),
-            @AttributeOverride(name = "flat", column = @Column(nullable = false))
+            @AttributeOverride(name = "house", column = @Column(nullable = false))
     })
     private Address address;
 
@@ -62,6 +69,11 @@ public class ClientCompany implements Serializable, Cloneable {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Type(type = "client_company_status")
+    private Status status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonIgnore
@@ -86,10 +98,6 @@ public class ClientCompany implements Serializable, Cloneable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
     @JsonIgnore
     private List<Auto> autos;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
-    @JsonIgnore
-    private List<Driver> drivers;
 
 
     @Override
@@ -123,5 +131,11 @@ public class ClientCompany implements Serializable, Cloneable {
     public int hashCode() {
         return Objects.hash(id, name, type, payerAccountNumber, address, registrationDate, email);
     }
+
+    public enum Status {
+        ACTIVE,
+        BLOCKED
+    }
+
 
 }

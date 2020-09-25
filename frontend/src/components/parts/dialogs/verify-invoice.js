@@ -2,14 +2,17 @@ import {OkButton} from "../buttons/ok-button";
 import React from "react";
 import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../../roles/manager/request-utils";
+import {withRouter} from "react-router-dom"
+
 
 export const AssignVerificationInvoice = (props) => {
+    console.log(props);
     let inv = props.invoice;
     const [invoice, setInvoice] = React.useState({id: inv.id, status: "ACCEPTED"});
 
     const handleVerify = async () => {
         await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
+        props.history.push("/invoice")
     }
 
     return (
@@ -44,3 +47,26 @@ export const RejectVerificationInvoice = (props) => {
             </div>
         </div>);
 }
+
+export const CloseInvoice = (props) => {
+    let inv = props.invoice;
+    const [invoice, setInvoice] = React.useState({id: inv.id, status: "CLOSED"});
+
+    const handleClose = async () => {
+        await updateInvoiceStatus(invoice);
+        window.location.href = "/main";
+    }
+
+    return (
+        <div className="form-signin">
+            <div>
+                <i style={{fontSize: 16}}>Close the invoice?</i>
+                <div className='btn-row'>
+                    <OkButton content='OK' handleClick={handleClose}/>
+                    <CancelButton content='Cancel' handleClick={props.handleClose}/>
+                </div>
+            </div>
+        </div>);
+}
+
+export default withRouter(AssignVerificationInvoice)

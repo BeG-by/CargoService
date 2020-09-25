@@ -8,14 +8,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices, getInvoiceById, saveWaybill} from "./request-utils";
+import {getAllInvoices, getInvoiceById} from "./request-utils";
 import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
-import {DialogWindow} from "../../parts/dialog";
+import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {WaybillError} from "../../forms/waybill-form/waybill-form-error";
 import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
@@ -148,7 +147,7 @@ function InvoicesTableContent() {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
                     count={invoices.length}
                     rowsPerPage={rowsPerPage}
@@ -185,6 +184,5 @@ function InvoicesTableContent() {
         </div>
     );
 }
-
 
 export default () => <BodyWrapper content={InvoicesTableContent}/>

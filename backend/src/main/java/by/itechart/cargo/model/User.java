@@ -1,10 +1,13 @@
 package by.itechart.cargo.model;
 
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import by.itechart.cargo.model.freight.Invoice;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,6 +21,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Table(name = "user", schema = "public")
+@TypeDef(
+        name = "user_status",
+        typeClass = EnumTypePostgreSql.class
+)
 public class User implements Serializable, Cloneable {
 
     @Id
@@ -29,6 +36,7 @@ public class User implements Serializable, Cloneable {
     private String login;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(name = "name", nullable = false)
@@ -40,21 +48,29 @@ public class User implements Serializable, Cloneable {
     @Column(name = "patronymic", nullable = false)
     private String patronymic;
 
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
     @Embedded
     private Address address;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "passport")
+    private String passport;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Type(type = "user_status")
+    private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
     @JsonIgnore
     private ClientCompany clientCompany;
 
-    @JsonManagedReference (value = "user_role")
+    @JsonManagedReference(value = "user_role")
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "user_role",
@@ -64,7 +80,7 @@ public class User implements Serializable, Cloneable {
     private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "registrationUser")
-    @JsonBackReference (value = "reg_invoice")
+    @JsonBackReference(value = "reg_invoice")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Invoice> registrationInvoice;
@@ -74,5 +90,16 @@ public class User implements Serializable, Cloneable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Invoice> checkingInvoice;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "driver")
+    @JsonBackReference(value = "driver_invoice")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Invoice> driver;
+
+    public enum Status {
+        ACTIVE,
+        BLOCKED,
+    }
 
 }

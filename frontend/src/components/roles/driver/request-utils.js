@@ -21,12 +21,12 @@ export async function getPointById(id) {
     });
 }
 
-export async function updatePoints(waybill) {
+export async function updatePoint(point) {
     const endpoint = `/v1/api/waybills/points`;
     return await axios({
         method: "post",
         url: endpoint,
-        data: waybill,
+        data: point,
     }).then((res) => {
         return true;
     });

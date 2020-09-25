@@ -1,8 +1,7 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.Driver;
-import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.service.DriverService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +22,12 @@ public class DriverController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Driver>> findAll() {
+    public ResponseEntity<List<UserResponse>> findAll() {
         return ResponseEntity.ok(driverService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Driver> findById(@PathVariable long id) throws NotFoundException {
+    public ResponseEntity<UserResponse> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(driverService.findById(id));
     }
 

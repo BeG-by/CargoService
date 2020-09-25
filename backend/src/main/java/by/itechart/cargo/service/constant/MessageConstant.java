@@ -14,5 +14,10 @@ public interface MessageConstant {
 
     String AUTO_NOT_FOUND_MESSAGE = "Auto not found";
 
+
     String PRODUCT_OWNER_NOT_FOUND_MESSAGE = "Product owner not found";
+
+    String POINT_NOT_FOUND_MESSAGE = "Point not found";
+
+    String WAYBILL_NOT_FOUND_MESSAGE = "Waybill not found";
 }

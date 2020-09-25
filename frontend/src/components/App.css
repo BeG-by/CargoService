@@ -12,6 +12,17 @@
     color: white;
 }
 
+.main-body-field {
+    display: block;
+    flex-direction: column;
+    padding: 70px 5px;
+    margin: 20px auto;
+    color: white;
+    background: rgba(0, 0, 0, 0.4);
+    max-width: 100%;
+    border-radius: 30px;
+}
+
 /*Reset default styles for <NavLink>*/
 
 .nav-link-item {

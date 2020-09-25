@@ -5,7 +5,11 @@
 
     <!--  Create users table-->
     <changeSet id="1.0.0" author="vladislav.mironuk">
+
+        <sql>CREATE TYPE user_status AS ENUM('ACTIVE', 'BLOCKED')</sql>
+
         <createTable tableName="user">
+
             <column name="id_user" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -29,21 +33,31 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="birthday" type="DATE"/>
+            <column name="birthday" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="country" type="VARCHAR(64)"/>
             <column name="city" type="VARCHAR(64)"/>
             <column name="street" type="VARCHAR(64)"/>
             <column name="house" type="VARCHAR(64)"/>
             <column name="flat" type="VARCHAR(64)"/>
-            <column name="email" type="VARCHAR(64)"/>
+
+            <column name="email" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="passport" type="VARCHAR(64)"/>
+
+            <column name="status" type="user_status" defaultValue="ACTIVE"/>
+
         </createTable>
     </changeSet>
 
     <!--  Create roles table-->
     <changeSet id="1.0.1" author="vladislav.mironuk">
-        <sql>CREATE TYPE role_enum AS ENUM('SYSADMIN', 'ADMIN', 'MANAGER', 'DISPATCHER', 'DRIVER',
-            'CLIENT_COMPANY_OWNER')
-        </sql>
+        <sql>CREATE TYPE role_enum AS ENUM('SYSADMIN', 'ADMIN', 'MANAGER', 'DISPATCHER', 'DRIVER', 'OWNER')</sql>
+
         <createTable tableName="role">
             <column name="id_role" type="INTEGER" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -86,14 +100,15 @@
     <!-- Create client company and contract table, add reference from user to company -->
     <changeSet id="1.0.3" author="vladislav.mironuk">
         <sql>CREATE TYPE client_company_type AS ENUM('SP', 'JP')</sql>
+        <sql>CREATE TYPE client_company_status AS ENUM('ACTIVE', 'BLOCKED')</sql>
 
         <createTable tableName="client_company">
             <column name="id_client_company" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" unique="true"/>
             </column>
 
             <column name="name" type="VARCHAR(64)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
 
             <column name="type" type="client_company_type">
@@ -101,7 +116,7 @@
             </column>
 
             <column name="PAN" type="VARCHAR(9)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
 
             <column name="country" type="VARCHAR(64)">
@@ -120,17 +135,18 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="flat" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="flat" type="VARCHAR(64)"/>
 
             <column name="registration_date" type="DATE" defaultValue="NOW">
                 <constraints nullable="false"/>
             </column>
 
             <column name="email" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
+
+            <column name="status" type="client_company_status" defaultValue="ACTIVE"/>
+
         </createTable>
 
         <createTable tableName="contract">
@@ -176,106 +192,14 @@
     </changeSet>
 
 
-    <!-- Insert data for tests -->
-    <changeSet id="1.0.4" author="vladislav.mironuk">
-        <insert tableName="client_company">
-            <column name="name" value="Google"/>
-            <column name="type" value="SP"/>
-            <column name="pan" value="123456789"/>
-            <column name="country" value="Belarus"/>
-            <column name="city" value="Minsk"/>
-            <column name="street" value="Gikalo"/>
-            <column name="house" value="3"/>
-            <column name="flat" value="2"/>
-            <column name="email" value="tractor@email.com"/>
-        </insert>
-
-        <insert tableName="user">
-            <column name="login" value="root"/>
-            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
-            <column name="name" value="Robert"/>
-            <column name="patronymic" value="patronymic"/>
-            <column name="surname" value="Stark"/>
-            <column name="id_client_company" value="1"/>
-        </insert>
-
-        <insert tableName="user">
-            <column name="login" value="dispatcher"/>
-            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
-            <column name="name" value="Jessika"/>
-            <column name="patronymic" value="Ivanovna"/>
-            <column name="surname" value="Parker"/>
-            <column name="id_client_company" value="1"/>
-        </insert>
-
-        <insert tableName="user">
-            <column name="login" value="manager"/>
-            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
-            <column name="name" value="Natasha"/>
-            <column name="patronymic" value="Viktorovna"/>
-            <column name="surname" value="Romanovna"/>
-            <column name="id_client_company" value="1"/>
-        </insert>
-
-        <insert tableName="user">
-            <column name="login" value="admin"/>
-            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
-            <column name="name" value="Eugene"/>
-            <column name="patronymic" value="Bib"/>
-            <column name="surname" value="Admin"/>
-            <column name="id_client_company" value="1"/>
-        </insert>
-
-        <insert tableName="role">
-            <column name="role" value="SYSADMIN"/>
-        </insert>
-
-        <insert tableName="role">
-            <column name="role" value="DISPATCHER"/>
-        </insert>
-
-        <insert tableName="role">
-            <column name="role" value="MANAGER"/>
-        </insert>
-
-        <insert tableName="role">
-            <column name="role" value="ADMIN"/>
-        </insert>
-
-        <insert tableName="user_role">
-            <column name="id_user" value="1"/>
-            <column name="id_role" value="1"/>
-        </insert>
-
-        <insert tableName="user_role">
-            <column name="id_user" value="2"/>
-            <column name="id_role" value="2"/>
-        </insert>
-
-        <insert tableName="user_role">
-            <column name="id_user" value="3"/>
-            <column name="id_role" value="3"/>
-        </insert>
-
-        <insert tableName="user_role">
-            <column name="id_user" value="3"/>
-            <column name="id_role" value="3"/>
-        </insert>
-
-        <insert tableName="user_role">
-            <column name="id_user" value="4"/>
-            <column name="id_role" value="4"/>
-        </insert>
-    </changeSet>
-
     <!-- Product owners -->
 
-    <changeSet id="1.0.5" author="eugene.begun">
+    <changeSet id="1.0.4" author="eugene.begun">
         <sql>CREATE TYPE product_owner_type AS ENUM('SP', 'JP')</sql>
 
         <createTable tableName="product_owner">
             <column name="id_product_owner" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" unique="true"/>
             </column>
 
             <column name="name" type="VARCHAR(64)">
@@ -324,42 +248,13 @@
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
-    <!--Driver, Product, Invoice, Auto-->
-    <changeSet id="1.0.6" author="eugene.begun">
 
-        <!--Driver-->
-        <createTable tableName="driver">
-
-            <column name="id_driver" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
-
-            <column name="name" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="surname" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="patronymic" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="passport" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="id_auto" type="BIGSERIAL"/>
-
-            <column name="id_client_company" type="BIGSERIAL">
-                <constraints nullable="false"/>
-            </column>
-
-        </createTable>
+    <!--Product, Invoice, Auto-->
+    <changeSet id="1.0.5" author="eugene.begun">
 
         <!--Auto-->
         <sql>CREATE TYPE auto_type AS ENUM('EURO_TRACK', 'JUMBO' , 'REFRIGERATOR')</sql>
+
         <createTable tableName="auto">
 
             <column name="id_auto" type="BIGSERIAL" autoIncrement="true">
@@ -424,34 +319,19 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="id_waybill" type="BIGSERIAL"/>
-
             <column name="id_user_checking" type="BIGSERIAL"/>
 
             <column name="id_client_company" type="BIGSERIAL"/>
 
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="driver"
-                                 baseColumnNames="id_auto"
-                                 constraintName="fk_driver_auto"
-                                 onDelete="CASCADE"
-                                 referencedTableName="auto"
-                                 referencedColumnNames="id_auto"/>
-
-        <addForeignKeyConstraint baseTableName="driver"
-                                 baseColumnNames="id_client_company"
-                                 constraintName="fk_client_company_driver"
-                                 onDelete="CASCADE"
-                                 referencedTableName="client_company"
-                                 referencedColumnNames="id_client_company"/>
 
         <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_driver"
                                  constraintName="fk_driver_invoice"
                                  onDelete="CASCADE"
-                                 referencedTableName="driver"
-                                 referencedColumnNames="id_driver"/>
+                                 referencedTableName="user"
+                                 referencedColumnNames="id_user"/>
 
         <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_user_registration"
@@ -493,7 +373,7 @@
             </column>
 
             <column name="id_invoice" type="BIGSERIAL">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
 
             <column name="id_auto" type="BIGSERIAL">
@@ -564,7 +444,6 @@
                                  referencedColumnNames="id_waybill"/>
 
     </changeSet>
-
 
     <!--Data for test-->
     <changeSet id="1.0.7" author="eugene.begun">

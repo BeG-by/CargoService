@@ -6,17 +6,19 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import {ItemInvoiceList} from "./drawer-items/item-invoice-list";
-import {ItemWaybillList} from "./drawer-items/item-waybill-list";
-import {ItemInfo} from "./drawer-items/item-info";
-import {ItemContacts} from "./drawer-items/item-contacts";
-import {ItemSendMail} from "./drawer-items/item-send-mail";
-import {ItemClientTable} from "./drawer-items/item-clients-company";
+import {ItemInvoiceList} from "../drawer-items/item-invoice-list";
+import {ItemWaybillList} from "../drawer-items/item-waybill-list";
+import {ItemInfo} from "../drawer-items/item-info";
+import {ItemContacts} from "../drawer-items/item-contacts";
+import {ItemSendMail} from "../drawer-items/item-send-mail";
+import {ItemClientTable} from "../drawer-items/item-clients-company";
 import {connect} from "react-redux";
-import {ItemUserTable} from "./drawer-items/item-user-list";
-import ItemInvoices from "./drawer-items/item-invoices";
+import {ItemUserTable} from "../drawer-items/item-user-list";
+import ItemInvoices from "../drawer-items/item-invoices";
+import {DRAWER_WITH} from "../../pages/body-wrapper";
 
-let drawerWidth;
+
+const drawerWidth = DRAWER_WITH;
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -44,7 +46,7 @@ const mapStateToProps = (store) => {
 
 
 export const DrawerMenu = connect(mapStateToProps)((props) => {
-    drawerWidth = props.drawerWidth;
+
     const classes = useStyles();
     const theme = useTheme();
     const components = [];
