@@ -1,34 +1,39 @@
 import React from "react";
-import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
+import {makeStyles} from "@material-ui/core/styles";
+import {BodyWrapper} from "./body-wrapper";
 
-export const WelcomeBody = (props) => {
-    const classes = props.classes;
+export const useStyles = makeStyles(() => ({
+    mainParagraph: {
+        fontSize: "22px",
+        paddingTop: "20px",
+    },
+}));
+
+
+export const WelcomeBody = () => {
+    const classes = useStyles();
     return (
-        <main
-            className={clsx(classes.content, {
-                [classes.contentShift]: props.openMenu,
-            })}
-        >
-            <div className={classes.drawerHeader}/>
-            <div className={classes.mainField}>
-                <Typography
-                    variant="h4"
-                    style={{fontStyle: 'oblique'}}>
-                    Welcome!
-                </Typography>
-                <Typography
-                    className={classes.mainParagraph}
-                    paragraph>
-                    This application is ready to offer our customers easy and reliable control
-                    over the movement of the necessary goods.
-                </Typography>
-                <Typography
-                    className={classes.mainParagraph}
-                    paragraph>
-                    Please sign in to access all features you need.
-                </Typography>
-            </div>
-        </main>
+        <div className={classes.drawerHeader}>
+            <Typography
+                variant="h4"
+                style={{fontStyle: 'oblique'}}>
+                Welcome!
+            </Typography>
+            <Typography
+                className={classes.mainParagraph}
+                paragraph>
+                This application is ready to offer our customers easy and reliable control
+                over the movement of the necessary goods.
+            </Typography>
+            <Typography
+                className={classes.mainParagraph}
+                paragraph>
+                Please sign in to access all features you need.
+            </Typography>
+        </div>
+
     );
 }
+
+export default () => <BodyWrapper content={WelcomeBody}/>

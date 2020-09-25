@@ -29,6 +29,8 @@ public class JwtUserDetails implements UserDetails {
     private LocalDate birthday;
     private Address address;
     private String email;
+    private String passport;
+    private User.Status status;
     private ClientCompany clientCompany;
     private Set<Role> roles;
     private Collection<? extends GrantedAuthority> authorities;
@@ -45,6 +47,8 @@ public class JwtUserDetails implements UserDetails {
                 .birthday(birthday)
                 .address(address)
                 .email(email)
+                .passport(passport)
+                .status(status)
                 .clientCompany(clientCompany)
                 .roles(roles)
                 .build();

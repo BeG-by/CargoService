@@ -36,7 +36,7 @@ public class WaybillController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Waybill>> findById(@PathVariable long id) {
+    public ResponseEntity<Waybill> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(waybillService.findById(id));
     }
 
@@ -45,7 +45,7 @@ public class WaybillController {
         return ResponseEntity.ok(pointService.findById(id));
     }
 
-    @PostMapping("/points")
+    @PostMapping("/points") // TODO
     public ResponseEntity<String> updatePoints(@RequestBody @Valid UpdatePointsRequest request)
             throws NotFoundException {
         pointService.updatePoint(request);
@@ -53,9 +53,9 @@ public class WaybillController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid WaybillRequest waybillRequest)
+    public ResponseEntity<String> save(@RequestBody @Valid WaybillRequest waybillRequest)
             throws NotFoundException {
-        waybillService.saveOne(waybillRequest);
+        waybillService.save(waybillRequest);
         return ResponseEntity.ok("Waybill has been saved");
     }
 

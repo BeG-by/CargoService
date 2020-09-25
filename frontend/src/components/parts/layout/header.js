@@ -7,15 +7,14 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {SignoutButton} from "./buttons/signout-button";
-import {SigninButton} from "./buttons/signin-button";
+import {SignoutButton} from "../buttons/signout-button";
+import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {changeUserAndCompany} from "../store/actions";
-import {Link} from "react-router-dom";
-import '../App.css';
+import {changeUserAndCompany} from "../../store/actions";
+import {DRAWER_WITH} from "../../pages/body-wrapper";
 
-let drawerWidth;
+const drawerWidth = DRAWER_WITH;
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -82,7 +81,6 @@ const getUserInfoRequest = () => {
 
 
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
-    drawerWidth = props.drawerWidth;
     const user = props.user;
     const isAuthenticate = localStorage.getItem("authorization");
     const headerText = "Manage your cargo with convenient digital tools";
@@ -124,7 +122,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                           handleClickOpen={handleClickOpen}
                           handleClose={handleClose}/>;
     };
-
+//fixme  handleDrawerOpen?
     return (
         <AppBar className={clsx(classes.appBar, {
             [classes.appBarShift]: props.openMenu,
@@ -141,9 +139,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                     <MenuIcon/>
                 </IconButton>
                 <Typography className={classes.title} variant="h6" noWrap>
-                    <Link to='/main' className="link-item-white">
-                        CARGO APP
-                    </Link>
+                    CARGO APP
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>

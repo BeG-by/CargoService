@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveOne(@RequestBody @Valid UserSaveRequest userSaveRequest) throws AlreadyExistException {
-        userService.saveOne(userSaveRequest);
+    public ResponseEntity<String> save(@RequestBody @Valid UserSaveRequest userRequest) throws AlreadyExistException {
+        userService.save(userRequest);
         return ResponseEntity.ok("User has been saved");
     }
 
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<String> update(@RequestBody @Valid UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
         userService.update(userUpdateRequest);
         return ResponseEntity.ok("User has been updated");
     }

@@ -53,7 +53,6 @@ export const CloseInvoice = withRouter((props) => {
     const handleClose = async () => {
         await updateInvoiceStatus(invoice);
         props.history.push("/success");
-
     }
 
     return (

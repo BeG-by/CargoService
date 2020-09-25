@@ -50,10 +50,6 @@ public class Product implements Serializable, Cloneable {
     @Positive(message = "Price must be more than 1")
     private Long price;
 
-    @Column(name = "sum", nullable = false)
-    @Positive(message = "Sum must be more than 1")
-    private Long sum;
-
     @Column(name = "mass", nullable = false)
     @NotBlank(message = "Mass is mandatory")
     @Size(max = 16 , message = "Mass is too long (max is 16)")

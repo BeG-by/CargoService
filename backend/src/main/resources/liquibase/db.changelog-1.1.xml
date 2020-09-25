@@ -1,0 +1,32 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.1.0" author="vladislav.mironuk">
+        <createTable tableName="storage">
+            <column name="id_storage" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="country" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

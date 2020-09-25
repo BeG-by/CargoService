@@ -25,7 +25,7 @@ public class Role implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_role", nullable = false, updatable = false)
-    private Long roleId;
+    private Integer roleId;
 
     @Enumerated(EnumType.STRING)
     @Type(type = "role_enum")
@@ -38,9 +38,6 @@ public class Role implements Serializable, Cloneable {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
 
-    public Role(RoleType role) {
-        this.role = role;
-    }
 
     public enum RoleType {
         SYSADMIN,
@@ -48,7 +45,7 @@ public class Role implements Serializable, Cloneable {
         MANAGER,
         DISPATCHER,
         DRIVER,
-        CLIENT_COMPANY_OWNER
+        OWNER
     }
 }
 
