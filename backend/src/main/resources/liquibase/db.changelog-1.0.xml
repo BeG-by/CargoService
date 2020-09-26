@@ -307,6 +307,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="lost_quantity" type="INT"/>
+
+            <column name="comment" type="VARCHAR(500)"/>
+
             <column name="id_invoice" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
@@ -314,7 +318,7 @@
         </createTable>
 
         <!--Invoice-->
-        <sql>CREATE TYPE invoice_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED')</sql>
+        <sql>CREATE TYPE invoice_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED', 'CLOSED_WITH_ACT')</sql>
         <createTable tableName="invoice">
 
             <column name="id_invoice" type="BIGSERIAL" autoIncrement="true">
@@ -360,6 +364,8 @@
             <column name="id_user_checking" type="BIGSERIAL"/>
 
             <column name="id_client_company" type="BIGSERIAL"/>
+
+            <column name="comment" type="VARCHAR(500)"/>
 
         </createTable>
 

@@ -31,6 +31,7 @@ public class InvoiceResponse {
     private User checkingUser;
     private List<Product> products;
     private Long waybillId;
+    private String comment;
 
     public InvoiceResponse toInvoiceResponse(Invoice invoice) {
         InvoiceResponse response = new InvoiceResponse();
@@ -42,6 +43,7 @@ public class InvoiceResponse {
         response.setCloseDate(invoice.getCloseDate());
         response.setDriver(invoice.getDriver());
         response.setShipper(invoice.getShipper());
+        response.setComment(invoice.getComment());
         response.setConsignee(invoice.getConsignee());
         response.setRegistrationUser(invoice.getRegistrationUser());
         response.setCheckingUser(invoice.getCheckingUser());

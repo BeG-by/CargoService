@@ -9,10 +9,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 @Entity
@@ -38,7 +35,7 @@ public class Product implements Serializable, Cloneable {
     private String name;
 
     @Column(name = "quantity", nullable = false)
-    @Positive(message = "Quantity must be more than 1")
+    @Positive(message = "Quantity must be more than 0")
     private Integer quantity;
 
     @Column(name = "measure", nullable = false)
@@ -49,6 +46,14 @@ public class Product implements Serializable, Cloneable {
     @Column(name = "price", nullable = false)
     @Positive(message = "Price must be more than 1")
     private Long price;
+
+    @Column(name = "comment")
+    @Size(max = 500, message = "Comment length is greater than 500 symbols")
+    private String comment;
+
+    @Column(name = "lost_quantity")
+    @Positive (message = "Quantity must be more than 0")
+    private String lostQuantity;
 
     @Column(name = "mass", nullable = false)
     @NotBlank(message = "Mass is mandatory")

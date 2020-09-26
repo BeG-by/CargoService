@@ -177,8 +177,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoice.getInvoiceStatus().equals(InvoiceStatus.ACCEPTED)) {
             foundInvoice.setCheckingDate(LocalDate.now());
             foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
-        }
-        if (invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED)) {
+        } else if (invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED)
+                   || invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
         }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());

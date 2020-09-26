@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.2.0" author="marianna.patrusova">
+        <createTable tableName="act">
+            <column name="id_act" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="id_invoice" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consignee_worker" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="act_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="act"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_act_invoice"
+                                 onDelete="CASCADE"
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
+    </changeSet>
+
+</databaseChangeLog>
