@@ -19,7 +19,7 @@ public class ProductOwnerUpdateRequest implements Serializable, Cloneable {
     @Positive
     private Long id;
 
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "Name is mandatory")
     @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
 

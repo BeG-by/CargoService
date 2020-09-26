@@ -3,7 +3,7 @@ import {Formik, Form} from "formik";
 import FormikField from "../formik-field";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ProductFormValidationSchema} from "./validation";
+import {ProductFormValidationSchema} from "./validation-shema";
 import ProductMassMeasureSelector from "./product-mass-measure-selector";
 import ProductQuantityMeasureSelector from "./product-quantity-measure-selector";
 import ProductCurrencySelector from "./product-currency-selector";

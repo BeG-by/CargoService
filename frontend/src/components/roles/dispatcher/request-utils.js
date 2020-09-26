@@ -62,7 +62,6 @@ export function makeGetProductOwnerByIdRequest(id) {
 
 export function makeSaveProductOwnerRequest(productOwner) {
     const endpoint = `/v1/api/owners`;
-    console.log(productOwner);
     return axios({
         method: "post",
         url: endpoint,

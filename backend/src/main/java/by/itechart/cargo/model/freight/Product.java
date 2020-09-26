@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -60,7 +61,7 @@ public class Product implements Serializable, Cloneable {
 
     @Column(name = "price", nullable = false)
     @Positive(message = "Price must be more than 1")
-    private Long price;
+    private BigDecimal price;
 
     @Column(name = "mass", nullable = false)
     @NotBlank(message = "Mass is mandatory")

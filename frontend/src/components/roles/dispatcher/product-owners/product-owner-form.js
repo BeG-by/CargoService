@@ -14,6 +14,7 @@ import {
 import useToast from "../../../parts/toast-notification/useToast";
 import ProductOwnerTypeSelector from "./product-owner-type-selector";
 import FormDatePicker from "../form-date-picker";
+import {ProductFormValidationSchema} from "./validation-shema";
 
 const EMPTY_PRODUCT_OWNER = {
     id: -1,
@@ -97,7 +98,7 @@ export default function ProductOwnerForm(props) {
     }
 
     function handleRequestError(error) {
-        if (error.response && !error.response.status === 500) {
+        if (error.response.status < 500) {
             openToast(error.response.data, "error");
         } else {
             openToast("Cannot get response from server", "error");
@@ -140,7 +141,7 @@ export default function ProductOwnerForm(props) {
                     registrationDate: productOwner.registrationDate,
                 }}
                 onSubmit={handleSubmit}
-                // validationSchema={ClientFormValidationSchema}
+                validationSchema={ProductFormValidationSchema}
             >
                 {(formProps) => (
                     <Form>

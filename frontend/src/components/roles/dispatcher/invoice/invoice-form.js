@@ -4,7 +4,7 @@ import {Formik, Form} from "formik";
 import ItemList from "../item-list";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
-import {InvoiceFormValidation} from "./validation";
+import {InvoiceFormValidation} from "./validation-shema";
 import {Button} from "@material-ui/core";
 import {
     makeGetAllDriversRequest,
@@ -50,12 +50,50 @@ const INIT_INVOICE_STATE = {
 };
 
 export default function InvoiceForm(props) {
+    const {onClose} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
     const [drivers, setDrivers] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [productIndex, setProductIndex] = useState(0);
     const [toastComponent, showToastComponent] = useToast();
+
+    useEffect(() => {
+        updateDriversList();
+        if (props.invoiceId !== null && props.invoiceId !== undefined) {
+            fetchInitInvoiceState(props.invoiceId);
+        } else {
+            setEmptyInitInvoiceState();
+        }
+    }, [props.invoiceId, props.productOwner]);
+
+    const handleSubmit = (values) => {
+        let invoice = {};
+        invoice.invoiceNumber = values.invoiceNumber;
+        invoice.shipper = values.shipper;
+        invoice.consignee = values.consignee;
+
+        invoice.productOwnerId = initInvoice.productOwner.id;
+        invoice.products = initInvoice.products;
+        invoice.registrationDate = initInvoice.registrationDate;
+        invoice.driverId = initInvoice.driver.id;
+        invoice.status = "REGISTERED";
+
+        if (props.invoiceId !== null && props.invoiceId !== undefined) {
+            invoice.id = props.invoiceId;
+            sendInvoiceForUpdate(invoice);
+        } else {
+            sendInvoiceForSave(invoice);
+        }
+    };
+
+    const handleClose = () => {
+        setInitInvoice(INIT_INVOICE_STATE);
+        setSelectedProduct(EMPTY_PRODUCT);
+        setProductIndex(0);
+
+        onClose();
+    }
 
     const updateDriversList = async () => {
         try {
@@ -69,7 +107,9 @@ export default function InvoiceForm(props) {
 
     const sendInvoiceForSave = async (invoice) => {
         try {
-            makeSaveInvoiceRequest(invoice);
+            await makeSaveInvoiceRequest(invoice);
+            showToastComponent("Invoice has been saved");
+            handleClose();
         } catch (error) {
             handleRequestError(error);
         }
@@ -77,13 +117,15 @@ export default function InvoiceForm(props) {
 
     const sendInvoiceForUpdate = async (invoice) => {
         try {
-            makeUpdateInvoiceRequest(invoice);
+            await makeUpdateInvoiceRequest(invoice);
+            showToastComponent("Invoice has been updated");
+            handleClose();
         } catch (error) {
             handleRequestError(error);
         }
     };
 
-    const updateInitInvoiceState = async (id) => {
+    const fetchInitInvoiceState = async (id) => {
         try {
             const res = await makeGetInvoiceByIdRequest(id);
             setInitInvoice((prevState) => {
@@ -98,20 +140,16 @@ export default function InvoiceForm(props) {
         }
     };
 
-    useEffect(() => {
-        updateDriversList();
-        if (props.invoiceId !== null && props.invoiceId !== undefined) {
-            updateInitInvoiceState(props.invoiceId);
-        } else {
-            setInitInvoice((prevState) => {
-                return {
-                    ...prevState,
-                    registrationDate: new Date().toISOString().slice(0, 10),
-                    productOwner: props.productOwner,
-                };
-            });
-        }
-    }, [props.invoiceId, props.productOwner]);
+    function setEmptyInitInvoiceState() {
+        setInitInvoice((prevState) => {
+            return {
+                ...prevState,
+                registrationDate: new Date().toISOString().slice(0, 10),
+                productOwner: props.productOwner,
+            };
+        });
+    }
+
 
     const handleProductDialogClose = () => {
         setSelectedProduct(EMPTY_PRODUCT);
@@ -186,7 +224,6 @@ export default function InvoiceForm(props) {
     };
 
     const handleRequestError = (error) => {
-        console.log(error.response);
         if (error.response && error.response.status !== 500) {
             showToastComponent(error.response.data, "error");
         } else {
@@ -194,25 +231,6 @@ export default function InvoiceForm(props) {
         }
     };
 
-    const handleSubmit = (values) => {
-        let invoice = {};
-        invoice.invoiceNumber = values.invoiceNumber;
-        invoice.shipper = values.shipper;
-        invoice.consignee = values.consignee;
-
-        invoice.productOwnerId = initInvoice.productOwner.id;
-        invoice.products = initInvoice.products;
-        invoice.registrationDate = initInvoice.registrationDate;
-        invoice.driverId = initInvoice.driver.id;
-        invoice.status = "REGISTERED";
-
-        if (props.invoiceId !== null && props.invoiceId !== undefined) {
-            invoice.id = props.invoiceId;
-            sendInvoiceForUpdate(invoice);
-        } else {
-            sendInvoiceForSave(invoice);
-        }
-    };
 
     return (
         <React.Fragment>

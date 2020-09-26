@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProductOwnerSaveRequest implements Serializable, Cloneable {
 
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "Name is mandatory")
     @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
 
