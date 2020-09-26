@@ -14,7 +14,7 @@
             <column name="consignee_worker" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="act_date" type="DATE">
+            <column name="registration_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
         </createTable>

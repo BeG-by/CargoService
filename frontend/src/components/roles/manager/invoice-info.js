@@ -1,16 +1,20 @@
 import React, {useEffect} from "react";
 import {OkButton} from "../../parts/buttons/ok-button";
 import {DialogWindow} from "../../parts/dialogs/dialog";
-import {CloseInvoice, RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
-import AssignVerificationInvoice from "../../parts/dialogs/verify-invoice";
+import {RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
+import {AssignVerificationInvoice} from "../../parts/dialogs/verify-invoice";
 import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
 import {getWaybillById} from "../driver/request-utils";
+import {CloseInvoice} from "../../parts/dialogs/close-invoice";
+import {EditInvoice} from "../../parts/dialogs/edit-invoice";
 
 export const InvoiceInfo = (props) => {
     const [form, setForm] = React.useState(null);
     const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
     const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
+    const [openEditDialog, setOpenEditDialog] = React.useState(false);
+    const [openCloseDialog, setOpenCloseDialog] = React.useState(false);
     const [invoice, setInvoice] = React.useState({
         id: 0,
         invoiceStatus: "",
@@ -31,6 +35,8 @@ export const InvoiceInfo = (props) => {
     const handleClose = () => {
         setOpenVerifyDialog(false);
         setOpenRejectDialog(false);
+        setOpenCloseDialog(false);
+        setOpenEditDialog(false);
     };
 
     const handleVerifyOpen = () => {
@@ -45,10 +51,16 @@ export const InvoiceInfo = (props) => {
         setOpenRejectDialog(true);
     }
 
+    const handleEditOpen = () => {
+        const form = <EditInvoice handleClose={handleClose} invoice={invoice}/>
+        setForm(form);
+        setOpenEditDialog(true);
+    }
+
     const handleCloseOpen = () => {
         const form = <CloseInvoice handleClose={handleClose} invoice={invoice}/>
         setForm(form);
-        setOpenRejectDialog(true);
+        setOpenCloseDialog(true);
     }
 
     async function fetchInvoice(cleanupFunction) {
@@ -93,35 +105,40 @@ export const InvoiceInfo = (props) => {
     }, []);
 
     let status = invoice.invoiceStatus;
-    let buttonVerify;
-    let buttonReject;
-    let buttonClose;
-    let style;
+    let verifyDisabled = false;
+    let rejectDisabled = false;
+    let closeDisabled = false;
+    let editDisabled = false;
 
-    if (status.trim() === 'REGISTERED') {
-        buttonVerify = <OkButton content={'Verify'} handleClick={handleVerifyOpen}/>
-        buttonReject = <OkButton content={'Reject'} handleClick={handleRejectOpen}/>
-        style = 'btn-row';
-    } else if (status.trim() === 'ACCEPTED' && checkPassage) {
-        buttonClose = <OkButton content={'Close'} handleClick={handleCloseOpen}/>;
-        style = 'btn-row';
+
+    if (status.trim() === 'REGISTERED' && props.role === "MANAGER") {
+        closeDisabled = true;
+        editDisabled = true;
+    } else if (status.trim() === 'ACCEPTED' && checkPassage && props.role === "DRIVER") {
+        verifyDisabled = true;
+        rejectDisabled = true;
+        editDisabled = true;
+    } else if (status.trim() === 'REJECTED' && props.role === "DISPATCHER") {
+        verifyDisabled = true;
+        rejectDisabled = true;
+        closeDisabled = true;
     } else {
-        style = 'btn'
+        verifyDisabled = true;
+        rejectDisabled = true;
+        editDisabled = true;
+        closeDisabled = true;
     }
 
-    let buttons = <div className={style}>
-        {buttonVerify}
-        {buttonReject}
-        {buttonClose}
-    </div>
-
-    const content = <div>
-        <InvoiceInfoContent invoice={invoice} buttons={buttons}/>
+    let buttons = <div className='btn-row'>
+        <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>;
+        <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>;
+        <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>;
+        <OkButton content={'Edit'} handleClick={handleEditOpen} disabled={editDisabled}/>;
     </div>
 
     return (
         <div>
-            {content}
+            <InvoiceInfoContent invoice={invoice} buttons={buttons}/>
             <DialogWindow
                 dialogTitle="Verification"
                 handleClose={handleClose}
@@ -131,6 +148,16 @@ export const InvoiceInfo = (props) => {
                 dialogTitle="Rejection"
                 handleClose={handleClose}
                 openDialog={openRejectDialog}
+                form={form}/>
+            <DialogWindow
+                dialogTitle="Closing"
+                handleClose={handleClose}
+                openDialog={openCloseDialog}
+                form={form}/>
+            <DialogWindow
+                dialogTitle="Editing"
+                handleClose={handleClose}
+                openDialog={openEditDialog}
                 form={form}/>
         </div>
     );
