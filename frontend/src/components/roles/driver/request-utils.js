@@ -41,3 +41,14 @@ export async function getAllWaybills() {
         return res.data;
     });
 }
+
+export async function saveAct(act) {
+    const endpoint = `/v1/api/acts`;
+    return await axios({
+        method: "post",
+        url: endpoint,
+        data: act,
+    }).then((res) => {
+        return true;
+    });
+}

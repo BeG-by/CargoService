@@ -8,26 +8,29 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import fetchFieldFromObject from "../../../forms/fetch-field-from-object";
+import fetchFieldFromObject from "../fetch-field-from-object";
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 100, maxWidth: 100},
+    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
     {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
-    {label: "Mass", id: "mass", minWidth: 100, maxWidth: 100},
-    {label: "Quantity", id: "quantity", minWidth: 100, maxWidth: 100},
-    {label: "Price", id: "price", minWidth: 100, maxWidth: 100},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
+    {label: "Status", id: "status", minWidth: 100, maxWidth: 100},
+    {label: "Lost quantity", id: "lostQuantity", minWidth: 50, maxWidth: 50},
+    {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
 ];
 
 const useStyles = makeStyles({
     root: {
-        // width: "100%",
+        width: "100%",
     },
     container: {
         maxHeight: 440,
     },
 });
 
-export default (props) => {
+export const ProductsTable = (props) => {
     const onRowClick = props.onRowClick;
     const products = props.products;
 

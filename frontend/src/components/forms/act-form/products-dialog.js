@@ -1,11 +1,11 @@
 import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import PointsForm from "./points-form";
+import ProductsForm from "./products-form";
 import {DialogTitleCustomized} from "../../parts/dialogs/dialog-title-customized";
 
-export default (props) => {
-    const {open, onClose, initPointState, onSubmit, onDelete} = props;
+export default function ProductDialog(props) {
+    const {open, onClose, onSubmit, onDelete, initProductState} = props;
 
     const handleClose = () => {
         onClose();
@@ -21,14 +21,13 @@ export default (props) => {
         >
             <DialogTitleCustomized
                 onClose={handleClose}>
-                Control point
+                Lost product
             </DialogTitleCustomized>
             <DialogContent>
-                <PointsForm
-                    initPointState={initPointState}
+                <ProductForm
+                    initProductState={initProductState}
                     onSubmit={onSubmit}
                     onClose={handleClose}
-                    onDelete={onDelete}
                 />
             </DialogContent>
         </Dialog>
