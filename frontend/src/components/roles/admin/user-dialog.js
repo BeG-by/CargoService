@@ -5,12 +5,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
 import FormikField from "./formik-field";
-import {getUserById, saveUser, updateUser} from "./request-util";
+import {findUserById, saveUser, updateUser} from "./request-util";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import UserDatePicker from "./user-date-picker";
 import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
-import {withRouter} from "react-router-dom";
 
 
 const EMPTY_USER = {
@@ -21,7 +20,7 @@ const EMPTY_USER = {
     surname: "",
     patronymic: "",
     passport: "",
-    roles: "",
+    roles: [],
     birthday: "",
     address: {
         country: "",
@@ -35,7 +34,7 @@ const EMPTY_USER = {
 };
 
 
-const UserDialog = (props) => {
+export const UserDialog = (props) => {
     const {open, onClose, userId, refreshTable, showToast, handleError} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
@@ -44,10 +43,12 @@ const UserDialog = (props) => {
     useEffect(() => {
 
         if (isUpdateForm) {
-            getUserById(props.userId)
+            findUserById(props.userId)
                 .then(res => {
-                    if (res.data.address === null) {
-                        res.data.address = {
+                    const user = res.data;
+
+                    if (user.address === null) {
+                        user.address = {
                             country: "",
                             city: "",
                             street: "",
@@ -55,6 +56,9 @@ const UserDialog = (props) => {
                             flat: ""
                         }
                     }
+
+                    user.roles = user.roles[0];
+
                     setUser(res.data);
                 }).catch(error => handleError(error))
         }
@@ -138,6 +142,7 @@ const UserDialog = (props) => {
                                         handleError(error)
                                     })
                             } else {
+
                                 saveUser(user)
                                     .then(res => {
                                         handleClose();
@@ -264,6 +269,3 @@ const UserDialog = (props) => {
         </div>
     );
 }
-
-
-export default withRouter(UserDialog)

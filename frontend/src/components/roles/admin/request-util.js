@@ -1,15 +1,15 @@
 import axios from "axios";
 
-export const getUserById = (id) => {
-    const endpoint = "/v1/api/users/" + id;
+const endpoint = "/v1/api/users";
+
+export const findUserById = (id) => {
     return axios({
         method: "get",
-        url: endpoint,
+        url: endpoint + "/" + id,
     })
 };
 
-export const getAllUsers = () => {
-    const endpoint = "/v1/api/users";
+export const findAllUsers = () => {
     return axios({
         method: "get",
         url: endpoint,
@@ -17,7 +17,6 @@ export const getAllUsers = () => {
 };
 
 export const updateUser = (user) => {
-    const endpoint = "/v1/api/users";
     return axios({
         method: "put",
         url: endpoint,
@@ -26,10 +25,16 @@ export const updateUser = (user) => {
 };
 
 export const saveUser = (user) => {
-    const endpoint = "/v1/api/users";
     return axios({
         method: "post",
         url: endpoint,
         data: user
+    })
+};
+
+export const deleteUser = (id) => {
+    return axios({
+        method: "delete",
+        url: endpoint + "/" + id,
     })
 };

@@ -1,5 +1,3 @@
-/// Wrapper for InvoiceTable, User table
-
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 

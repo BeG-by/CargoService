@@ -18,9 +18,9 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Users ---
 
-GET localhost:8080/v1/api/users/info
+GET localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5Njk2MTU3LCJleHAiOjE2MDA1NjAxNTd9.XwG82XBIRywcBDqkTeH2e7SVNwmIIUOzUhRY4fAMroQ
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIkFETUlOIl0sImlhdCI6MTYwMTE0OTg2NCwiZXhwIjoxNjAyMDEzODY0fQ.mOdrvZWRApJcpa3FaW6ROFwJPIfhlM9gcx23dCl5gWw
 
 ###
 

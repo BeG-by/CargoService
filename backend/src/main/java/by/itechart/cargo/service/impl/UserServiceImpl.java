@@ -16,6 +16,7 @@ import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse findById(long id) throws NotFoundException {
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         return userRepository.findByIdAndClientCompanyId(id, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
                 .map(UserResponse::toUserResponse)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAll() {
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
-        return userRepository.findAllByClientCompanyId(companyId)
+        return userRepository.findAllWithoutDeleted(companyId, Sort.by("id"))
                 .stream()
                 .map(UserResponse::toUserResponse)
                 .collect(Collectors.toList());
@@ -86,7 +88,7 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
         }
 
-        if (email != null && userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
         }
 
@@ -141,6 +143,8 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(password));
         }
 
+        user.setEmail(request.getEmail());
+
         user.setName(request.getName());
         user.setSurname(request.getSurname());
         user.setPatronymic(request.getPatronymic());
@@ -158,6 +162,17 @@ public class UserServiceImpl implements UserService {
 
         log.info("User has been updated {}", user);
 
+    }
+
+    @Override
+    public void delete(long id) throws NotFoundException {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        userRepository.findByIdAndClientCompanyId(id, companyId)
+                .map(user -> {
+                    user.setStatus(User.Status.DELETED);
+                    return user;
+                })
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
 }

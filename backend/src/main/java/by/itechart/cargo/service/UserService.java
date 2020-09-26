@@ -21,4 +21,6 @@ public interface UserService {
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
 
+    void delete(long id) throws NotFoundException;
+
 }

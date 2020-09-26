@@ -100,6 +100,7 @@ public class User implements Serializable, Cloneable {
     public enum Status {
         ACTIVE,
         BLOCKED,
+        DELETED
     }
 
 }
