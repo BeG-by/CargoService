@@ -3,8 +3,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import {Copyright} from "./copyright";
+import {DRAWER_WITH} from "../../pages/body-wrapper";
 
-let drawerWidth;
+
+const drawerWidth = DRAWER_WITH;
 
 const useStyles = makeStyles((theme) => ({
     footer: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Footer = (props) => {
-    drawerWidth = props.drawerWidth;
+
     const classes = useStyles();
     return (
         <footer className={ clsx (classes.footer,

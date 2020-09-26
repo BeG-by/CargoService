@@ -1,16 +1,20 @@
 package by.itechart.cargo.service;
 
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
+import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.freight.Waybill;
+
 import java.util.List;
-import java.util.Optional;
 
 public interface WaybillService {
 
     List<Waybill> findAll();
 
-    Optional<Waybill> findById(long id);
+    List<WaybillTableResponse> findAllTableData();
 
-    void save(WaybillRequest waybillRequest);
+    Waybill findById(long id) throws NotFoundException;
+
+    void save(WaybillRequest waybillRequest) throws NotFoundException;
 
 }

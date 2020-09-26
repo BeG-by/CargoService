@@ -42,10 +42,12 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .birthday(user.getBirthday())
                 .address(user.getAddress())
                 .email(user.getEmail())
+                .passport(user.getPassport())
+                .status(user.getStatus())
                 .clientCompany(user.getClientCompany())
                 .roles(user.getRoles())
                 .authorities(createGrantedAuthority(user.getRoles()))
-                .isEnable(true)
+                .isEnable(user.getStatus().toString().equals("ACTIVE"))
                 .build();
     }
 

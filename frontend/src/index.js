@@ -19,7 +19,7 @@ ReactDOM.render(
                 <App/>
             </BrowserRouter>
         </Provider>
-        <button onClick={()=> console.log(store.getState())}>REDUX STATE</button>
+        {/*<button onClick={()=> console.log(store.getState())}>REDUX STATE</button>*/}
     </MuiThemeProvider>,
     document.getElementById('root')
 );

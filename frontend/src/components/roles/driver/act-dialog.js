@@ -1,10 +1,10 @@
 import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import WaybillForm from "../../forms/waybill-form/waybill-form";
 import {DialogTitleCustomized} from "../../parts/dialog-title-customized";
+import ActForm from "../../forms/act-form/act-form";
 
-export default function WaybillDialog(props) {
+export default function ActDialog(props) {
     return (
         <div>
             <Dialog
@@ -15,11 +15,11 @@ export default function WaybillDialog(props) {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitleCustomized
-                                    onClose={props.onClose}>
-                    {"Waybill to invoice # "}{props.invoice.number}
+                    onClose={props.onClose}>
+                    {"Act to invoice # "}
                 </DialogTitleCustomized>
                 <DialogContent>
-                    <WaybillForm invoice={props.invoice} onClose={props.onClose}/>
+                    <ActForm waybill={props.waybill} onClose={props.onClose}/>
                 </DialogContent>
             </Dialog>
         </div>

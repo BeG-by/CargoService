@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<String> update(@RequestBody @Valid UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
         userService.update(userUpdateRequest);
         return ResponseEntity.ok("User has been updated");
     }

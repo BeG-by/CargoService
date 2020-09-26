@@ -1,12 +1,11 @@
 /// Wrapper for InvoiceTable, User table
 
 import React from "react";
-import clsx from "clsx";
 import {makeStyles} from "@material-ui/core/styles";
 
-const drawerWidth = 240;
+export const DRAWER_WITH = 240;
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
     },
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: drawerWidth,
+        marginLeft: DRAWER_WITH,
     },
     mainField: {
         display: "block",
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: "30px",
         paddingLeft: "5px",
         paddingRight: "5px",
-        margin: "20px auto",
+        margin: "auto",
         color: "white",
         background: "rgba(0, 0, 0, 0.4)",
         maxWidth: '100%',
@@ -54,13 +53,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const BodyWrapper = (props) => {
     const classes = useStyles();
-    
+
     return (
-        <main
-            className={clsx(classes.content, {
-                [classes.contentShift]: props.openMenu,
-            })}
-        >
+        <main>
             <div className={classes.drawerHeader}/>
             <div className={classes.mainField}>
                 {props.content()}

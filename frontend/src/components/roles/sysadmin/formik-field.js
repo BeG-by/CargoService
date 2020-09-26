@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import {ErrorMessage} from "formik";
-import {ErrorMsg} from "../../parts/error-message";
+import {ErrorMsg} from "../../parts/layout/error-message";
 
 export default (props) => {
     const {formikProps, formikFieldName, id, label} = props;
@@ -16,7 +16,6 @@ export default (props) => {
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 value={formikProps.values[formikFieldName]}
-                // helperText={<ErrorMsg name={formikFieldName}/>}
                 fullWidth
             />
             <label style={{color: "crimson"}}>
