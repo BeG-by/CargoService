@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static by.itechart.cargo.service.constant.MessageConstant.PRODUCT_OWNER_EXIST_MESSAGE;
 import static by.itechart.cargo.service.constant.MessageConstant.PRODUCT_OWNER_NOT_FOUND_MESSAGE;
 
 @Service
@@ -45,36 +46,41 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
     @Override
     public ProductOwner findById(Long id) throws NotFoundException {
-
-//        if (!productOwner.getClientCompany().getId().equals(jwtTokenUtil.getJwtUser().getClientCompany().getId())) {
-//            throw new "Not your product onwer"
-//        }
-
+        ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
+        ClientCompany clientCompanyProxy = clientCompanyRepository.getOne(clientCompany.getId());
         return productOwnerRepository
-                .findById(id)
+                .findByIdAndClientCompany(id, clientCompanyProxy)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public void save(ProductOwnerSaveRequest productOwnerSaveRequest) throws AlreadyExistException, NotFoundException {
+    public void save(ProductOwnerSaveRequest productOwnerSaveRequest) throws AlreadyExistException {
         ProductOwner productOwner = productOwnerSaveRequest.toProductOwner();
-        Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
+        ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
+        ClientCompany clientCompanyProxy = clientCompanyRepository.findById(clientCompany.getId()).get();
 
-        if (productOwnerRepository.findByName(productOwner.getName()).isPresent()) {
-            throw new AlreadyExistException("Product owner with such name already exist");
+        if (productOwnerRepository.findByNameAndClientCompany(productOwner.getName(), clientCompanyProxy).isPresent()) {
+            throw new AlreadyExistException(PRODUCT_OWNER_EXIST_MESSAGE);
         }
-        productOwner.setClientCompany(clientCompanyRepository.getOne(clientCompanyId));
+
+        productOwner.setClientCompany(clientCompanyProxy);
         productOwnerRepository.save(productOwner);
     }
 
     @Override
     public void update(ProductOwnerUpdateRequest productOwnerUpdateRequest) throws NotFoundException, AlreadyExistException {
-        ProductOwner productOwner = productOwnerRepository.findById(productOwnerUpdateRequest.getId())
-                .orElseThrow(() -> new NotFoundException("Product owner not found"));
+        ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
+        ClientCompany clientCompanyProxy = clientCompanyRepository.findById(clientCompany.getId()).get();
 
-        Optional<ProductOwner> productOwnerByName = productOwnerRepository.findByName(productOwnerUpdateRequest.getName());
+        ProductOwner productOwner = productOwnerRepository
+                .findByIdAndClientCompany(productOwnerUpdateRequest.getId(), clientCompanyProxy)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
+
+        Optional<ProductOwner> productOwnerByName = productOwnerRepository
+                .findByNameAndClientCompany(productOwnerUpdateRequest.getName(), clientCompanyProxy);
+
         if (productOwnerByName.isPresent() && !productOwnerByName.get().getId().equals(productOwner.getId())) {
-            throw new AlreadyExistException("Product owner with such name already exist");
+            throw new AlreadyExistException(PRODUCT_OWNER_EXIST_MESSAGE);
         }
 
         productOwner.setName(productOwnerUpdateRequest.getName());
@@ -86,11 +92,9 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
     @Override
     public void delete(Long id) throws NotFoundException {
+        //todo: check errors
         ProductOwner productOwner = productOwnerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product owner not found"));
-
-        ClientCompany clientCompany = productOwner.getClientCompany();
-        String name = clientCompany.getName();
+                .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
         productOwnerRepository.delete(productOwner);
     }
 
