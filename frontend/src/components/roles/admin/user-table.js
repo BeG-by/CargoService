@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -11,6 +11,8 @@ import TableRow from "@material-ui/core/TableRow";
 import UserDialog from "./user-dialog";
 import {getAllUsers} from "./request-util";
 import {BodyWrapper} from "../../pages/body-wrapper";
+import useToast from "../../parts/toast-notification/useToast";
+import Button from "@material-ui/core/Button";
 
 
 const columns = [
@@ -56,21 +58,23 @@ const useStyles = makeStyles({
 
 export function UserTable() {
     const classes = useStyles();
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const [users, setUsers] = React.useState([]);
-    const [formDialogOpen, setFormDialogOpen] = React.useState(false);
-    const [selectedUserId, setSelectedUserId] = React.useState(
-        -1
-    );
-
+    const [users, setUsers] = useState([]);
+    const [formDialogOpen, setFormDialogOpen] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(-1);
+    const [toastComponent, showToastComponent] = useToast();
 
     useEffect(() => {
+        insertUsers()
+    }, []);
+
+    const insertUsers = () => {
         getAllUsers()
             .then(res => setUsers(res.data))
-            .catch(error => alert(error))
-    }, []);
+            .catch(error => handleRequestError(error))
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -86,8 +90,19 @@ export function UserTable() {
         setPage(0);
     };
 
+    const handleRequestError = (error) => {
+        if (error.response && error.response.status !== 500) {
+            showToastComponent("Operation was failed. " + error.response.data, "error");
+        } else {
+            showToastComponent("Operation was failed. Cannot get response from server", "error");
+        }
+    };
+
     return (
         <Paper className={classes.root}>
+            <Button variant="contained" color="primary" onClick={() => setFormDialogOpen(true)}>
+                Create user
+            </Button>
             <TableContainer className={classes.container}>
                 <Table aria-label="sticky table">
                     <TableHead>
@@ -110,7 +125,7 @@ export function UserTable() {
 
                                 let status = user.status.charAt(0) + user.status.substring(1).toLowerCase();
                                 let roles = user.roles.map(role => role.charAt(0) + role.substring(1).toLowerCase());
-                                
+
                                 return (
                                     <TableRow
                                         onClick={() => {
@@ -166,7 +181,11 @@ export function UserTable() {
                     setFormDialogOpen(false);
                     setSelectedUserId(-1);
                 }}
+                refreshTable={insertUsers}
+                showToast={showToastComponent}
+                handleError={handleRequestError}
             />
+            {toastComponent}
         </Paper>
     );
 }

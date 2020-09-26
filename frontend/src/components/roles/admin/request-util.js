@@ -24,3 +24,12 @@ export const updateUser = (user) => {
         data: user
     })
 };
+
+export const saveUser = (user) => {
+    const endpoint = "/v1/api/users";
+    return axios({
+        method: "post",
+        url: endpoint,
+        data: user
+    })
+};

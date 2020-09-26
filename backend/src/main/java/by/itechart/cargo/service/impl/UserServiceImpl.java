@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,6 +99,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(rolesDb);
         user.setClientCompany(clientCompanyRepository.getOne(companyId));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setStatus(User.Status.ACTIVE);
 
         User userDb = userRepository.save(user);
         log.info("User has been saved {}", userDb);
@@ -108,8 +108,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(UserUpdateRequest request) throws NotFoundException, AlreadyExistException {
-
-        System.out.println("HERE" + request);
 
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         final Long id = request.getId();

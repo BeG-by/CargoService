@@ -56,7 +56,7 @@ export default function App() {
                     <Route exact path="/main" component={MainBody}/>
                     <Route exact path="/waybill" component={WayBillTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
-                    <Route exact path={"/users"} component={UserTable}/>
+                    <Route exact path={"/users"} render={UserTable}/>
                     <Route exact path={"/owners"} component={ProductOwnersTable}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
                     <Route component={NotFound}/>

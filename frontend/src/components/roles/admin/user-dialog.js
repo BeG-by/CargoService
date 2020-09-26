@@ -5,7 +5,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
 import FormikField from "./formik-field";
-import {getUserById, updateUser} from "./request-util";
+import {getUserById, saveUser, updateUser} from "./request-util";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import UserDatePicker from "./user-date-picker";
@@ -28,6 +28,7 @@ const EMPTY_USER = {
         city: "",
         street: "",
         house: "",
+        flat: ""
     },
     email: "",
     status: ""
@@ -35,11 +36,14 @@ const EMPTY_USER = {
 
 
 const UserDialog = (props) => {
-    const {open, onClose, userId} = props;
+    const {open, onClose, userId, refreshTable, showToast, handleError} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
+    const isUpdateForm = props.userId >= 0;
+
     useEffect(() => {
-        if (props.userId >= 0) {
+
+        if (isUpdateForm) {
             getUserById(props.userId)
                 .then(res => {
                     if (res.data.address === null) {
@@ -48,10 +52,11 @@ const UserDialog = (props) => {
                             city: "",
                             street: "",
                             house: "",
+                            flat: ""
                         }
                     }
                     setUser(res.data);
-                })
+                }).catch(error => handleError(error))
         }
     }, [props.userId]);
 
@@ -95,21 +100,20 @@ const UserDialog = (props) => {
                             city: user.address.city,
                             street: user.address.street,
                             house: user.address.house,
+                            flat: user.address.flat,
                         }}
                         onSubmit={(values) => {
 
                             const user = {
-                                id: values.id,
                                 login: values.login,
                                 password: values.password,
                                 name: values.name,
                                 surname: values.surname,
                                 patronymic: values.patronymic,
-                                roles: values.role,
+                                roles: [values.role],
                                 birthday: values.birthday,
                                 email: values.email,
                                 passport: values.passport,
-                                status: values.status,
                                 address: {
                                     country: values.country,
                                     city: values.city,
@@ -119,13 +123,31 @@ const UserDialog = (props) => {
                                 }
                             };
 
-                            updateUser(user)
-                                .then(res => {
-                                    props.history.push("/info");
-                                    props.history.push("/users");
-                                    alert(res.data);
-                                })
-                                .catch(error => alert(error + error.data))
+                            if (isUpdateForm) {
+
+                                user.id = values.id;
+                                user.status = values.status;
+
+                                updateUser(user)
+                                    .then(res => {
+                                        handleClose();
+                                        refreshTable();
+                                        showToast("User has been updated", "success")
+                                    })
+                                    .catch(error => {
+                                        handleError(error)
+                                    })
+                            } else {
+                                saveUser(user)
+                                    .then(res => {
+                                        handleClose();
+                                        refreshTable();
+                                        showToast("User has been created", "success")
+                                    })
+                                    .catch(error => {
+                                        handleError(error)
+                                    })
+                            }
 
                         }}
                     >
@@ -176,12 +198,14 @@ const UserDialog = (props) => {
                                         label={"Role"}
                                         formikFieldName={"role"}
                                     />
-                                    <UserStatusSelector
+
+                                    {isUpdateForm ? <UserStatusSelector
                                         formikProps={formProps}
                                         id={"status"}
                                         label={"Status"}
                                         formikFieldName={"status"}
-                                    />
+                                    /> : ""}
+
                                     <UserDatePicker
                                         formikProps={formProps}
                                         id={"birthday"}
@@ -229,7 +253,7 @@ const UserDialog = (props) => {
                                         type="submit"
                                         disabled={formProps.listener}
                                     >
-                                        Submit
+                                        {isUpdateForm ? "Update" : "Save"}
                                     </Button>
                                 </Form>
                             );
