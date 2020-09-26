@@ -12,9 +12,10 @@ import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
-import {DRAWER_WITH} from "../../pages/body-wrapper";
+import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import {Link} from "react-router-dom";
 
-const drawerWidth = DRAWER_WITH;
+const drawerWidth = DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -79,7 +80,6 @@ const getUserInfoRequest = () => {
     })
 };
 
-
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     const user = props.user;
     const isAuthenticate = localStorage.getItem("authorization");
@@ -139,7 +139,9 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                     <MenuIcon/>
                 </IconButton>
                 <Typography className={classes.title} variant="h6" noWrap>
-                    CARGO APP
+                    <Link to="/main" className="link-item-white">
+                        CARGO APP
+                    </Link>
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>

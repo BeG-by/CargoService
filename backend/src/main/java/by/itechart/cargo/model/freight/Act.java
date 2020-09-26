@@ -29,7 +29,7 @@ public class Act implements Serializable, Cloneable {
 
     @JoinColumn(name = "id_invoice")
     @OneToOne(cascade = CascadeType.ALL)
-    private Invoice invoice;
+    private Invoice actInvoice;
 
 }
 

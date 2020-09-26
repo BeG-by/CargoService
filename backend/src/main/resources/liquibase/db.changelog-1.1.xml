@@ -29,4 +29,28 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="1.2.1" author="marianna.patrusova">
+        <createTable tableName="act">
+            <column name="id_act" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="id_invoice" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consignee_worker" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="registration_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="act"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_act_invoice"
+                                 onDelete="CASCADE"
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
+    </changeSet>
+
 </databaseChangeLog>

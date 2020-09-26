@@ -2,7 +2,7 @@ import React from "react";
 import {DrawerItem} from "./drawer-item";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
-const path = "/main";
+const path = "/invoice";
 
 export const ItemInvoiceList = () => {
     const icon = <AssignmentIcon color='primary'/>;

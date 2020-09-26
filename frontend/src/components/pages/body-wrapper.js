@@ -2,8 +2,9 @@
 
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
+import clsx from "clsx";
 
-export const DRAWER_WITH = 240;
+export const DRAWER_WIDTH = 240;
 
 export const useStyles = makeStyles((theme) => ({
     grow: {
@@ -29,7 +30,7 @@ export const useStyles = makeStyles((theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        marginLeft: DRAWER_WITH,
+        marginLeft: DRAWER_WIDTH,
     },
     mainField: {
         display: "block",
@@ -55,7 +56,11 @@ export const BodyWrapper = (props) => {
     const classes = useStyles();
 
     return (
-        <main>
+        <main
+            className={clsx(classes.content, {
+                [classes.contentShift]: props.openMenu,
+            })}
+        >
             <div className={classes.drawerHeader}/>
             <div className={classes.mainField}>
                 {props.content()}

@@ -11,11 +11,11 @@ import {getAllWaybills, getWaybillById} from "./request-utils";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
-import {BodyWrapper} from "../../pages/body-wrapper";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import {getInvoiceById} from "../manager/request-utils";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
+import {connect} from "react-redux";
 
 const columns = [
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100},
@@ -32,7 +32,13 @@ const columns = [
     },
 ];
 
-function WaybillsTableContent() {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [waybills, setWaybills] = React.useState([]);
@@ -185,6 +191,4 @@ function WaybillsTableContent() {
             </Paper>
         </div>
     );
-}
-
-export default () => <BodyWrapper content={WaybillsTableContent}/>
+})

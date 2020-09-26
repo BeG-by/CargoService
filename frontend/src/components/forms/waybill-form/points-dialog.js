@@ -3,7 +3,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PointsForm from "./points-form";
-import {DialogTitleCustomized} from "../../parts/dialog-title-customized";
+import {DialogTitleCustomized} from "../../parts/dialogs/dialog-title-customized";
 
 export default (props) => {
     const {open, onClose, initPointState, onSubmit, onDelete} = props;

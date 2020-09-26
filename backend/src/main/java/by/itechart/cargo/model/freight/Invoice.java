@@ -56,7 +56,7 @@ public class Invoice implements Serializable, Cloneable {
     @Column(name = "consignee", nullable = false)
     private String consignee;
 
-    @Column(name = "consignee")
+    @Column(name = "comment")
     private String comment;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -74,7 +74,7 @@ public class Invoice implements Serializable, Cloneable {
     @EqualsAndHashCode.Exclude
     private Waybill waybill;
 
-    @OneToOne(mappedBy = "invoice")
+    @OneToOne(mappedBy = "actInvoice")
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

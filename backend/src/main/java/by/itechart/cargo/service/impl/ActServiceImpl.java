@@ -42,7 +42,7 @@ public class ActServiceImpl implements ActService {
                 .findById(invoiceId).orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
         invoice.setProducts(actRequest.getProducts());
         invoiceRepository.save(invoice);
-        act.setInvoice(invoice);
+        act.setActInvoice(invoice);
         final Act actDb = actRepository.save(act);
         log.info("Act has been saved {}", actDb);
     }

@@ -15,7 +15,6 @@ import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {BodyWrapper} from "../../pages/body-wrapper";
 import {connect} from "react-redux";
 
 const columns = [
@@ -38,7 +37,7 @@ const mapStateToProps = (store) => {
     }
 };
 
-export const InvoicesTableContent = connect(mapStateToProps)((props) => {
+export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
@@ -192,5 +191,3 @@ export const InvoicesTableContent = connect(mapStateToProps)((props) => {
         </div>
     );
 })
-
-// export default () => <BodyWrapper content={InvoicesTableContent}/>

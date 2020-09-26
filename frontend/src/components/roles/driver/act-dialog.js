@@ -1,7 +1,7 @@
 import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import {DialogTitleCustomized} from "../../parts/dialog-title-customized";
+import {DialogTitleCustomized} from "../../parts/dialogs/dialog-title-customized";
 import ActForm from "../../forms/act-form/act-form";
 
 export default function ActDialog(props) {
