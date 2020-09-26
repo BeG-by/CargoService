@@ -62,7 +62,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             break;
         case 'DISPATCHER':
             components.push(<ItemClientTable key="Product owners"/>);
-            components.push(<ItemInvoices key="Invoices"/>)
+            components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<Divider key='Divider'/>);
             break;
         case 'DRIVER':

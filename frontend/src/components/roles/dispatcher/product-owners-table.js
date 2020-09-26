@@ -11,7 +11,6 @@ import TableRow from "@material-ui/core/TableRow";
 import {makeGetAllProductOwnersRequest} from "./request-utils";
 import InvoiceDialog from "./invoice/invoice-dialog";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {BodyWrapper} from "../../pages/body-wrapper";
 import useToast from "../../parts/toast-notification/useToast";
 
 const columns = [
@@ -45,7 +44,7 @@ const EMPTY_PRODUCT_OWNER = {
     phone: "",
 };
 
-export function ProductOwnersTable() {
+export const ProductOwnersTable = () => {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -64,7 +63,6 @@ export function ProductOwnersTable() {
             showToastComponent("Cannot get response from server", "error");
         }
     }
-
 
     useEffect(() => {
         let mounted = true
@@ -170,5 +168,3 @@ export function ProductOwnersTable() {
         </div>
     );
 }
-
-export default () => <BodyWrapper content={ProductOwnersTable}/>

@@ -1,5 +1,5 @@
 import React from "react";
-import ProductOwnersTable from "../roles/dispatcher/product-owners-table";
+import {ProductOwnersTable} from "../roles/dispatcher/product-owners-table";
 import {InvoicesTable} from "../roles/manager/invoices-table";
 import {WaybillsTable} from "../roles/driver/waybills-table";
 import ClientsTable from "../roles/sysadmin/clients-table";

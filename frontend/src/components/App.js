@@ -15,7 +15,7 @@ import {SendMailBody} from "./pages/send-mail-body";
 import {ContactsBody} from "./pages/contacts-body";
 import {InvoicesTable} from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
-import ProductOwnersTable from "./roles/dispatcher/product-owners-table";
+import {ProductOwnersTable} from "./roles/dispatcher/product-owners-table";
 import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
 import {SuccessBody} from "./pages/success-body";
 import {BodyWrapper} from "./pages/body-wrapper";
@@ -51,7 +51,7 @@ export default function App() {
                     <Route exact path={"/waybill"} component={() => <BodyWrapper openMenu={openMenu} content={() => <WaybillsTable/>}/>}/>
                     <Route exact path={"/invoice"} component={() => <BodyWrapper openMenu={openMenu} content={() => <InvoicesTable/>}/>}/>
                     <Route exact path={"/users"} component={UserTable}/>
-                    <Route exact path={"/owners"} component={ProductOwnersTable}/>
+                    <Route exact path={"/owners"} component={() =><BodyWrapper openMenu={openMenu} content={() => <ProductOwnersTable/>}/>}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
                     <Route exact path={"/success"} component={SuccessBody}/>
                     <Route component={() => <BodyWrapper openMenu={openMenu} content={NotFound}/>}/>

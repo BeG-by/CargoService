@@ -8,13 +8,13 @@ export const EditInvoice = withRouter((props) => {
     let inv = props.invoice;
 
     const handleEdit = () => {
-        //fixme do smth
+        //fixme do smth to edit
     }
 
     return (
         <div className="form-signin">
             <div>
-                <i style={{fontSize: 16}}>Close the invoice?</i>
+                <i style={{fontSize: 16}}>Edit the invoice?</i>
                 <div className='btn-row'>
                     <OkButton content='OK' handleClick={handleEdit}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>

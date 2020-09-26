@@ -8,8 +8,15 @@ import InvoiceInfoContent from "./invoice-info-content";
 import {getWaybillById} from "../driver/request-utils";
 import {CloseInvoice} from "../../parts/dialogs/close-invoice";
 import {EditInvoice} from "../../parts/dialogs/edit-invoice";
+import {connect} from "react-redux";
 
-export const InvoiceInfo = (props) => {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const InvoiceInfo = connect(mapStateToProps)((props) => {
     const [form, setForm] = React.useState(null);
     const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
     const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
@@ -110,7 +117,6 @@ export const InvoiceInfo = (props) => {
     let closeDisabled = false;
     let editDisabled = false;
 
-
     if (status.trim() === 'REGISTERED' && props.role === "MANAGER") {
         closeDisabled = true;
         editDisabled = true;
@@ -161,4 +167,4 @@ export const InvoiceInfo = (props) => {
                 form={form}/>
         </div>
     );
-}
+})
