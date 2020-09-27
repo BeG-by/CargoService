@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="1.0.0" author="vladislav.mironuk">
+    <changeSet id="1.1.0" author="vladislav.mironuk">
         <createTable tableName="storage">
             <column name="id_storage" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -29,7 +29,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="1.0.1" author="vladislav.mironuk">
+    <changeSet id="1.1.1" author="vladislav.mironuk">
         <!--Product-->
         <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
         <sql>CREATE TYPE mass_measure AS ENUM('KG','TON')</sql>
@@ -70,8 +70,12 @@
             </column>
 
             <column name="status" type="product_status" defaultValue="ACCEPTED">
-                <constraints nullable="false"/> <!-- Is it necessary? We set default value -->
+                <constraints nullable="false"/>
             </column>
+
+            <column name="lost_quantity" type="INT"/>
+
+            <column name="comment" type="VARCHAR(500)"/>
 
             <column name="id_invoice" type="BIGSERIAL">
                 <constraints nullable="false"/>
@@ -82,6 +86,30 @@
         <addForeignKeyConstraint baseTableName="product"
                                  baseColumnNames="id_invoice"
                                  constraintName="fk_product_invoice"
+                                 onDelete="CASCADE"
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
+    </changeSet>
+
+    <changeSet id="1.2.2" author="marianna.patrusova">
+        <createTable tableName="act">
+            <column name="id_act" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="id_invoice" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consignee_worker" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="registration_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="act"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_act_invoice"
                                  onDelete="CASCADE"
                                  referencedTableName="invoice"
                                  referencedColumnNames="id_invoice"/>

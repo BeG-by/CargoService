@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, {useState} from "react";
+import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,13 +8,17 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import CheckIcon from "@material-ui/icons/Check";
 import fetchFieldFromObject from "../fetch-field-from-object";
 
 const columns = [
-    { label: "Place", id: "place", minWidth: 150 },
-    { label: "Passage Date", id: "passageDate", minWidth: 150 },
-    { label: "Passed", id: "passed", minWidth: 150 },
+    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
+    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
+    {label: "Status", id: "productStatus", minWidth: 100, maxWidth: 100},
+    {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
+    {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
 ];
 
 const useStyles = makeStyles({
@@ -26,9 +30,9 @@ const useStyles = makeStyles({
     },
 });
 
-export default (props) => {
+export const ProductsTable = (props) => {
     const onRowClick = props.onRowClick;
-    const points = props.points;
+    const products = props.products;
 
     const classes = useStyles();
     const [page, setPage] = useState(0);
@@ -38,8 +42,8 @@ export default (props) => {
         setPage(newPage);
     };
 
-    const handleTableRowClick = (point) => {
-        onRowClick(point);
+    const handleTableRowClick = (product) => {
+        onRowClick(product);
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -56,7 +60,7 @@ export default (props) => {
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
-                                    style={{ minWidth: column.minWidth }}
+                                    style={{ maxWidth: column.maxWidth}}
                                 >
                                     {column.label}
                                 </TableCell>
@@ -64,25 +68,23 @@ export default (props) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {points
+                        {products
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((point) => {
+                            .map((product) => {
                                 return (
                                     <TableRow
                                         onClick={() => {
-                                            handleTableRowClick(point);
+                                            handleTableRowClick(product);
                                         }}
                                         hover
                                         role="checkbox"
                                         tabIndex={-1}
-                                        key={point.id}
+                                        key={product.id}
                                     >
                                         {columns.map((column) => {
                                             return (
                                                 <TableCell key={column.id}>
-                                                    {column.id === 'passed' && fetchFieldFromObject(point, column.id)
-                                                        ? <CheckIcon/>
-                                                        : fetchFieldFromObject(point, column.id)}
+                                                    {fetchFieldFromObject(product, column.id)}
                                                 </TableCell>
                                             );
                                         })}
@@ -94,9 +96,9 @@ export default (props) => {
             </TableContainer>
 
             <TablePagination
-                rowsPerPageOptions={[5, 10, 15]}
+                rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={points.length}
+                count={products.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

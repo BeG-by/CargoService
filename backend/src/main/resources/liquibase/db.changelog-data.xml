@@ -310,6 +310,7 @@
             <column name="id_user_registration" value="1"/>
             <column name="id_client_company" value="1"/>
             <column name="id_product_owner" value="1"/>
+            <column name="comment" value="Consignee name error, check it out"/>
         </insert>
 
         <insert tableName="invoice">

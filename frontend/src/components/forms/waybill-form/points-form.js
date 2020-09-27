@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import FormikField from "../../roles/sysadmin/formik-field";
 import Button from "@material-ui/core/Button";
-import {PointFormValidation} from "./waybill-form-validation";
+import {PointFormValidation} from "../../parts/validation/waybill-form-validation";
 
 export default (props) => {
     const { initPointState, onSubmit, onClose, onDelete } = props;

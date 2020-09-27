@@ -42,7 +42,7 @@ public class InvoiceRequest {
     private String consignee;
 
     @NotNull
-    @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED",
+    @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED|CLOSED_WITH_ACT",
             message = "Type must be one of InvoiceStatus types")
     private InvoiceStatus status;
 

@@ -56,6 +56,9 @@ public class Invoice implements Serializable, Cloneable {
     @Column(name = "consignee", nullable = false)
     private String consignee;
 
+    @Column(name = "comment")
+    private String comment;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_product_owner", nullable = false)
     private ProductOwner productOwner;
@@ -70,6 +73,12 @@ public class Invoice implements Serializable, Cloneable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Waybill waybill;
+
+    @OneToOne(mappedBy = "actInvoice")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Act act;
 
     @JoinColumn(name = "id_user_registration", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

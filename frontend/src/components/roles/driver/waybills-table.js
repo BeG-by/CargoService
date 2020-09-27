@@ -11,11 +11,11 @@ import {getAllWaybills, getWaybillById} from "./request-utils";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
-import {BodyWrapper} from "../../pages/body-wrapper";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import {getInvoiceById} from "../manager/request-utils";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
+import {connect} from "react-redux";
 
 const columns = [
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100},
@@ -32,15 +32,29 @@ const columns = [
     },
 ];
 
-function WaybillsTableContent() {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [waybills, setWaybills] = React.useState([]);
-    const [waybill, setWaybill] = React.useState({id: 0, invoice: null});
+    const [waybill, setWaybill] = React.useState({id: 0, invoice: {}});
     const [form, setForm] = React.useState(null);
     const [actFillDialogOpen, setActFillDialogOpen] = React.useState(false);
     const [actDialogOpen, setActDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
+
+    function handleRequestError(error) {
+        if (error.response && error.response.status !== 500) {
+            alert("error");
+        } else {
+            alert("Cannot get response from server");
+        }
+    }
 
     async function fetchWaybills(cleanupFunction) {
         if (!cleanupFunction) setWaybills(await getAllWaybills());
@@ -48,7 +62,11 @@ function WaybillsTableContent() {
 
     useEffect(() => {
         let cleanupFunction = false;
-        fetchWaybills(cleanupFunction);
+        fetchWaybills(cleanupFunction)
+            .catch((err) => {
+                setWaybills([]);
+                handleRequestError(err);
+            });
         return () => cleanupFunction = true;
     }, []);
 
@@ -57,19 +75,19 @@ function WaybillsTableContent() {
     };
 
     let foundWaybill = {};
-    let foundInvoice = {};
     let checkPassage = true;
     const handleTableRowClick = async (wb) => {
         foundWaybill = await getWaybillById(wb.id);
-        foundInvoice = await getInvoiceById(wb.invoiceId);
         foundWaybill.points.forEach(p => {
             if (!p.passed) checkPassage = false;
         })
         setWaybill(() => ({
             id: foundWaybill.id,
-            invoice: foundInvoice,
+            invoice: foundWaybill.invoice,
         }));
-        if (checkPassage) {
+        if (checkPassage
+            && foundWaybill.invoice.status !== "CLOSED"
+            && foundWaybill.invoice.status !== "CLOSED_WITH_ACT") {
             setForm(FillActDialog(handleActFormOpen, handleWaybillInfoOpen));
             setActFillDialogOpen(true);
         } else {
@@ -185,6 +203,4 @@ function WaybillsTableContent() {
             </Paper>
         </div>
     );
-}
-
-export default () => <BodyWrapper content={WaybillsTableContent}/>
+})

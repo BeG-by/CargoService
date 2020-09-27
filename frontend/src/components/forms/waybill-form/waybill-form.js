@@ -4,13 +4,13 @@ import PointsTable from "./points-table";
 import {Formik, Form, ErrorMessage} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
-import {WaybillFormValidation} from "./waybill-form-validation";
+import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import DatePickerField from "../../parts/date-picker";
+import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 

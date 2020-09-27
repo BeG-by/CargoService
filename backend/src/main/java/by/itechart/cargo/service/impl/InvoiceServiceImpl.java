@@ -164,10 +164,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setInvoice(invoice);
             p.setProductStatus(Status.ACCEPTED);
         });
-
         log.info("Invoice has been updated {}", invoiceRequest);
     }
-
 
     @Override
     public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
@@ -177,13 +175,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoice.getInvoiceStatus().equals(InvoiceStatus.ACCEPTED)) {
             foundInvoice.setCheckingDate(LocalDate.now());
             foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
-        }
-        if (invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED)) {
+        } else if (invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED)
+                   || invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
         }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-        Invoice invoiceDb = invoiceRepository.save(foundInvoice);
-        log.info("Invoice has been verified {}", invoiceDb);
+        foundInvoice.setComment(invoice.getComment());
+        log.info("Invoice status has been updated {}", foundInvoice);
     }
 
 }

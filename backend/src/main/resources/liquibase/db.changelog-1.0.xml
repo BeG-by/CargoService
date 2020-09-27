@@ -6,7 +6,7 @@
     <!--  Create users table-->
     <changeSet id="1.0.0" author="vladislav.mironuk">
 
-        <sql>CREATE TYPE user_status AS ENUM('ACTIVE','DELETED' , 'BLOCKED')</sql>
+        <sql>CREATE TYPE user_status AS ENUM('ACTIVE', 'DELETED', 'BLOCKED')</sql>
 
         <createTable tableName="user">
 
@@ -329,8 +329,17 @@
 
             <column name="id_client_company" type="BIGSERIAL"/>
 
+            <column name="comment" type="VARCHAR(500)"/>
+
         </createTable>
 
+
+        <addForeignKeyConstraint baseTableName="product"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_product_invoice"
+                                 onDelete="CASCADE"
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
 
         <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_driver"

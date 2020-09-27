@@ -4,23 +4,19 @@ import {updateInvoiceStatus} from "../../roles/manager/request-utils";
 import {OkButton} from "../buttons/ok-button";
 import {CancelButton} from "../buttons/cancel-button";
 
-export const CloseInvoice = withRouter((props) => {
+export const EditInvoice = withRouter((props) => {
     let inv = props.invoice;
-    const invoice = inv.act === null
-                    ? {id: inv.id, status: "CLOSED", comment: "Clean delivery"}
-                    : {id: inv.id, status: "CLOSED_WITH_ACT", comment: "Delivery with losses"};
 
-    const handleClose = async () => {
-        await updateInvoiceStatus(invoice);
-        props.history.push("/success");
+    const handleEdit = () => {
+        //fixme do smth to edit
     }
 
     return (
         <div className="form-signin">
             <div>
-                <i style={{fontSize: 16}}>Close the invoice?</i>
+                <i style={{fontSize: 16}}>Edit the invoice?</i>
                 <div className='btn-row'>
-                    <OkButton content='OK' handleClick={handleClose}/>
+                    <OkButton content='OK' handleClick={handleEdit}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import WaybillForm from "../../forms/waybill-form/waybill-form";
-import {DialogTitleCustomized} from "../../parts/dialog-title-customized";
+import {DialogTitleCustomized} from "../../parts/dialogs/dialog-title-customized";
 
 export default function WaybillDialog(props) {
     return (

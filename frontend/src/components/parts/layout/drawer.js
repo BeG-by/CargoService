@@ -14,11 +14,11 @@ import {ItemSendMail} from "../drawer-items/item-send-mail";
 import {ItemClientTable} from "../drawer-items/item-clients-company";
 import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
-import ItemInvoices from "../drawer-items/item-invoices";
-import {DRAWER_WITH} from "../../pages/body-wrapper";
+import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 
 
-const drawerWidth = DRAWER_WITH;
+const drawerWidth = DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -53,7 +53,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
 
     switch (props.role) {
         case 'SYSADMIN':
-            components.push(<ItemClientTable key="Client table"/>);
+            components.push(<ItemClientTable key="Clients"/>);
             components.push(<Divider key='Divider'/>);
             break;
         case 'ADMIN':
@@ -62,19 +62,16 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             break;
         case 'DISPATCHER':
             components.push(<ItemClientTable key="Product owners"/>);
-            components.push(<ItemInvoices key="Invoice items"/>)
+            components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<Divider key='Divider'/>);
             break;
+        case 'DRIVER':
         case 'MANAGER':
             components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<ItemWaybillList key='Waybills'/>);
             components.push(<Divider key='Divider'/>);
             break;
-        case 'DRIVER':
-
-            break;
         case 'OWNER':
-
             break;
         default:
     }

@@ -3,10 +3,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import {Copyright} from "./copyright";
-import {DRAWER_WITH} from "../../pages/body-wrapper";
+import {DRAWER_WIDTH} from "../../pages/body-wrapper";
 
 
-const drawerWidth = DRAWER_WITH;
+const drawerWidth = DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme) => ({
     footer: {

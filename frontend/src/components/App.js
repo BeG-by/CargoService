@@ -15,7 +15,7 @@ import SendMailBody from "./pages/send-mail-body";
 import ContactsBody from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
-import ProductOwnersTable from "./roles/dispatcher/product-owners/product-owners-table";
+import ProductOwnersTable from "./roles/dispatcher/product-owners-table";
 import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
 
 
@@ -56,9 +56,10 @@ export default function App() {
                     <Route exact path="/main" component={MainBody}/>
                     <Route exact path="/waybill" component={WayBillTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
-                    <Route exact path={"/users"} render={UserTable}/>
+                    <Route exact path={"/users"} component={UserTable}/>
                     <Route exact path={"/owners"} component={ProductOwnersTable}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
+                    <Route exact path={"/success"} component={() => <BodyWrapper openMenu={openMenu} content={() => <SuccessBody/>}/>}/> // fix
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>

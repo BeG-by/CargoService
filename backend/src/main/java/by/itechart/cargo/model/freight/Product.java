@@ -73,10 +73,19 @@ public class Product implements Serializable, Cloneable {
     @Type(type = "product_status")
     private Status productStatus;
 
+    @Column(name = "comment")
+    @Size(max = 500, message = "Comment length is greater than 500 symbols")
+    private String comment;
+
+    @Column(name = "lost_quantity")
+    @Positive (message = "Quantity must be more than 0")
+    private Integer lostQuantity;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_invoice")
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Invoice invoice;
+
 }

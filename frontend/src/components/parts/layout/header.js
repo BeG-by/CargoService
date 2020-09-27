@@ -12,9 +12,10 @@ import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
-import {DRAWER_WITH} from "../../pages/body-wrapper";
+import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import {Link} from "react-router-dom";
 
-const drawerWidth = DRAWER_WITH;
+const drawerWidth = DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -72,22 +73,17 @@ const mapActionsToProps = (dispatch) => {
 };
 
 const getUserInfoRequest = () => {
-
     const endpoint = "/v1/api/users/info";
     return axios({
         method: "GET",
         url: endpoint,
     })
-
 };
 
-
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
-
     const user = props.user;
-    const isAuthenticate = localStorage.getItem("authorization") !== null;
+    const isAuthenticate = localStorage.getItem("authorization");
     const headerText = "Manage your cargo with convenient digital tools";
-
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -102,7 +98,6 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
         }
     };
 
-
     useEffect(() => {
         if (isAuthenticate) {
             getUserInfo();
@@ -116,10 +111,9 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
         setOpenDialog(false);
     };
 
-    const renderHeaderText = () => {
-        return isAuthenticate ? user.name + " " + user.surname + ", " + user.roles : headerText
-    };
-
+    const renderHeaderText = isAuthenticate
+        ? user.name + " " + user.surname + ", " + user.roles
+        : headerText;
 
     const LoginButton = () => {
         return isAuthenticate ?
@@ -128,8 +122,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                           handleClickOpen={handleClickOpen}
                           handleClose={handleClose}/>;
     };
-
-
+//fixme  handleDrawerOpen?
     return (
         <AppBar className={clsx(classes.appBar, {
             [classes.appBarShift]: props.openMenu,
@@ -146,11 +139,13 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                     <MenuIcon/>
                 </IconButton>
                 <Typography className={classes.title} variant="h6" noWrap>
-                    CARGO APP
+                    <Link to="/main" className="link-item-white">
+                        CARGO APP
+                    </Link>
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>
-                    {renderHeaderText()}
+                    {renderHeaderText}
                 </Typography>
                 <div className={classes.grow}/>
                 <LoginButton/>

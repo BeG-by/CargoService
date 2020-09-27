@@ -15,7 +15,7 @@ import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {BodyWrapper} from "../../pages/body-wrapper";
+import {connect} from "react-redux";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -31,15 +31,30 @@ const columns = [
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
-function InvoicesTableContent() {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
-    const [invoice, setInvoice] = React.useState({id: 0, waybillId: "", invoiceStatus: "", number: ""});
+    const [invoice, setInvoice] = React.useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const role = props.role;
+
+    function handleRequestError(error) {
+        if (error.response && error.response.status !== 500) {
+            alert("error");
+        } else {
+            alert("Cannot get response from server");
+        }
+    }
 
     async function fetchInvoices(cleanupFunction) {
         if (!cleanupFunction) setInvoices(await getAllInvoices());
@@ -47,7 +62,11 @@ function InvoicesTableContent() {
 
     useEffect(() => {
         let cleanupFunction = false;
-        fetchInvoices(cleanupFunction);
+        fetchInvoices(cleanupFunction)
+            .catch((err) => {
+                setInvoices([]);
+                handleRequestError(err);
+            });
         return () => cleanupFunction = true;
     }, []);
 
@@ -61,11 +80,11 @@ function InvoicesTableContent() {
         setInvoice(() => ({
             id: foundInvoice.id,
             invoiceStatus: foundInvoice.invoiceStatus,
-            waybillId: foundInvoice.waybillId,
+            waybill: foundInvoice.waybill,
             number: foundInvoice.number,
         }));
         if (foundInvoice.invoiceStatus === "ACCEPTED"
-            && foundInvoice.waybillId === null) {
+            && foundInvoice.waybill === null) {
             setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {
@@ -161,7 +180,11 @@ function InvoicesTableContent() {
                     open={waybillDialogOpen}
                     onClose={() => {
                         setWaybillDialogOpen(false);
-                        fetchInvoices(false);
+                        fetchInvoices(false)
+                            .catch((err) => {
+                                setInvoices([]);
+                                handleRequestError(err);
+                            });
                     }}
                 />
 
@@ -173,7 +196,7 @@ function InvoicesTableContent() {
                 />
 
                 <DialogWindow
-                    dialogTitle="Invoice Info"
+                    dialogTitle={"Invoice # " + invoice.number}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}
@@ -183,6 +206,4 @@ function InvoicesTableContent() {
             </Paper>
         </div>
     );
-}
-
-export default () => <BodyWrapper content={InvoicesTableContent}/>
+})

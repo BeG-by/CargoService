@@ -2,17 +2,21 @@ import {OkButton} from "../buttons/ok-button";
 import React from "react";
 import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../../roles/manager/request-utils";
-import {withRouter} from "react-router-dom"
+import {withRouter} from "react-router-dom";
+import {Form, Formik} from "formik";
+import FormikField from "../../roles/sysadmin/formik-field";
+import Button from "@material-ui/core/Button";
+import {RejectInvoiceValidation} from "../validation/reject-invoice-validation";
 
-
-export const AssignVerificationInvoice = (props) => {
-    console.log(props);
-    let inv = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: inv.id, status: "ACCEPTED"});
-
+export const AssignVerificationInvoice = withRouter((props) => {
     const handleVerify = async () => {
+        const invoice = {
+            id: props.invoice.id,
+            status: "ACCEPTED",
+            comment: "Invoice checked, errors: none"
+        };
         await updateInvoiceStatus(invoice);
-        props.history.push("/invoice")
+        props.history.push("/success");
     }
 
     return (
@@ -25,48 +29,63 @@ export const AssignVerificationInvoice = (props) => {
                 </div>
             </div>
         </div>);
-}
+})
 
-export const RejectVerificationInvoice = (props) => {
-    let inv = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: inv.id, status: "REJECTED"});
-
-    const handleReject = async () => {
+export const RejectVerificationInvoice = withRouter((props) => {
+    const handleReject = async (values) => {
+        const invoice = {
+            id: values.id,
+            status: values.status,
+            comment: values.comment
+        };
         await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
+        props.history.push("/success");
     }
+
+    const comment = <Formik
+        enableReinitialize
+        initialValues={{
+            id: props.invoice.id,
+            status: "REJECTED",
+            comment: ""
+        }}
+        onSubmit={handleReject}
+        validationSchema={RejectInvoiceValidation}
+    >
+        {(formProps) => (
+            <Form>
+                <FormikField
+                    formikProps={formProps}
+                    id={"comment"}
+                    label={"Comment"}
+                    formikFieldName={"comment"}
+                />
+                <div className="btn-row">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                    >
+                        Reject
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='secondary'
+                        onClick={props.handleClose}>
+                        Cancel
+                    </Button>
+                </div>
+            </Form>
+        )}
+    </Formik>;
 
     return (
         <div className="form-signin">
             <div>
                 <i style={{fontSize: 16}}>Reject the incorrect invoice?</i>
-                <div className='btn-row'>
-                    <OkButton content='OK' handleClick={handleReject}/>
-                    <CancelButton content='Cancel' handleClick={props.handleClose}/>
-                </div>
+                {comment}
             </div>
         </div>);
-}
+})
 
-export const CloseInvoice = (props) => {
-    let inv = props.invoice;
-    const [invoice, setInvoice] = React.useState({id: inv.id, status: "CLOSED"});
 
-    const handleClose = async () => {
-        await updateInvoiceStatus(invoice);
-        window.location.href = "/main";
-    }
-
-    return (
-        <div className="form-signin">
-            <div>
-                <i style={{fontSize: 16}}>Close the invoice?</i>
-                <div className='btn-row'>
-                    <OkButton content='OK' handleClick={handleClose}/>
-                    <CancelButton content='Cancel' handleClick={props.handleClose}/>
-                </div>
-            </div>
-        </div>);
-}
-
-export default withRouter(AssignVerificationInvoice)

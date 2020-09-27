@@ -1,42 +1,44 @@
+import {connect} from "react-redux";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
+import {List} from "material-ui";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ListItemText from "@material-ui/core/ListItemText";
 import TableContainer from "@material-ui/core/TableContainer";
+import {Typography} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import TablePagination from "@material-ui/core/TablePagination";
-import React from "react";
-import {Typography} from "@material-ui/core";
-import {List} from "material-ui";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import HowToRegIcon from '@material-ui/icons/HowToReg';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
-import {getPointById, updatePoint} from "./request-utils";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import CheckIcon from "@material-ui/icons/Check";
+import TablePagination from "@material-ui/core/TablePagination";
+
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
 const columns = [
-    {id: "place", label: "Place", minWidth: 200},
-    {id: "passageDate", label: "Passage Date", minWidth: 200},
-    {id: "passed", label: "Passed", minWidth: 200}
+    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
+    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
+    {label: "Status", id: "productStatus", minWidth: 100, maxWidth: 100},
+    {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
+    {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
 ];
 
-export default function WaybillInfoContent(props) {
+export const ActInfo = connect(mapStateToProps)((props) => {
+    const invoice = props.invoice;
+    const act = props.act;
+
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
-
-    const handleTableRowClick = async (p) => {
-        let selected = await getPointById(p.id);
-        //fixme вставить диалог подтвердить прохождение точки on
-        if (!selected.passed) {
-            await updatePoint(selected);
-            props.action();
-        }
-    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -51,91 +53,71 @@ export default function WaybillInfoContent(props) {
                                 <CheckCircleIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Invoice #"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.invoice.number}
+                                        {invoice.driver.name + " " +
+                                        invoice.driver.surname}
                                     </React.Fragment>
                                 }
+                                secondary="Driver"
                             />
                             <ListItemIcon>
                                 <CheckCircleIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Auto"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.auto.mark} {props.waybill.auto.type}
+                                        {act.consigneeWorker}
                                     </React.Fragment>
                                 }
+                                secondary="Consignee worker"
+                            />
+                        </ListItem>
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItemIcon>
+                                <CheckCircleIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {invoice.shipper}
+                                    </React.Fragment>
+                                }
+                                secondary="Shipper"
                             />
                             <ListItemIcon>
                                 <CheckCircleIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Driver"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.driver.name} {props.waybill.driver.surname}
+                                        {invoice.consignee}
                                     </React.Fragment>
                                 }
+                                secondary="Consignee"
                             />
                         </ListItem>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <DepartureBoardIcon/>
+                                <CheckCircleIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Departure Date"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.departureDate}
+                                        {act.registrationDate}
                                     </React.Fragment>
                                 }
-                            />
-                            <ListItemIcon>
-                                <DepartureBoardIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="Arrival Date"
-                                secondary={
-                                    <React.Fragment>
-                                        {props.waybill.arrivalDate}
-                                    </React.Fragment>
-                                }
-                            />
-                        </ListItem>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <HowToRegIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="Shipper"
-                                secondary={
-                                    <React.Fragment>
-                                        {props.waybill.shipper}
-                                    </React.Fragment>
-                                }
-                            />
-                            <ListItemIcon>
-                                <HowToRegIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="Consignee"
-                                secondary={
-                                    <React.Fragment>
-                                        {props.waybill.consignee}
-                                    </React.Fragment>
-                                }
+                                secondary="Registration date"
                             />
                         </ListItem>
                     </div>
                 </List>
+
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom
                                 style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
-                        Control Points:
+                        Products List:
                     </Typography>
                     <Table
                         aria-label="sticky table">
@@ -152,30 +134,22 @@ export default function WaybillInfoContent(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.waybill.points
+                            {invoice.products
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((point) => {
+                                .map((product) => {
                                     return (
                                         <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(point);
-                                            }}
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={point.id}
+                                            key={product.id}
                                         >
                                             {columns.map((column) => {
-                                                const value = fetchFieldFromObject(point, column.id);
+                                                const value = fetchFieldFromObject(product, column.id);
                                                 return (
                                                     <TableCell key={column.id}>
-                                                        {column.id === 'passed' && value === true
-                                                            ? <CheckIcon/>
-                                                            : column.id === 'passed' && value === false
-                                                                ? ""
-                                                                : value}
+                                                        {value}
                                                     </TableCell>
-
                                                 );
                                             })}
                                         </TableRow>
@@ -185,15 +159,17 @@ export default function WaybillInfoContent(props) {
                     </Table>
                 </TableContainer>
                 <br/>
+
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
+                    rowsPerPageOptions={[10, 25, 50]}
                     component="div"
-                    count={props.waybill.points.length}
+                    count={invoice.products.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
                 />
+
             </Paper>
         </div>
     );
-}
+})

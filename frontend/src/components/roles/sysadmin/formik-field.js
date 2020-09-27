@@ -1,7 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import {ErrorMessage} from "formik";
-import {ErrorMsg} from "../../parts/layout/error-message";
 
 export default (props) => {
     const {formikProps, formikFieldName, id, label} = props;
@@ -18,7 +17,7 @@ export default (props) => {
                 value={formikProps.values[formikFieldName]}
                 fullWidth
             />
-            <label style={{color: "crimson"}}>
+            <label className="error-message">
                 <ErrorMessage name={formikFieldName}/>
             </label>
         </React.Fragment>
