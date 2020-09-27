@@ -48,6 +48,12 @@ public class UserUpdateRequest {
     @Size(max = 64, message = "Patronymic is too long (max is 64)")
     private String email;
 
+    @Size(max = 64, message = "Passport is too long (max is 64)")
+    private String passport;
+
+    //TODO Validation
+    private String status;
+
     @NotNull
     // TODO Enum validations - ?
     private Set<String> roles;

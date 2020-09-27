@@ -5,13 +5,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
 import FormikField from "./formik-field";
-import {getUserById, updateUser} from "./request-util";
+import {findUserById, saveUser, updateUser} from "./request-util";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import UserDatePicker from "./user-date-picker";
-import UserTypeSelector from "./user-role-selector";
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
+import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
 
 
 const EMPTY_USER = {
@@ -21,37 +19,48 @@ const EMPTY_USER = {
     name: "",
     surname: "",
     patronymic: "",
-    roles: "",
+    passport: "",
+    roles: [],
     birthday: "",
     address: {
         country: "",
         city: "",
         street: "",
         house: "",
+        flat: ""
     },
-    email: ""
+    email: "",
+    status: ""
 };
 
 
-const UserDialog = (props) => {
-    const {open, onClose, userId} = props;
+export const UserDialog = (props) => {
+    const {open, onClose, userId, refreshTable, showToast, handleError} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
+    const isUpdateForm = props.userId >= 0;
+
     useEffect(() => {
-        if (props.userId >= 0) {
-            getUserById(props.userId)
+
+        if (isUpdateForm) {
+            findUserById(props.userId)
                 .then(res => {
-                    if (res.data.address === null) {
-                        res.data.address = {
+                    const user = res.data;
+
+                    if (user.address === null) {
+                        user.address = {
                             country: "",
                             city: "",
                             street: "",
                             house: "",
+                            flat: ""
                         }
                     }
-                    console.log(res.data)
+
+                    user.roles = user.roles[0];
+
                     setUser(res.data);
-                })
+                }).catch(error => handleError(error))
         }
     }, [props.userId]);
 
@@ -82,44 +91,68 @@ const UserDialog = (props) => {
                         initialValues={{
                             id: userId,
                             login: user.login,
-                            password: "",
+                            password: user.password,
                             name: user.name,
                             surname: user.surname,
                             patronymic: user.patronymic,
                             role: user.roles,
                             birthday: user.birthday,
                             email: user.email,
+                            passport: user.passport,
+                            status: user.status,
                             country: user.address.country,
                             city: user.address.city,
                             street: user.address.street,
                             house: user.address.house,
+                            flat: user.address.flat,
                         }}
                         onSubmit={(values) => {
 
                             const user = {
-                                id: values.id,
                                 login: values.login,
-                                password: "",
+                                password: values.password,
                                 name: values.name,
                                 surname: values.surname,
                                 patronymic: values.patronymic,
-                                roles: values.role,
+                                roles: [values.role],
                                 birthday: values.birthday,
                                 email: values.email,
+                                passport: values.passport,
                                 address: {
                                     country: values.country,
                                     city: values.city,
                                     street: values.street,
-                                    house: values.house
+                                    house: values.house,
+                                    flat: values.flat
                                 }
+                            };
+
+                            if (isUpdateForm) {
+
+                                user.id = values.id;
+                                user.status = values.status;
+
+                                updateUser(user)
+                                    .then(res => {
+                                        handleClose();
+                                        refreshTable();
+                                        showToast("User has been updated", "success")
+                                    })
+                                    .catch(error => {
+                                        handleError(error)
+                                    })
+                            } else {
+
+                                saveUser(user)
+                                    .then(res => {
+                                        handleClose();
+                                        refreshTable();
+                                        showToast("User has been created", "success")
+                                    })
+                                    .catch(error => {
+                                        handleError(error)
+                                    })
                             }
-
-                            console.log(user)
-
-                            updateUser(user)
-                                .then(props.history.push("/main"))
-                                .catch(error => alert(error + error.data))
-
 
                         }}
                     >
@@ -157,12 +190,27 @@ const UserDialog = (props) => {
                                         label={"Patronymic"}
                                         formikFieldName={"patronymic"}
                                     />
+
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"passport"}
+                                        label={"Passport"}
+                                        formikFieldName={"passport"}
+                                    />
                                     <UserTypeSelector
                                         formikProps={formProps}
                                         id={"role"}
                                         label={"Role"}
                                         formikFieldName={"role"}
                                     />
+
+                                    {isUpdateForm ? <UserStatusSelector
+                                        formikProps={formProps}
+                                        id={"status"}
+                                        label={"Status"}
+                                        formikFieldName={"status"}
+                                    /> : ""}
+
                                     <UserDatePicker
                                         formikProps={formProps}
                                         id={"birthday"}
@@ -198,13 +246,19 @@ const UserDialog = (props) => {
                                         label={"House"}
                                         formikFieldName={"house"}
                                     />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"flat"}
+                                        label={"Flat"}
+                                        formikFieldName={"flat"}
+                                    />
                                     <Button
                                         variant="contained"
                                         color="primary"
                                         type="submit"
                                         disabled={formProps.listener}
                                     >
-                                        Submit
+                                        {isUpdateForm ? "Update" : "Save"}
                                     </Button>
                                 </Form>
                             );
@@ -215,6 +269,3 @@ const UserDialog = (props) => {
         </div>
     );
 }
-
-
-export default withRouter(UserDialog)

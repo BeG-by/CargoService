@@ -13,6 +13,7 @@ import { makeGetAllClientsRequest } from "./request-utils";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },
@@ -70,7 +71,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ClientsTable() {
+function ClientsTable() {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -216,3 +217,6 @@ export default function ClientsTable() {
     </div>
   );
 }
+
+
+export default () => <BodyWrapper content={ClientsTable}/>

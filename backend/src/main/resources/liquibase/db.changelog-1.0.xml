@@ -6,7 +6,7 @@
     <!--  Create users table-->
     <changeSet id="1.0.0" author="vladislav.mironuk">
 
-        <sql>CREATE TYPE user_status AS ENUM('ACTIVE', 'BLOCKED')</sql>
+        <sql>CREATE TYPE user_status AS ENUM('ACTIVE','DELETED' , 'BLOCKED')</sql>
 
         <createTable tableName="user">
 
@@ -100,7 +100,7 @@
     <!-- Create client company and contract table, add reference from user to company -->
     <changeSet id="1.0.3" author="vladislav.mironuk">
         <sql>CREATE TYPE client_company_type AS ENUM('SP', 'JP')</sql>
-        <sql>CREATE TYPE client_company_status AS ENUM('ACTIVE', 'BLOCKED')</sql>
+        <sql>CREATE TYPE client_company_status AS ENUM('ACTIVE', 'DELETED', 'BLOCKED')</sql>
 
         <createTable tableName="client_company">
             <column name="id_client_company" type="BIGSERIAL" autoIncrement="true">
