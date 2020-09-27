@@ -1,10 +1,6 @@
-package by.itechart.cargo.model.freight;
+package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.Address;
-import by.itechart.cargo.model.ClientCompany;
-import by.itechart.cargo.model.enumeration.CompanyType;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
-import by.itechart.cargo.model.enumeration.ProductOwnerStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -48,7 +44,7 @@ public class ProductOwner implements Serializable, Cloneable {
     @Enumerated(EnumType.STRING)
     @Type(type = "product_owner_status")
     @Column(name = "status", nullable = false)
-    private ProductOwnerStatus status;
+    private Status status;
 
     @Embedded
     @AttributeOverrides({
@@ -79,4 +75,14 @@ public class ProductOwner implements Serializable, Cloneable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Invoice> invoices;
+
+    public enum CompanyType {
+        SP, //Sole proprietorship
+        JP //Juridical person
+    }
+
+    public enum Status {
+        ACTIVE, DELETED
+    }
+
 }

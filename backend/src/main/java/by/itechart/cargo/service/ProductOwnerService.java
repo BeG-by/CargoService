@@ -4,7 +4,7 @@ import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.ProductOwner;
 
 import java.util.List;
 

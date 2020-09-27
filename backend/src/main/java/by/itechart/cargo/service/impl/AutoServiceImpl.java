@@ -3,7 +3,7 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.model_dto.auto.AutoRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
-import by.itechart.cargo.model.freight.Auto;
+import by.itechart.cargo.model.Auto;
 import by.itechart.cargo.repository.AutoRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;

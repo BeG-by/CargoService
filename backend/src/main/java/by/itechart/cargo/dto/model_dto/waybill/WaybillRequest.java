@@ -1,7 +1,7 @@
 package by.itechart.cargo.dto.model_dto.waybill;
 
-import by.itechart.cargo.model.freight.Point;
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.Point;
+import by.itechart.cargo.model.Waybill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,9 +1,7 @@
 package by.itechart.cargo.dto.model_dto.product_owner;
 
 import by.itechart.cargo.model.Address;
-import by.itechart.cargo.model.enumeration.CompanyType;
-import by.itechart.cargo.model.enumeration.ProductOwnerStatus;
-import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.ProductOwner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,8 +38,8 @@ public class ProductOwnerSaveRequest implements Serializable, Cloneable {
         return ProductOwner.builder()
                 .name(name)
                 .address(address)
-                .status(ProductOwnerStatus.ACTIVE)
-                .type(CompanyType.valueOf(type))
+                .status(ProductOwner.Status.ACTIVE)
+                .type(ProductOwner.CompanyType.valueOf(type))
                 .registrationDate(registrationDate)
                 .phone(phone)
                 .build();

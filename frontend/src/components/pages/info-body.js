@@ -1,4 +1,5 @@
 import React from "react";
+import {BodyWrapper} from "./body-wrapper";
 
 export const InfoBody = () => {
     //todo content
@@ -7,3 +8,6 @@ export const InfoBody = () => {
         and marvelous glory, splendid facts and high definition photos of little fluffy puppies, blah-blah-blah...
     </h2>;
 }
+
+
+export default () => <BodyWrapper content={InfoBody}/>

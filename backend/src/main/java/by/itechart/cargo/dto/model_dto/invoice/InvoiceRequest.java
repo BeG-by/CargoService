@@ -1,10 +1,8 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
 import by.itechart.cargo.dto.validation.EnumNamePattern;
-import by.itechart.cargo.model.enumeration.InvoiceStatus;
-import by.itechart.cargo.model.freight.Invoice;
-import by.itechart.cargo.model.freight.Product;
-import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.Invoice;
+import by.itechart.cargo.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,7 +42,7 @@ public class InvoiceRequest {
     @NotNull
     @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED|CLOSED_WITH_ACT",
             message = "Type must be one of InvoiceStatus types")
-    private InvoiceStatus status;
+    private Invoice.Status status;
 
     @NotNull(message = "Driver id number is mandatory")
     private Long driverId;
@@ -58,7 +56,7 @@ public class InvoiceRequest {
                 .id(id)
                 .number(invoiceNumber)
                 .registrationDate(registrationDate)
-                .invoiceStatus(status)
+                .status(status)
                 .shipper(shipper)
                 .consignee(consignee)
                 .products(products)

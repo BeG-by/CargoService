@@ -1,7 +1,7 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.Auto;
+import by.itechart.cargo.model.Auto;
 import by.itechart.cargo.service.AutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

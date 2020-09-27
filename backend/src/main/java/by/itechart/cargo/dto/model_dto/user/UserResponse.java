@@ -1,7 +1,6 @@
 package by.itechart.cargo.dto.model_dto.user;
 
 import by.itechart.cargo.model.Address;
-import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,7 @@
 package by.itechart.cargo.dto.model_dto.product_owner;
 
 import by.itechart.cargo.model.Address;
-import by.itechart.cargo.model.enumeration.CompanyType;
-import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.ProductOwner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class ProductOwnerDTO {
     private String name;
 
     //todo: enum validation
-    private CompanyType type;
+    private ProductOwner.CompanyType type;
 
     //todo: date validation
     private LocalDate registrationDate;

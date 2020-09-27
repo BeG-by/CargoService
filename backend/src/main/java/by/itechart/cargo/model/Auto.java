@@ -1,6 +1,5 @@
-package by.itechart.cargo.model.freight;
+package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;

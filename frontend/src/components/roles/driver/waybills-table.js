@@ -16,6 +16,7 @@ import {getInvoiceById} from "../manager/request-utils";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
+import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100},

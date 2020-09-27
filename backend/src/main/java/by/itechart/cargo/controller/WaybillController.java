@@ -4,8 +4,8 @@ import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.Point;
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.Point;
+import by.itechart.cargo.model.Waybill;
 import by.itechart.cargo.service.PointService;
 import by.itechart.cargo.service.WaybillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/api/waybills")

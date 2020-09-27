@@ -3,7 +3,7 @@ package by.itechart.cargo.service;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.Waybill;
 
 import java.util.List;
 

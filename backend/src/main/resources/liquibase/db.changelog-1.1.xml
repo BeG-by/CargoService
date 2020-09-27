@@ -91,7 +91,7 @@
                                  referencedColumnNames="id_invoice"/>
     </changeSet>
 
-    <changeSet id="1.2.2" author="marianna.patrusova">
+    <changeSet id="1.1.2" author="marianna.patrusova">
         <createTable tableName="act">
             <column name="id_act" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>

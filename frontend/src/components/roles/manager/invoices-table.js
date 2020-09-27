@@ -16,6 +16,7 @@ import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import {connect} from "react-redux";
+import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -207,3 +208,6 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         </div>
     );
 })
+
+
+export default InvoicesTable;

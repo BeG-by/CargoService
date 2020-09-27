@@ -6,7 +6,7 @@ import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.freight.Invoice;
+import by.itechart.cargo.model.Invoice;
 import java.util.List;
 
 public interface InvoiceService {

@@ -1,11 +1,6 @@
 package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.enumeration.CompanyType;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
-import by.itechart.cargo.model.freight.Auto;
-import by.itechart.cargo.model.freight.Invoice;
-import by.itechart.cargo.model.freight.ProductOwner;
-import by.itechart.cargo.model.freight.Waybill;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -138,5 +133,9 @@ public class ClientCompany implements Serializable, Cloneable {
         BLOCKED
     }
 
+    public enum CompanyType {
+        SP, //Sole proprietorship
+        JP //Juridical person
+    }
 
 }

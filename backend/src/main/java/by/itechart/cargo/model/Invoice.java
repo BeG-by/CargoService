@@ -1,9 +1,6 @@
-package by.itechart.cargo.model.freight;
+package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.ClientCompany;
-import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
-import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -39,7 +36,7 @@ public class Invoice implements Serializable, Cloneable {
     @Enumerated(EnumType.STRING)
     @Type(type = "invoice_status")
     @Column(name = "status")
-    private InvoiceStatus invoiceStatus;
+    private Status status;
 
     @Column(name = "registration_date", nullable = false)
     private LocalDate registrationDate;
@@ -97,5 +94,9 @@ public class Invoice implements Serializable, Cloneable {
     @JoinColumn(name = "id_client_company", nullable = false)
     @JsonBackReference(value = "invoice_company")
     private ClientCompany clientCompany;
+
+    public enum Status {
+        REGISTERED, ACCEPTED, REJECTED, CLOSED, CLOSED_WITH_ACT
+    }
 
 }

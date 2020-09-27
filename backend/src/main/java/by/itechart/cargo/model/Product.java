@@ -1,10 +1,6 @@
-package by.itechart.cargo.model.freight;
+package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
-import by.itechart.cargo.model.enumeration.Status;
-import by.itechart.cargo.model.enumeration.product.Currency;
-import by.itechart.cargo.model.enumeration.product.MassMeasure;
-import by.itechart.cargo.model.enumeration.product.QuantityMeasure;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -78,7 +74,7 @@ public class Product implements Serializable, Cloneable {
     private String comment;
 
     @Column(name = "lost_quantity")
-    @Positive (message = "Quantity must be more than 0")
+    @Positive(message = "Quantity must be more than 0")
     private Integer lostQuantity;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -87,5 +83,24 @@ public class Product implements Serializable, Cloneable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Invoice invoice;
+
+    public enum Status {
+        ACCEPTED,
+        VERIFIED,
+        DELIVERED,
+        LOST
+    }
+
+    public enum Currency {
+        RUB, BYN, EURO, USD
+    }
+
+    public enum MassMeasure {
+        KG, TON
+    }
+
+    public enum QuantityMeasure {
+        BOX, BAG, PIECE, BARREL
+    }
 
 }

@@ -2,21 +2,22 @@ import React from "react";
 import "./App.css";
 import interceptors from "../../src/security/Interceptors";
 import {Route, Switch} from "react-router-dom";
-import NotFound from "./pages/error-page/error-404";
+import {NotFound} from "./pages/error-page/error-404";
 import {Header} from "./parts/layout/header";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {DrawerMenu} from "./parts/layout/drawer";
 import WelcomeBody from "./pages/welcome-body";
 import {Footer} from "./parts/layout/footer";
 import {MainBody} from "./pages/main-body";
-import WayBillTable from "./roles/driver/waybills-table";
+import {WaybillsTable} from "./roles/driver/waybills-table"
 import InfoBody from "./pages/info-body";
 import SendMailBody from "./pages/send-mail-body";
 import ContactsBody from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
-import ProductOwnersTable from "./roles/dispatcher/product-owners-table";
+import ProductOwnersTable from "./roles/dispatcher/product-owners/product-owners-table";
 import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
+import {SuccessBody} from "./pages/success-body";
 
 
 export default function App() {
@@ -54,12 +55,12 @@ export default function App() {
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
                     <Route exact path="/main" component={MainBody}/>
-                    <Route exact path="/waybill" component={WayBillTable}/>
+                    <Route exact path="/waybill" component={WaybillsTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
                     <Route exact path={"/users"} component={UserTable}/>
                     <Route exact path={"/owners"} component={ProductOwnersTable}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
-                    <Route exact path={"/success"} component={() => <BodyWrapper openMenu={openMenu} content={() => <SuccessBody/>}/>}/> // fix
+                    <Route exact path={"/success"} component={SuccessBody}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>
