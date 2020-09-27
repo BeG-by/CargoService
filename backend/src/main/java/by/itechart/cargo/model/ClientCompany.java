@@ -134,6 +134,7 @@ public class ClientCompany implements Serializable, Cloneable {
 
     public enum Status {
         ACTIVE,
+        DELETED,
         BLOCKED
     }
 

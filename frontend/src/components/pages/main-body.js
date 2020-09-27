@@ -4,7 +4,6 @@ import InvoicesTable from "../roles/manager/invoices-table";
 import ClientsTable from "../roles/sysadmin/clients-table";
 import UserTable from "../roles/admin/user-table";
 import {connect} from "react-redux";
-import {BodyWrapper} from "./body-wrapper";
 
 const mapStateToProps = (store) => {
     return {
@@ -18,27 +17,27 @@ export const MainBody = connect(mapStateToProps)((props) => {
     switch (props.role) {
 
         case 'SYSADMIN':
-            content = () => <ClientsTable/>;
+            content = <ClientsTable/>;
             break;
         case 'ADMIN':
-            content = () => <UserTable/>;
+            content = <UserTable/>;
             break;
         case 'DISPATCHER':
-            content = () => <ProductOwnersTable/>;
+            content = <ProductOwnersTable/>;
             break;
         case 'MANAGER':
-            content = () => <InvoicesTable/>;
+            content = <InvoicesTable/>;
             break;
         case 'DRIVER':
-            content = () => {return "Driver..."}
+            content = () => {return "Driver..."};
             break;
         case 'OWNER':
-            content = () => {return "Owner..."}
+            content = () => {return "Owner..."};
             break;
         default:
             content = () => {return "Loading..."};
     }
 
-    return <BodyWrapper content={content}/>
+    return content;
 
 });
