@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="1.1.0" author="vladislav.mironuk">
+    <changeSet id="1.0.0" author="vladislav.mironuk">
         <createTable tableName="storage">
             <column name="id_storage" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -28,5 +28,64 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="1.0.1" author="vladislav.mironuk">
+        <!--Product-->
+        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
+        <sql>CREATE TYPE mass_measure AS ENUM('KG','TON')</sql>
+        <sql>CREATE TYPE quantity_measure AS ENUM('PIECE','BOX', 'BARREL', 'BAG')</sql>
+        <sql>CREATE TYPE currency_type AS ENUM('RUB','BYN', 'EURO', 'USD')</sql>
+        <createTable tableName="product">
+
+            <column name="id_product" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="quantity_measure" type="quantity_measure">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="mass_measure" type="mass_measure">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="currency" type="currency_type">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="mass" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="product_status" defaultValue="ACCEPTED">
+                <constraints nullable="false"/> <!-- Is it necessary? We set default value -->
+            </column>
+
+            <column name="id_invoice" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product"
+                                 baseColumnNames="id_invoice"
+                                 constraintName="fk_product_invoice"
+                                 onDelete="CASCADE"
+                                 referencedTableName="invoice"
+                                 referencedColumnNames="id_invoice"/>
+    </changeSet>
+
 
 </databaseChangeLog>

@@ -15,7 +15,7 @@ import SendMailBody from "./pages/send-mail-body";
 import ContactsBody from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/user-table";
-import ProductOwnersTable from "./roles/dispatcher/product-owners-table";
+import ProductOwnersTable from "./roles/dispatcher/product-owners/product-owners-table";
 import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
 
 

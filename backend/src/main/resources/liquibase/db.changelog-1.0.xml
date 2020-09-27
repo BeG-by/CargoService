@@ -193,9 +193,9 @@
 
 
     <!-- Product owners -->
-
-    <changeSet id="1.0.4" author="eugene.begun">
+    <changeSet id="1.0.4" author="vladislav.mironuk">
         <sql>CREATE TYPE product_owner_type AS ENUM('SP', 'JP')</sql>
+        <sql>CREATE TYPE product_owner_status AS ENUM('ACTIVE', 'BLOCKED', 'DELETED')</sql>
 
         <createTable tableName="product_owner">
             <column name="id_product_owner" type="BIGSERIAL" autoIncrement="true">
@@ -232,7 +232,13 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="phone" type="VARCHAR(255)"/>
+            <column name="status" type="product_owner_status" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="phone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
 
             <column name="id_client_company" type="BIGSERIAL">
                 <constraints nullable="false"/>
@@ -270,44 +276,6 @@
             </column>
 
             <column name="id_client_company" type="BIGSERIAL">
-                <constraints nullable="false"/>
-            </column>
-
-        </createTable>
-
-        <!--Product-->
-        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
-        <createTable tableName="product">
-
-            <column name="id_product" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
-
-            <column name="name" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="quantity" type="INT">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="measure" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="price" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="mass" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="status" type="product_status" defaultValue="ACCEPTED">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="id_invoice" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
 
@@ -363,13 +331,6 @@
 
         </createTable>
 
-
-        <addForeignKeyConstraint baseTableName="product"
-                                 baseColumnNames="id_invoice"
-                                 constraintName="fk_product_invoice"
-                                 onDelete="CASCADE"
-                                 referencedTableName="invoice"
-                                 referencedColumnNames="id_invoice"/>
 
         <addForeignKeyConstraint baseTableName="invoice"
                                  baseColumnNames="id_driver"

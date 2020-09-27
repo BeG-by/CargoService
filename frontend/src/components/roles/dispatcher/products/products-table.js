@@ -11,15 +11,17 @@ import TableRow from "@material-ui/core/TableRow";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 100, maxWidth: 100},
-    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
     {label: "Mass", id: "mass", minWidth: 100, maxWidth: 100},
+    {label: "Mass measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
     {label: "Quantity", id: "quantity", minWidth: 100, maxWidth: 100},
+    {label: "Quantity measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
     {label: "Price", id: "price", minWidth: 100, maxWidth: 100},
+    {label: "Currency", id: "currency", minWidth: 100, maxWidth: 100},
 ];
 
 function fetchFieldFromObject(obj, prop) {
     if (obj === undefined || obj === null) {
-        return;
+        return null;
     }
     let index = prop.indexOf(".");
     if (index > -1) {
@@ -72,7 +74,7 @@ export default (props) => {
                                 <TableCell
                                     key={column.id}
                                     align={column.align}
-                                    style={{ maxWidth: column.maxWidth}}
+                                    style={{maxWidth: column.maxWidth}}
                                 >
                                     {column.label}
                                 </TableCell>

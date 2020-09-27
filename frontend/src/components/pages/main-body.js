@@ -1,5 +1,5 @@
 import React from "react";
-import ProductOwnersTable from "../roles/dispatcher/product-owners-table";
+import ProductOwnersTable from "../roles/dispatcher/product-owners/product-owners-table";
 import InvoicesTable from "../roles/manager/invoices-table";
 import ClientsTable from "../roles/sysadmin/clients-table";
 import UserTable from "../roles/admin/user-table";
@@ -35,7 +35,9 @@ export const MainBody = connect(mapStateToProps)((props) => {
             content = () => {return "Owner..."};
             break;
         default:
-            content = () => {return "Loading..."};
+            content = () => {
+                return "Loading..."
+            };
     }
 
     return content;

@@ -62,16 +62,14 @@ export function InvoiceTable() {
     const [toastComponent, showToastComponent] = useToast();
 
     function handleRequestError(error) {
-        console.log(invoices)
-        if (error.response && !error.response.status === 500) {
+        if (error.response.status < 500) {
             showToastComponent(error.response.data, "error");
         } else {
             showToastComponent("Cannot get response from server", "error");
         }
     }
 
-    useEffect(() => {
-        let mounted = true;
+    function fetchInvoices(mounted) {
         makeGetAllInvoicesRequest()
             .then((res) => {
                     if (mounted) {
@@ -83,6 +81,11 @@ export function InvoiceTable() {
                 setInvoices([]);
                 handleRequestError(err)
             })
+    }
+
+    useEffect(() => {
+        let mounted = true;
+        fetchInvoices(mounted);
         return () => mounted = false;
     }, []);
 
@@ -173,7 +176,7 @@ export function InvoiceTable() {
                 />
             </Paper>
 
-             {toastComponent}
+            {toastComponent}
         </div>
     );
 }
