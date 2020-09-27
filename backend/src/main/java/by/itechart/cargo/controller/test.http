@@ -97,7 +97,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 {
   "status": "REGISTERED",
-  "invoiceNumber": "TTN3277838",
+  "invoiceNumber": "TTN8888888",
   "registrationDate": "2020-01-03",
   "productOwnerId": 1,
   "shipper": "OOO 'Test company', Minsk, Nemiga 3 ",
@@ -225,3 +225,35 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 GET localhost:8080/v1/api/waybills/points/12
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
+// --- Acts ---
+
+GET localhost:8080/v1/api/acts/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+###
+
+POST localhost:8080/v1/api/acts
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNTk5MTM3ODU1LCJleHAiOjE4MDE1OTkxMzc4NTV9.Pf5XEA7ure-0R67U-T5YShQIMXw6iYCJRDsVorZ96BI
+
+{
+  "invoiceId": 1,
+  "consigneeWorker": "Sergey Sergeev",
+  "registrationDate": "2020-09-27",
+  "products": [
+    {
+      "id": 28,
+      "invoiceId": 1,
+      "name": "beer",
+      "quantity": 5,
+      "measure": "bochka",
+      "price": 56,
+      "mass": "100 kg",
+      "productStatus": "LOST",
+      "lostQuantity": 2,
+      "comment": "all is gone"
+    }]
+}

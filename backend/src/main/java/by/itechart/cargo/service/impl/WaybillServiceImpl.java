@@ -63,7 +63,6 @@ public class WaybillServiceImpl implements WaybillService {
         return waybillRepository.findById(id).orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
     }
 
-
     @Override
     public void save(WaybillRequest waybillRequest) throws NotFoundException {
         final Waybill waybill = waybillRequest.toWaybill();
@@ -75,17 +74,14 @@ public class WaybillServiceImpl implements WaybillService {
 
         final ClientCompany clientCompany = clientCompanyRepository
                 .findById(companyId).orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
-
         waybill.setClientCompany(clientCompany);
 
         final Invoice invoice = invoiceRepository
                 .findById(invoiceId).orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
-
         waybill.setInvoice(invoice);
 
         final Auto auto = autoRepository
                 .findById(autoId).orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
-
         waybill.setAuto(auto);
 
         waybill.getPoints().forEach(p -> p.setWaybill(waybill));

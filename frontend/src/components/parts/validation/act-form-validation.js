@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const ActFormValidation = Yup.object({
     consigneeWorker: Yup.string()
-        .required("Consignee worker is required")
+        .min(5, "Min length must be greater than 5 symbols")
         .max(255, "Max length must be lesser than 255 symbols")
 });
 

@@ -84,7 +84,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
             number: foundInvoice.number,
         }));
         if (foundInvoice.invoiceStatus === "ACCEPTED"
-            && foundInvoice.waybill.id === null) {
+            && foundInvoice.waybill === null) {
             setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {
@@ -180,7 +180,11 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     open={waybillDialogOpen}
                     onClose={() => {
                         setWaybillDialogOpen(false);
-                        fetchInvoices(false);
+                        fetchInvoices(false)
+                            .catch((err) => {
+                                setInvoices([]);
+                                handleRequestError(err);
+                            });
                     }}
                 />
 
@@ -192,7 +196,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                 />
 
                 <DialogWindow
-                    dialogTitle="Invoice Info"
+                    dialogTitle={"Invoice # " + invoice.number}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}

@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {validationSchemaLogin} from "./validation";
+import {validationSchemaLogin} from "../../parts/validation/login-form-validation";
 import {Form, Formik} from "formik";
 import React from "react";
 import {FormikField, LoginField, PasswordField} from "./formik-field";

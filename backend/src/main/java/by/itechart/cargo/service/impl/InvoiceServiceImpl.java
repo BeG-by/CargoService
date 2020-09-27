@@ -167,7 +167,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         log.info("Invoice has been updated {}", invoiceRequest);
     }
 
-
     @Override
     public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
@@ -182,7 +181,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
         foundInvoice.setComment(invoice.getComment());
-        log.info("Invoice has been verified {}", foundInvoice);
+        log.info("Invoice status has been updated {}", foundInvoice);
     }
 
 }

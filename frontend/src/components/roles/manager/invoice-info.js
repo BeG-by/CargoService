@@ -95,6 +95,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
             },
             waybill: selected.waybill,
             act: selected.act,
+            comment: selected.comment,
         });
         if (selected.waybill === null) {
             setCheckPassage(false);
@@ -136,10 +137,10 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     }
 
     let buttons = <div className='btn-row'>
-        <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>;
-        <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>;
-        <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>;
-        <OkButton content={'Edit'} handleClick={handleEditOpen} disabled={editDisabled}/>;
+        <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>
+        <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>
+        <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>
+        <OkButton content={'Edit'} handleClick={handleEditOpen} disabled={editDisabled}/>
     </div>
 
     return (

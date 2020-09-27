@@ -7,29 +7,29 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Grid from "@material-ui/core/Grid";
 import {Button} from "@material-ui/core";
 import {saveAct} from "../../roles/driver/request-utils";
-import {ActFormValidation} from "./act-form-validation";
+import {ActFormValidation} from "../../parts/validation/act-form-validation";
 import {ProductsTable} from "./products-table";
 import ProductsDialog from "./products-dialog";
-
-const EMPTY_PRODUCT = {
-    id: null,
-    idx: -1,
-    invoiceId: null,
-    status: "",
-    lostQuantity: 0,
-    comment: "",
-    name: "",
-    quantity: 0,
-    measure: "",
-    price: 0,
-    mass: "",
-};
+import FormikField from "../../roles/sysadmin/formik-field";
 
 export const ActForm = (props) => {
     const invoice = props.invoice;
+    const EMPTY_PRODUCT = {
+        id: 0,
+        idx: -1,
+        invoiceId: invoice.id,
+        productStatus: "",
+        lostQuantity: 0,
+        comment: "",
+        name: "",
+        quantity: 0,
+        measure: "",
+        price: 0,
+        mass: "",
+    };
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
-    const [products, setProducts] = useState(props.invoice.products);
+    const [products, setProducts] = useState(invoice.products);
 
     const useStyles = makeStyles(() => ({
         formControl: {
@@ -38,10 +38,6 @@ export const ActForm = (props) => {
         }
     }));
     const classes = useStyles();
-
-    // useEffect(() => {
-    //     setInvoice(props.invoice);
-    // }, [props.invoice]);
 
     useEffect(() => {
         setProducts(invoice.products);
@@ -68,8 +64,7 @@ export const ActForm = (props) => {
             const temp = [...prevState];
             for (let el of temp) {
                 if (el.idx === product.idx) {
-                    el.invoiceId = product.invoiceId;
-                    el.status = product.status;
+                    el.productStatus = product.productStatus;
                     el.lostQuantity = product.lostQuantity;
                     el.comment = product.comment;
                     el.name = product.name;
@@ -87,8 +82,11 @@ export const ActForm = (props) => {
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
 
     const handleSubmit = (values) => {
+        products.forEach(p => {
+            p.invoiceId = invoice.id;
+        })
         const act = {};
-        act.invoiceId = values.invoiceId;
+        act.invoiceId = invoice.id;
         act.registrationDate = today;
         act.consigneeWorker = values.consigneeWorker;
         act.products = products;
@@ -104,17 +102,16 @@ export const ActForm = (props) => {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    invoiceId: invoice.id,
                     consigneeWorker: ""
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={ActFormValidation}
             >
-                {() => (
+                {(formProps) => (
                     <Form>
                         <FormControl className={classes.formControl}>
                             <Grid container spacing={3}>
-                                <Grid item xs={6}>
+                                <Grid item md={6}>
                                     <TextField name="driver"
                                                label="Driver"
                                                type="text"
@@ -123,15 +120,13 @@ export const ActForm = (props) => {
                                                defaultValue={invoice.driver.name + " "
                                                + invoice.driver.surname}/>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <TextField name="consigneeWorker"
-                                               id="consigneeWorker"
-                                               label="Consignee worker"
-                                               type="text"
+                                <Grid item md={6}>
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"consigneeWorker"}
+                                        label={"Consignee worker"}
+                                        formikFieldName={"consigneeWorker"}
                                     />
-                                    <label style={{color: "#f50057"}}>
-                                        <ErrorMessage name={"consigneeWorker"}/>
-                                    </label>
                                 </Grid>
                             </Grid>
                             <br/>

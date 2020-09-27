@@ -16,7 +16,7 @@ export default function FormikField(props) {
                 value={formikProps.values[formikFieldName]}
                 fullWidth
             />
-            <label style={{color: "red"}}>
+            <label className="error-message">
                 <ErrorMessage name={formikFieldName}/>
             </label>
         </React.Fragment>

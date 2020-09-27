@@ -53,7 +53,7 @@ public class Product implements Serializable, Cloneable {
 
     @Column(name = "lost_quantity")
     @Positive (message = "Quantity must be more than 0")
-    private String lostQuantity;
+    private Integer lostQuantity;
 
     @Column(name = "mass", nullable = false)
     @NotBlank(message = "Mass is mandatory")

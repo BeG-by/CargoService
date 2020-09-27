@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import FormikField from "../../roles/sysadmin/formik-field";
 import Button from "@material-ui/core/Button";
-import {ProductFormValidation} from "./act-form-validation";
+import {ProductFormValidation} from "../../parts/validation/act-form-validation";
 
 export default (props) => {
     const { initProductState, onSubmit, onClose } = props;
@@ -11,7 +11,7 @@ export default (props) => {
         const product = {
             id: initProductState.id,
             invoiceId: initProductState.invoiceId,
-            status: "LOST",
+            productStatus: "LOST",
             lostQuantity: values.quantity,
             comment: values.comment,
             name: initProductState.name,

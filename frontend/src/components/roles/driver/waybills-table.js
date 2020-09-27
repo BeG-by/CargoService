@@ -85,7 +85,9 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
             id: foundWaybill.id,
             invoice: foundWaybill.invoice,
         }));
-        if (checkPassage) {
+        if (checkPassage
+            && foundWaybill.invoice.status !== "CLOSED"
+            && foundWaybill.invoice.status !== "CLOSED_WITH_ACT") {
             setForm(FillActDialog(handleActFormOpen, handleWaybillInfoOpen));
             setActFillDialogOpen(true);
         } else {

@@ -15,31 +15,37 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
+import StoreIcon from '@material-ui/icons/Store';
+import CommentIcon from '@material-ui/icons/Comment';
+import {ActInfo} from "./act-info";
+import {DialogWindow} from "../../parts/dialogs/dialog";
+import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 
 const columns = [
     {id: "name", label: "Name", minWidth: 200},
     {id: "quantity", label: "Quantity", minWidth: 100},
     {id: "measure", label: "Measure", minWidth: 100},
     {id: "price", label: "Price", minWidth: 100},
-    {id: "sum", label: "Sum", minWidth: 100},
     {id: "mass", label: "Mass", minWidth: 100},
-    {id: "status", label: "Status", minWidth: 100},
+    {id: "productStatus", label: "Status", minWidth: 100},
 ];
 
-function fetchFieldFromObject(obj, prop) {
-    let index = prop.indexOf(".");
-    if (index > 0) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-    return obj[prop];
-}
-
 export default function InvoiceInfoContent(props) {
+    const invoice = props.invoice;
+    const act = props.invoice.act;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
+    const [actInfoDialogOpen, setActInfoDialogOpen] = React.useState(false);
+    const [form, setForm] = React.useState(null);
+
+    const handleActInfoOpen = () => {
+        setForm(<ActInfo act={act} invoice={invoice}/>);
+        setActInfoDialogOpen(true);
+    }
+
+    const handleClose = () => {
+        setActInfoDialogOpen(false);
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -47,20 +53,12 @@ export default function InvoiceInfoContent(props) {
     return (
         <div>
             <Paper>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    {props.buttons}
+                </div>
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                     <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                        <ListItemIcon>
-                            <CheckCircleIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.number}
-                                </React.Fragment>
-                            }
-                            secondary="Invoice #"
-                        />
                         <ListItemIcon>
                             <CheckCircleIcon/>
                         </ListItemIcon>
@@ -78,10 +76,23 @@ export default function InvoiceInfoContent(props) {
                         <ListItemText
                             primary={
                                 <React.Fragment>
-                                    {props.invoice.waybillId !== null ? "Filled" : "Empty"}
+                                    {props.invoice.waybill !== null ? "Filled" : "Empty"}
                                 </React.Fragment>
                             }
                             secondary="Waybill"
+                        />
+                        <ListItemIcon>
+                            <CheckCircleIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <React.Fragment>
+                                    {act !== null ?
+                                        <strong onClick={handleActInfoOpen}>Filled</strong>
+                                        : "Empty"}
+                                </React.Fragment>
+                            }
+                            secondary="Act"
                         />
                     </ListItem>
                     <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
@@ -155,7 +166,46 @@ export default function InvoiceInfoContent(props) {
                         />
                     </ListItem>
                     </div>
+                    <ListItem style={{flexDirection: "row", alignItems: "flex-start"}}>
+                        <ListItemIcon>
+                            <StoreIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <React.Fragment>
+                                    {props.invoice.shipper}
+                                </React.Fragment>
+                            }
+                            secondary="Shipper"
+                        />
+                        <ListItemIcon>
+                            <StoreIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <React.Fragment>
+                                    {props.invoice.consignee}
+                                </React.Fragment>
+                            }
+                            secondary="Consignee"
+                        />
+                    </ListItem>
+
+                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}} >
+                        <ListItemIcon>
+                            <CommentIcon/>
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <React.Fragment>
+                                    {props.invoice.comment}
+                                </React.Fragment>
+                            }
+                            secondary="Comment"
+                        />
+                    </ListItem>
                 </List>
+
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom
@@ -202,6 +252,7 @@ export default function InvoiceInfoContent(props) {
                     </Table>
                 </TableContainer>
                 <br/>
+
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 50]}
                     component="div"
@@ -210,10 +261,16 @@ export default function InvoiceInfoContent(props) {
                     page={page}
                     onChangePage={handleChangePage}
                 />
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                    {props.buttons}
-                </div>
             </Paper>
+
+            <DialogWindow
+                dialogTitle={"Act to invoice # " + invoice.number}
+                fullWidth={true}
+                maxWidth="md"
+                handleClose={handleClose}
+                openDialog={actInfoDialogOpen}
+                form={form}
+            />
         </div>
     );
 }
