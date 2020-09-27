@@ -3,9 +3,12 @@ package by.itechart.cargo.model.freight;
 import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.CompanyType;
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
+import by.itechart.cargo.model.enumeration.ProductOwnerStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,6 +20,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product_owner")
+@TypeDef(
+        name = "client_company_type",
+        typeClass = EnumTypePostgreSql.class
+)
+@TypeDef(
+        name = "product_owner_status",
+        typeClass = EnumTypePostgreSql.class
+)
 @Builder
 public class ProductOwner implements Serializable, Cloneable {
 
@@ -32,6 +43,12 @@ public class ProductOwner implements Serializable, Cloneable {
     @Column(name = "type", nullable = false)
     @Type(type = "client_company_type")     //todo: rename on refactor stage;
     private CompanyType type;
+
+
+    @Enumerated(EnumType.STRING)
+    @Type(type = "product_owner_status")
+    @Column(name = "status", nullable = false)
+    private ProductOwnerStatus status;
 
     @Embedded
     @AttributeOverrides({

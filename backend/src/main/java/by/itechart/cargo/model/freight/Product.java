@@ -71,7 +71,7 @@ public class Product implements Serializable, Cloneable {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     @Type(type = "product_status")
-    private Status productStatus;   //todo: validation???
+    private Status productStatus;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_invoice")
@@ -79,6 +79,4 @@ public class Product implements Serializable, Cloneable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Invoice invoice;
-
-
 }

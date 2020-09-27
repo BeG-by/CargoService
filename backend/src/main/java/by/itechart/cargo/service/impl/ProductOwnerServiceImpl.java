@@ -6,6 +6,7 @@ import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.enumeration.CompanyType;
+import by.itechart.cargo.model.enumeration.ProductOwnerStatus;
 import by.itechart.cargo.model.freight.ProductOwner;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.ProductOwnerRepository;
@@ -41,7 +42,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
     @Override
     public List<ProductOwner> findAll() {
-        return productOwnerRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
+        return productOwnerRepository.findByClientCompanyAndStatus(jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwnerStatus.ACTIVE);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
         ClientCompany clientCompanyProxy = clientCompanyRepository.getOne(clientCompany.getId());
         return productOwnerRepository
-                .findByIdAndClientCompany(id, clientCompanyProxy)
+                .findByIdAndClientCompanyAndStatus(id, clientCompanyProxy, ProductOwnerStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
     }
 
@@ -59,7 +60,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
         ClientCompany clientCompanyProxy = clientCompanyRepository.findById(clientCompany.getId()).get();
 
-        if (productOwnerRepository.findByNameAndClientCompany(productOwner.getName(), clientCompanyProxy).isPresent()) {
+        if (productOwnerRepository.findByNameAndClientCompanyAndStatus(productOwner.getName(), clientCompanyProxy, ProductOwnerStatus.ACTIVE).isPresent()) {
             throw new AlreadyExistException(PRODUCT_OWNER_EXIST_MESSAGE);
         }
 
@@ -73,11 +74,11 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         ClientCompany clientCompanyProxy = clientCompanyRepository.findById(clientCompany.getId()).get();
 
         ProductOwner productOwner = productOwnerRepository
-                .findByIdAndClientCompany(productOwnerUpdateRequest.getId(), clientCompanyProxy)
+                .findByIdAndClientCompanyAndStatus(productOwnerUpdateRequest.getId(), clientCompanyProxy, ProductOwnerStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
 
         Optional<ProductOwner> productOwnerByName = productOwnerRepository
-                .findByNameAndClientCompany(productOwnerUpdateRequest.getName(), clientCompanyProxy);
+                .findByNameAndClientCompanyAndStatus(productOwnerUpdateRequest.getName(), clientCompanyProxy, ProductOwnerStatus.ACTIVE);
 
         if (productOwnerByName.isPresent() && !productOwnerByName.get().getId().equals(productOwner.getId())) {
             throw new AlreadyExistException(PRODUCT_OWNER_EXIST_MESSAGE);
@@ -92,11 +93,8 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
     @Override
     public void delete(Long id) throws NotFoundException {
-        //todo: check errors
         ProductOwner productOwner = productOwnerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
-        productOwnerRepository.delete(productOwner);
+        productOwner.setStatus(ProductOwnerStatus.DELETED);
     }
-
-
 }
