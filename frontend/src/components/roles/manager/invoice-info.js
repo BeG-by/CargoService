@@ -5,7 +5,6 @@ import {RejectVerificationInvoice} from "../../parts/dialogs/verify-invoice";
 import {AssignVerificationInvoice} from "../../parts/dialogs/verify-invoice";
 import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
-import {getWaybillById} from "../driver/request-utils";
 import {CloseInvoice} from "../../parts/dialogs/close-invoice";
 import {EditInvoice} from "../../parts/dialogs/edit-invoice";
 import {connect} from "react-redux";
@@ -35,7 +34,8 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         driver: {id: 0, name: "", surname: ""},
         registrationUser: {id: 0},
         checkingUser: {id: 0},
-        waybillId: "",
+        waybill: null,
+        act: null,
     });
     const [checkPassage, setCheckPassage] = React.useState(true);
 
@@ -93,13 +93,13 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
                 name: selected.checkingUser.name,
                 surname: selected.checkingUser.surname
             },
-            waybillId: selected.waybillId,
+            waybill: selected.waybill,
+            act: selected.act,
         });
-        if (selected.waybillId === null) {
+        if (selected.waybill === null) {
             setCheckPassage(false);
         } else {
-            let foundWaybill = await getWaybillById(selected.waybillId);
-            foundWaybill.points.forEach(p => {
+            selected.waybill.points.forEach(p => {
                 if (!p.passed) setCheckPassage(false);
             })
         }

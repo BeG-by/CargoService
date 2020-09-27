@@ -164,7 +164,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setInvoice(invoice);
             p.setProductStatus(Status.ACCEPTED);
         });
-
         log.info("Invoice has been updated {}", invoiceRequest);
     }
 
@@ -182,8 +181,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             foundInvoice.setCloseDate(LocalDate.now());
         }
         foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-        Invoice invoiceDb = invoiceRepository.save(foundInvoice);
-        log.info("Invoice has been verified {}", invoiceDb);
+        foundInvoice.setComment(invoice.getComment());
+        log.info("Invoice has been verified {}", foundInvoice);
     }
 
 }

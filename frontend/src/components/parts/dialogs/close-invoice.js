@@ -6,7 +6,9 @@ import {CancelButton} from "../buttons/cancel-button";
 
 export const CloseInvoice = withRouter((props) => {
     let inv = props.invoice;
-    const [invoice] = React.useState({id: inv.id, status: "CLOSED"});
+    const invoice = inv.act === null
+                    ? {id: inv.id, status: "CLOSED", comment: "Clean delivery"}
+                    : {id: inv.id, status: "CLOSED_WITH_ACT", comment: "Delivery with losses"};
 
     const handleClose = async () => {
         await updateInvoiceStatus(invoice);

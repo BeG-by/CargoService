@@ -4,8 +4,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import ProductsForm from "./products-form";
 import {DialogTitleCustomized} from "../../parts/dialogs/dialog-title-customized";
 
-export default function ProductDialog(props) {
-    const {open, onClose, onSubmit, onDelete, initProductState} = props;
+export default function ProductsDialog(props) {
+    const {open, onClose, onSubmit, initProductState} = props;
 
     const handleClose = () => {
         onClose();
@@ -24,7 +24,7 @@ export default function ProductDialog(props) {
                 Lost product
             </DialogTitleCustomized>
             <DialogContent>
-                <ProductForm
+                <ProductsForm
                     initProductState={initProductState}
                     onSubmit={onSubmit}
                     onClose={handleClose}

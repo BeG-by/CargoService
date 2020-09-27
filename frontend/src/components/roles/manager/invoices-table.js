@@ -41,12 +41,20 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
-    const [invoice, setInvoice] = React.useState({id: 0, waybillId: "", invoiceStatus: "", number: ""});
+    const [invoice, setInvoice] = React.useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
     const role = props.role;
+
+    function handleRequestError(error) {
+        if (error.response && error.response.status !== 500) {
+            alert("error");
+        } else {
+            alert("Cannot get response from server");
+        }
+    }
 
     async function fetchInvoices(cleanupFunction) {
         if (!cleanupFunction) setInvoices(await getAllInvoices());
@@ -54,7 +62,11 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
     useEffect(() => {
         let cleanupFunction = false;
-        fetchInvoices(cleanupFunction);
+        fetchInvoices(cleanupFunction)
+            .catch((err) => {
+                setInvoices([]);
+                handleRequestError(err);
+            });
         return () => cleanupFunction = true;
     }, []);
 
@@ -68,11 +80,11 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setInvoice(() => ({
             id: foundInvoice.id,
             invoiceStatus: foundInvoice.invoiceStatus,
-            waybillId: foundInvoice.waybillId,
+            waybill: foundInvoice.waybill,
             number: foundInvoice.number,
         }));
         if (foundInvoice.invoiceStatus === "ACCEPTED"
-            && foundInvoice.waybillId === null) {
+            && foundInvoice.waybill.id === null) {
             setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {

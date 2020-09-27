@@ -1,8 +1,7 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.act.ActRequest;
+import by.itechart.cargo.dto.model_dto.act.ActRequest;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.enumeration.InvoiceStatus;
 import by.itechart.cargo.model.freight.Act;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.repository.*;

@@ -17,7 +17,7 @@ const columns = [
     {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
     {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
     {label: "Status", id: "status", minWidth: 100, maxWidth: 100},
-    {label: "Lost quantity", id: "lostQuantity", minWidth: 50, maxWidth: 50},
+    {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
     {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
 ];
 

@@ -1,15 +1,12 @@
-package by.itechart.cargo.dto.act;
+package by.itechart.cargo.dto.model_dto.act;
 
 import by.itechart.cargo.model.freight.Act;
-import by.itechart.cargo.model.freight.Point;
 import by.itechart.cargo.model.freight.Product;
-import by.itechart.cargo.model.freight.Waybill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;

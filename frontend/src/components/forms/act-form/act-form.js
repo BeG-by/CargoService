@@ -9,6 +9,7 @@ import {Button} from "@material-ui/core";
 import {saveAct} from "../../roles/driver/request-utils";
 import {ActFormValidation} from "./act-form-validation";
 import {ProductsTable} from "./products-table";
+import ProductsDialog from "./products-dialog";
 
 const EMPTY_PRODUCT = {
     id: null,
@@ -25,7 +26,7 @@ const EMPTY_PRODUCT = {
 };
 
 export const ActForm = (props) => {
-    const [invoice, setInvoice] = useState(props.invoice);
+    const invoice = props.invoice;
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [products, setProducts] = useState(props.invoice.products);
@@ -38,13 +39,13 @@ export const ActForm = (props) => {
     }));
     const classes = useStyles();
 
-    useEffect(() => {
-        setInvoice(props.invoice);
-    }, [props.invoice]);
+    // useEffect(() => {
+    //     setInvoice(props.invoice);
+    // }, [props.invoice]);
 
     useEffect(() => {
-        setProducts(props.invoice.products);
-    }, [props.invoice.products]);
+        setProducts(invoice.products);
+    }, [invoice.products]);
 
     const handleTableRowClick = (product) => {
         setSelectedProduct(product);
@@ -119,8 +120,8 @@ export const ActForm = (props) => {
                                                type="text"
                                                id="driver"
                                                disabled={true}
-                                               defaultValue={props.waybill.invoice.driver.name + " "
-                                               + props.waybill.invoice.driver.surname}/>
+                                               defaultValue={invoice.driver.name + " "
+                                               + invoice.driver.surname}/>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField name="consigneeWorker"
@@ -142,7 +143,7 @@ export const ActForm = (props) => {
                                                type="text"
                                                id="shipper"
                                                disabled={true}
-                                               defaultValue={props.waybill.invoice.shipper}/>
+                                               defaultValue={invoice.shipper}/>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField name="consignee"
@@ -150,7 +151,7 @@ export const ActForm = (props) => {
                                                type="text"
                                                id="consignee"
                                                disabled={true}
-                                               defaultValue={props.waybill.invoice.consignee}/>
+                                               defaultValue={invoice.consignee}/>
                                 </Grid>
                             </Grid>
                         </FormControl>

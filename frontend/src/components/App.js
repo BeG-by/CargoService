@@ -51,9 +51,9 @@ export default function App() {
                     <Route exact path={"/waybill"} component={() => <BodyWrapper openMenu={openMenu} content={() => <WaybillsTable/>}/>}/>
                     <Route exact path={"/invoice"} component={() => <BodyWrapper openMenu={openMenu} content={() => <InvoicesTable/>}/>}/>
                     <Route exact path={"/users"} component={UserTable}/>
-                    <Route exact path={"/owners"} component={() =><BodyWrapper openMenu={openMenu} content={() => <ProductOwnersTable/>}/>}/>
+                    <Route exact path={"/owners"} component={() => <BodyWrapper openMenu={openMenu} content={() => <ProductOwnersTable/>}/>}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
-                    <Route exact path={"/success"} component={SuccessBody}/>
+                    <Route exact path={"/success"} component={() => <BodyWrapper openMenu={openMenu} content={() => <SuccessBody/>}/>}/>
                     <Route component={() => <BodyWrapper openMenu={openMenu} content={NotFound}/>}/>
                 </Switch>
                 <CssBaseline/>

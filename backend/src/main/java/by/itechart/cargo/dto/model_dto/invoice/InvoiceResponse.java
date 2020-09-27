@@ -3,8 +3,10 @@ package by.itechart.cargo.dto.model_dto.invoice;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerDTO;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.model.enumeration.InvoiceStatus;
+import by.itechart.cargo.model.freight.Act;
 import by.itechart.cargo.model.freight.Invoice;
 import by.itechart.cargo.model.freight.Product;
+import by.itechart.cargo.model.freight.Waybill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +32,8 @@ public class InvoiceResponse {
     private User registrationUser;
     private User checkingUser;
     private List<Product> products;
-    private Long waybillId;
+    private Waybill waybill;
+    private Act act;
     private String comment;
 
     public InvoiceResponse toInvoiceResponse(Invoice invoice) {
@@ -49,7 +52,8 @@ public class InvoiceResponse {
         response.setCheckingUser(invoice.getCheckingUser());
         response.setProducts(invoice.getProducts());
         response.setProductOwnerDTO(ProductOwnerDTO.fromProductOwner(invoice.getProductOwner()));
-        response.setWaybillId(invoice.getWaybill() == null ? null : invoice.getWaybill().getId());
+        response.setWaybill(invoice.getWaybill());
+        response.setAct(invoice.getAct());
         return response;
     }
 

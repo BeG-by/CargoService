@@ -1,6 +1,6 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.act.ActRequest;
+import by.itechart.cargo.dto.model_dto.act.ActRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.freight.Act;
 import by.itechart.cargo.service.ActService;
