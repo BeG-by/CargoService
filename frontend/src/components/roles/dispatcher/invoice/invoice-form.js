@@ -24,7 +24,7 @@ const EMPTY_DRIVER = {
 
 const EMPTY_PRODUCT_OWNER = {
     name: "",
-    type: "SP",
+    type: "Sole proprietorship",
     phone: "",
 };
 
@@ -128,12 +128,12 @@ export default function InvoiceForm(props) {
     const fetchInitInvoiceState = async (id) => {
         try {
             const res = await makeGetInvoiceByIdRequest(id);
-            setInitInvoice((prevState) => {
-                return {
-                    ...res.data,
-                    productOwner: res.data.productOwnerDTO,
-                };
-            });
+            let invoiceState = {
+                ...res.data,
+                productOwner: res.data.productOwnerDTO,
+            }
+            invoiceState.productOwner.type = invoiceState.productOwner.type === "SP" ? "Sole proprietorship" : "Juridical person";
+            setInitInvoice(invoiceState);
         } catch (error) {
             setInitInvoice(INIT_INVOICE_STATE);
             handleRequestError(error);
@@ -142,11 +142,13 @@ export default function InvoiceForm(props) {
 
     function setEmptyInitInvoiceState() {
         setInitInvoice((prevState) => {
-            return {
+            let invoiceState = {
                 ...prevState,
                 registrationDate: new Date().toISOString().slice(0, 10),
                 productOwner: props.productOwner,
-            };
+            }
+            invoiceState.productOwner.type = invoiceState.productOwner.type === "SP" ? "Sole proprietorship" : "Juridical person";
+            return invoiceState;
         });
     }
 
