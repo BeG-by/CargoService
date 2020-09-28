@@ -22,12 +22,13 @@ import {DialogWindow} from "../../parts/dialogs/dialog";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 200},
-    {id: "quantity", label: "Quantity", minWidth: 100},
-    {id: "measure", label: "Measure", minWidth: 100},
-    {id: "price", label: "Price", minWidth: 100},
-    {id: "mass", label: "Mass", minWidth: 100},
-    {id: "productStatus", label: "Status", minWidth: 100},
+    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
+    {label: "Mass measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
+    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Quantity measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
 ];
 
 export default function InvoiceInfoContent(props) {
@@ -137,7 +138,8 @@ export default function InvoiceInfoContent(props) {
                         <ListItemText
                             primary={
                                 <React.Fragment>
-                                    {props.invoice.driver.name} {props.invoice.driver.surname}
+                                    {props.invoice.driver.name + " "
+                                    + props.invoice.driver.surname}
                                 </React.Fragment>
                             }
                             secondary="Driver"
@@ -148,7 +150,8 @@ export default function InvoiceInfoContent(props) {
                         <ListItemText
                             primary={
                                 <React.Fragment>
-                                    {props.invoice.registrationUser.name} {props.invoice.registrationUser.surname}
+                                    {props.invoice.registrationUser.name + " "
+                                    + props.invoice.registrationUser.surname}
                                 </React.Fragment>
                             }
                             secondary="Dispatcher"
@@ -159,7 +162,10 @@ export default function InvoiceInfoContent(props) {
                         <ListItemText
                             primary={
                                 <React.Fragment>
-                                    {props.invoice.checkingUser === null ? null : props.invoice.checkingUser.name} {props.invoice.checkingUser === null ? null : props.invoice.checkingUser.surname}
+                                    {props.invoice.checkingUser === null
+                                        ? null
+                                        : props.invoice.checkingUser.name + " "
+                                        + props.invoice.checkingUser.surname}
                                 </React.Fragment>
                             }
                             secondary="Manager"

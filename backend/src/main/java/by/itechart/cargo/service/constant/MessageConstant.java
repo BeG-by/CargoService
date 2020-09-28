@@ -19,9 +19,10 @@ public interface MessageConstant {
     String WAYBILL_NOT_FOUND_MESSAGE = "Waybill not found";
 
     String PRODUCT_OWNER_NOT_FOUND_MESSAGE = "Product owner not found";
+
     String PRODUCT_OWNER_EXIST_MESSAGE = "Product owner already exists";
 
     String ACT_NOT_FOUND_MESSAGE = "Act not found";
 
-
+    String PRODUCT_NOT_FOUND_MESSAGE = "Product not found";
 }

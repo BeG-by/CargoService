@@ -26,22 +26,30 @@ const mapStateToProps = (store) => {
 };
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
-    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
+    {label: "Name", id: "name", minWidth: 100, maxWidth: 100},
     {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
     {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
-    {label: "Status", id: "productStatus", minWidth: 100, maxWidth: 100},
+    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
     {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
-    {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
+    {label: "Comment", id: "comment", minWidth: 100, maxWidth: 100},
 ];
 
 export const ActInfo = connect(mapStateToProps)((props) => {
     const invoice = props.invoice;
     const act = props.act;
 
+    const losses = [];
+    invoice.products.forEach(p => {
+        if (p.productStatus === "LOST") {
+            losses.push(p);
+        }
+    })
+
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -126,7 +134,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     <Typography variant="h6"
                                 gutterBottom
                                 style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
-                        Products List:
+                        Lost products list:
                     </Typography>
                     <Table
                         aria-label="sticky table">
@@ -143,7 +151,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {invoice.products
+                            {losses
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((product) => {
                                     return (
@@ -170,9 +178,9 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                 <br/>
 
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={invoice.products.length}
+                    count={losses.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

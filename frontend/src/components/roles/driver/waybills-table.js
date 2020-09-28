@@ -12,11 +12,9 @@ import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {getInvoiceById} from "../manager/request-utils";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
-import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100},

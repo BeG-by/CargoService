@@ -6,7 +6,6 @@ import {ActForm} from "../../forms/act-form/act-form";
 
 export default function ActDialog(props) {
     const invoice = props.waybill.invoice;
-    console.log(invoice.number);
     return (
         <div>
             <Dialog
@@ -18,7 +17,7 @@ export default function ActDialog(props) {
             >
                 <DialogTitleCustomized
                     onClose={props.onClose}>
-                    {"Act to invoice # "} {invoice.number}
+                    {"Act to invoice # " + invoice.number}
                 </DialogTitleCustomized>
                 <DialogContent>
                     <ActForm invoice={invoice} onClose={props.onClose}/>

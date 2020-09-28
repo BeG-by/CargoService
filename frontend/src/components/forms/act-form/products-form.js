@@ -14,11 +14,13 @@ export default (props) => {
             productStatus: "LOST",
             lostQuantity: values.quantity,
             comment: values.comment,
+            currency: values.currency,
             name: initProductState.name,
             quantity: initProductState.quantity,
-            measure: initProductState.measure,
+            quantityMeasure: initProductState.quantityMeasure,
             price: initProductState.price,
             mass: initProductState.mass,
+            massMeasure: initProductState.massMeasure,
         };
         product.idx = initProductState.idx;
         onSubmit(product);

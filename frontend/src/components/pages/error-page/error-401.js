@@ -1,5 +1,5 @@
 import React from "react";
-import ReturnButton from "../../parts/buttons/return-button";
+import {ReturnButton} from "../../parts/buttons/return-button";
 
 export const NotAuthorized = () => {
     return (

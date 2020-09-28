@@ -30,7 +30,7 @@ public class InvoiceRequest {
     //todo: validate?
     private LocalDate registrationDate;
 
-    @NotNull
+    @NotNull (message = "Product owner id is mandatory")
     private Long productOwnerId;
 
     @Size(max = 255, message = "Shipper is too long (max is 255)")
@@ -39,7 +39,7 @@ public class InvoiceRequest {
     @Size(max = 255, message = "Consignee is too long (max is 255)")
     private String consignee;
 
-    @NotNull
+    @NotNull (message = "Invoice status is mandatory")
     @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED|CLOSED_WITH_ACT",
             message = "Type must be one of InvoiceStatus types")
     private Invoice.Status status;
