@@ -261,25 +261,41 @@
     <changeSet id="insert_auto" author="eugene.begun">
         <insert tableName="auto">
             <column name="mark" value="VAZ2107"/>
+            <column name="number" value="AK-32133"/>
             <column name="type" value="EURO_TRACK"/>
+            <column name="consumption" value="10"/>
+            <column name="issue_date" value="2004-03-03"/>
+            <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="2"/>
         </insert>
 
         <insert tableName="auto">
             <column name="mark" value="MERCEDES-432"/>
             <column name="type" value="JUMBO"/>
+            <column name="number" value="YK-3232"/>
+            <column name="consumption" value="10.5"/>
+            <column name="issue_date" value="2005-03-02"/>
+            <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="2"/>
         </insert>
 
         <insert tableName="auto">
             <column name="mark" value="OPEL-32"/>
             <column name="type" value="REFRIGERATOR"/>
+            <column name="number" value="HK-03321"/>
+            <column name="consumption" value="16.6"/>
+            <column name="issue_date" value="2009-10-23"/>
+            <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="2"/>
         </insert>
 
         <insert tableName="auto">
             <column name="mark" value="VAZ-32"/>
             <column name="type" value="EURO_TRACK"/>
+            <column name="number" value="HK-07834"/>
+            <column name="consumption" value="10"/>
+            <column name="issue_date" value="2004-03-03"/>
+            <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="3"/>
         </insert>
     </changeSet>

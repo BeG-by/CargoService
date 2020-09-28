@@ -2,7 +2,7 @@ import React from "react";
 import ProductOwnersTable from "../roles/dispatcher/product-owners/product-owners-table";
 import InvoicesTable from "../roles/manager/invoices-table";
 import ClientsTable from "../roles/sysadmin/clients-table";
-import UserTable from "../roles/admin/user-table";
+import UserTable from "../roles/admin/users/user-table";
 import {WaybillsTable} from "../roles/driver/waybills-table";
 import {connect} from "react-redux";
 

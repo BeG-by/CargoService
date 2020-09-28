@@ -4,12 +4,13 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
-import FormikField from "./formik-field";
-import {findUserById, saveUser, updateUser} from "./request-util";
+import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import UserDatePicker from "./user-date-picker";
+import CustomDatePicker from "../custom-date-picker";
 import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
+import {USER_URL} from "../request-util"
+import {makeRequest} from "../request-util"
 
 
 const EMPTY_USER = {
@@ -38,12 +39,12 @@ export const UserDialog = (props) => {
     const {open, onClose, userId, refreshTable, showToast, handleError} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
-    const isUpdateForm = props.userId >= 0;
+    const isUpdateForm = userId >= 0;
 
     useEffect(() => {
 
         if (isUpdateForm) {
-            findUserById(props.userId)
+            makeRequest("GET", USER_URL + "/" + userId)
                 .then(res => {
                     const user = res.data;
 
@@ -62,7 +63,7 @@ export const UserDialog = (props) => {
                     setUser(res.data);
                 }).catch(error => handleError(error))
         }
-    }, [props.userId]);
+    }, [userId]);
 
     const handleClose = () => {
         setUser(EMPTY_USER);
@@ -80,7 +81,6 @@ export const UserDialog = (props) => {
                     <span id="form-title">User Form</span>
                     <IconButton aria-label="close"
                                 onClick={handleClose}
-                                className="close-user-dialog-btn"
                     >
                         <CloseIcon/>
                     </IconButton>
@@ -132,7 +132,7 @@ export const UserDialog = (props) => {
                                 user.id = values.id;
                                 user.status = values.status;
 
-                                updateUser(user)
+                                makeRequest("PUT", USER_URL, user)
                                     .then(res => {
                                         handleClose();
                                         refreshTable();
@@ -143,7 +143,7 @@ export const UserDialog = (props) => {
                                     })
                             } else {
 
-                                saveUser(user)
+                                makeRequest("POST", USER_URL, user)
                                     .then(res => {
                                         handleClose();
                                         refreshTable();
@@ -211,7 +211,7 @@ export const UserDialog = (props) => {
                                         formikFieldName={"status"}
                                     /> : ""}
 
-                                    <UserDatePicker
+                                    <CustomDatePicker
                                         formikProps={formProps}
                                         id={"birthday"}
                                         label={"Date of birth"}
