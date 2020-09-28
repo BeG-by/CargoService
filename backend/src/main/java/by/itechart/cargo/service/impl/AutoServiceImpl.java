@@ -39,7 +39,7 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public List<Auto> findAll() {
-        return autoRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
+        return autoRepository.findAllByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
     }
 
     @Override

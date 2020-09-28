@@ -18,15 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("FROM User u WHERE u.clientCompany.id = :clientCompanyId AND u.status <> 'DELETED'")
     List<User> findAllWithoutDeleted(Long clientCompanyId , Sort sort);
 
-    List<User> findAllByClientCompanyId(Long clientCompanyId);
-
     Optional<User> findByIdAndClientCompanyId(Long userId, Long clientCompanyId);
 
     List<User> findAllByClientCompanyIdAndRoles(Long clientCompanyId, Role role);
 
     Optional<User> findByIdAndRolesAndClientCompanyId(Long userId, Role role, Long clientCompanyId);
-
-//    @Query(value = "FROM DepositDetail d WHERE d.startDate > :firstDate AND d.startDate < :secondDate")
-//    List<DepositDetail> findAllByCreateDate(@Param("firstDate") LocalDateTime firstDate, @Param("secondDate") LocalDateTime secondDate, Sort sort);
 
 }

@@ -8,51 +8,24 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {UserDialog} from "./user-dialog";
-import {deleteUser, findAllUsers} from "./request-util";
-import {BodyWrapper} from "../../pages/body-wrapper";
-import useToast from "../../parts/toast-notification/useToast";
+import {BodyWrapper} from "../../../pages/body-wrapper";
+import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
-import ConfirmDeletingDialog from "./slide-dialog";
+import {makeRequest, AUTO_URL} from "../request-util";
+import {AutoDialog} from "./auto-dialog";
+import ConfirmDeletingDialog from "../slide-dialog";
 
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 170},
-    {id: "surname", label: "Surname", minWidth: 170},
-    {id: "patronymic", label: "Patronymic", minWidth: 170},
-    {
-        id: "role",
-        label: "Role",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "birthday",
-        label: "Date of birth",
-        minWidth: 170,
-        align: "center",
-        format: (value) => value.toFixed(2),
-    },
-    {
-        id: "status",
-        label: "Status",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "email",
-        label: "Email",
-        minWidth: 170,
-        align: "center",
-    },
+    {id: "mark", label: "Mark", minWidth: 170},
+    {id: "type", label: "Type", minWidth: 170},
     {
         id: "edit_delete",
         label: "",
         minWidth: 60,
         align: "center",
     }
-
 ];
 
 
@@ -65,32 +38,34 @@ const useStyles = makeStyles({
     },
 });
 
-export function UserTable() {
+export function AutoTable() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const [users, setUsers] = useState([]);
+    const [autos, setAutos] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(-1);
+    const [selectedAutoId, setSelectedAutoId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
 
+    const REMOVE_TITLE = "Do you want to remove the auto ?";
+
     useEffect(() => {
-        insertUsers()
+        insertAutos()
     }, []);
 
-    const insertUsers = () => {
-        findAllUsers()
-            .then(res => setUsers(res.data))
+    const insertAutos = () => {
+        makeRequest("GET", AUTO_URL)
+            .then(res => setAutos(res.data))
             .catch(error => handleRequestError(error))
     };
 
 
-    const deleteSelectedUser = (id) => {
-        deleteUser(id)
+    const deleteAuto = (id) => {
+        makeRequest("DELETE", AUTO_URL + "/" + id)
             .then(res => {
-                insertUsers();
-                showToastComponent("User has been deleted", "success");
+                insertAutos();
+                showToastComponent("Auto has been deleted", "success");
             })
             .catch(error => handleRequestError(error))
     };
@@ -100,8 +75,8 @@ export function UserTable() {
         setPage(newPage);
     };
 
-    const handleTableRowClick = (user) => {
-        setSelectedUserId(user.id);
+    const handleTableRowClick = (auto) => {
+        setSelectedAutoId(auto.id);
         setFormDialogOpen(true);
     };
 
@@ -119,13 +94,13 @@ export function UserTable() {
     };
 
     return (
-        <div className="user-table-wrapper">
+        <div className="auto-table-wrapper">
             <Button
-                className="add-user-btn"
+                className="add-auto-btn"
                 variant="contained"
-                    color="primary"
-                    onClick={() => setFormDialogOpen(true)}>
-                Create user
+                color="primary"
+                onClick={() => setFormDialogOpen(true)}>
+                Create auto
             </Button>
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
@@ -144,58 +119,42 @@ export function UserTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {users
+                            {autos
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((user) => {
-
-                                    let status = user.status.charAt(0) + user.status.substring(1).toLowerCase();
-                                    let roles = user.roles.map(role => role.charAt(0) + role.substring(1).toLowerCase());
+                                .map((auto) => {
 
                                     return (
                                         <TableRow
                                             onClick={() => {
-                                                handleTableRowClick(user);
+                                                handleTableRowClick(auto);
                                             }}
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={user.id}
+                                            key={auto.id}
                                         >
                                             <TableCell key={columns[0].id}>
-                                                {user.name}
+                                                {auto.mark}
                                             </TableCell>
                                             <TableCell key={columns[1].id}>
-                                                {user.surname}
+                                                {auto.autoType}
                                             </TableCell>
                                             <TableCell key={columns[2].id}>
-                                                {user.patronymic}
-                                            </TableCell>
-                                            <TableCell key={columns[3].id} align={columns[3].align}>
-                                                {roles}
-                                            </TableCell>
-                                            <TableCell key={columns[4].id} align={columns[3].align}>
-                                                {user.birthday}
-                                            </TableCell>
-                                            <TableCell key={columns[5].id} align={columns[4].align}>
-                                                {status}
-                                            </TableCell>
-                                            <TableCell key={columns[6].id} align={columns[5].align}>
-                                                {user.email}
-                                            </TableCell>
-                                            <TableCell key={columns[7].id}>
                                                 <div className="table-delete-edit-div">
                                                     <Button
-                                                        className="user-table-btn"
+                                                        className="auto-table-btn"
                                                         color={"primary"}
                                                         startIcon={<EditIcon/>}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            handleTableRowClick(user)
+                                                            handleTableRowClick(auto)
                                                         }}/>
                                                     <ConfirmDeletingDialog
-                                                        userId={user.id}
-                                                        deleteUser={deleteSelectedUser}
+                                                        id={auto.id}
+                                                        onDelete={deleteAuto}
+                                                        text={REMOVE_TITLE}
                                                     />
+
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -208,21 +167,21 @@ export function UserTable() {
                 <TablePagination
                     rowsPerPageOptions={[10, 15, 20]}
                     component="div"
-                    count={users.length}
+                    count={autos.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
-                <UserDialog
+                <AutoDialog
                     open={formDialogOpen}
-                    userId={selectedUserId}
+                    autoId={selectedAutoId}
                     onClose={() => {
                         setFormDialogOpen(false);
-                        setSelectedUserId(-1);
+                        setSelectedAutoId(-1);
                     }}
-                    refreshTable={insertUsers}
+                    refreshTable={insertAutos}
                     showToast={showToastComponent}
                     handleError={handleRequestError}
                 />
@@ -233,4 +192,4 @@ export function UserTable() {
 }
 
 
-export default () => <BodyWrapper content={UserTable}/>
+export default () => <BodyWrapper content={AutoTable}/>

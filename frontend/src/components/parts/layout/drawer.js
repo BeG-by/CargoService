@@ -16,6 +16,7 @@ import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
 import {DRAWER_WIDTH} from "../../pages/body-wrapper";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
+import {ItemAutosTable} from "../drawer-items/item-auto";
 
 
 const drawerWidth = DRAWER_WIDTH;
@@ -58,6 +59,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             break;
         case 'ADMIN':
             components.push(<ItemUserTable key="Users"/>);
+            components.push(<ItemAutosTable key="Autos"/>);
             components.push(<Divider key='Divider'/>);
             break;
         case 'DISPATCHER':

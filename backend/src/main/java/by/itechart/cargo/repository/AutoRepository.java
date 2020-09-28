@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AutoRepository extends JpaRepository<Auto, Long> {
 
-    List<Auto> findByClientCompany(ClientCompany clientCompany);
+    List<Auto> findAllByClientCompany(ClientCompany clientCompany);
 }
