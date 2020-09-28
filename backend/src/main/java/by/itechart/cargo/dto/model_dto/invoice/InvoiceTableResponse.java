@@ -1,6 +1,6 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
-import by.itechart.cargo.model.freight.Invoice;
+import by.itechart.cargo.model.Invoice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class InvoiceTableResponse {
     public InvoiceTableResponse toInvoiceTableResponse(Invoice invoice) {
         InvoiceTableResponse response = new InvoiceTableResponse();
         response.setId(invoice.getId());
-        response.setStatus(invoice.getInvoiceStatus().name());
+        response.setStatus(invoice.getStatus().name());
         response.setNumber(invoice.getNumber());
         response.setDate(invoice.getRegistrationDate().toString());
         response.setShipper(invoice.getShipper());

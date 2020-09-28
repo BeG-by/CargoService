@@ -1,7 +1,7 @@
 package by.itechart.cargo.repository;
 
-import by.itechart.cargo.model.freight.Point;
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.Point;
+import by.itechart.cargo.model.Waybill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

@@ -92,6 +92,14 @@ public class JwtTokenUtil {
         return (JwtUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public long getCurrentCompanyId() {
+        final JwtUserDetails currentUser = (JwtUserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return currentUser.getClientCompany().getId();
+    }
+
 }
 
 

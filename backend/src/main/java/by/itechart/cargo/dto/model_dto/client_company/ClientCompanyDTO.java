@@ -3,7 +3,6 @@ package by.itechart.cargo.dto.model_dto.client_company;
 import by.itechart.cargo.dto.validation.EnumNamePattern;
 import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.ClientCompany;
-import by.itechart.cargo.model.enumeration.CompanyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +28,7 @@ public class ClientCompanyDTO implements Serializable, Cloneable {
     //TODO enums invalid message to client
     @NotNull(message = "Client company type is mandatory")
     @EnumNamePattern(regexp = "SP|JP", message = "Type must be \"SP\" or \"JP\"")
-    private CompanyType type;
+    private ClientCompany.CompanyType type;
 
     @Pattern(regexp = "[a-zA-z0-9]{9}", message = "Payer account number must be 9 digits")
     private String payerAccountNumber;

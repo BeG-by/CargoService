@@ -1,4 +1,4 @@
-package by.itechart.cargo.model.freight;
+package by.itechart.cargo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

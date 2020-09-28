@@ -2,11 +2,10 @@ package by.itechart.cargo.dto.model_dto.invoice;
 
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerDTO;
 import by.itechart.cargo.model.User;
-import by.itechart.cargo.model.enumeration.InvoiceStatus;
-import by.itechart.cargo.model.freight.Act;
-import by.itechart.cargo.model.freight.Invoice;
-import by.itechart.cargo.model.freight.Product;
-import by.itechart.cargo.model.freight.Waybill;
+import by.itechart.cargo.model.Act;
+import by.itechart.cargo.model.Invoice;
+import by.itechart.cargo.model.Product;
+import by.itechart.cargo.model.Waybill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ public class InvoiceResponse {
     private Long id;
     private ProductOwnerDTO productOwnerDTO;
     private String number;
-    private InvoiceStatus invoiceStatus;
+    private Invoice.Status status;
     private LocalDate registrationDate;
     private LocalDate checkingDate;
     private LocalDate closeDate;
@@ -39,7 +38,7 @@ public class InvoiceResponse {
     public InvoiceResponse toInvoiceResponse(Invoice invoice) {
         InvoiceResponse response = new InvoiceResponse();
         response.setId(invoice.getId());
-        response.setInvoiceStatus(invoice.getInvoiceStatus());
+        response.setStatus(invoice.getStatus());
         response.setNumber(invoice.getNumber());
         response.setRegistrationDate(invoice.getRegistrationDate());
         response.setCheckingDate(invoice.getCheckingDate());

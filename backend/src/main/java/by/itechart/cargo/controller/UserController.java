@@ -55,4 +55,10 @@ public class UserController {
         return ResponseEntity.ok(userService.findInfo());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable long id) throws NotFoundException {
+        userService.delete(id);
+        return ResponseEntity.ok("User has been deleted");
+    }
+
 }

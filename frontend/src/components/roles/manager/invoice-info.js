@@ -74,7 +74,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         let selected = await getInvoiceById(props.invoiceId);
         if (!cleanupFunction) setInvoice({
             id: selected.id,
-            invoiceStatus: selected.invoiceStatus,
+            invoiceStatus: selected.status,
             products: selected.products,
             number: selected.number,
             registrationDate: selected.registrationDate,

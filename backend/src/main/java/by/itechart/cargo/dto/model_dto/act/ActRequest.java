@@ -1,7 +1,7 @@
 package by.itechart.cargo.dto.model_dto.act;
 
-import by.itechart.cargo.model.freight.Act;
-import by.itechart.cargo.model.freight.Product;
+import by.itechart.cargo.model.Act;
+import by.itechart.cargo.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

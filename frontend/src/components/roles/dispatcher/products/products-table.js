@@ -8,15 +8,31 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import fetchFieldFromObject from "../../../forms/fetch-field-from-object";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 100, maxWidth: 100},
-    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
     {label: "Mass", id: "mass", minWidth: 100, maxWidth: 100},
+    {label: "Mass measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
     {label: "Quantity", id: "quantity", minWidth: 100, maxWidth: 100},
+    {label: "Quantity measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
     {label: "Price", id: "price", minWidth: 100, maxWidth: 100},
+    {label: "Currency", id: "currency", minWidth: 100, maxWidth: 100},
 ];
+
+function fetchFieldFromObject(obj, prop) {
+    if (obj === undefined || obj === null) {
+        return null;
+    }
+    let index = prop.indexOf(".");
+    if (index > -1) {
+        return fetchFieldFromObject(
+            obj[prop.substring(0, index)],
+            prop.substr(index + 1)
+        );
+    }
+
+    return obj[prop];
+}
 
 const useStyles = makeStyles({
     root: {
@@ -57,7 +73,8 @@ export default (props) => {
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
-                                    style={{ maxWidth: column.maxWidth}}
+                                    align={column.align}
+                                    style={{maxWidth: column.maxWidth}}
                                 >
                                     {column.label}
                                 </TableCell>
@@ -80,7 +97,7 @@ export default (props) => {
                                     >
                                         {columns.map((column) => {
                                             return (
-                                                <TableCell key={column.id}>
+                                                <TableCell key={column.id} align={column.align}>
                                                     {fetchFieldFromObject(product, column.id)}
                                                 </TableCell>
                                             );

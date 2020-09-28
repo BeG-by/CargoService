@@ -1,9 +1,9 @@
 import React from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
-export default function UserTypeSelector(props) {
+export default function ProductMassMeasureSelector(props) {
     const {formikProps, formikFieldName, id, label} = props;
     return (
         <React.Fragment>
@@ -16,11 +16,8 @@ export default function UserTypeSelector(props) {
                 value={formikProps.values[formikFieldName]}
                 fullWidth
             >
-                <MenuItem value={"ADMIN"}>Administrator</MenuItem>
-                <MenuItem value={"DISPATCHER"}>Dispatcher</MenuItem>
-                <MenuItem value={"MANAGER"}>Manager</MenuItem>
-                <MenuItem value={"DRIVER"}>Driver</MenuItem>
-                <MenuItem value={"OWNER"}>Company owner</MenuItem>
+                <MenuItem value={"KG"}>Kilogram</MenuItem>
+                <MenuItem value={"TON"}>Ton</MenuItem>
             </Select>
         </React.Fragment>
     );

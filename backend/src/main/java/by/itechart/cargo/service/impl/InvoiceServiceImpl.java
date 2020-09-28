@@ -7,11 +7,10 @@ import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
+import by.itechart.cargo.model.Product;
 import by.itechart.cargo.model.User;
-import by.itechart.cargo.model.enumeration.InvoiceStatus;
-import by.itechart.cargo.model.enumeration.Status;
-import by.itechart.cargo.model.freight.Invoice;
-import by.itechart.cargo.model.freight.ProductOwner;
+import by.itechart.cargo.model.Invoice;
+import by.itechart.cargo.model.ProductOwner;
 import by.itechart.cargo.repository.*;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.security.jwt.JwtUserDetails;
@@ -106,13 +105,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoice.getProducts().forEach(p -> {
             p.setInvoice(invoice);
-            p.setProductStatus(Status.ACCEPTED);
+            p.setProductStatus(Product.Status.ACCEPTED);
         });
 
         if (invoiceRequest.getStatus() == null) {
-            invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
+            invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
-            invoice.setInvoiceStatus(invoiceRequest.getStatus());
+            invoice.setStatus(invoiceRequest.getStatus());
         }
 
         final Invoice invoiceDb = invoiceRepository.save(invoice);
@@ -150,9 +149,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoice.setNumber(invoiceRequest.getInvoiceNumber());
         if (invoiceRequest.getStatus() == null) {
-            invoice.setInvoiceStatus(InvoiceStatus.REGISTERED);
+            invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
-            invoice.setInvoiceStatus(invoiceRequest.getStatus());
+            invoice.setStatus(invoiceRequest.getStatus());
         }
         invoice.setShipper(invoiceRequest.getShipper());
         invoice.setConsignee(invoiceRequest.getConsignee());
@@ -162,7 +161,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.getProducts().addAll(invoiceRequest.getProducts());
         invoiceRequest.getProducts().forEach(p -> {
             p.setInvoice(invoice);
-            p.setProductStatus(Status.ACCEPTED);
+            p.setProductStatus(Product.Status.ACCEPTED);
         });
         log.info("Invoice has been updated {}", invoiceRequest);
     }
@@ -172,14 +171,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         final Invoice invoice = invoiceRequest.toInvoice();
         Invoice foundInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow(() ->
                 new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
-        if (invoice.getInvoiceStatus().equals(InvoiceStatus.ACCEPTED)) {
+        if (invoice.getStatus().equals(Invoice.Status.ACCEPTED)) {
             foundInvoice.setCheckingDate(LocalDate.now());
             foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
-        } else if (invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED)
-                   || invoice.getInvoiceStatus().equals(InvoiceStatus.CLOSED_WITH_ACT)) {
+        } else if (invoice.getStatus().equals(Invoice.Status.CLOSED)
+                   || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
         }
-        foundInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
+        foundInvoice.setStatus(invoice.getStatus());
         foundInvoice.setComment(invoice.getComment());
         log.info("Invoice status has been updated {}", foundInvoice);
     }

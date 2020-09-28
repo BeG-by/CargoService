@@ -1,6 +1,5 @@
-package by.itechart.cargo.model.freight;
+package by.itechart.cargo.model;
 
-import by.itechart.cargo.model.ClientCompany;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;

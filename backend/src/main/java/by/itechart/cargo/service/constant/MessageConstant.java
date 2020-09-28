@@ -7,11 +7,21 @@ public interface MessageConstant {
     String EMAIL_EXIST_MESSAGE = "Email already exists";
 
     String CLIENT_NOT_FOUND_MESSAGE = "Client not found";
+
     String INVOICE_NOT_FOUND_MESSAGE = "Invoice not found";
+
     String DRIVER_NOT_FOUND_MESSAGE = "Driver not found";
+
     String AUTO_NOT_FOUND_MESSAGE = "Auto not found";
+
     String POINT_NOT_FOUND_MESSAGE = "Point not found";
+
     String WAYBILL_NOT_FOUND_MESSAGE = "Waybill not found";
+
+    String PRODUCT_OWNER_NOT_FOUND_MESSAGE = "Product owner not found";
+    String PRODUCT_OWNER_EXIST_MESSAGE = "Product owner already exists";
+
     String ACT_NOT_FOUND_MESSAGE = "Act not found";
+
 
 }
