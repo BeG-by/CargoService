@@ -13,6 +13,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
 import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import Link from "@material-ui/core/Link";
 
 const drawerWidth = DRAWER_WIDTH;
 

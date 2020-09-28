@@ -12,7 +12,7 @@ export default (props) => {
             id: initProductState.id,
             invoiceId: initProductState.invoiceId,
             productStatus: "LOST",
-            lostQuantity: values.quantity,
+            lostQuantity: values.lostQuantity,
             comment: values.comment,
             currency: values.currency,
             name: initProductState.name,
