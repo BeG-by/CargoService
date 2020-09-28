@@ -19,9 +19,9 @@ import {makeRequest , USER_URL} from "../request-util"
 
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 170},
-    {id: "surname", label: "Surname", minWidth: 170},
-    {id: "patronymic", label: "Patronymic", minWidth: 170},
+    {id: "name", label: "Name", minWidth: 170 , align: "center"},
+    {id: "surname", label: "Surname", minWidth: 170, align: "center"},
+    {id: "patronymic", label: "Patronymic", minWidth: 170, align: "center"},
     {
         id: "role",
         label: "Role",
@@ -150,7 +150,6 @@ export function UserTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((user) => {
 
-                                    let status = user.status.charAt(0) + user.status.substring(1).toLowerCase();
                                     let roles = user.roles.map(role => role.charAt(0) + role.substring(1).toLowerCase());
 
                                     return (
@@ -163,28 +162,28 @@ export function UserTable() {
                                             tabIndex={-1}
                                             key={user.id}
                                         >
-                                            <TableCell key={columns[0].id}>
+                                            <TableCell key={columns[0].id} align="center">
                                                 {user.name}
                                             </TableCell>
-                                            <TableCell key={columns[1].id}>
+                                            <TableCell key={columns[1].id} align="center">
                                                 {user.surname}
                                             </TableCell>
-                                            <TableCell key={columns[2].id}>
+                                            <TableCell key={columns[2].id} align="center">
                                                 {user.patronymic}
                                             </TableCell>
-                                            <TableCell key={columns[3].id} align={columns[3].align}>
+                                            <TableCell key={columns[3].id} align="center">
                                                 {roles}
                                             </TableCell>
-                                            <TableCell key={columns[4].id} align={columns[3].align}>
+                                            <TableCell key={columns[4].id} align="center">
                                                 {user.birthday}
                                             </TableCell>
-                                            <TableCell key={columns[5].id} align={columns[4].align}>
-                                                {status}
+                                            <TableCell key={columns[5].id} align="center">
+                                                {user.status}
                                             </TableCell>
-                                            <TableCell key={columns[6].id} align={columns[5].align}>
+                                            <TableCell key={columns[6].id} align="center">
                                                 {user.email}
                                             </TableCell>
-                                            <TableCell key={columns[7].id}>
+                                            <TableCell key={columns[7].id} align="center">
                                                 <div className="table-delete-edit-div">
                                                     <Button
                                                         className="basket-table-btn"

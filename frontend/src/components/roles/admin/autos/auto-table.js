@@ -18,14 +18,13 @@ import ConfirmDeletingDialog from "../slide-dialog";
 
 
 const columns = [
-    {id: "mark", label: "Mark", minWidth: 170},
-    {id: "type", label: "Type", minWidth: 170},
-    {
-        id: "edit_delete",
-        label: "",
-        minWidth: 60,
-        align: "center",
-    }
+    {id: "mark", label: "Mark", minWidth: 170, align: "center"},
+    {id: "number", label: "Number", minWidth: 170, align: "center"},
+    {id: "type", label: "Type", minWidth: 170, align: "center"},
+    {id: "consumption", label: "Consumption (liter / 100 km)", minWidth: 100, align: "center"},
+    {id: "dateOfIssue", label: "Date of issue", minWidth: 170, align: "center"},
+    {id: "status", label: "Status", minWidth: 100, align: "center"},
+    {id: "edit_delete", label: "", minWidth: 60, align: "center"}
 ];
 
 
@@ -96,7 +95,6 @@ export function AutoTable() {
     return (
         <div className="auto-table-wrapper">
             <Button
-                className="add-auto-btn"
                 variant="contained"
                 color="primary"
                 onClick={() => setFormDialogOpen(true)}>
@@ -133,16 +131,28 @@ export function AutoTable() {
                                             tabIndex={-1}
                                             key={auto.id}
                                         >
-                                            <TableCell key={columns[0].id}>
+                                            <TableCell key={columns[0].id} align="center">
                                                 {auto.mark}
                                             </TableCell>
-                                            <TableCell key={columns[1].id}>
+                                            <TableCell key={columns[1].id} align="center">
+                                                {auto.number}
+                                            </TableCell>
+                                            <TableCell key={columns[2].id} align="center">
                                                 {auto.autoType}
                                             </TableCell>
-                                            <TableCell key={columns[2].id}>
+                                            <TableCell key={columns[3].id} align="center">
+                                                {auto.consumption}
+                                            </TableCell>
+                                            <TableCell key={columns[4].id} align="center">
+                                                {auto.dateOfIssue}
+                                            </TableCell>
+                                            <TableCell key={columns[5].id} align="center">
+                                                {auto.status}
+                                            </TableCell>
+                                            <TableCell key={columns[6].id} align="center">
                                                 <div className="table-delete-edit-div">
                                                     <Button
-                                                        className="auto-table-btn"
+                                                        className="basket-table-btn"
                                                         color={"primary"}
                                                         startIcon={<EditIcon/>}
                                                         onClick={(e) => {

@@ -53,6 +53,7 @@
     min-width: 20px !important;
 }
 
-.user-table-wrapper {
+.user-table-wrapper,
+.auto-table-wrapper {
     text-align: end;
 }

@@ -8,13 +8,18 @@ import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {AUTO_URL, makeRequest} from "../request-util"
-import {AutoTypeSelector} from "./auto-selectors";
+import {AutoStatusSelector, AutoTypeSelector} from "./auto-selectors";
+import CustomDatePicker from "../custom-date-picker";
 
 
 const EMPTY_AUTO = {
     id: -1,
     mark: "",
-    type: "",
+    number: "",
+    autoType: "",
+    consumption: "",
+    dateOfIssue: "",
+    status: "",
 
 };
 
@@ -61,19 +66,27 @@ export const AutoDialog = (props) => {
                         initialValues={{
                             id: autoId,
                             mark: auto.mark,
-                            type: auto.autoType,
+                            number: auto.number,
+                            autoType: auto.autoType,
+                            consumption: auto.consumption,
+                            dateOfIssue: auto.dateOfIssue,
+                            status: auto.status,
                         }}
                         onSubmit={(values) => {
 
                             const auto = {
                                 mark: values.mark,
-                                autoType: values.type,
-                                };
+                                number: values.number,
+                                autoType: values.autoType,
+                                consumption: values.consumption,
+                                dateOfIssue: values.dateOfIssue,
+                                status: values.status,
+                            };
 
                             if (isUpdateForm) {
 
                                 auto.id = values.id;
-                                
+
                                 makeRequest("PUT", AUTO_URL, auto)
                                     .then(res => {
                                         handleClose();
@@ -84,7 +97,7 @@ export const AutoDialog = (props) => {
                                         handleError(error)
                                     })
                             } else {
-
+                                console.log(auto);
                                 makeRequest("POST", AUTO_URL, auto)
                                     .then(res => {
                                         handleClose();
@@ -107,12 +120,38 @@ export const AutoDialog = (props) => {
                                         label={"Mark"}
                                         formikFieldName={"mark"}
                                     />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"number"}
+                                        label={"Number"}
+                                        formikFieldName={"number"}
+                                    />
                                     <AutoTypeSelector
                                         formikProps={formProps}
-                                        id={"type"}
+                                        id={"autoType"}
                                         label={"Type"}
-                                        formikFieldName={"type"}
+                                        formikFieldName={"autoType"}
                                     />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"consumption"}
+                                        label={"Consumption (liter / 100 km)"}
+                                        formikFieldName={"consumption"}
+                                    />
+                                    <CustomDatePicker
+                                        formikProps={formProps}
+                                        id={"dateOfIssue"}
+                                        label={"Date of issue"}
+                                        formikFieldName={"dateOfIssue"}
+                                    />
+
+                                    {isUpdateForm ? <AutoStatusSelector
+                                        formikProps={formProps}
+                                        id={"status"}
+                                        label={"Status"}
+                                        formikFieldName={"status"}
+                                    /> : ""}
+
                                     <Button
                                         variant="contained"
                                         color="primary"

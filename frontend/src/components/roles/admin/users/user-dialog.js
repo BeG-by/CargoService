@@ -7,7 +7,7 @@ import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import UserDatePicker from "./user-date-picker";
+import CustomDatePicker from "../custom-date-picker";
 import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
 import {USER_URL} from "../request-util"
 import {makeRequest} from "../request-util"
@@ -211,7 +211,7 @@ export const UserDialog = (props) => {
                                         formikFieldName={"status"}
                                     /> : ""}
 
-                                    <UserDatePicker
+                                    <CustomDatePicker
                                         formikProps={formProps}
                                         id={"birthday"}
                                         label={"Date of birth"}
