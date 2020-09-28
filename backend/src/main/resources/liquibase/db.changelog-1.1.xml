@@ -65,7 +65,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="price" type="BIGINT">
+            <column name="price" type="decimal">
                 <constraints nullable="false"/>
             </column>
 

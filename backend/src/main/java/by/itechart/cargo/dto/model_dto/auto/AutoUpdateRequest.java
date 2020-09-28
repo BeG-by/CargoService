@@ -7,25 +7,32 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AutoRequest {
+public class AutoUpdateRequest {
 
+    private Long id;
 
     @NotBlank(message = "Auto mark is mandatory")
     @Size(max = 64, message = "Mark length has oversize (max is 64)")
     private String mark;
 
-    @NotBlank(message = "Auto type is mandatory")
-    private String type;
+    //TODO validation
+    private String number;
 
-    public Auto toAuto() {
-        return Auto.builder()
-                .mark(mark)
-                .autoType(Auto.AutoType.valueOf(type))
-                .build();
-    }
+    @NotBlank(message = "Auto type is mandatory")
+    private String autoType;
+
+    private BigDecimal consumption;
+
+    private LocalDate dateOfIssue;
+
+    private String status;
+
+
 
 }
