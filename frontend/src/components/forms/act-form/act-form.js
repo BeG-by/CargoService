@@ -64,6 +64,7 @@ export const ActForm = (props) => {
             const temp = [...prevState];
             for (let el of temp) {
                 if (el.idx === product.idx) {
+                    el.id = product.id;
                     el.productStatus = product.productStatus;
                     el.lostQuantity = product.lostQuantity;
                     el.comment = product.comment;

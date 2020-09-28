@@ -13,11 +13,14 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import HowToRegIcon from '@material-ui/icons/HowToReg';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 import {getPointById, updatePoint} from "./request-utils";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import CheckIcon from "@material-ui/icons/Check";
+import StoreIcon from '@material-ui/icons/Store';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import {DialogWindow} from "../../parts/dialogs/dialog";
+import {PassPoint} from "../../parts/dialogs/pass-point";
 
 const columns = [
     {id: "place", label: "Place", minWidth: 200},
@@ -27,20 +30,31 @@ const columns = [
 
 export default function WaybillInfoContent(props) {
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [form, setForm] = React.useState(null);
+    const [pointPassedDialogOpen, setPointPassedDialogOpen] = React.useState(false);
 
     const handleTableRowClick = async (p) => {
         let selected = await getPointById(p.id);
-        //fixme вставить диалог подтвердить прохождение точки on
         if (!selected.passed) {
-            await updatePoint(selected);
-            props.action();
+            setForm(<PassPoint handleClose={handleClose} selected={selected}/>);
+            setPointPassedDialogOpen(true);
         }
+    };
+
+    const handleClose = () => {
+        setPointPassedDialogOpen(false);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
     };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
     return (
         <div>
             <Paper>
@@ -48,37 +62,28 @@ export default function WaybillInfoContent(props) {
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <LocalShippingIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Invoice #"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.invoice.number}
+                                        {props.waybill.auto.mark + " "
+                                        + props.waybill.auto.type}
                                     </React.Fragment>
                                 }
+                                secondary="Auto"
                             />
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <HowToRegIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Auto"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.auto.mark} {props.waybill.auto.type}
+                                        {props.waybill.driver.name + " "
+                                        + props.waybill.driver.surname}
                                     </React.Fragment>
                                 }
-                            />
-                            <ListItemIcon>
-                                <CheckCircleIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="Driver"
-                                secondary={
-                                    <React.Fragment>
-                                        {props.waybill.driver.name} {props.waybill.driver.surname}
-                                    </React.Fragment>
-                                }
+                                secondary="Driver"
                             />
                         </ListItem>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
@@ -86,47 +91,47 @@ export default function WaybillInfoContent(props) {
                                 <DepartureBoardIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Departure Date"
-                                secondary={
+                                primary={
                                     <React.Fragment>
                                         {props.waybill.departureDate}
                                     </React.Fragment>
                                 }
+                                secondary="Departure Date"
                             />
                             <ListItemIcon>
                                 <DepartureBoardIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Arrival Date"
-                                secondary={
+                                primary={
                                     <React.Fragment>
                                         {props.waybill.arrivalDate}
                                     </React.Fragment>
                                 }
+                                secondary="Arrival Date"
                             />
                         </ListItem>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <HowToRegIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Shipper"
-                                secondary={
+                                primary={
                                     <React.Fragment>
                                         {props.waybill.shipper}
                                     </React.Fragment>
                                 }
+                                secondary="Shipper"
                             />
                             <ListItemIcon>
-                                <HowToRegIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Consignee"
-                                secondary={
+                                primary={
                                     <React.Fragment>
                                         {props.waybill.consignee}
                                     </React.Fragment>
                                 }
+                                secondary="Consignee"
                             />
                         </ListItem>
                     </div>
@@ -185,6 +190,7 @@ export default function WaybillInfoContent(props) {
                     </Table>
                 </TableContainer>
                 <br/>
+
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15]}
                     component="div"
@@ -192,6 +198,14 @@ export default function WaybillInfoContent(props) {
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+
+                <DialogWindow
+                    dialogTitle="Confirmation"
+                    handleClose={handleClose}
+                    openDialog={pointPassedDialogOpen}
+                    form={form}
                 />
             </Paper>
         </div>

@@ -15,6 +15,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import TablePagination from "@material-ui/core/TablePagination";
+import HowToRegIcon from "@material-ui/icons/HowToReg";
+import StoreIcon from '@material-ui/icons/Store';
+import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 
 const mapStateToProps = (store) => {
     return {
@@ -38,11 +41,17 @@ export const ActInfo = connect(mapStateToProps)((props) => {
     const act = props.act;
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
     return (
         <div>
             <Paper>
@@ -50,7 +59,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <HowToRegIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -62,7 +71,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Driver"
                             />
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <HowToRegIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -75,7 +84,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                         </ListItem>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -86,7 +95,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Shipper"
                             />
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -99,7 +108,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                         </ListItem>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <DepartureBoardIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -167,6 +176,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
             </Paper>

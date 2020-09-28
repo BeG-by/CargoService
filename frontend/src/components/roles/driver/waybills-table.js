@@ -76,16 +76,26 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
 
     let foundWaybill = {};
     let checkPassage = true;
+    let checkLosses = true;
+
     const handleTableRowClick = async (wb) => {
         foundWaybill = await getWaybillById(wb.id);
         foundWaybill.points.forEach(p => {
-            if (!p.passed) checkPassage = false;
+            if (!p.passed) {
+                checkPassage = false;
+            }
+        });
+        foundWaybill.invoice.products.forEach(p => {
+            if (p.productStatus === "LOST") {
+                checkLosses = false;
+            }
         })
         setWaybill(() => ({
             id: foundWaybill.id,
             invoice: foundWaybill.invoice,
         }));
         if (checkPassage
+            && checkLosses
             && foundWaybill.invoice.status !== "CLOSED"
             && foundWaybill.invoice.status !== "CLOSED_WITH_ACT") {
             setForm(FillActDialog(handleActFormOpen, handleWaybillInfoOpen));
@@ -167,7 +177,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
+                    rowsPerPageOptions={[10, 20, 30]}
                     component="div"
                     count={waybills.length}
                     rowsPerPage={rowsPerPage}
@@ -181,7 +191,11 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                     open={actDialogOpen}
                     onClose={() => {
                         setActDialogOpen(false);
-                        fetchWaybills(false);
+                        fetchWaybills(false)
+                            .catch((err) => {
+                                setWaybills([]);
+                                handleRequestError(err);
+                            });
                     }}
                 />
 
@@ -193,7 +207,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 />
 
                 <DialogWindow
-                    dialogTitle="Waybill Info"
+                    dialogTitle={"Waybill to invoice " + waybill.invoice.number}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}
