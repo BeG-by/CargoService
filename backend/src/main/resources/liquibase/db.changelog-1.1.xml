@@ -115,5 +115,38 @@
                                  referencedColumnNames="id_invoice"/>
     </changeSet>
 
+    <changeSet id="1.1.3" author="vladislav.mironuk">
+
+        <createTable tableName="point">
+            <column name="id_point" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="id_waybill" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="longitude" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="latitude" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="passed" type="BOOlEAN" defaultValue="FALSE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="passage_date" type="DATE"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="point"
+                                 baseColumnNames="id_waybill"
+                                 constraintName="fk_point_waybill"
+                                 onDelete="CASCADE"
+                                 referencedTableName="waybill"
+                                 referencedColumnNames="id_waybill"/>
+    </changeSet>
 
 </databaseChangeLog>

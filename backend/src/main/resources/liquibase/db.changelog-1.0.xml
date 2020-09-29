@@ -370,7 +370,7 @@
                                  referencedColumnNames="id_client_company"/>
     </changeSet>
 
-    <!-- Waybill, Point -->
+    <!-- Waybill -->
     <changeSet id="1.0.6" author="marianna.patrusova">
 
         <!--Waybill-->
@@ -400,29 +400,6 @@
 
         </createTable>
 
-        <!-- Point -->
-        <createTable tableName="point">
-
-            <column name="id_point" type="BIGSERIAL" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
-
-            <column name="id_waybill" type="BIGSERIAL">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="place" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="passed" type="BOOlEAN" defaultValue="FALSE">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="passage_date" type="DATE"/>
-
-        </createTable>
-
         <addForeignKeyConstraint baseTableName="waybill"
                                  baseColumnNames="id_client_company"
                                  constraintName="fk_client_company_waybill"
@@ -443,13 +420,6 @@
                                  onDelete="CASCADE"
                                  referencedTableName="invoice"
                                  referencedColumnNames="id_invoice"/>
-
-        <addForeignKeyConstraint baseTableName="point"
-                                 baseColumnNames="id_waybill"
-                                 constraintName="fk_point_waybill"
-                                 onDelete="CASCADE"
-                                 referencedTableName="waybill"
-                                 referencedColumnNames="id_waybill"/>
 
     </changeSet>
 

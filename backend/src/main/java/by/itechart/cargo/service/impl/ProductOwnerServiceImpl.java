@@ -10,6 +10,7 @@ import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.ProductOwnerRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.service.ProductOwnerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static by.itechart.cargo.service.constant.MessageConstant.PRODUCT_OWNER_N
 
 @Service
 @Transactional
+@Slf4j
 public class ProductOwnerServiceImpl implements ProductOwnerService {
 
     private final ProductOwnerRepository productOwnerRepository;
@@ -64,6 +66,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
         productOwner.setClientCompany(clientCompanyProxy);
         productOwnerRepository.save(productOwner);
+        log.info("Product owner has been saved {}", productOwner);
     }
 
     @Override
@@ -87,6 +90,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         productOwner.setRegistrationDate(productOwnerUpdateRequest.getRegistrationDate());
         productOwner.setType(ProductOwner.CompanyType.valueOf(productOwnerUpdateRequest.getType()));
         productOwner.setAddress(productOwnerUpdateRequest.getAddress());
+        log.info("Product owner has been updated {}", productOwner);
     }
 
     @Override
@@ -94,5 +98,6 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         ProductOwner productOwner = productOwnerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
         productOwner.setStatus(ProductOwner.Status.DELETED);
+        log.info("Product owner has been deleted {}", productOwner);
     }
 }

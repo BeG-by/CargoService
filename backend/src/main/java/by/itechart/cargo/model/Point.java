@@ -23,10 +23,15 @@ public class Point implements Serializable, Cloneable {
     @Column(name = "id_point")
     private Long id;
 
-    @NotBlank(message = "Place is mandatory")
-    @Size(max = 255, message = "Place length is too long")
-    @Column(name = "place")
-    private String place;
+    @NotBlank(message = "Latitude is mandatory")
+    @Size(max = 32, message = "Latitude length is too long")
+    @Column(name = "latitude")
+    private String latitude;
+
+    @NotBlank(message = "Longitude is mandatory")
+    @Size(max = 32, message = "Longitude length is too long")
+    @Column(name = "longitude")
+    private String longitude;
 
     @Column(name = "passed")
     private boolean isPassed;
