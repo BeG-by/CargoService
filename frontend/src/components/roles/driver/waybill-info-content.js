@@ -18,6 +18,9 @@ import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 import {getPointById, updatePoint} from "./request-utils";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import CheckIcon from "@material-ui/icons/Check";
+import Map from "../../../map/map";
+import {Form} from "formik";
+import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
 
 const columns = [
     {id: "place", label: "Place", minWidth: 200},
@@ -131,68 +134,69 @@ export default function WaybillInfoContent(props) {
                         </ListItem>
                     </div>
                 </List>
-                <TableContainer>
-                    <Typography variant="h6"
-                                gutterBottom
-                                style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
-                        Control Points:
-                    </Typography>
-                    <Table
-                        aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        style={{minWidth: column.minWidth, fontSize: 16, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {props.waybill.points
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((point) => {
-                                    return (
-                                        <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(point);
-                                            }}
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={point.id}
-                                        >
-                                            {columns.map((column) => {
-                                                const value = fetchFieldFromObject(point, column.id);
-                                                return (
-                                                    <TableCell key={column.id}>
-                                                        {column.id === 'passed' && value === true
-                                                            ? <CheckIcon/>
-                                                            : column.id === 'passed' && value === false
-                                                                ? ""
-                                                                : value}
-                                                    </TableCell>
+                <ManagerMapForPointAdding/>
+                {/*<TableContainer>*/}
+                {/*    <Typography variant="h6"*/}
+                {/*                gutterBottom*/}
+                {/*                style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>*/}
+                {/*        Control Points:*/}
+                {/*    </Typography>*/}
+                {/*    <Table*/}
+                {/*        aria-label="sticky table">*/}
+                {/*        <TableHead>*/}
+                {/*            <TableRow>*/}
+                {/*                {columns.map((column) => (*/}
+                {/*                    <TableCell*/}
+                {/*                        key={column.id}*/}
+                {/*                        style={{minWidth: column.minWidth, fontSize: 16, color: "#3f51b5"}}*/}
+                {/*                    >*/}
+                {/*                        {column.label}*/}
+                {/*                    </TableCell>*/}
+                {/*                ))}*/}
+                {/*            </TableRow>*/}
+                {/*        </TableHead>*/}
+                {/*        <TableBody>*/}
+                {/*            {props.waybill.points*/}
+                {/*                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*/}
+                {/*                .map((point) => {*/}
+                {/*                    return (*/}
+                {/*                        <TableRow*/}
+                {/*                            onClick={() => {*/}
+                {/*                                handleTableRowClick(point);*/}
+                {/*                            }}*/}
+                {/*                            hover*/}
+                {/*                            role="checkbox"*/}
+                {/*                            tabIndex={-1}*/}
+                {/*                            key={point.id}*/}
+                {/*                        >*/}
+                {/*                            {columns.map((column) => {*/}
+                {/*                                const value = fetchFieldFromObject(point, column.id);*/}
+                {/*                                return (*/}
+                {/*                                    <TableCell key={column.id}>*/}
+                {/*                                        {column.id === 'passed' && value === true*/}
+                {/*                                            ? <CheckIcon/>*/}
+                {/*                                            : column.id === 'passed' && value === false*/}
+                {/*                                                ? ""*/}
+                {/*                                                : value}*/}
+                {/*                                    </TableCell>*/}
 
-                                                );
-                                            })}
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <br/>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
-                    component="div"
-                    count={props.waybill.points.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                />
+                {/*                                );*/}
+                {/*                            })}*/}
+                {/*                        </TableRow>*/}
+                {/*                    );*/}
+                {/*                })}*/}
+                {/*        </TableBody>*/}
+                {/*    </Table>*/}
+                {/*</TableContainer>*/}
+                {/*<br/>*/}
+                {/*<TablePagination*/}
+                {/*    rowsPerPageOptions={[5, 10, 15]}*/}
+                {/*    component="div"*/}
+                {/*    count={props.waybill.points.length}*/}
+                {/*    rowsPerPage={rowsPerPage}*/}
+                {/*    page={page}*/}
+                {/*    onChangePage={handleChangePage}*/}
+                {/*/>*/}
             </Paper>
         </div>
     );
