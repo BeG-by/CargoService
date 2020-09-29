@@ -94,6 +94,10 @@ public class ClientCompany implements Serializable, Cloneable {
     @JsonIgnore
     private List<Auto> autos;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonIgnore
+    private List<Storage> storages;
+
 
     @Override
     public String toString() {

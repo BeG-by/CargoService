@@ -48,6 +48,7 @@ public class AutoServiceImpl implements AutoService {
     public Auto findById(long autoId) throws NotFoundException {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         return autoRepository.findByIdAndClientCompanyId(autoId, companyId)
+                .filter(auto -> !auto.getStatus().equals(Auto.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
     }
 
@@ -57,8 +58,11 @@ public class AutoServiceImpl implements AutoService {
         final String number = auto.getNumber();
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
 
-        if (autoRepository.findByNumberAndClientCompanyId(number, companyId).isPresent()) {
-            throw new AlreadyExistException(String.format("Auto with %s already exist", number));
+        if (autoRepository.findByNumberAndClientCompanyId(number, companyId)
+                .filter(a -> !a.getStatus().equals(Auto.Status.DELETED))
+                .isPresent()) {
+
+            throw new AlreadyExistException(String.format("Auto with number '%s' already exist", number));
         }
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
@@ -77,11 +81,11 @@ public class AutoServiceImpl implements AutoService {
                 .orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
 
         final boolean isNumberExist = autoRepository.findByNumberAndClientCompanyId(number, companyId)
-                .filter(a -> !a.getId().equals(autoId))
+                .filter(a -> !a.getId().equals(autoId) && !a.getStatus().equals(Auto.Status.DELETED))
                 .isPresent();
 
         if (isNumberExist) {
-            throw new AlreadyExistException(String.format("Auto with %s already exist", number));
+            throw new AlreadyExistException(String.format("Auto with number '%s' already exist", number));
         }
 
         auto.setMark(autoRequest.getMark());
@@ -91,15 +95,18 @@ public class AutoServiceImpl implements AutoService {
         auto.setDateOfIssue(autoRequest.getDateOfIssue());
         auto.setStatus(Auto.Status.valueOf(autoRequest.getStatus()));
 
+        log.info("Auto has been updated {}", auto);
+
     }
 
     @Override
     public void delete(long autoId) throws NotFoundException {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         autoRepository.findByIdAndClientCompanyId(autoId, companyId)
-                .map(a -> {
-                    a.setStatus(Auto.Status.DELETED);
-                    return a;
+                .map(auto -> {
+                    auto.setStatus(Auto.Status.DELETED);
+                    log.info("Auto has been deleted {}", auto);
+                    return auto;
                 })
                 .orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
     }

@@ -2,7 +2,7 @@ POST localhost:8080/v1/api/auth/login
 Content-Type: application/json
 
 {
-  "login": "admin",
+  "login": "manager",
   "password": "root"
 }
 
@@ -257,3 +257,49 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
       "comment": "all is gone"
     }]
 }
+
+###
+
+GET localhost:8080/v1/api/storages
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
+
+###
+
+POST localhost:8080/v1/api/storages
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
+
+{
+  "country": "Russia",
+  "city": "Smolensk",
+  "street": "Lenina",
+  "house": "32",
+  "email": "t3tt@mail.ru",
+  "phone": "376321234541"
+}
+###
+
+PUT localhost:8080/v1/api/storages
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
+
+{
+  "id": 5,
+  "country": "Russia",
+  "city": "Smolen3sk",
+  "street": "Lenina",
+  "house": "323",
+  "flat": "3",
+  "email": "t3tt3@mail.ru",
+  "phone": "376321234541",
+  "productOwnerId": 2,
+  "status": "ACTIVE"
+}
+###
+
+DELETE localhost:8080/v1/api/storages/5
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
+
+###
