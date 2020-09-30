@@ -31,7 +31,8 @@
 
     <changeSet id="1.1.1" author="vladislav.mironuk">
         <!--Product-->
-        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
+        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' ,
+            'SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH')</sql>
         <sql>CREATE TYPE mass_measure AS ENUM('KG','TON')</sql>
         <sql>CREATE TYPE quantity_measure AS ENUM('PIECE','BOX', 'BARREL', 'BAG')</sql>
         <sql>CREATE TYPE currency_type AS ENUM('RUB','BYN', 'EURO', 'USD')</sql>

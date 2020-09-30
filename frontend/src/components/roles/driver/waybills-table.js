@@ -86,7 +86,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
             }
         });
         foundWaybill.invoice.products.forEach(p => {
-            if (p.productStatus === "LOST") {
+            if (p.lostQuantity > 0) {
                 checkLosses = false;
             }
         })
@@ -207,7 +207,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 />
 
                 <DialogWindow
-                    dialogTitle={"Waybill info"}
+                    dialogTitle={"Waybill to invoice # " + waybill.invoice.number}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}

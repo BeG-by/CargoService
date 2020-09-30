@@ -88,7 +88,7 @@ export default function InvoiceInfoContent(props) {
                                     primary={
                                         <React.Fragment>
                                             {props.invoice.waybill !== null ?
-                                                <strong>Filled</strong>
+                                                <strong style={{color: "#3f51b5"}}>Filled</strong>
                                                 : "Empty"}
                                         </React.Fragment>
                                     }
@@ -104,7 +104,7 @@ export default function InvoiceInfoContent(props) {
                                     primary={
                                         <React.Fragment>
                                             {act !== null ?
-                                                <strong>Filled</strong>
+                                                <strong style={{color: "#3f51b5"}}>Filled</strong>
                                                 : "Empty"}
                                         </React.Fragment>
                                     }

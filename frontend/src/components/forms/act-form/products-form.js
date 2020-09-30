@@ -1,20 +1,35 @@
-import React from "react";
-import { Formik, Form } from "formik";
+import React, {useState} from "react";
+import {Formik, Form, ErrorMessage} from "formik";
 import FormikField from "../../roles/sysadmin/formik-field";
 import Button from "@material-ui/core/Button";
 import {ProductFormValidation} from "../../parts/validation/act-form-validation";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 export default (props) => {
     const { initProductState, onSubmit, onClose } = props;
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const useStyles = makeStyles((theme) => ({
+        formControl: {
+            marginTop: 20,
+            minWidth: "100%",
+        }
+    }));
+    const classes = useStyles();
 
     const handleSubmit = (values) => {
+        alert(selectedStatus);
+        alert(values.productStatus);
         const product = {
             id: initProductState.id,
             invoiceId: initProductState.invoiceId,
-            productStatus: "LOST",
+            productStatus: values.productStatus,
             lostQuantity: values.lostQuantity,
             comment: values.comment,
-            currency: values.currency,
+            currency: initProductState.currency,
             name: initProductState.name,
             quantity: initProductState.quantity,
             quantityMeasure: initProductState.quantityMeasure,
@@ -26,15 +41,49 @@ export default (props) => {
         onSubmit(product);
     };
 
+    const statuses = ['SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH'];
+    const handleStatusChange = (event) => {
+        event.preventDefault();
+        setSelectedStatus(event.target.value);
+    };
+
     return (
         <Formik
             enableReinitialize
-            initialValues={initProductState}
+            initialValues={{
+                productStatus: selectedStatus,
+                lostQuantity: "",
+                comment: ""
+            }}
             onSubmit={handleSubmit}
             validationSchema={ProductFormValidation}
         >
             {(formProps) => (
                 <Form>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-label">Select losses category</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedStatus}
+                            onChange={handleStatusChange}
+                            name={"productStatus"}
+                        >
+                            {statuses.map(status => {
+                                return (
+                                    <MenuItem
+                                        key={status}
+                                        name={"productStatus"}
+                                        value={status}>
+                                        {status}
+                                    </MenuItem>
+                                )
+                            })}
+                        </Select>
+                        <label style={{color: "#f50057"}}>
+                            <ErrorMessage name={"productStatus"}/>
+                        </label>
+                    </FormControl>
                     <FormikField
                         formikProps={formProps}
                         id={"lostQuantity"}

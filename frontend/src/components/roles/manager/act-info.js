@@ -44,7 +44,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
 
     const losses = [];
     invoice.products.forEach(p => {
-        if (p.productStatus === "LOST") {
+        if (p.lostQuantity > 0) {
             losses.push(p);
         }
     })

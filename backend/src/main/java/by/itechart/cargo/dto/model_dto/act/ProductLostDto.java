@@ -19,7 +19,7 @@ public class ProductLostDto {
     private Long id;
 
     @NotNull (message = "Product status is mandatory")
-    @EnumNamePattern(regexp = "ACCEPTED|DELIVERED|LOST|VERIFIED",
+    @EnumNamePattern(regexp = "ACCEPTED|DELIVERED|VERIFIED|SPOILED|STOLEN|CONFISCATED|DAMAGED_IN_CRASH",
             message = "Type must be one of ProductStatus types")
     private Product.Status productStatus;
 

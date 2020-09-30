@@ -88,17 +88,18 @@ export const ActForm = (props) => {
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
 
     const handleSubmit = (values) => {
-        let lostProducts = [];
+        let statusProducts = [];
         products.forEach(p => {
-            if (p.productStatus === "LOST") {
-                lostProducts.push(p);
+            if (p.lostQuantity === 0) {
+                p.productStatus = "DELIVERED";
             }
+            statusProducts.push(p);
         })
         const act = {};
         act.invoiceId = invoice.id;
         act.registrationDate = today;
         act.consigneeWorker = values.consigneeWorker;
-        act.products = lostProducts;
+        act.products = statusProducts;
         const saveActRequest = async (act) => {
             await saveAct(act);
             props.onClose();

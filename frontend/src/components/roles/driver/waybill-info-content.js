@@ -25,6 +25,7 @@ import Divider from "@material-ui/core/Divider";
 import {InvoiceInfo} from "../manager/invoice-info";
 import {OkButton} from "../../parts/buttons/ok-button";
 import {connect} from "react-redux";
+import Button from "@material-ui/core/Button";
 
 const columns = [
     {id: "place", label: "Place", minWidth: 200},
@@ -78,8 +79,14 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
 
     return (
         <div>
+            <Button
+                color="primary"
+                variant="outlined"
+                onClick={handleInvoiceInfoOpen}>
+                {"See invoice info"}
+            </Button>
+
             <Paper>
-                <OkButton disabled={false} handleClick={handleInvoiceInfoOpen} content={"See invoice info"}/>
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
