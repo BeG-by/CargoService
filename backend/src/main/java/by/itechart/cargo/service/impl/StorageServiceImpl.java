@@ -119,7 +119,6 @@ public class StorageServiceImpl implements StorageService {
 
         storage.setEmail(email);
         storage.setPhone(updateRequest.getPhone());
-        storage.setStatus(Storage.Status.valueOf(updateRequest.getStatus()));
 
         log.info("Storage has been updated {}", storage);
 

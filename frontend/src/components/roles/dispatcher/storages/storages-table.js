@@ -8,52 +8,23 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {UserDialog} from "./user-dialog";
 import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
-import ConfirmDeletingDialog from "../slide-dialog";
-import {makeRequest , USER_URL , handleRequestError} from "../request-util"
-
+import {makeRequest, STORAGE_URL, handleRequestError} from "../../admin/request-util";
+import ConfirmDeletingDialog from "../../admin/slide-dialog";
+import {StorageDialog} from "./storage-dialog";
 
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 170 , align: "center"},
-    {id: "surname", label: "Surname", minWidth: 170, align: "center"},
-    {id: "patronymic", label: "Patronymic", minWidth: 170, align: "center"},
-    {
-        id: "role",
-        label: "Role",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "birthday",
-        label: "Date of birth",
-        minWidth: 170,
-        align: "center",
-        format: (value) => value.toFixed(2),
-    },
-    {
-        id: "status",
-        label: "Status",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "email",
-        label: "Email",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "edit_delete",
-        label: "",
-        minWidth: 60,
-        align: "center",
-    }
-
+    {id: "country", label: "Country", minWidth: 170, align: "center"},
+    {id: "city", label: "City", minWidth: 170, align: "center"},
+    {id: "street", label: "Street", minWidth: 170, align: "center"},
+    {id: "house", label: "House", minWidth: 100, align: "center"},
+    {id: "email", label: "Email", minWidth: 170, align: "center"},
+    {id: "phone", label: "Phone", minWidth: 100, align: "center"},
+    {id: "edit_delete", label: "", minWidth: 60, align: "center"}
 ];
 
 
@@ -66,34 +37,34 @@ const useStyles = makeStyles({
     },
 });
 
-export function UserTable() {
+export function StorageTable() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const [users, setUsers] = useState([]);
+    const [storages, setStorages] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(-1);
+    const [selectedStorageId, setSelectedStorageId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
 
-    const REMOVE_TITLE = "Do you want to remove the user ?";
+    const REMOVE_TITLE = "Do you want to remove the storage ?";
 
     useEffect(() => {
-        insertUsers()
+        insertStorages()
     }, []);
 
-    const insertUsers = () => {
-        makeRequest("GET", USER_URL)
-            .then(res => setUsers(res.data))
-            .catch(error => handleRequestError(error, showToastComponent))
+    const insertStorages = () => {
+        makeRequest("GET", STORAGE_URL)
+            .then(res => setStorages(res.data))
+            .catch(error => handleRequestError(error , showToastComponent))
     };
 
 
-    const deleteSelectedUser = (id) => {
-        makeRequest("DELETE", USER_URL + "/" + id)
+    const deleteStorage = (id) => {
+        makeRequest("DELETE", STORAGE_URL + "/" + id)
             .then(res => {
-                insertUsers();
-                showToastComponent("User has been deleted", "success");
+                insertStorages();
+                showToastComponent("Storage has been deleted", "success");
             })
             .catch(error => handleRequestError(error, showToastComponent))
     };
@@ -103,8 +74,8 @@ export function UserTable() {
         setPage(newPage);
     };
 
-    const handleTableRowClick = (user) => {
-        setSelectedUserId(user.id);
+    const handleTableRowClick = (auto) => {
+        setSelectedStorageId(auto.id);
         setFormDialogOpen(true);
     };
 
@@ -113,13 +84,14 @@ export function UserTable() {
         setPage(0);
     };
 
+
     return (
-        <div className="user-table-wrapper">
+        <div className="storage-table-wrapper">
             <Button
                 variant="contained"
                 color="primary"
                 onClick={() => setFormDialogOpen(true)}>
-                Create user
+                Create storage
             </Button>
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
@@ -138,44 +110,39 @@ export function UserTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {users
+                            {storages
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((user) => {
-
-                                    let roles = user.roles.map(role => role.charAt(0) + role.substring(1).toLowerCase());
+                                .map((storage) => {
 
                                     return (
                                         <TableRow
                                             onClick={() => {
-                                                handleTableRowClick(user);
+                                                handleTableRowClick(storage);
                                             }}
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={user.id}
+                                            key={storage.id}
                                         >
                                             <TableCell key={columns[0].id} align="center">
-                                                {user.name}
+                                                {storage.address.country}
                                             </TableCell>
                                             <TableCell key={columns[1].id} align="center">
-                                                {user.surname}
+                                                {storage.address.city}
                                             </TableCell>
                                             <TableCell key={columns[2].id} align="center">
-                                                {user.patronymic}
+                                                {storage.address.street}
                                             </TableCell>
                                             <TableCell key={columns[3].id} align="center">
-                                                {roles}
+                                                {storage.address.house}
                                             </TableCell>
                                             <TableCell key={columns[4].id} align="center">
-                                                {user.birthday}
+                                                {storage.email}
                                             </TableCell>
                                             <TableCell key={columns[5].id} align="center">
-                                                {user.status}
+                                                {storage.phone}
                                             </TableCell>
                                             <TableCell key={columns[6].id} align="center">
-                                                {user.email}
-                                            </TableCell>
-                                            <TableCell key={columns[7].id} align="center">
                                                 <div className="table-delete-edit-div">
                                                     <Button
                                                         className="basket-table-btn"
@@ -183,13 +150,14 @@ export function UserTable() {
                                                         startIcon={<EditIcon/>}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            handleTableRowClick(user)
+                                                            handleTableRowClick(storage)
                                                         }}/>
                                                     <ConfirmDeletingDialog
-                                                        id={user.id}
-                                                        onDelete={deleteSelectedUser}
+                                                        id={storage.id}
+                                                        onDelete={deleteStorage}
                                                         text={REMOVE_TITLE}
                                                     />
+
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -202,22 +170,23 @@ export function UserTable() {
                 <TablePagination
                     rowsPerPageOptions={[10, 15, 20]}
                     component="div"
-                    count={users.length}
+                    count={storages.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
-                <UserDialog
+                <StorageDialog
                     open={formDialogOpen}
-                    userId={selectedUserId}
+                    storageId={selectedStorageId}
                     onClose={() => {
                         setFormDialogOpen(false);
-                        setSelectedUserId(-1);
+                        setSelectedStorageId(-1);
                     }}
-                    refreshTable={insertUsers}
+                    refreshTable={insertStorages}
                     showToast={showToastComponent}
+                    handleError={handleRequestError}
                 />
                 {toastComponent}
             </Paper>
@@ -226,4 +195,4 @@ export function UserTable() {
 }
 
 
-export default () => <BodyWrapper content={UserTable}/>
+export default () => <BodyWrapper content={StorageTable}/>
