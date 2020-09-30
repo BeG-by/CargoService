@@ -7,42 +7,42 @@ import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {AUTO_URL, handleRequestError, makeRequest} from "../request-util"
-import {AutoStatusSelector, AutoTypeSelector} from "./auto-selectors";
-import CustomDatePicker from "../custom-date-picker";
+import {makeRequest, STORAGE_URL, handleRequestError} from "../../admin/request-util"
 
 
-const EMPTY_AUTO = {
+const EMPTY_STORAGE = {
     id: -1,
-    mark: "",
-    number: "",
-    autoType: "",
-    consumption: "",
-    dateOfIssue: "",
-    status: "",
+    address: {
+        country: "",
+        city: "",
+        street: "",
+        house: ""
+    },
+    email: "",
+    phone: "",
 
 };
 
 
-export const AutoDialog = (props) => {
-    const {open, onClose, autoId, refreshTable, showToast} = props;
-    const [auto, setAuto] = useState(EMPTY_AUTO);
-    const TITLE = "Auto form"
+export const StorageDialog = (props) => {
+    const {open, onClose, storageId, refreshTable, showToast} = props;
+    const [storage, setStorage] = useState(EMPTY_STORAGE);
 
-    const isUpdateForm = autoId >= 0;
+    const TITLE = "Storage Form"
+
+    const isUpdateForm = storageId >= 0;
 
     useEffect(() => {
 
         if (isUpdateForm) {
-            makeRequest("GET", AUTO_URL + "/" + autoId)
-                .then(res => {
-                    setAuto(res.data);
-                }).catch(error => handleRequestError(error, showToast))
+            makeRequest("GET", STORAGE_URL + "/" + storageId)
+                .then(res => setStorage(res.data))
+                .catch(error => handleRequestError(error, setStorage))
         }
-    }, [autoId]);
+    }, [storageId]);
 
     const handleClose = () => {
-        setAuto(EMPTY_AUTO);
+        setStorage(EMPTY_STORAGE);
         onClose();
     };
 
@@ -65,44 +65,43 @@ export const AutoDialog = (props) => {
                     <Formik
                         enableReinitialize
                         initialValues={{
-                            id: autoId,
-                            mark: auto.mark,
-                            number: auto.number,
-                            autoType: auto.autoType,
-                            consumption: auto.consumption,
-                            dateOfIssue: auto.dateOfIssue,
-                            status: auto.status,
+                            id: storageId,
+                            country: storage.address.country,
+                            city: storage.address.city,
+                            street: storage.address.street,
+                            house: storage.address.house,
+                            email: storage.email,
+                            phone: storage.phone
                         }}
                         onSubmit={(values) => {
 
-                            const auto = {
-                                mark: values.mark,
-                                number: values.number,
-                                autoType: values.autoType,
-                                consumption: values.consumption,
-                                dateOfIssue: values.dateOfIssue,
-                                status: values.status,
+                            const storage = {
+                                country: values.country,
+                                city: values.city,
+                                street: values.street,
+                                house: values.house,
+                                email: values.email,
+                                phone: values.phone
                             };
 
                             if (isUpdateForm) {
 
-                                auto.id = values.id;
+                                storage.id = values.id;
 
-                                makeRequest("PUT", AUTO_URL, auto)
+                                makeRequest("PUT", STORAGE_URL, storage)
                                     .then(res => {
                                         handleClose();
                                         refreshTable();
-                                        showToast("Auto has been updated", "success")
+                                        showToast("Storage has been updated", "success")
                                     })
                                     .catch(error => handleRequestError(error, showToast))
-
                             } else {
 
-                                makeRequest("POST", AUTO_URL, auto)
+                                makeRequest("POST", STORAGE_URL, storage)
                                     .then(res => {
                                         handleClose();
                                         refreshTable();
-                                        showToast("Auto has been created", "success")
+                                        showToast("Storage has been created", "success")
                                     })
                                     .catch(error => handleRequestError(error, showToast))
                             }
@@ -114,41 +113,40 @@ export const AutoDialog = (props) => {
                                 <Form>
                                     <FormikField
                                         formikProps={formProps}
-                                        id={"mark"}
-                                        label={"Mark"}
-                                        formikFieldName={"mark"}
+                                        id={"country"}
+                                        label={"Country"}
+                                        formikFieldName={"country"}
                                     />
                                     <FormikField
                                         formikProps={formProps}
-                                        id={"number"}
-                                        label={"Number"}
-                                        formikFieldName={"number"}
-                                    />
-                                    <AutoTypeSelector
-                                        formikProps={formProps}
-                                        id={"autoType"}
-                                        label={"Type"}
-                                        formikFieldName={"autoType"}
+                                        id={"city"}
+                                        label={"City"}
+                                        formikFieldName={"city"}
                                     />
                                     <FormikField
                                         formikProps={formProps}
-                                        id={"consumption"}
-                                        label={"Consumption (liter / 100 km)"}
-                                        formikFieldName={"consumption"}
+                                        id={"street"}
+                                        label={"Street"}
+                                        formikFieldName={"street"}
                                     />
-                                    <CustomDatePicker
+                                    <FormikField
                                         formikProps={formProps}
-                                        id={"dateOfIssue"}
-                                        label={"Date of issue"}
-                                        formikFieldName={"dateOfIssue"}
+                                        id={"house"}
+                                        label={"House"}
+                                        formikFieldName={"house"}
                                     />
-
-                                    {isUpdateForm ? <AutoStatusSelector
+                                    <FormikField
                                         formikProps={formProps}
-                                        id={"status"}
-                                        label={"Status"}
-                                        formikFieldName={"status"}
-                                    /> : ""}
+                                        id={"email"}
+                                        label={"Email"}
+                                        formikFieldName={"email"}
+                                    />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"phone"}
+                                        label={"Phone"}
+                                        formikFieldName={"phone"}
+                                    />
 
                                     <Button
                                         variant="contained"

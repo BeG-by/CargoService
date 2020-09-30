@@ -6,6 +6,7 @@ import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Auto;
 import by.itechart.cargo.service.AutoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class AutoController {
 
     private final AutoService autoService;
 
+    @Autowired
     public AutoController(AutoService autoService) {
         this.autoService = autoService;
     }

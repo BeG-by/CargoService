@@ -69,12 +69,17 @@ public class ProductOwner implements Serializable, Cloneable {
     @EqualsAndHashCode.Exclude
     private ClientCompany clientCompany;
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productOwner")
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Invoice> invoices;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "productOwner")
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Storage> storages;
 
     public enum CompanyType {
         SP, //Sole proprietorship

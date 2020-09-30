@@ -4,6 +4,8 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="1.1.0" author="vladislav.mironuk">
+        <sql>CREATE TYPE storage_status AS ENUM('ACTIVE', 'DELETED')</sql>
+
         <createTable tableName="storage">
             <column name="id_storage" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -20,13 +22,35 @@
             <column name="house" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
+            <column name="flat" type="VARCHAR(64)"/>
             <column name="phone" type="VARCHAR(64)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(64)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
+            <column name="status" type="storage_status" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_product_owner" type="BIGSERIAL"/>
+            <column name="id_client_company" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="storage"
+                                 baseColumnNames="id_product_owner"
+                                 constraintName="fk_product_owner_storage"
+                                 referencedTableName="product_owner"
+                                 referencedColumnNames="id_product_owner"/>
+
+        <addForeignKeyConstraint baseTableName="storage"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_storage"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
+
     </changeSet>
 
     <changeSet id="1.1.1" author="vladislav.mironuk">

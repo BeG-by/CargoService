@@ -11,7 +11,7 @@ public interface AutoRepository extends JpaRepository<Auto, Long> {
 
     Optional<Auto> findByIdAndClientCompanyId(Long autoId, Long clientCompanyId);
 
-    @Query("FROM Auto u WHERE u.clientCompany.id = :clientCompanyId AND u.status <> 'DELETED'")
+    @Query("FROM Auto a WHERE a.clientCompany.id = :clientCompanyId AND a.status <> 'DELETED'")
     List<Auto> findAllWithoutDeleted(Long clientCompanyId);
 
     Optional<Auto> findByNumberAndClientCompanyId(String number, Long clientCompanyId);
