@@ -13,6 +13,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import {connect} from "react-redux";
 
 const EMPTY_AUTO = {
     id: 0,
@@ -29,7 +30,14 @@ const EMPTY_POINT = {
     passageDate: "",
 };
 
-export default (props) => {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const WaybillForm = connect(mapStateToProps)((props) => {
+    const role = props.role;
     const [invoice, setInvoice] = useState(props.invoice);
     const [selectedAuto, setSelectedAuto] = useState(EMPTY_AUTO);
     const [selectedPoint, setSelectedPoint] = useState(EMPTY_POINT);
@@ -276,4 +284,4 @@ export default (props) => {
             </Formik>
         </React.Fragment>
     );
-};
+});

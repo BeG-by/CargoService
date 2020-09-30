@@ -18,6 +18,7 @@ import {connect} from "react-redux";
 
 const columns = [
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100},
+    {id: "status", label: "Invoice status", minWidth: 150},
     {id: "auto", label: "Auto", minWidth: 100},
     {
         id: "departureDate",
@@ -206,13 +207,14 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 />
 
                 <DialogWindow
-                    dialogTitle={"Waybill to invoice " + waybill.invoice.number}
+                    dialogTitle={"Waybill info"}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}
                     openDialog={waybillInfoDialogOpen}
                     form={form}
                 />
+
             </Paper>
         </div>
     );

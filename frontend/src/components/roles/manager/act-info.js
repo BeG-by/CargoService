@@ -18,6 +18,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
 import StoreIcon from '@material-ui/icons/Store';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
+import Divider from "@material-ui/core/Divider";
 
 const mapStateToProps = (store) => {
     return {
@@ -26,15 +27,15 @@ const mapStateToProps = (store) => {
 };
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 100, maxWidth: 100},
-    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
-    {label: "Measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
-    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
-    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
-    {label: "Measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
-    {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
-    {label: "Comment", id: "comment", minWidth: 100, maxWidth: 100},
+    {label: "Name", id: "name", minWidth: 100},
+    {label: "Mass", id: "mass", minWidth: 50},
+    {label: "Measure", id: "massMeasure", minWidth: 100},
+    {label: "Price", id: "price", minWidth: 50},
+    {label: "Currency", id: "currency", minWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50},
+    {label: "Measure", id: "quantityMeasure", minWidth: 100},
+    {label: "Lost quantity", id: "lostQuantity", minWidth: 100},
+    {label: "Comment", id: "comment", minWidth: 100},
 ];
 
 export const ActInfo = connect(mapStateToProps)((props) => {
@@ -90,6 +91,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Consignee worker"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
                                 <StoreIcon/>
@@ -114,6 +116,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Consignee"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
                                 <DepartureBoardIcon/>
@@ -129,7 +132,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                         </ListItem>
                     </div>
                 </List>
-
+                <Divider/>
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom

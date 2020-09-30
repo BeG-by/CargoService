@@ -20,6 +20,9 @@ import CommentIcon from '@material-ui/icons/Comment';
 import {ActInfo} from "./act-info";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import Tooltip from '@material-ui/core/Tooltip';
+import {WaybillInfo} from "../driver/waybill-info";
+import Divider from "@material-ui/core/Divider";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
@@ -34,9 +37,11 @@ const columns = [
 export default function InvoiceInfoContent(props) {
     const invoice = props.invoice;
     const act = props.invoice.act;
+    const waybill = props.invoice.waybill;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
     const [actInfoDialogOpen, setActInfoDialogOpen] = React.useState(false);
+    const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
     const [form, setForm] = React.useState(null);
 
     const handleActInfoOpen = () => {
@@ -44,8 +49,14 @@ export default function InvoiceInfoContent(props) {
         setActInfoDialogOpen(true);
     }
 
+    const handleWaybillInfoOpen = () => {
+        setForm(<WaybillInfo waybillId={waybill.id}/>);
+        setWaybillInfoDialogOpen(true);
+    }
+
     const handleClose = () => {
         setActInfoDialogOpen(false);
+        setWaybillInfoDialogOpen(false);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -54,150 +65,163 @@ export default function InvoiceInfoContent(props) {
     return (
         <div>
             <Paper>
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                    {props.buttons}
-                </div>
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
-                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                        <ListItemIcon>
-                            <CheckCircleIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.invoiceStatus}
-                                </React.Fragment>
-                            }
-                            secondary="Invoice status"
-                        />
-                        <ListItemIcon>
-                            <CheckCircleIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.waybill !== null ? "Filled" : "Empty"}
-                                </React.Fragment>
-                            }
-                            secondary="Waybill"
-                        />
-                        <ListItemIcon>
-                            <CheckCircleIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {act !== null ?
-                                        <strong onClick={handleActInfoOpen}>Filled</strong>
-                                        : "Empty"}
-                                </React.Fragment>
-                            }
-                            secondary="Act"
-                        />
-                    </ListItem>
-                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                        <ListItemIcon>
-                            <DepartureBoardIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.registrationDate}
-                                </React.Fragment>
-                            }
-                            secondary="Registration Date"
-                        />
-                        <ListItemIcon>
-                            <DepartureBoardIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.checkingDate}
-                                </React.Fragment>
-                            }
-                            secondary="Checking Date"
-                        />
-                        <ListItemIcon>
-                            <DepartureBoardIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.closeDate}
-                                </React.Fragment>
-                            }
-                            secondary="Closing Date"
-                        />
-                    </ListItem>
-                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}} >
-                        <ListItemIcon>
-                            <HowToRegIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.driver.name + " "
-                                    + props.invoice.driver.surname}
-                                </React.Fragment>
-                            }
-                            secondary="Driver"
-                        />
-                        <ListItemIcon>
-                            <HowToRegIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.registrationUser.name + " "
-                                    + props.invoice.registrationUser.surname}
-                                </React.Fragment>
-                            }
-                            secondary="Dispatcher"
-                        />
-                        <ListItemIcon>
-                            <HowToRegIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.checkingUser === null
-                                        ? null
-                                        : props.invoice.checkingUser.name + " "
-                                        + props.invoice.checkingUser.surname}
-                                </React.Fragment>
-                            }
-                            secondary="Manager"
-                        />
-                    </ListItem>
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItemIcon>
+                                <CheckCircleIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.invoiceStatus}
+                                    </React.Fragment>
+                                }
+                                secondary="Invoice status"
+                            />
+                            <ListItemIcon>
+                                <CheckCircleIcon/>
+                            </ListItemIcon>
+                            <Tooltip title="Click to see Waybill info" arrow>
+                                <ListItemText
+                                    onClick={handleWaybillInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            {props.invoice.waybill !== null ?
+                                                <strong>Filled</strong>
+                                                : "Empty"}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Waybill"
+                                />
+                            </Tooltip>
+                            <ListItemIcon>
+                                <CheckCircleIcon/>
+                            </ListItemIcon>
+                            <Tooltip title="Click to see Act info" arrow>
+                                <ListItemText
+                                    onClick={handleActInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            {act !== null ?
+                                                <strong>Filled</strong>
+                                                : "Empty"}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Act"
+                                />
+                            </Tooltip>
+                        </ListItem>
+                        <Divider orientation="vertical" flexItem/>
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItemIcon>
+                                <DepartureBoardIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.registrationDate}
+                                    </React.Fragment>
+                                }
+                                secondary="Registration Date"
+                            />
+                            <ListItemIcon>
+                                <DepartureBoardIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.checkingDate}
+                                    </React.Fragment>
+                                }
+                                secondary="Checking Date"
+                            />
+                            <ListItemIcon>
+                                <DepartureBoardIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.closeDate}
+                                    </React.Fragment>
+                                }
+                                secondary="Closing Date"
+                            />
+                        </ListItem>
+                        <Divider orientation="vertical" flexItem/>
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItemIcon>
+                                <HowToRegIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.driver.name + " "
+                                        + props.invoice.driver.surname}
+                                    </React.Fragment>
+                                }
+                                secondary="Driver"
+                            />
+                            <ListItemIcon>
+                                <HowToRegIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.registrationUser.name + " "
+                                        + props.invoice.registrationUser.surname}
+                                    </React.Fragment>
+                                }
+                                secondary="Dispatcher"
+                            />
+                            <ListItemIcon>
+                                <HowToRegIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.checkingUser === null
+                                            ? null
+                                            : props.invoice.checkingUser.name + " "
+                                            + props.invoice.checkingUser.surname}
+                                    </React.Fragment>
+                                }
+                                secondary="Manager"
+                            />
+                        </ListItem>
                     </div>
-                    <ListItem style={{flexDirection: "row", alignItems: "flex-start"}}>
-                        <ListItemIcon>
-                            <StoreIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.shipper}
-                                </React.Fragment>
-                            }
-                            secondary="Shipper"
-                        />
-                        <ListItemIcon>
-                            <StoreIcon/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={
-                                <React.Fragment>
-                                    {props.invoice.consignee}
-                                </React.Fragment>
-                            }
-                            secondary="Consignee"
-                        />
-                    </ListItem>
-
-                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}} >
+                    <Divider/>
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItemIcon>
+                                <StoreIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.shipper}
+                                    </React.Fragment>
+                                }
+                                secondary="Shipper"
+                            />
+                        </ListItem>
+                        <Divider orientation="vertical" flexItem/>
+                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItemIcon>
+                                <StoreIcon/>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={
+                                    <React.Fragment>
+                                        {props.invoice.consignee}
+                                    </React.Fragment>
+                                }
+                                secondary="Consignee"
+                            />
+                        </ListItem>
+                    </div>
+                    <Divider/>
+                    <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                         <ListItemIcon>
                             <CommentIcon/>
                         </ListItemIcon>
@@ -211,7 +235,7 @@ export default function InvoiceInfoContent(props) {
                         />
                     </ListItem>
                 </List>
-
+                <Divider/>
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom
@@ -267,6 +291,10 @@ export default function InvoiceInfoContent(props) {
                     page={page}
                     onChangePage={handleChangePage}
                 />
+
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    {props.buttons}
+                </div>
             </Paper>
 
             <DialogWindow
@@ -275,6 +303,15 @@ export default function InvoiceInfoContent(props) {
                 maxWidth="md"
                 handleClose={handleClose}
                 openDialog={actInfoDialogOpen}
+                form={form}
+            />
+
+            <DialogWindow
+                dialogTitle={"Waybill to invoice # " + invoice.number}
+                fullWidth={true}
+                maxWidth="md"
+                handleClose={handleClose}
+                openDialog={waybillInfoDialogOpen}
                 form={form}
             />
         </div>

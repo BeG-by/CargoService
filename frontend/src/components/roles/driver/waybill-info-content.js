@@ -21,6 +21,10 @@ import StoreIcon from '@material-ui/icons/Store';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {PassPoint} from "../../parts/dialogs/pass-point";
+import Divider from "@material-ui/core/Divider";
+import {InvoiceInfo} from "../manager/invoice-info";
+import {OkButton} from "../../parts/buttons/ok-button";
+import {connect} from "react-redux";
 
 const columns = [
     {id: "place", label: "Place", minWidth: 200},
@@ -28,22 +32,34 @@ const columns = [
     {id: "passed", label: "Passed", minWidth: 200}
 ];
 
-export default function WaybillInfoContent(props) {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const WaybillInfoContent = connect(mapStateToProps)((props) => {
+    const role = props.role;
+    const waybill = props.waybill;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [form, setForm] = React.useState(null);
     const [pointPassedDialogOpen, setPointPassedDialogOpen] = React.useState(false);
+    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
 
     const handleTableRowClick = async (p) => {
-        let selected = await getPointById(p.id);
-        if (!selected.passed) {
-            setForm(<PassPoint handleClose={handleClose} selected={selected}/>);
-            setPointPassedDialogOpen(true);
+        if (role === "DRIVER") {
+            let selected = await getPointById(p.id);
+            if (!selected.passed) {
+                setForm(<PassPoint handleClose={handleClose} action={props.action} selected={selected}/>);
+                setPointPassedDialogOpen(true);
+            }
         }
     };
 
     const handleClose = () => {
         setPointPassedDialogOpen(false);
+        setInvoiceInfoDialogOpen(false);
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -55,9 +71,15 @@ export default function WaybillInfoContent(props) {
         setPage(newPage);
     };
 
+    const handleInvoiceInfoOpen = () => {
+        setForm(<InvoiceInfo invoiceId={waybill.invoice.id}/>);
+        setInvoiceInfoDialogOpen(true);
+    }
+
     return (
         <div>
             <Paper>
+                <OkButton disabled={false} handleClick={handleInvoiceInfoOpen} content={"See invoice info"}/>
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
@@ -86,6 +108,7 @@ export default function WaybillInfoContent(props) {
                                 secondary="Driver"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
                                 <DepartureBoardIcon/>
@@ -110,6 +133,7 @@ export default function WaybillInfoContent(props) {
                                 secondary="Arrival Date"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
                                 <StoreIcon/>
@@ -136,6 +160,7 @@ export default function WaybillInfoContent(props) {
                         </ListItem>
                     </div>
                 </List>
+                <Divider/>
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom
@@ -194,7 +219,7 @@ export default function WaybillInfoContent(props) {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={props.waybill.points.length}
+                    count={waybill.points.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
@@ -207,7 +232,16 @@ export default function WaybillInfoContent(props) {
                     openDialog={pointPassedDialogOpen}
                     form={form}
                 />
+
+                <DialogWindow
+                    dialogTitle={"Invoice # " + waybill.invoice.number}
+                    fullWidth={true}
+                    maxWidth="md"
+                    handleClose={handleClose}
+                    openDialog={invoiceInfoDialogOpen}
+                    form={form}
+                />
             </Paper>
         </div>
     );
-}
+});

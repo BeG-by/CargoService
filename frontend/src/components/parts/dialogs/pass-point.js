@@ -8,7 +8,8 @@ export const PassPoint = withRouter((props) => {
     const handlePass = async () => {
         const selected = props.selected;
         await updatePoint(selected);
-        props.history.push("/success");
+        props.action();
+        props.handleClose();
     };
 
     return (

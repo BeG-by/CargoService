@@ -18,7 +18,7 @@ import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import {connect} from "react-redux";
 
 const columns = [
-    {id: "number", label: "Invoice #", minWidth: 100},
+    {id: "number", label: "Invoice", minWidth: 100},
     {id: "status", label: "Status", minWidth: 100},
     {
         id: "date",

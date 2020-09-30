@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {getWaybillById} from "./request-utils";
-import WaybillInfoContent from "./waybill-info-content";
+import {WaybillInfoContent} from "./waybill-info-content";
 
 export const WaybillInfo = (props) => {
     const [waybill, setWaybill] = React.useState({

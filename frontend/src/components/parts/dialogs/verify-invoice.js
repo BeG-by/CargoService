@@ -28,7 +28,8 @@ export const AssignVerificationInvoice = withRouter((props) => {
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>
                 </div>
             </div>
-        </div>);
+        </div>
+    );
 })
 
 export const RejectVerificationInvoice = withRouter((props) => {

@@ -16,6 +16,7 @@ import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
 import {DRAWER_WIDTH} from "../../pages/body-wrapper";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
+import {ItemProfile} from "../drawer-items/item-profile";
 
 
 const drawerWidth = DRAWER_WIDTH;
@@ -62,7 +63,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             break;
         case 'DISPATCHER':
             components.push(<ItemClientTable key="Product owners"/>);
-            components.push(<ItemInvoiceList key='Invoices'/>);
+            components.push(<ItemInvoices key='Invoices'/>);
             components.push(<Divider key='Divider'/>);
             break;
         case 'DRIVER':
@@ -97,11 +98,12 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
                 {components}
             </List>
             <List>
-                <ItemInfo/>
-                <ItemContacts/>
+                <ItemProfile/>
             </List>
             <Divider/>
             <List>
+                <ItemInfo/>
+                <ItemContacts/>
                 <ItemSendMail/>
             </List>
         </Drawer>
