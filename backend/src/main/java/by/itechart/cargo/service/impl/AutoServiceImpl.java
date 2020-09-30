@@ -1,13 +1,14 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.auto.AutoRequest;
+import by.itechart.cargo.dto.model_dto.auto.AutoSaveRequest;
+import by.itechart.cargo.dto.model_dto.auto.AutoUpdateRequest;
+import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Auto;
 import by.itechart.cargo.repository.AutoRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
-import by.itechart.cargo.security.jwt.JwtUserDetails;
 import by.itechart.cargo.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +40,68 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public List<Auto> findAll() {
-        return autoRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return autoRepository.findAllWithoutDeleted(companyId);
     }
 
     @Override
-    public Auto findById(long id) throws NotFoundException {
-        return autoRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
+    public Auto findById(long autoId) throws NotFoundException {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return autoRepository.findByIdAndClientCompanyId(autoId, companyId)
+                .orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public void save(AutoRequest autoRequest) {
+    public void save(AutoSaveRequest autoRequest) throws AlreadyExistException {
         final Auto auto = autoRequest.toAuto();
-        final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
-        final Long companyId = currentUser.getClientCompany().getId();
+        final String number = auto.getNumber();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+
+        if (autoRepository.findByNumberAndClientCompanyId(number, companyId).isPresent()) {
+            throw new AlreadyExistException(String.format("Auto with %s already exist", number));
+        }
+
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         auto.setClientCompany(clientCompany);
         final Auto autoDb = autoRepository.save(auto);
         log.info("Auto has been saved {}", autoDb);
+    }
+
+    @Override
+    public void update(AutoUpdateRequest autoRequest) throws NotFoundException, AlreadyExistException {
+        final Long autoId = autoRequest.getId();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        final String number = autoRequest.getNumber();
+
+        final Auto auto = autoRepository.findByIdAndClientCompanyId(autoId, companyId)
+                .orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
+
+        final boolean isNumberExist = autoRepository.findByNumberAndClientCompanyId(number, companyId)
+                .filter(a -> !a.getId().equals(autoId))
+                .isPresent();
+
+        if (isNumberExist) {
+            throw new AlreadyExistException(String.format("Auto with %s already exist", number));
+        }
+
+        auto.setMark(autoRequest.getMark());
+        auto.setNumber(number);
+        auto.setAutoType(Auto.AutoType.valueOf(autoRequest.getAutoType()));
+        auto.setConsumption(autoRequest.getConsumption());
+        auto.setDateOfIssue(autoRequest.getDateOfIssue());
+        auto.setStatus(Auto.Status.valueOf(autoRequest.getStatus()));
+
+    }
+
+    @Override
+    public void delete(long autoId) throws NotFoundException {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        autoRepository.findByIdAndClientCompanyId(autoId, companyId)
+                .map(a -> {
+                    a.setStatus(Auto.Status.DELETED);
+                    return a;
+                })
+                .orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
     }
 
 }

@@ -260,6 +260,7 @@
 
         <!--Auto-->
         <sql>CREATE TYPE auto_type AS ENUM('EURO_TRACK', 'JUMBO' , 'REFRIGERATOR')</sql>
+        <sql>CREATE TYPE auto_status AS ENUM('ACTIVE', 'BROKEN' , 'DELETED')</sql>
 
         <createTable tableName="auto">
 
@@ -270,6 +271,20 @@
             <column name="mark" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="number" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="consumption" type="real">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="auto_status" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_date" type="DATE"/>
 
             <column name="type" type="auto_type">
                 <constraints nullable="false"/>
@@ -282,7 +297,8 @@
         </createTable>
 
         <!--Invoice-->
-        <sql>CREATE TYPE invoice_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED', 'CLOSED_WITH_ACT')</sql>
+        <sql>CREATE TYPE invoice_status AS ENUM('REGISTERED', 'REJECTED' , 'ACCEPTED' , 'CLOSED', 'CLOSED_WITH_ACT')
+        </sql>
         <createTable tableName="invoice">
 
             <column name="id_invoice" type="BIGSERIAL" autoIncrement="true">

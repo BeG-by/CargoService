@@ -6,14 +6,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const title = "Do you want to remove user ?";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
 export default function ConfirmDeletingDialog(props) {
-    const {userId, deleteUser} = props;
+    const {id, onDelete, text} = props;
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -27,7 +26,7 @@ export default function ConfirmDeletingDialog(props) {
     return (
         <div>
             <Button
-                className="user-table-btn"
+                className="basket-table-btn"
                 color={"primary"}
                 startIcon={<DeleteIcon/>}
                 onClick={(e) => {
@@ -44,12 +43,12 @@ export default function ConfirmDeletingDialog(props) {
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title">{text}</DialogTitle>
                 <DialogActions>
                     <Button onClick={(e) => {
                         e.stopPropagation();
                         handleClose();
-                        deleteUser(userId);
+                        onDelete(id);
                     }} color="primary">
                         Yes
                     </Button>

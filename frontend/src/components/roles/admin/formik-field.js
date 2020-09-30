@@ -3,8 +3,6 @@ import TextField from "@material-ui/core/TextField";
 
 export default (props) => {
     const {formikProps, formikFieldName} = props;
-
-
     return (
         <TextField
             {...props}
