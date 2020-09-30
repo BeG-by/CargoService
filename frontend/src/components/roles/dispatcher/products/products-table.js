@@ -17,12 +17,18 @@ const columns = [
     {label: "Quantity measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
     {label: "Price", id: "price", minWidth: 100, maxWidth: 100},
     {label: "Currency", id: "currency", minWidth: 100, maxWidth: 100},
+    {label: "Sum", id: "sum", minWidth: 100, maxWidth: 100},
 ];
 
-function fetchFieldFromObject(obj, prop) {
+const fetchFieldFromObject = (obj, prop) => {
     if (obj === undefined || obj === null) {
         return null;
     }
+
+    if (prop === "sum") {
+        return Number(obj.quantity) * Number(obj.price) + " " + obj.currency;
+    }
+
     let index = prop.indexOf(".");
     if (index > -1) {
         return fetchFieldFromObject(
@@ -51,6 +57,13 @@ export default (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
+    const sumOfAll = {
+        BYN: 0,
+        USD: 0,
+        EURO: 0,
+        RUB: 0
+    }
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -63,6 +76,10 @@ export default (props) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+
+    const handleChangeSum = (price, currency) => {
+        sumOfAll[currency] = sumOfAll[currency] + price;
+    }
 
     return (
         <Paper className={classes.root}>
@@ -85,6 +102,10 @@ export default (props) => {
                         {products
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((product) => {
+
+                                const sumRow = Number(product.quantity) * Number(product.price);
+                                handleChangeSum(sumRow, product.currency);
+
                                 return (
                                     <TableRow
                                         onClick={() => {
@@ -96,15 +117,31 @@ export default (props) => {
                                         key={product.id}
                                     >
                                         {columns.map((column) => {
+
+                                            let innerContent = column.id === "sum" ?
+                                                sumRow + " " + product.currency :
+                                                fetchFieldFromObject(product, column.id);
+
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
-                                                    {fetchFieldFromObject(product, column.id)}
+                                                    {innerContent}
                                                 </TableCell>
                                             );
                                         })}
                                     </TableRow>
                                 );
                             })}
+
+                        <div>Total</div>
+                        {sumOfAll.BYN === 0 ? "" :
+                            <div>BYN: {sumOfAll.BYN}</div>}
+                        {sumOfAll.USD === 0 ? "" :
+                            <div>USD: {sumOfAll.USD}</div>}
+                        {sumOfAll.EURO === 0 ? "" :
+                            <div>EURO: {sumOfAll.EURO}</div>}
+                        {sumOfAll.RUB === 0 ? "" :
+                            <div>RUB: {sumOfAll.RUB}</div>}
+
                     </TableBody>
                 </Table>
             </TableContainer>
