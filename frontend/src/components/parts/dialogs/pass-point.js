@@ -6,9 +6,9 @@ import {updatePoint} from "../../roles/driver/request-utils";
 
 export const PassPoint = withRouter((props) => {
     const handlePass = async () => {
-        const selected = props.selected;
-        await updatePoint(selected);
-        props.action();
+        const selectedPoint = props.selected;
+        await updatePoint(selectedPoint);
+        props.updatePoints();
         props.handleClose();
     };
 

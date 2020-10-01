@@ -62,7 +62,7 @@ export const WaybillInfo = (props) => {
     }, []);
 
     const content = <div>
-        <WaybillInfoContent waybill={waybill} action={fetchWaybill}/>
+        <WaybillInfoContent waybill={waybill} updatePoints={fetchWaybill}/>
     </div>
 
     return (

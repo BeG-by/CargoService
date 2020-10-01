@@ -57,7 +57,10 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
             let selected = await getPointById(p.id);
             if (!selected.passed) {
                 setTitle("Confirmation");
-                setForm(<PassPoint handleClose={handleClose} action={props.action} selected={selected}/>);
+                setForm(<PassPoint
+                    handleClose={handleClose}
+                    updatePoints={props.updatePoints}
+                    selected={selected}/>);
                 setPointPassedDialogOpen(true);
             }
         }
