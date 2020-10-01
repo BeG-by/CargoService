@@ -1,5 +1,5 @@
 import React, {useCallback, useRef, useState} from "react";
-import {GoogleMap, InfoWindow, Marker, OverlayView, useLoadScript} from "@react-google-maps/api";
+import {GoogleMap, Marker, useLoadScript, Polyline} from "@react-google-maps/api";
 import MarkersList from "./markers-list";
 
 const MAP_CONTAINER_STYLE = {width: 750, height: 500}
@@ -8,7 +8,8 @@ const START_CENTER = {lat: 43.6, lng: -79};
 const START_ZOOM = 8;
 const PASSED_MARKER_ICON = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
 const NOT_PASSED_MARKER_ICON = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-
+const POLYLINE_COLOR = "#00ffff";
+const POLYLINE_OPACITY = 5;
 
 export default function AbstractMap(props) {
     const markers = props.markers;
@@ -27,9 +28,9 @@ export default function AbstractMap(props) {
         mapRef.current = map;
     }, []);
 
-    const handleMapClick = useCallback((event) => {
+    const handleMapClick = (event) => {
         onMapClick(event);
-    }, []);
+    };
 
 
     if (loadError) return "Error loading maps";
@@ -53,6 +54,17 @@ export default function AbstractMap(props) {
                         icon={marker.isPassed ? PASSED_MARKER_ICON : NOT_PASSED_MARKER_ICON}
                     />
                 )}
+                <Polyline
+                    geodesic={true}
+                    options={{
+                        path: markers,
+                        strokeColor: POLYLINE_COLOR,
+                        strokeOpacity: POLYLINE_OPACITY,
+                        strokeWeight: 2,
+                        icons: [{offset: "0", repeat: "10px"},
+                        ],
+                    }}
+                />
                 {infoWindowComponent}
             </GoogleMap>
             <MarkersList
