@@ -9,8 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import CustomDatePicker from "../custom-date-picker";
 import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
-import {USER_URL} from "../request-util"
-import {makeRequest} from "../request-util"
+import {USER_URL, handleRequestError, makeRequest} from "../request-util"
 
 
 const EMPTY_USER = {
@@ -31,13 +30,16 @@ const EMPTY_USER = {
         flat: ""
     },
     email: "",
+    phone: "",
     status: ""
 };
 
 
 export const UserDialog = (props) => {
-    const {open, onClose, userId, refreshTable, showToast, handleError} = props;
+    const {open, onClose, userId, refreshTable, showToast} = props;
     const [user, setUser] = useState(EMPTY_USER);
+
+    const TITLE = "User Form";
 
     const isUpdateForm = userId >= 0;
 
@@ -61,7 +63,7 @@ export const UserDialog = (props) => {
                     user.roles = user.roles[0];
 
                     setUser(res.data);
-                }).catch(error => handleError(error))
+                }).catch(error => handleRequestError(error, showToast))
         }
     }, [userId]);
 
@@ -78,7 +80,7 @@ export const UserDialog = (props) => {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">
-                    <span id="form-title">User Form</span>
+                    <span id="form-title">{TITLE}</span>
                     <IconButton aria-label="close"
                                 onClick={handleClose}
                     >
@@ -98,6 +100,7 @@ export const UserDialog = (props) => {
                             role: user.roles,
                             birthday: user.birthday,
                             email: user.email,
+                            phone: user.phone,
                             passport: user.passport,
                             status: user.status,
                             country: user.address.country,
@@ -117,6 +120,7 @@ export const UserDialog = (props) => {
                                 roles: [values.role],
                                 birthday: values.birthday,
                                 email: values.email,
+                                phone: values.phone,
                                 passport: values.passport,
                                 address: {
                                     country: values.country,
@@ -138,9 +142,7 @@ export const UserDialog = (props) => {
                                         refreshTable();
                                         showToast("User has been updated", "success")
                                     })
-                                    .catch(error => {
-                                        handleError(error)
-                                    })
+                                    .catch(error => handleRequestError(error, showToast))
                             } else {
 
                                 makeRequest("POST", USER_URL, user)
@@ -149,9 +151,7 @@ export const UserDialog = (props) => {
                                         refreshTable();
                                         showToast("User has been created", "success")
                                     })
-                                    .catch(error => {
-                                        handleError(error)
-                                    })
+                                    .catch(error => handleRequestError(error, showToast))
                             }
 
                         }}
@@ -221,6 +221,12 @@ export const UserDialog = (props) => {
                                         id={"email"}
                                         label={"Email"}
                                         formikFieldName={"email"}
+                                    />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"phone"}
+                                        label={"Phone"}
+                                        formikFieldName={"phone"}
                                     />
                                     <FormikField
                                         formikProps={formProps}

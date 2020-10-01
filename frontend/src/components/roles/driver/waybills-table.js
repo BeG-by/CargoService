@@ -12,14 +12,13 @@ import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
-import {getInvoiceById} from "../manager/request-utils";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
-import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100},
+    {id: "status", label: "Invoice status", minWidth: 150},
     {id: "auto", label: "Auto", minWidth: 100},
     {
         id: "departureDate",
@@ -77,16 +76,26 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
 
     let foundWaybill = {};
     let checkPassage = true;
+    let checkLosses = true;
+
     const handleTableRowClick = async (wb) => {
         foundWaybill = await getWaybillById(wb.id);
         foundWaybill.points.forEach(p => {
-            if (!p.passed) checkPassage = false;
+            if (!p.passed) {
+                checkPassage = false;
+            }
+        });
+        foundWaybill.invoice.products.forEach(p => {
+            if (p.lostQuantity > 0) {
+                checkLosses = false;
+            }
         })
         setWaybill(() => ({
             id: foundWaybill.id,
             invoice: foundWaybill.invoice,
         }));
         if (checkPassage
+            && checkLosses
             && foundWaybill.invoice.status !== "CLOSED"
             && foundWaybill.invoice.status !== "CLOSED_WITH_ACT") {
             setForm(FillActDialog(handleActFormOpen, handleWaybillInfoOpen));
@@ -168,7 +177,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
+                    rowsPerPageOptions={[10, 20, 30]}
                     component="div"
                     count={waybills.length}
                     rowsPerPage={rowsPerPage}
@@ -182,7 +191,11 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                     open={actDialogOpen}
                     onClose={() => {
                         setActDialogOpen(false);
-                        fetchWaybills(false);
+                        fetchWaybills(false)
+                            .catch((err) => {
+                                setWaybills([]);
+                                handleRequestError(err);
+                            });
                     }}
                 />
 
@@ -194,13 +207,14 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 />
 
                 <DialogWindow
-                    dialogTitle="Waybill Info"
+                    dialogTitle={"Waybill to invoice # " + waybill.invoice.number}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}
                     openDialog={waybillInfoDialogOpen}
                     form={form}
                 />
+
             </Paper>
         </div>
     );

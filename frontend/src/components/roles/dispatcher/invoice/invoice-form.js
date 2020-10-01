@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FormikField from "../formik-field";
-import {Formik, Form} from "formik";
+import {Form, Formik} from "formik";
 import ItemList from "../item-list";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
@@ -8,13 +8,14 @@ import {InvoiceFormValidation} from "./validation-shema";
 import {Button} from "@material-ui/core";
 import {
     makeGetAllDriversRequest,
+    makeGetInvoiceByIdRequest,
     makeSaveInvoiceRequest,
     makeUpdateInvoiceRequest,
-    makeGetInvoiceByIdRequest,
 } from "../request-utils";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
 import useToast from "../../../parts/toast-notification/useToast";
+import Paper from '@material-ui/core/Paper';
+import {connect} from "react-redux";
+import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
 
 const EMPTY_DRIVER = {
     name: "",
@@ -49,7 +50,15 @@ const INIT_INVOICE_STATE = {
     products: [],
 };
 
-export default function InvoiceForm(props) {
+const TOTAL = {
+    BYN: 0,
+    USD: 0,
+    EURO: 0,
+    RUB: 0,
+    weight: 0
+};
+
+function InvoiceForm(props) {
     const {onClose} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
     const [drivers, setDrivers] = useState([]);
@@ -57,6 +66,7 @@ export default function InvoiceForm(props) {
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [productIndex, setProductIndex] = useState(0);
     const [toastComponent, showToastComponent] = useToast();
+    const [total, setTotal] = useState(TOTAL);
 
     useEffect(() => {
         updateDriversList();
@@ -161,7 +171,6 @@ export default function InvoiceForm(props) {
     const handleProductDelete = (id) => {
         if (id !== -1) {
             deleteProductById(id);
-            handleProductDialogClose();
         }
     };
 
@@ -180,7 +189,7 @@ export default function InvoiceForm(props) {
         setProductDialogOpen(true);
     };
 
-    const handleProductTableClick = (product) => {
+    const handleProductTableClick = (product, isOpen = true) => {
         setSelectedProduct(product);
         setProductDialogOpen(true);
     };
@@ -233,6 +242,9 @@ export default function InvoiceForm(props) {
         }
     };
 
+    const handleTotal = (total) => {
+        setTotal(total);
+    };
 
     return (
         <React.Fragment>
@@ -247,103 +259,143 @@ export default function InvoiceForm(props) {
                 validationSchema={InvoiceFormValidation}
             >
                 {(formProps) => (
-                    <Form>
-                        <TextField
-                            disabled={true}
-                            id={"productOwnerName"}
-                            label={"Product owner name"}
-                            value={initInvoice.productOwner.name}
-                        />
-                        <TextField
-                            disabled={true}
-                            id="productOwnerType"
-                            label="Product owner type"
-                            value={initInvoice.productOwner.type}
-                        />
-                        <TextField
-                            disabled={true}
-                            id={"productOwnerPhone"}
-                            label={"Product owner phone"}
-                            value={initInvoice.productOwner.phone}
-                        />
-                        <TextField
-                            disabled={true}
-                            id={"invoiceRegistrationDate"}
-                            label={"Invoice registration date"}
-                            value={initInvoice.registrationDate}
-                        />
+                    <Form className="invoice-form">
+                        <div className="container-wrapper">
+                            <div className="invoice-data-wrapper">
+                                <div className="customer-data-wrapper">
+                                    <div className="left-div-wrapper">
+                                        <div className="customer-wrapper">
+                                            <Paper elevation={3}>
+                                                <h2>Customer</h2>
+                                                <div className="customer-paper">
+                                                    <div>
+                                                        <p>Company name</p>
+                                                        {initInvoice.productOwner.name}
+                                                    </div>
+                                                    <div>
+                                                        <p>Phone</p>
+                                                        {initInvoice.productOwner.phone}
+                                                    </div>
+                                                </div>
+                                            </Paper>
+                                        </div>
+                                        <div className="data-wrapper">
+                                            <Paper elevation={3}>
+                                                <h2>Information</h2>
+                                                <FormikField
+                                                    formikProps={formProps}
+                                                    id={"invoiceNumber"}
+                                                    label={"Invoice number"}
+                                                    formikFieldName={"invoiceNumber"}
+                                                />
 
-                        <Grid container justify={"space-evenly"}>
-                            <Grid item xs={4}
-                                  justify="space-between"
-                                  alignItems="center">
-                                <FormikField
-                                    formikProps={formProps}
-                                    id={"invoiceNumber"}
-                                    label={"Invoice number"}
-                                    formikFieldName={"invoiceNumber"}
-                                />
+                                                <FormikField
+                                                    formikProps={formProps}
+                                                    id={"shipper"}
+                                                    label={"Shipper"}
+                                                    formikFieldName={"shipper"}
+                                                />
+                                                <FormikField
+                                                    formikProps={formProps}
+                                                    id={"consignee"}
+                                                    label={"Consignee"}
+                                                    formikFieldName={"consignee"}
+                                                />
+                                                <ItemList
+                                                    items={drivers}
+                                                    onRowClick={(item) => {
+                                                        setInitInvoice((prevState) => {
+                                                            return {...prevState, driver: item};
+                                                        });
+                                                    }}
+                                                />
 
-                                <FormikField
-                                    formikProps={formProps}
-                                    id={"shipper"}
-                                    label={"Shipper"}
-                                    formikFieldName={"shipper"}
+                                                <div className="registration-date">
+                                                    <div>
+                                                        <p>Date of registration</p>
+                                                        {initInvoice.registrationDate}
+                                                    </div>
+                                                    <div>
+                                                        <p>Registration person</p>
+                                                        {props.user.name + " " + props.user.surname}
+                                                    </div>
+                                                </div>
+                                            </Paper>
+                                        </div>
+                                    </div>
+                                    <div className="right-div-wrapper">
+                                        <Paper elevation={3} className="driver-info">
+                                            <h2>Driver</h2>
+                                            <div>
+                                                <p>Name</p>
+                                                {initInvoice.driver.name}
+                                            </div>
+                                            <div>
+                                                <p>Surname</p>
+                                                {initInvoice.driver.surname}
+                                            </div>
+                                            <div>
+                                                <p>Patronymic</p>
+                                                {initInvoice.driver.patronymic}
+                                            </div>
+                                            <div>
+                                                <p>Date of birth</p>
+                                                {initInvoice.driver.birthday}
+                                            </div>
+                                            <div>
+                                                <p>Passport</p>
+                                                {initInvoice.driver.passport}
+                                            </div>
+                                        </Paper>
+                                        <Paper elevation={3} className="driver-info">
+                                            <h2>Total</h2>
+                                            <div>
+                                                <p>Price</p>
+                                                {total.BYN === 0 ? "" :
+                                                    <div>BYN: {total.BYN}</div>}
+                                                {total.USD === 0 ? "" :
+                                                    <div>USD: {total.USD}</div>}
+                                                {total.EURO === 0 ? "" :
+                                                    <div>EURO: {total.EURO}</div>}
+                                                {total.RUB === 0 ? "" :
+                                                    <div>RUB: {total.RUB}</div>}
+                                                {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
+                                                    <div>0</div> : ""}
+                                            </div>
+                                            <div>
+                                                <p>Weight</p>
+                                                {total.weight + " kg"}
+                                            </div>
+                                        </Paper>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="product-table-wrapper">
+                                <h2>Products</h2>
+                                <Button variant="contained"
+                                        color="primary"
+                                        onClick={handleCreateNewProductClick}>
+                                    <LibraryAddRoundedIcon/>
+                                </Button>
+                                <ProductsTable
+                                    products={initInvoice.products}
+                                    onRowClick={handleProductTableClick}
+                                    onAddProduct={handleTotal}
+                                    onRowDelete={handleProductDelete}
                                 />
-
-                                <FormikField
-                                    formikProps={formProps}
-                                    id={"consignee"}
-                                    label={"Consignee"}
-                                    formikFieldName={"consignee"}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    disabled={true}
-                                    id={"driverName"}
-                                    label={"Driver name"}
-                                    value={initInvoice.driver.name}
-                                />
-                                <TextField
-                                    disabled={true}
-                                    id={"driverSurname"}
-                                    label={"Driver surname"}
-                                    value={initInvoice.driver.surname}
-                                />
-                                <TextField
-                                    disabled={true}
-                                    id={"driverPassport"}
-                                    label={"Driver passport"}
-                                    value={initInvoice.driver.passport}
-                                />
-                                <ItemList
-                                    items={drivers}
-                                    onRowClick={(item) => {
-                                        setInitInvoice((prevState) => {
-                                            return {...prevState, driver: item};
-                                        });
-                                    }}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button variant="contained"
+                            </div>
+                        </div>
+                        <div className="reg-btn">
+                            <Button
+                                variant="contained"
                                 color="primary"
-                                onClick={handleCreateNewProductClick}>
-                            +
-                        </Button>
-                        <ProductsTable
-                            products={initInvoice.products}
-                            onRowClick={handleProductTableClick}
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            disabled={formProps.listener}
-                        >
-                            Register invoice
-                        </Button>
+                                type="submit"
+                                disabled={formProps.listener}
+                            >
+                                Register invoice
+                            </Button>
+                        </div>
+
                     </Form>
                 )}
             </Formik>
@@ -352,10 +404,17 @@ export default function InvoiceForm(props) {
                 open={productDialogOpen}
                 initProductState={selectedProduct}
                 onSubmit={handleProductDialogSubmit}
-                onDelete={handleProductDelete}
                 onClose={handleProductDialogClose}
             />
 
         </React.Fragment>
     );
 };
+
+const mapStateToProps = (store) => {
+    return {
+        user: store.user,
+    }
+};
+
+export default connect(mapStateToProps)(InvoiceForm);

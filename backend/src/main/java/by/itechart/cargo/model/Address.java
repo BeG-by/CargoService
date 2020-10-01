@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Embeddable

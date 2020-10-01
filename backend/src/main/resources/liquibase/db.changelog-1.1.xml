@@ -4,6 +4,8 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="1.1.0" author="vladislav.mironuk">
+        <sql>CREATE TYPE storage_status AS ENUM('ACTIVE', 'DELETED')</sql>
+
         <createTable tableName="storage">
             <column name="id_storage" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -20,18 +22,41 @@
             <column name="house" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
+            <column name="flat" type="VARCHAR(64)"/>
             <column name="phone" type="VARCHAR(64)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(64)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
+            <column name="status" type="storage_status" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_product_owner" type="BIGSERIAL"/>
+            <column name="id_client_company" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="storage"
+                                 baseColumnNames="id_product_owner"
+                                 constraintName="fk_product_owner_storage"
+                                 referencedTableName="product_owner"
+                                 referencedColumnNames="id_product_owner"/>
+
+        <addForeignKeyConstraint baseTableName="storage"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_storage"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
+
     </changeSet>
 
     <changeSet id="1.1.1" author="vladislav.mironuk">
         <!--Product-->
-        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' , 'LOST')</sql>
+        <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' ,
+            'SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH')</sql>
         <sql>CREATE TYPE mass_measure AS ENUM('KG','TON')</sql>
         <sql>CREATE TYPE quantity_measure AS ENUM('PIECE','BOX', 'BARREL', 'BAG')</sql>
         <sql>CREATE TYPE currency_type AS ENUM('RUB','BYN', 'EURO', 'USD')</sql>
@@ -91,6 +116,7 @@
                                  referencedColumnNames="id_invoice"/>
     </changeSet>
 
+    <!--Act-->
     <changeSet id="1.1.2" author="marianna.patrusova">
         <createTable tableName="act">
             <column name="id_act" type="BIGSERIAL" autoIncrement="true">

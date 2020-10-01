@@ -17,6 +17,7 @@ import {ItemUserTable} from "../drawer-items/item-user-list";
 import {DRAWER_WIDTH} from "../../pages/body-wrapper";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
+import {ItemStorages} from "../drawer-items/item-storages";
 
 
 const drawerWidth = DRAWER_WIDTH;
@@ -65,6 +66,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
         case 'DISPATCHER':
             components.push(<ItemClientTable key="Product owners"/>);
             components.push(<ItemInvoices key='Invoices'/>);
+            components.push(<ItemStorages key='Storages'/>);
             components.push(<Divider key='Divider'/>);
             break;
         case 'DRIVER':

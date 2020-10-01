@@ -14,7 +14,7 @@ export default function InvoiceDialog(props) {
     };
 
     return (
-        <Dialog maxWidth={"lg"} open={open} onClose={handleClose}>
+        <Dialog maxWidth={"lg"} open={open} onClose={handleClose} className="invoice-dialog">
             <DialogTitle id="form-dialog-title">
                 <span id="form-title">Invoice</span>
                 <IconButton aria-label="close"

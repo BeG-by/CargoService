@@ -8,7 +8,11 @@ export const ActFormValidation = Yup.object({
 
 export const ProductFormValidation = Yup.object({
     comment: Yup.string()
+        .required("Comment is required")
         .max(500, "Max length must be lesser than 500 symbols"),
     lostQuantity: Yup.number()
-        .min(0, "Quantity must be positive number")
+        .required("Lost quantity is required")
+        .min(0, "Quantity must be positive number"),
+    productStatus: Yup.string()
+        .required("Status is mandatory")
 });

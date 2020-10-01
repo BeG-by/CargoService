@@ -120,6 +120,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository
                 .findByIdAndClientCompanyId(id, companyId)
+                .filter(u -> !u.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
         final boolean isLoginExist = userRepository.findByLogin(login)
@@ -171,6 +172,7 @@ public class UserServiceImpl implements UserService {
         userRepository.findByIdAndClientCompanyId(id, companyId)
                 .map(user -> {
                     user.setStatus(User.Status.DELETED);
+                    log.info("User has been deleted {}", user);
                     return user;
                 })
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));

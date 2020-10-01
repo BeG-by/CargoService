@@ -12,13 +12,15 @@ import fetchFieldFromObject from "../fetch-field-from-object";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
-    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
+    {label: "Status", id: "productStatus", minWidth: 60, maxWidth: 60},
     {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
+    {label: "Measure", id: "massMeasure", minWidth: 130, maxWidth: 130},
     {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
-    {label: "Status", id: "productStatus", minWidth: 100, maxWidth: 100},
-    {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
-    {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
+    {label: "Currency", id: "currency", minWidth: 100, maxWidth: 100},
+    {label: "Quantity", id: "quantity", minWidth: 70, maxWidth: 70},
+    {label: "Measure", id: "quantityMeasure", minWidth: 140, maxWidth: 140},
+    {label: "Lost", id: "lostQuantity", minWidth: 140, maxWidth: 140},
+    {label: "Comment", id: "comment", minWidth: 100, maxWidth: 100},
 ];
 
 const useStyles = makeStyles({

@@ -53,6 +53,9 @@ public class User implements Serializable, Cloneable {
     @Embedded
     private Address address;
 
+    @Column(name = "phone", nullable = false)
+    private String phone;
+
     @Column(name = "email", nullable = false)
     private String email;
 

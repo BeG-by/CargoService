@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Formik, Form, ErrorMessage} from "formik";
+import {Formik, Form} from "formik";
 import TextField from "@material-ui/core/TextField";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import FormControl from "@material-ui/core/FormControl";
@@ -14,6 +14,7 @@ import FormikField from "../../roles/sysadmin/formik-field";
 
 export const ActForm = (props) => {
     const invoice = props.invoice;
+
     const EMPTY_PRODUCT = {
         id: 0,
         idx: -1,
@@ -23,9 +24,11 @@ export const ActForm = (props) => {
         comment: "",
         name: "",
         quantity: 0,
-        measure: "",
+        quantityMeasure: "",
         price: 0,
+        currency: "",
         mass: "",
+        massMeasure: "",
     };
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
@@ -64,14 +67,17 @@ export const ActForm = (props) => {
             const temp = [...prevState];
             for (let el of temp) {
                 if (el.idx === product.idx) {
+                    el.id = product.id;
                     el.productStatus = product.productStatus;
                     el.lostQuantity = product.lostQuantity;
                     el.comment = product.comment;
                     el.name = product.name;
                     el.quantity = product.quantity;
-                    el.measure = product.measure;
+                    el.quantityMeasure = product.quantityMeasure;
                     el.price = product.price;
+                    el.currency = product.currency;
                     el.mass = product.mass;
+                    el.massMeasure = product.massMeasure;
                 }
             }
             return temp;
@@ -82,14 +88,18 @@ export const ActForm = (props) => {
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
 
     const handleSubmit = (values) => {
+        let statusProducts = [];
         products.forEach(p => {
-            p.invoiceId = invoice.id;
+            if (p.lostQuantity === 0) {
+                p.productStatus = "DELIVERED";
+            }
+            statusProducts.push(p);
         })
         const act = {};
         act.invoiceId = invoice.id;
         act.registrationDate = today;
         act.consigneeWorker = values.consigneeWorker;
-        act.products = products;
+        act.products = statusProducts;
         const saveActRequest = async (act) => {
             await saveAct(act);
             props.onClose();

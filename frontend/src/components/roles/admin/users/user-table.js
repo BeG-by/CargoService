@@ -14,7 +14,7 @@ import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
 import ConfirmDeletingDialog from "../slide-dialog";
-import {makeRequest , USER_URL} from "../request-util"
+import {makeRequest , USER_URL , handleRequestError} from "../request-util"
 
 
 
@@ -85,7 +85,7 @@ export function UserTable() {
     const insertUsers = () => {
         makeRequest("GET", USER_URL)
             .then(res => setUsers(res.data))
-            .catch(error => handleRequestError(error))
+            .catch(error => handleRequestError(error, showToastComponent))
     };
 
 
@@ -95,7 +95,7 @@ export function UserTable() {
                 insertUsers();
                 showToastComponent("User has been deleted", "success");
             })
-            .catch(error => handleRequestError(error))
+            .catch(error => handleRequestError(error, showToastComponent))
     };
 
 
@@ -111,14 +111,6 @@ export function UserTable() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
-    };
-
-    const handleRequestError = (error) => {
-        if (error.response && error.response.status !== 500) {
-            showToastComponent("Operation was failed. " + error.response.data, "error");
-        } else {
-            showToastComponent("Operation was failed. Cannot get response from server", "error");
-        }
     };
 
     return (
@@ -226,7 +218,6 @@ export function UserTable() {
                     }}
                     refreshTable={insertUsers}
                     showToast={showToastComponent}
-                    handleError={handleRequestError}
                 />
                 {toastComponent}
             </Paper>

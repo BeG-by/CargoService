@@ -13,6 +13,7 @@ public class WaybillTableResponse {
     private long id;
     private long invoiceId;
     private String invoiceNumber;
+    private String status;
     private String auto;
     private String departureDate;
     private String arrivalDate;
@@ -20,6 +21,7 @@ public class WaybillTableResponse {
     public WaybillTableResponse toWaybillTableResponse(Waybill waybill) {
         WaybillTableResponse response = new WaybillTableResponse();
         response.setId(waybill.getId());
+        response.setStatus(waybill.getInvoice().getStatus().name());
         response.setInvoiceId(waybill.getInvoice().getId());
         response.setInvoiceNumber(waybill.getInvoice().getNumber());
         response.setAuto(waybill.getAuto().getMark() + " " + waybill.getAuto().getAutoType());

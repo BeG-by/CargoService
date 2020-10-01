@@ -10,7 +10,6 @@ export const useStyles = makeStyles(() => ({
     },
 }));
 
-
 export const WelcomeBody = () => {
     const classes = useStyles();
     return (

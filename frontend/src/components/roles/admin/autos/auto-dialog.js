@@ -7,7 +7,7 @@ import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {AUTO_URL, makeRequest} from "../request-util"
+import {AUTO_URL, handleRequestError, makeRequest} from "../request-util"
 import {AutoStatusSelector, AutoTypeSelector} from "./auto-selectors";
 import CustomDatePicker from "../custom-date-picker";
 
@@ -25,8 +25,9 @@ const EMPTY_AUTO = {
 
 
 export const AutoDialog = (props) => {
-    const {open, onClose, autoId, refreshTable, showToast, handleError} = props;
+    const {open, onClose, autoId, refreshTable, showToast} = props;
     const [auto, setAuto] = useState(EMPTY_AUTO);
+    const TITLE = "Auto form"
 
     const isUpdateForm = autoId >= 0;
 
@@ -36,7 +37,7 @@ export const AutoDialog = (props) => {
             makeRequest("GET", AUTO_URL + "/" + autoId)
                 .then(res => {
                     setAuto(res.data);
-                }).catch(error => handleError(error))
+                }).catch(error => handleRequestError(error, showToast))
         }
     }, [autoId]);
 
@@ -53,7 +54,7 @@ export const AutoDialog = (props) => {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">
-                    <span id="form-title">User Form</span>
+                    <span id="form-title">{TITLE}</span>
                     <IconButton aria-label="close"
                                 onClick={handleClose}
                     >
@@ -93,20 +94,17 @@ export const AutoDialog = (props) => {
                                         refreshTable();
                                         showToast("Auto has been updated", "success")
                                     })
-                                    .catch(error => {
-                                        handleError(error)
-                                    })
+                                    .catch(error => handleRequestError(error, showToast))
+
                             } else {
-                                console.log(auto);
+
                                 makeRequest("POST", AUTO_URL, auto)
                                     .then(res => {
                                         handleClose();
                                         refreshTable();
                                         showToast("Auto has been created", "success")
                                     })
-                                    .catch(error => {
-                                        handleError(error)
-                                    })
+                                    .catch(error => handleRequestError(error, showToast))
                             }
 
                         }}

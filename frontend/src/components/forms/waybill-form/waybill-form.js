@@ -12,6 +12,8 @@ import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
 import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
+import TextField from "@material-ui/core/TextField";
+import {connect} from "react-redux";
 
 const EMPTY_AUTO = {
     id: 0,
@@ -20,7 +22,14 @@ const EMPTY_AUTO = {
 };
 
 
-export default (props) => {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const WaybillForm = connect(mapStateToProps)((props) => {
+    const role = props.role;
     const [invoice, setInvoice] = useState(props.invoice);
     const [selectedAuto, setSelectedAuto] = useState(EMPTY_AUTO);
     const [pointIndex, setPointIndex] = useState(0);
@@ -193,4 +202,4 @@ export default (props) => {
             </Formik>
         </React.Fragment>
     );
-};
+});

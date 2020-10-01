@@ -7,7 +7,6 @@ import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
 import {withRouter} from "react-router-dom"
 
-
 class LoginForm extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +19,6 @@ class LoginForm extends Component {
         this.onChangePassword = this.onChangePassword.bind(this);
         this.goBack = this.goBack.bind(this);
     }
-
 
     searchByLoginPass = (values, {props = this.props, setSubmitting}) => {
         setSubmitting(false);
@@ -35,10 +33,10 @@ class LoginForm extends Component {
 
         axios.post(endpoint, user_object)
             .then(res => {
-                    localStorage.setItem("authorization", res.data.token);
-                    props.changeUserAndCompany(res.data.user, res.data.company);
+                    let data = res.data;
+                    localStorage.setItem("authorization", data.token);
+                    props.changeUserAndCompany(data.user, data.company);
                     this.props.history.push("/main");
-                    // window.location.href = "/main";
                 },
                 error => {
                     this.setState({
@@ -47,7 +45,6 @@ class LoginForm extends Component {
                     });
                 });
     };
-
 
     onChangePassword(event) {
         this.setState({
@@ -95,11 +92,10 @@ class LoginForm extends Component {
     }
 }
 
-
 const mapActionsToProps = (dispatch) => {
     return {
         changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
     }
 };
 
-export default withRouter(connect(null, mapActionsToProps)(LoginForm))
+export default withRouter(connect(null, mapActionsToProps)(LoginForm));

@@ -17,8 +17,8 @@ import InvoicesTable from "./roles/manager/invoices-table";
 import UserTable from "./roles/admin/users/user-table";
 import ProductOwnersTable from "./roles/dispatcher/product-owners/product-owners-table";
 import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
-import {SuccessBody} from "./pages/success-body";
 import AutoTable from "./roles/admin/autos/auto-table";
+import StorageTable from "./roles/dispatcher/storages/storages-table";
 
 
 export default function App() {
@@ -62,7 +62,7 @@ export default function App() {
                     <Route exact path={"/autos"} component={AutoTable}/>
                     <Route exact path={"/owners"} component={ProductOwnersTable}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
-                    <Route exact path={"/success"} component={SuccessBody}/>
+                    <Route exact path={"/storages"} component={StorageTable}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>

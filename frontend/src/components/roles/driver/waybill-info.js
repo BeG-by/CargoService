@@ -16,6 +16,14 @@ export const WaybillInfo = (props) => {
         consignee: "",
     });
 
+    function handleRequestError(error) {
+        if (error.response && error.response.status !== 500) {
+            alert("error");
+        } else {
+            alert("Cannot get response from server");
+        }
+    }
+
     async function fetchWaybill(cleanupFunction) {
         let selected = await getWaybillById(props.waybillId);
         if (!cleanupFunction)
@@ -38,7 +46,21 @@ export const WaybillInfo = (props) => {
 
     useEffect(() => {
         let cleanupFunction = false;
-        fetchWaybill(cleanupFunction);
+        fetchWaybill(cleanupFunction)
+            .catch((err) => {
+                setWaybill({
+                    id: 0,
+                    departureDate: "",
+                    arrivalDate: "",
+                    points: [],
+                    invoice: {id: 0, number: ""},
+                    auto: {id: 0, mark: "", type: ""},
+                    driver: {id: 0, name: "", surname: ""},
+                    shipper: "",
+                    consignee: "",
+                });
+                handleRequestError(err);
+            });
         return () => cleanupFunction = true;
     }, []);
 
