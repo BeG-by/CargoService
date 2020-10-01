@@ -387,15 +387,9 @@
             <column name="arrival_date" value="2020-09-11"/>
             <column name="id_client_company" value="2"/>
         </insert>
-        <insert tableName="point">
-            <column name="id_waybill" value="1"/>
-            <column name="place" value="Smolensk"/>
-            <column name="passed" value="FALSE"/>
-            <column name="passage_date" value="null"/>
-        </insert>
     </changeSet>
 
-    <changeSet id="storage_insert" author="vladislav.mironuk">
+    <changeSet id="instert_storage" author="vladislav.mironuk">
         <insert tableName="storage">
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>

@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-import PointsDialog from "./points-dialog";
-import PointsTable from "./points-table";
 import {Formik, Form, ErrorMessage} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
@@ -12,6 +10,8 @@ import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
+import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
+import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
 import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 
@@ -21,14 +21,6 @@ const EMPTY_AUTO = {
     autoType: "",
 };
 
-const EMPTY_POINT = {
-    id: null,
-    idx: -1,
-    waybillId: "",
-    place: "",
-    passed: false,
-    passageDate: "",
-};
 
 const mapStateToProps = (store) => {
     return {
@@ -40,12 +32,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const role = props.role;
     const [invoice, setInvoice] = useState(props.invoice);
     const [selectedAuto, setSelectedAuto] = useState(EMPTY_AUTO);
-    const [selectedPoint, setSelectedPoint] = useState(EMPTY_POINT);
-    const [pointDialogOpen, setPointDialogOpen] = useState(false);
     const [pointIndex, setPointIndex] = useState(0);
     const [points, setPoints] = useState([]);
     const [autos, setAutos] = useState([]);
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles(() => ({
         formControl: {
             marginTop: 20,
             minWidth: "100%",
@@ -57,7 +47,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         setInvoice(props.invoice);
     }, [props.invoice]);
 
-
     async function fetchAutos(cleanupFunction) {
         if (!cleanupFunction) setAutos(await getAllAutos());
     }
@@ -68,87 +57,46 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         return () => cleanupFunction = true;
     }, []);
 
-    const handleTableRowClick = (point) => {
-        setSelectedPoint(point);
-        setPointDialogOpen(true);
-    };
-
-    const handlePointDialogClose = () => {
-        setSelectedPoint(EMPTY_POINT);
-        setPointDialogOpen(false);
-    };
-
-    const handlePointDialogSubmit = (point) => {
-        if (point.idx === -1) {
-            addPoint(point);
-        } else {
-            updatePoint(point);
-        }
-        setSelectedPoint(EMPTY_POINT);
-        setPointDialogOpen(false);
-    };
-
-    const handleCreateNewPointClick = () => {
-        setSelectedPoint(EMPTY_POINT);
-        setPointDialogOpen(true);
-    };
-
-    const addPoint = (point) => {
-        point.idx = pointIndex;
-        setPointIndex(point.idx + 1);
-        setPoints((prevState) => {
-            const temp = [...prevState];
-            temp.push(point);
-            return temp;
-        });
-    };
-
-    const updatePoint = (newPoint) => {
-        setPoints((prevState) => {
-            const temp = [...prevState];
-            for (let el of temp) {
-                if (el.idx === newPoint.idx) {
-                    el.waibillId = newPoint.waybillId;
-                    el.passed = newPoint.passed;
-                    el.place = newPoint.place;
-                    el.passageDate = newPoint.passageDate;
-                }
+    const handlePointDelete = (marker) => {
+        for (let i = 0; i < points.length; i++) {
+            if (marker.index === points[i].index) {
+                setPoints(prevState => {
+                    let markers = prevState;
+                    markers.splice(i, 1);
+                    return markers;
+                })
             }
-            return temp;
-        });
-    };
-
-    const handlePointDelete = (idx) => {
-        if (idx > -1) {
-            deletePointById(idx);
-            handlePointDialogClose();
         }
+    }
+
+    const handlePointAdd = (event) => {
+        setPoints(prevState => [...prevState, {
+            isPassed: false,
+            passageDate: null,
+            index: pointIndex,
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+        }])
+        setPointIndex(pointIndex + 1);
     };
 
-    const deletePointById = (idx) => {
-        setPoints((prevState) => {
-            const temp = [...prevState];
-            for (let i = 0; i < temp.length; i++) {
-                if (temp[i].idx === idx) {
-                    temp.splice(i, 1);
-                }
-            }
-            return temp;
-        });
-    };
 
     const handleSubmit = (values) => {
-        const waybill = {};
-        waybill.points = points;
-        waybill.invoiceId = values.invoiceId;
-        waybill.autoId = values.autoId;
-        waybill.departureDate = values.departureDate;
-        waybill.arrivalDate = values.arrivalDate;
-        const saveWaybillRequest = async (waybill) => {
-            await saveWaybill(waybill);
-            props.onClose();
-        };
-        saveWaybillRequest(waybill);
+        if (points.length > 1) {
+            const waybill = {};
+            waybill.points = convertPointsToBackendApi(points);
+            waybill.invoiceId = values.invoiceId;
+            waybill.autoId = values.autoId;
+            waybill.departureDate = values.departureDate;
+            waybill.arrivalDate = values.arrivalDate;
+            const saveWaybillRequest = async (waybill) => {
+                await saveWaybill(waybill);
+                props.onClose();
+            };
+            saveWaybillRequest(waybill);
+        } else {
+            alert("It's necessary to put at least 200 points")
+        }
     };
 
     const handleAutoChange = (event) => {
@@ -225,41 +173,11 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                             </Grid>
                         </Grid>
                         <br/>
-
-                        <FormControl className={classes.formControl}>
-                            <Grid container spacing={3}>
-                                <Grid item xs={6}>
-                                    <InputLabel id="demo-simple-select-label">Control points</InputLabel>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Button
-                                        variant="outlined"
-                                        color='primary'
-                                        style={{display: "block", marginLeft: "auto"}}
-                                        onClick={handleCreateNewPointClick}>Add control point</Button>
-                                </Grid>
-                            </Grid>
-
-                            <PointsTable
-                                editable={true}
-                                points={points}
-                                onRowClick={handleTableRowClick}/>
-                            <TextField name="points"
-                                       type="hidden"
-                                       onChange={formProps.handleChange}
-                            />
-                            <label style={{color: "#f50057"}}>
-                                <ErrorMessage name={"points"}/>
-                            </label>
-
-                            <PointsDialog
-                                open={pointDialogOpen}
-                                initPointState={selectedPoint}
-                                onSubmit={handlePointDialogSubmit}
-                                onClose={handlePointDialogClose}
-                                onDelete={handlePointDelete}
-                            />
-                        </FormControl>
+                        <ManagerMapForPointAdding
+                            markers={points}
+                            onMarkerAdd={handlePointAdd}
+                            onMarkerDelete={handlePointDelete}
+                        />
                         <br/>
 
                         <div className='btn-row'>
