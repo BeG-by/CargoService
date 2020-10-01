@@ -48,6 +48,10 @@ public class UserUpdateRequest {
     @Size(max = 64, message = "Patronymic is too long (max is 64)")
     private String email;
 
+    @NotBlank(message = "Phone is mandatory")
+    @Size(max = 20, message = "Phone is too long (max is 20)")
+    private String phone;
+
     @Size(max = 64, message = "Passport is too long (max is 64)")
     private String passport;
 

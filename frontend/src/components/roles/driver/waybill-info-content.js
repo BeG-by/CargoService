@@ -26,6 +26,8 @@ import {InvoiceInfo} from "../manager/invoice-info";
 import {OkButton} from "../../parts/buttons/ok-button";
 import {connect} from "react-redux";
 import Button from "@material-ui/core/Button";
+import {UserInfo} from "../admin/user-info";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const columns = [
     {id: "place", label: "Place", minWidth: 200},
@@ -47,11 +49,14 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     const [form, setForm] = React.useState(null);
     const [pointPassedDialogOpen, setPointPassedDialogOpen] = React.useState(false);
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
+    const [title, setTitle] = React.useState("");
 
     const handleTableRowClick = async (p) => {
         if (role === "DRIVER") {
             let selected = await getPointById(p.id);
             if (!selected.passed) {
+                setTitle("Confirmation");
                 setForm(<PassPoint handleClose={handleClose} action={props.action} selected={selected}/>);
                 setPointPassedDialogOpen(true);
             }
@@ -61,6 +66,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     const handleClose = () => {
         setPointPassedDialogOpen(false);
         setInvoiceInfoDialogOpen(false);
+        setUserInfoDialogOpen(false);
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -74,7 +80,15 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
 
     const handleInvoiceInfoOpen = () => {
         setForm(<InvoiceInfo invoiceId={waybill.invoice.id}/>);
+        setTitle("Invoice # " + waybill.invoice.number);
         setInvoiceInfoDialogOpen(true);
+    }
+
+    const handleDriverInfoOpen = () => {
+        const id = waybill.driver.id;
+        setForm(<UserInfo userId={id}/>);
+        setTitle("Driver");
+        setUserInfoDialogOpen(true);
     }
 
     return (
@@ -96,8 +110,8 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {props.waybill.auto.mark + " "
-                                        + props.waybill.auto.type}
+                                        {waybill.auto.mark + " "
+                                        + waybill.auto.type}
                                     </React.Fragment>
                                 }
                                 secondary="Auto"
@@ -105,15 +119,20 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {props.waybill.driver.name + " "
-                                        + props.waybill.driver.surname}
-                                    </React.Fragment>
-                                }
-                                secondary="Driver"
-                            />
+                            <Tooltip title="Click to see Driver info" arrow>
+                                <ListItemText
+                                    onClick={handleDriverInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            <strong style={{color: "#3f51b5"}}>
+                                                {waybill.driver.name + " "
+                                                + waybill.driver.surname}
+                                            </strong>
+                                        </React.Fragment>
+                                    }
+                                    secondary="Driver"
+                                />
+                            </Tooltip>
                         </ListItem>
                         <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
@@ -123,7 +142,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {props.waybill.departureDate}
+                                        {waybill.departureDate}
                                     </React.Fragment>
                                 }
                                 secondary="Departure Date"
@@ -134,7 +153,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {props.waybill.arrivalDate}
+                                        {waybill.arrivalDate}
                                     </React.Fragment>
                                 }
                                 secondary="Arrival Date"
@@ -148,7 +167,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {props.waybill.shipper}
+                                        {waybill.shipper}
                                     </React.Fragment>
                                 }
                                 secondary="Shipper"
@@ -159,7 +178,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {props.waybill.consignee}
+                                        {waybill.consignee}
                                     </React.Fragment>
                                 }
                                 secondary="Consignee"
@@ -189,7 +208,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.waybill.points
+                            {waybill.points
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((point) => {
                                     return (
@@ -234,18 +253,27 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                 />
 
                 <DialogWindow
-                    dialogTitle="Confirmation"
+                    dialogTitle={title}
                     handleClose={handleClose}
                     openDialog={pointPassedDialogOpen}
                     form={form}
                 />
 
                 <DialogWindow
-                    dialogTitle={"Invoice # " + waybill.invoice.number}
+                    dialogTitle={title}
                     fullWidth={true}
                     maxWidth="md"
                     handleClose={handleClose}
                     openDialog={invoiceInfoDialogOpen}
+                    form={form}
+                />
+
+                <DialogWindow
+                    dialogTitle={title}
+                    fullWidth={true}
+                    maxWidth="xs"
+                    handleClose={handleClose}
+                    openDialog={userInfoDialogOpen}
                     form={form}
                 />
             </Paper>

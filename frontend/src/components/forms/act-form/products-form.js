@@ -21,8 +21,6 @@ export default (props) => {
     const classes = useStyles();
 
     const handleSubmit = (values) => {
-        alert(selectedStatus);
-        alert(values.productStatus);
         const product = {
             id: initProductState.id,
             invoiceId: initProductState.invoiceId,

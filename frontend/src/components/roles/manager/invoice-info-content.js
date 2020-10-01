@@ -23,6 +23,7 @@ import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import Tooltip from '@material-ui/core/Tooltip';
 import {WaybillInfo} from "../driver/waybill-info";
 import Divider from "@material-ui/core/Divider";
+import {UserInfo} from "../admin/user-info";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
@@ -42,7 +43,9 @@ export default function InvoiceInfoContent(props) {
     const [rowsPerPage] = React.useState(10);
     const [actInfoDialogOpen, setActInfoDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
+    const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
     const [form, setForm] = React.useState(null);
+    const [title, setTitle] = React.useState("");
 
     const handleActInfoOpen = () => {
         setForm(<ActInfo act={act} invoice={invoice}/>);
@@ -54,14 +57,39 @@ export default function InvoiceInfoContent(props) {
         setWaybillInfoDialogOpen(true);
     }
 
+    const handleDriverInfoOpen = () => {
+        const id = invoice.driver.id;
+        setForm(<UserInfo userId={id}/>);
+        setTitle("Driver");
+        setUserInfoDialogOpen(true);
+    }
+
+    const handleDispatcherInfoOpen = () => {
+        const id = invoice.registrationUser.id;
+        setForm(<UserInfo userId={id}/>);
+        setTitle("Dispatcher");
+        setUserInfoDialogOpen(true);
+    }
+
+    const handleManagerInfoOpen = () => {
+        const id = invoice.checkingUser.id;
+        if (id !== null && id !== "undefined") {
+            setForm(<UserInfo userId={id}/>);
+            setTitle("Manager");
+            setUserInfoDialogOpen(true);
+        }
+    }
+
     const handleClose = () => {
         setActInfoDialogOpen(false);
         setWaybillInfoDialogOpen(false);
+        setUserInfoDialogOpen(false);
     };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
     return (
         <div>
             <Paper>
@@ -153,41 +181,56 @@ export default function InvoiceInfoContent(props) {
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {props.invoice.driver.name + " "
-                                        + props.invoice.driver.surname}
-                                    </React.Fragment>
-                                }
-                                secondary="Driver"
-                            />
+                            <Tooltip title="Click to see Driver info" arrow>
+                                <ListItemText
+                                    onClick={handleDriverInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            <strong style={{color: "#3f51b5"}}>
+                                                {props.invoice.driver.name + " "
+                                                + props.invoice.driver.surname}
+                                            </strong>
+                                        </React.Fragment>
+                                    }
+                                    secondary="Driver"
+                                />
+                            </Tooltip>
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {props.invoice.registrationUser.name + " "
-                                        + props.invoice.registrationUser.surname}
-                                    </React.Fragment>
-                                }
-                                secondary="Dispatcher"
-                            />
+                            <Tooltip title="Click to see Dispatcher info" arrow>
+                                <ListItemText
+                                    onClick={handleDispatcherInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            <strong style={{color: "#3f51b5"}}>
+                                                {props.invoice.registrationUser.name + " "
+                                                + props.invoice.registrationUser.surname}
+                                            </strong>
+                                        </React.Fragment>
+                                    }
+                                    secondary="Dispatcher"
+                                />
+                            </Tooltip>
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {props.invoice.checkingUser === null
-                                            ? null
-                                            : props.invoice.checkingUser.name + " "
-                                            + props.invoice.checkingUser.surname}
-                                    </React.Fragment>
-                                }
-                                secondary="Manager"
-                            />
+                            <Tooltip title="Click to see Dispatcher info" arrow>
+                                <ListItemText
+                                    onClick={handleManagerInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            {props.invoice.checkingUser === null
+                                                ? null
+                                                : <strong style={{color: "#3f51b5"}}>
+                                                    {props.invoice.checkingUser.name + " "
+                                                    + props.invoice.checkingUser.surname}
+                                                </strong>}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Manager"
+                                />
+                            </Tooltip>
                         </ListItem>
                     </div>
                     <Divider/>
@@ -312,6 +355,15 @@ export default function InvoiceInfoContent(props) {
                 maxWidth="md"
                 handleClose={handleClose}
                 openDialog={waybillInfoDialogOpen}
+                form={form}
+            />
+
+            <DialogWindow
+                dialogTitle={title}
+                fullWidth={true}
+                maxWidth="xs"
+                handleClose={handleClose}
+                openDialog={userInfoDialogOpen}
                 form={form}
             />
         </div>

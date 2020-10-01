@@ -37,13 +37,19 @@ const columns = [
     {
         id: "status",
         label: "Status",
-        minWidth: 170,
+        minWidth: 100,
         align: "center",
     },
     {
         id: "email",
         label: "Email",
         minWidth: 170,
+        align: "center",
+    },
+    {
+        id: "phone",
+        label: "Phone",
+        minWidth: 100,
         align: "center",
     },
     {
@@ -181,6 +187,9 @@ export function UserTable() {
                                             </TableCell>
                                             <TableCell key={columns[6].id} align={columns[5].align}>
                                                 {user.email}
+                                            </TableCell>
+                                            <TableCell key={columns[6].id} align={columns[5].align}>
+                                                {user.phone}
                                             </TableCell>
                                             <TableCell key={columns[7].id}>
                                                 <div className="table-delete-edit-div">

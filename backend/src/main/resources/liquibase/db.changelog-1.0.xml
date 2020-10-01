@@ -43,6 +43,10 @@
             <column name="house" type="VARCHAR(64)"/>
             <column name="flat" type="VARCHAR(64)"/>
 
+            <column name="phone" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="email" type="VARCHAR(64)">
                 <constraints nullable="false" unique="true"/>
             </column>

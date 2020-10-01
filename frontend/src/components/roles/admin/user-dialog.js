@@ -30,6 +30,7 @@ const EMPTY_USER = {
         flat: ""
     },
     email: "",
+    phone: "",
     status: ""
 };
 
@@ -98,6 +99,7 @@ export const UserDialog = (props) => {
                             role: user.roles,
                             birthday: user.birthday,
                             email: user.email,
+                            phone: user.phone,
                             passport: user.passport,
                             status: user.status,
                             country: user.address.country,
@@ -117,6 +119,7 @@ export const UserDialog = (props) => {
                                 roles: [values.role],
                                 birthday: values.birthday,
                                 email: values.email,
+                                phone: values.phone,
                                 passport: values.passport,
                                 address: {
                                     country: values.country,
@@ -221,6 +224,12 @@ export const UserDialog = (props) => {
                                         id={"email"}
                                         label={"Email"}
                                         formikFieldName={"email"}
+                                    />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"phone"}
+                                        label={"Phone"}
+                                        formikFieldName={"phone"}
                                     />
                                     <FormikField
                                         formikProps={formProps}
