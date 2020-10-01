@@ -80,11 +80,11 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         foundInvoice = await getInvoiceById(inv.id);
         setInvoice(() => ({
             id: foundInvoice.id,
-            invoiceStatus: foundInvoice.invoiceStatus,
+            invoiceStatus: foundInvoice.status,
             waybill: foundInvoice.waybill,
             number: foundInvoice.number,
         }));
-        if (foundInvoice.invoiceStatus === "ACCEPTED"
+        if (foundInvoice.status === "ACCEPTED"
             && foundInvoice.waybill === null) {
             setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);

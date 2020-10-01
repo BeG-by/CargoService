@@ -38,11 +38,9 @@
     align-items: center;
 }
 
-#form-dialog-title #form-title {
-    flex-basis: 95%;
-    text-align: center;
-    padding-left: 8%;
-}
+/*#form-dialog-title #form-title {*/
+
+/*}*/
 
 
 .table-delete-edit-div {
@@ -51,6 +49,7 @@
 
 .basket-table-btn {
     min-width: 20px !important;
+    margin: 0 !important;
 }
 
 .user-table-wrapper,
@@ -61,6 +60,10 @@
 
 /* Invoice form styles (Eugene)*/
 
+.MuiFormControl-marginDense {
+    margin-top: 3px !important;
+}
+
 .invoice-dialog .MuiDialog-container {
     display: block;
 }
@@ -70,6 +73,17 @@
 }
 
 .invoice-dialog .invoice-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.invoice-dialog .invoice-form h2 {
+    margin-bottom: 3px;
+    margin-top: 20px;
+    padding: 5px;
+}
+
+.container-wrapper {
     display: flex;
 }
 
@@ -90,7 +104,14 @@
 
 .product-table-wrapper {
     flex-basis: 50%;
+    text-align: end;
 }
+
+.product-table-wrapper button{
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
 
 .customer-wrapper {
     text-align: center;
@@ -142,6 +163,7 @@
     justify-content: space-around;
     padding-bottom: 10px;
     font-weight: bold;
+    text-align: center;
 }
 
 .customer-paper p,
@@ -153,17 +175,48 @@
 }
 
 .driver-info {
-    display: flex;
     flex-direction: column;
     padding-bottom: 10px;
     font-weight: bold;
     text-align: center;
+    margin-bottom: 30px;
 }
 
-#form-title {
+.invoice-dialog #form-title {
     color: #3f51b5;
     font-size: 28px;
     font-weight: bold;
+    flex-basis: 99%;
+    text-align: center;
+    padding-left: 3%;
 }
+
+.reg-btn {
+    text-align: center;
+}
+
+.reg-btn button {
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+/* Product form styles (Eugene)*/
+
+.product-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-form-wrapper {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.edit-delete-block {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 
 

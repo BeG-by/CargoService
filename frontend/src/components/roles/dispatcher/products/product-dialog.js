@@ -7,7 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 export default function ProductDialog(props) {
-    const {open, onClose, onSubmit, onDelete, initProductState} = props;
+    const {open, onClose, onSubmit, initProductState} = props;
 
     const handleClose = () => {
         onClose();
@@ -27,7 +27,6 @@ export default function ProductDialog(props) {
             <DialogContent>
                 <ProductForm
                     initProductState={initProductState}
-                    onDelete={onDelete}
                     onSubmit={onSubmit}
                 />
             </DialogContent>

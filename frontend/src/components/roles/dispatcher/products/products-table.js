@@ -8,16 +8,20 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import Button from "@material-ui/core/Button";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 100, maxWidth: 100},
-    {label: "Mass", id: "mass", minWidth: 100, maxWidth: 100},
-    {label: "Mass measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
-    {label: "Quantity", id: "quantity", minWidth: 100, maxWidth: 100},
-    {label: "Quantity measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
+    {label: "Name", id: "name", minWidth: 100, maxWidth: 100, align: "center"},
+    {label: "Mass", id: "mass", minWidth: 80, maxWidth: 80, align: "center"},
+    {label: "Mass measure", id: "massMeasure", minWidth: 80, maxWidth: 80, align: "center"},
+    {label: "Quantity", id: "quantity", minWidth: 80, maxWidth: 80, align: "center"},
+    {label: "Quantity measure", id: "quantityMeasure", minWidth: 80, maxWidth: 80, align: "center"},
     {label: "Price", id: "price", minWidth: 100, maxWidth: 100},
-    {label: "Currency", id: "currency", minWidth: 100, maxWidth: 100},
-    {label: "Sum", id: "sum", minWidth: 100, maxWidth: 100},
+    {label: "Currency", id: "currency", minWidth: 80, maxWidth: 80, align: "center"},
+    {label: "Sum", id: "sum", minWidth: 100, maxWidth: 100, align: "center"},
+    {id: "editDelete", label: "", minWidth: 60, maxWidth: 60, align: "center"}
 ];
 
 const fetchFieldFromObject = (obj, prop) => {
@@ -49,6 +53,7 @@ export default (props) => {
     const onRowClick = props.onRowClick;
     const products = props.products;
     const changeTotal = props.onAddProduct;
+    const {onRowDelete} = props;
 
     const classes = useStyles();
     const [page, setPage] = useState(0);
@@ -81,7 +86,7 @@ export default (props) => {
 
     const handleChangeTotal = (price, currency, weight, measure) => {
         TOTAL[currency] = TOTAL[currency] + price;
-        
+
         switch (measure) {
             case "KG":
                 TOTAL.weight = TOTAL.weight + weight;
@@ -89,7 +94,7 @@ export default (props) => {
             case "TON":
                 TOTAL.weight = TOTAL.weight + 1000 * weight;
         }
-        
+
     };
 
     return (
@@ -115,7 +120,7 @@ export default (props) => {
                             .map((product) => {
 
                                 const sumRow = Number(product.quantity) * Number(product.price);
-                                handleChangeTotal(sumRow, product.currency , Number(product.mass), product.massMeasure);
+                                handleChangeTotal(sumRow, product.currency, Number(product.mass), product.massMeasure);
 
                                 return (
                                     <TableRow
@@ -128,6 +133,32 @@ export default (props) => {
                                         key={product.id}
                                     >
                                         {columns.map((column) => {
+
+                                            if (column.id === "editDelete") {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align} className="edit-delete-block">
+                                                        <Button
+                                                            className="basket-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(product)
+                                                            }}/>
+
+                                                        <Button
+                                                            className="basket-table-btn"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                onRowDelete(product.id);
+                                                            }} color="primary"
+                                                            startIcon={<DeleteIcon/>}
+                                                        />
+
+
+                                                    </TableCell>
+                                                );
+                                            }
 
                                             let innerContent = column.id === "sum" ?
                                                 sumRow + " " + product.currency :
@@ -142,7 +173,7 @@ export default (props) => {
                                     </TableRow>
                                 );
                             })}
-                            
+
                     </TableBody>
                 </Table>
             </TableContainer>

@@ -1,7 +1,6 @@
 import React from "react";
-import {Formik, Form} from "formik";
+import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {ProductFormValidationSchema} from "./validation-shema";
 import ProductMassMeasureSelector from "./product-mass-measure-selector";
@@ -9,11 +8,7 @@ import ProductQuantityMeasureSelector from "./product-quantity-measure-selector"
 import ProductCurrencySelector from "./product-currency-selector";
 
 export default function ProductForm(props) {
-    const {initProductState, onSubmit, onDelete} = props;
-
-    const handleDelete = () => {
-        onDelete(initProductState.id);
-    };
+    const {initProductState, onSubmit} = props;
 
     const handleSubmit = (values) => {
         const product = {
@@ -44,84 +39,61 @@ export default function ProductForm(props) {
                         label={"Name"}
                         formikFieldName={"name"}
                     />
-                    <Grid container spacing={2} alignItems={"center"}>
-                        <Grid item xs={7}>
-                            <FormikField
-                                formikProps={formProps}
-                                id={"quantity"}
-                                label={"Quantity"}
-                                formikFieldName={"quantity"}
-                            />
-                        </Grid>
-                        <Grid item xs={5}>
-                            <ProductQuantityMeasureSelector
-                                formikProps={formProps}
-                                id={"quantityMeasure"}
-                                label={" "}
-                                formikFieldName={"quantityMeasure"}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} alignItems={"center"}>
-                        <Grid item xs={7}>
-                            <FormikField
-                                formikProps={formProps}
-                                id={"mass"}
-                                label={"Mass"}
-                                formikFieldName={"mass"}
-                            />
-                        </Grid>
-                        <Grid item xs={5}>
-                            <ProductMassMeasureSelector
-                                formikProps={formProps}
-                                id={"massMeasure"}
-                                label={" "}
-                                formikFieldName={"massMeasure"}/>
-                        </Grid>
-                    </Grid>
 
-                    <Grid container spacing={2} alignItems={"center"}>
-                        <Grid item xs={7}>
-                            <FormikField
-                                formikProps={formProps}
-                                id={"price"}
-                                label={"Price"}
-                                formikFieldName={"price"}
-                            />
-                        </Grid>
-                        <Grid item xs={5}>
-                            <ProductCurrencySelector
-                                formikProps={formProps}
-                                id={"currency"}
-                                label={" "}
-                                formikFieldName={"currency"}
-                            />
-                        </Grid>
-                    </Grid>
+                    <FormikField
+                        formikProps={formProps}
+                        id={"quantity"}
+                        label={"Quantity"}
+                        formikFieldName={"quantity"}
+                    />
+
+                    <ProductQuantityMeasureSelector
+                        formikProps={formProps}
+                        id={"quantityMeasure"}
+                        label={"Quantity measure"}
+                        formikFieldName={"quantityMeasure"}
+                    />
+
+                    <FormikField
+                        formikProps={formProps}
+                        id={"mass"}
+                        label={"Mass"}
+                        formikFieldName={"mass"}
+                    />
+
+                    <ProductMassMeasureSelector
+                        formikProps={formProps}
+                        id={"massMeasure"}
+                        label={"Mass measure"}
+                        formikFieldName={"massMeasure"}/>
 
 
-                    <Grid style={{marginTop: 15}} container justify="space-around">
+                    <FormikField
+                        formikProps={formProps}
+                        id={"price"}
+                        label={"Price"}
+                        formikFieldName={"price"}
+                    />
+
+                    <ProductCurrencySelector
+                        formikProps={formProps}
+                        id={"currency"}
+                        label={"Currency"}
+                        formikFieldName={"currency"}
+                    />
+
+                    <div className="button-form-wrapper">
                         <Button
                             variant="contained"
                             color="primary"
                             type="submit"
                             disabled={formProps.listener}
                         >
-                            Save
+                            {initProductState.id === -1 ? "Save" : "Update"}
                         </Button>
-                        {initProductState.id === -1 ? "" :
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={handleDelete}
-                            >
-                                Delete
-                            </Button>
-                        }
-                    </Grid>
+                    </div>
                 </Form>
             )}
         </Formik>
     );
-}
-;
+};

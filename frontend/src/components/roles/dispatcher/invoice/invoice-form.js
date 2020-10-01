@@ -15,7 +15,7 @@ import {
 import useToast from "../../../parts/toast-notification/useToast";
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
-import TableBody from "@material-ui/core/TableBody";
+import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
 
 const EMPTY_DRIVER = {
     name: "",
@@ -171,7 +171,6 @@ function InvoiceForm(props) {
     const handleProductDelete = (id) => {
         if (id !== -1) {
             deleteProductById(id);
-            handleProductDialogClose();
         }
     };
 
@@ -190,7 +189,7 @@ function InvoiceForm(props) {
         setProductDialogOpen(true);
     };
 
-    const handleProductTableClick = (product) => {
+    const handleProductTableClick = (product, isOpen = true) => {
         setSelectedProduct(product);
         setProductDialogOpen(true);
     };
@@ -261,111 +260,132 @@ function InvoiceForm(props) {
             >
                 {(formProps) => (
                     <Form className="invoice-form">
-                        <div className="invoice-data-wrapper">
-                            <div className="customer-data-wrapper">
-                                <div className="left-div-wrapper">
-                                    <div className="customer-wrapper">
-                                        <h2>Customer</h2>
-                                        <Paper elevation={3} className="customer-paper">
-                                            <div>
-                                                <p>Company name</p>
-                                                {initInvoice.productOwner.name}
-                                            </div>
-                                            <div>
-                                                <p>Phone</p>
-                                                {initInvoice.productOwner.phone}
-                                            </div>
-                                        </Paper>
-                                    </div>
-                                    <div className="data-wrapper">
-                                        <h2>Data</h2>
-                                        <Paper elevation={3}>
-                                            <FormikField
-                                                formikProps={formProps}
-                                                id={"invoiceNumber"}
-                                                label={"Invoice number"}
-                                                formikFieldName={"invoiceNumber"}
-                                            />
+                        <div className="container-wrapper">
+                            <div className="invoice-data-wrapper">
+                                <div className="customer-data-wrapper">
+                                    <div className="left-div-wrapper">
+                                        <div className="customer-wrapper">
+                                            <Paper elevation={3}>
+                                                <h2>Customer</h2>
+                                                <div className="customer-paper">
+                                                    <div>
+                                                        <p>Company name</p>
+                                                        {initInvoice.productOwner.name}
+                                                    </div>
+                                                    <div>
+                                                        <p>Phone</p>
+                                                        {initInvoice.productOwner.phone}
+                                                    </div>
+                                                </div>
+                                            </Paper>
+                                        </div>
+                                        <div className="data-wrapper">
+                                            <Paper elevation={3}>
+                                                <h2>Information</h2>
+                                                <FormikField
+                                                    formikProps={formProps}
+                                                    id={"invoiceNumber"}
+                                                    label={"Invoice number"}
+                                                    formikFieldName={"invoiceNumber"}
+                                                />
 
-                                            <FormikField
-                                                formikProps={formProps}
-                                                id={"shipper"}
-                                                label={"Shipper"}
-                                                formikFieldName={"shipper"}
-                                            />
-                                            <FormikField
-                                                formikProps={formProps}
-                                                id={"consignee"}
-                                                label={"Consignee"}
-                                                formikFieldName={"consignee"}
-                                            />
-                                            <ItemList
-                                                items={drivers}
-                                                onRowClick={(item) => {
-                                                    setInitInvoice((prevState) => {
-                                                        return {...prevState, driver: item};
-                                                    });
-                                                }}
-                                            />
-                                        </Paper>
-                                        <div className="registration-date">
-                                            <div>
-                                                <p>Date of registration</p>
-                                                {initInvoice.registrationDate}
-                                            </div>
-                                            <div>
-                                                <p>Registration person</p>
-                                                {props.user.name + " " + props.user.surname}
-                                            </div>
+                                                <FormikField
+                                                    formikProps={formProps}
+                                                    id={"shipper"}
+                                                    label={"Shipper"}
+                                                    formikFieldName={"shipper"}
+                                                />
+                                                <FormikField
+                                                    formikProps={formProps}
+                                                    id={"consignee"}
+                                                    label={"Consignee"}
+                                                    formikFieldName={"consignee"}
+                                                />
+                                                <ItemList
+                                                    items={drivers}
+                                                    onRowClick={(item) => {
+                                                        setInitInvoice((prevState) => {
+                                                            return {...prevState, driver: item};
+                                                        });
+                                                    }}
+                                                />
+
+                                                <div className="registration-date">
+                                                    <div>
+                                                        <p>Date of registration</p>
+                                                        {initInvoice.registrationDate}
+                                                    </div>
+                                                    <div>
+                                                        <p>Registration person</p>
+                                                        {props.user.name + " " + props.user.surname}
+                                                    </div>
+                                                </div>
+                                            </Paper>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="right-div-wrapper">
-                                    <h2>Driver</h2>
-                                    <Paper elevation={3} className="driver-info">
-                                        <div>
-                                            <p>Name</p>
-                                            {initInvoice.driver.name}
-                                        </div>
-                                        <div>
-                                            <p>Surname</p>
-                                            {initInvoice.driver.surname}
-                                        </div>
-                                        <div>
-                                            <p>Patronymic</p>
-                                            {initInvoice.driver.patronymic}
-                                        </div>
-                                        <div>
-                                            <p>Date of birth</p>
-                                            {initInvoice.driver.birthday}
-                                        </div>
-                                        <div>
-                                            <p>Passport</p>
-                                            {initInvoice.driver.passport}
-                                        </div>
-                                    </Paper>
-                                    <h2>Total</h2>
-                                    <Paper elevation={3} className="driver-info">
-                                        <div>
-                                            <p>Price</p>
-                                            {total.BYN === 0 ? "" :
-                                                <div>BYN: {total.BYN}</div>}
-                                            {total.USD === 0 ? "" :
-                                                <div>USD: {total.USD}</div>}
-                                            {total.EURO === 0 ? "" :
-                                                <div>EURO: {total.EURO}</div>}
-                                            {total.RUB === 0 ? "" :
-                                                <div>RUB: {total.RUB}</div>}
-                                            {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
-                                                <div>0</div> : ""}
-                                        </div>
-                                        <div>
-                                            <p>Weight</p>
-                                            {total.weight + " kg"}
-                                        </div>
-                                    </Paper>
+                                    <div className="right-div-wrapper">
+                                        <Paper elevation={3} className="driver-info">
+                                            <h2>Driver</h2>
+                                            <div>
+                                                <p>Name</p>
+                                                {initInvoice.driver.name}
+                                            </div>
+                                            <div>
+                                                <p>Surname</p>
+                                                {initInvoice.driver.surname}
+                                            </div>
+                                            <div>
+                                                <p>Patronymic</p>
+                                                {initInvoice.driver.patronymic}
+                                            </div>
+                                            <div>
+                                                <p>Date of birth</p>
+                                                {initInvoice.driver.birthday}
+                                            </div>
+                                            <div>
+                                                <p>Passport</p>
+                                                {initInvoice.driver.passport}
+                                            </div>
+                                        </Paper>
+                                        <Paper elevation={3} className="driver-info">
+                                            <h2>Total</h2>
+                                            <div>
+                                                <p>Price</p>
+                                                {total.BYN === 0 ? "" :
+                                                    <div>BYN: {total.BYN}</div>}
+                                                {total.USD === 0 ? "" :
+                                                    <div>USD: {total.USD}</div>}
+                                                {total.EURO === 0 ? "" :
+                                                    <div>EURO: {total.EURO}</div>}
+                                                {total.RUB === 0 ? "" :
+                                                    <div>RUB: {total.RUB}</div>}
+                                                {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
+                                                    <div>0</div> : ""}
+                                            </div>
+                                            <div>
+                                                <p>Weight</p>
+                                                {total.weight + " kg"}
+                                            </div>
+                                        </Paper>
+                                    </div>
                                 </div>
                             </div>
+                            <div className="product-table-wrapper">
+                                <h2>Products</h2>
+                                <Button variant="contained"
+                                        color="primary"
+                                        onClick={handleCreateNewProductClick}>
+                                    <LibraryAddRoundedIcon/>
+                                </Button>
+                                <ProductsTable
+                                    products={initInvoice.products}
+                                    onRowClick={handleProductTableClick}
+                                    onAddProduct={handleTotal}
+                                    onRowDelete={handleProductDelete}
+                                />
+                            </div>
+                        </div>
+                        <div className="reg-btn">
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -375,19 +395,7 @@ function InvoiceForm(props) {
                                 Register invoice
                             </Button>
                         </div>
-                        <div className="product-table-wrapper">
-                            <h2>Products</h2>
-                            <Button variant="contained"
-                                    color="primary"
-                                    onClick={handleCreateNewProductClick}>
-                                +
-                            </Button>
-                            <ProductsTable
-                                products={initInvoice.products}
-                                onRowClick={handleProductTableClick}
-                                onAddProduct={handleTotal}
-                            />
-                        </div>
+
                     </Form>
                 )}
             </Formik>
@@ -396,7 +404,6 @@ function InvoiceForm(props) {
                 open={productDialogOpen}
                 initProductState={selectedProduct}
                 onSubmit={handleProductDialogSubmit}
-                onDelete={handleProductDelete}
                 onClose={handleProductDialogClose}
             />
 
