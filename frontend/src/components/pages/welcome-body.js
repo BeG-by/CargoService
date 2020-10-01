@@ -1,6 +1,7 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
+import {BodyWrapper} from "./body-wrapper";
 
 export const useStyles = makeStyles(() => ({
     mainParagraph: {
@@ -33,3 +34,5 @@ export const WelcomeBody = () => {
 
     );
 }
+
+export default () => <BodyWrapper content={WelcomeBody}/>

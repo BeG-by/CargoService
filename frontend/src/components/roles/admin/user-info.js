@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {findUserById} from "./request-util";
+import {USER_URL, makeRequest} from "./request-util";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import {List} from "material-ui";
@@ -36,7 +36,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
 
     async function fetchUser(cleanupFunction) {
         const id = props.userId;
-        let selected = await findUserById(id);
+        let selected = await makeRequest("GET", USER_URL + "/" + id);
         if (!cleanupFunction) setUser({
             id: selected.data.id,
             name: selected.data.name + " " + selected.data.surname,

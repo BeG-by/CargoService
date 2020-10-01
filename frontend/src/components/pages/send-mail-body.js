@@ -1,4 +1,5 @@
 import React from "react";
+import {BodyWrapper} from "./body-wrapper";
 
 //todo inner content
 export const SendMailBody = () => {
@@ -6,3 +7,5 @@ export const SendMailBody = () => {
         Here you can send message to iTechArt support team.
     </h2>;
 }
+
+export default () => <BodyWrapper content={SendMailBody}/>

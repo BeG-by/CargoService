@@ -17,4 +17,4 @@ export const ProfileBody = connect(mapStateToProps)((props) => {
         <UserInfo userId={id}/>
     </div>;
 });
-//todo change password + avatar 
+//todo change password + avatar
