@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -25,10 +25,6 @@ const fetchFieldFromObject = (obj, prop) => {
         return null;
     }
 
-    if (prop === "sum") {
-        return Number(obj.quantity) * Number(obj.price) + " " + obj.currency;
-    }
-
     let index = prop.indexOf(".");
     if (index > -1) {
         return fetchFieldFromObject(
@@ -38,7 +34,7 @@ const fetchFieldFromObject = (obj, prop) => {
     }
 
     return obj[prop];
-}
+};
 
 const useStyles = makeStyles({
     root: {
@@ -52,17 +48,23 @@ const useStyles = makeStyles({
 export default (props) => {
     const onRowClick = props.onRowClick;
     const products = props.products;
+    const changeTotal = props.onAddProduct;
 
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const sumOfAll = {
+    const TOTAL = {
         BYN: 0,
         USD: 0,
         EURO: 0,
-        RUB: 0
-    }
+        RUB: 0,
+        weight: 0
+    };
+
+    useEffect(() => {
+        changeTotal(TOTAL);
+    }, [props.products]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -77,9 +79,18 @@ export default (props) => {
         setPage(0);
     };
 
-    const handleChangeSum = (price, currency) => {
-        sumOfAll[currency] = sumOfAll[currency] + price;
-    }
+    const handleChangeTotal = (price, currency, weight, measure) => {
+        TOTAL[currency] = TOTAL[currency] + price;
+        
+        switch (measure) {
+            case "KG":
+                TOTAL.weight = TOTAL.weight + weight;
+                break;
+            case "TON":
+                TOTAL.weight = TOTAL.weight + 1000 * weight;
+        }
+        
+    };
 
     return (
         <Paper className={classes.root}>
@@ -104,7 +115,7 @@ export default (props) => {
                             .map((product) => {
 
                                 const sumRow = Number(product.quantity) * Number(product.price);
-                                handleChangeSum(sumRow, product.currency);
+                                handleChangeTotal(sumRow, product.currency , Number(product.mass), product.massMeasure);
 
                                 return (
                                     <TableRow
@@ -131,17 +142,7 @@ export default (props) => {
                                     </TableRow>
                                 );
                             })}
-
-                        <div>Total</div>
-                        {sumOfAll.BYN === 0 ? "" :
-                            <div>BYN: {sumOfAll.BYN}</div>}
-                        {sumOfAll.USD === 0 ? "" :
-                            <div>USD: {sumOfAll.USD}</div>}
-                        {sumOfAll.EURO === 0 ? "" :
-                            <div>EURO: {sumOfAll.EURO}</div>}
-                        {sumOfAll.RUB === 0 ? "" :
-                            <div>RUB: {sumOfAll.RUB}</div>}
-
+                            
                     </TableBody>
                 </Table>
             </TableContainer>
