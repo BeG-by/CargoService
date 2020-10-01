@@ -38,7 +38,6 @@ class LoginForm extends Component {
                     localStorage.setItem("authorization", res.data.token);
                     props.changeUserAndCompany(res.data.user, res.data.company);
                     this.props.history.push("/main");
-                    // window.location.href = "/main";
                 },
                 error => {
                     this.setState({

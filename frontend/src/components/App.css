@@ -12,6 +12,12 @@
     color: white;
 }
 
+.header-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .main-body-field {
     display: block;
     flex-direction: column;

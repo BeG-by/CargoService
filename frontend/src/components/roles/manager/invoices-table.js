@@ -57,7 +57,9 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     }
 
     async function fetchInvoices(cleanupFunction) {
-        if (!cleanupFunction) setInvoices(await getAllInvoices());
+        if (!cleanupFunction) {
+            setInvoices(await getAllInvoices());
+        }
     }
 
     useEffect(() => {

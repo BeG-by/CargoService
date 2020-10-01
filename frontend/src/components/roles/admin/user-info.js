@@ -22,7 +22,8 @@ export const UserInfo = connect(mapStateToProps)((props) => {
         birthday: "",
         email: "",
         phone: "",
-        role: ""
+        role: "",
+        photo: null,
     });
 
     function handleRequestError(error) {
@@ -42,6 +43,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
             birthday: selected.data.birthday,
             email: selected.data.email,
             phone: selected.data.phone,
+            photo: selected.data.photo,
         });
     }
 
@@ -55,6 +57,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                     birthday: "",
                     email: "",
                     phone: "",
+                    photo: null
                 });
                 handleRequestError(err);
             });
@@ -71,7 +74,9 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                                 {user.name}
                             </Typography>
                             <img
-                                src={photo}
+                                src={user.photo === null || user.photo === undefined
+                                    ? photo
+                                    : user.photo}
                                 width={100}
                                 height={100}
                                 alt="avatar"/>

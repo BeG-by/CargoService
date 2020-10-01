@@ -16,7 +16,8 @@ const mapStateToProps = (store) => {
 
 export const MainBody = connect(mapStateToProps)((props) => {
     let content;
-    switch (props.role) {
+    const role = props.role;
+    switch (role) {
         case 'SYSADMIN':
             content = () => <ClientsTable/>;
             break;
