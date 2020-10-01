@@ -20,7 +20,6 @@ import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
 import {BodyWrapper} from "./pages/body-wrapper";
 import {ProfileBody} from "./pages/profile-body";
 
-
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
 
