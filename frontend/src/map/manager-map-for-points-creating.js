@@ -5,12 +5,11 @@ import Button from "@material-ui/core/Button";
 import AbstractMap from "./abstract-map";
 
 export default function ManagerMapForPointAdding(props) {
-    // const markers = [];
-    const onMarkerAdd = () => console.log("add");
-    const onMarkerDelete = () => console.log("delete");
+    const markers = props.markers;
+    const onMarkerAdd = props.onMarkerAdd;
+    const onMarkerDelete = props.onMarkerDelete;
 
     const [selectedMarker, setSelectedMarker] = useState(null);
-    const [markers, setMarkers] = useState([]);
 
     const handleMarkerDelete = (marker) => {
         setSelectedMarker(null);
@@ -33,7 +32,7 @@ export default function ManagerMapForPointAdding(props) {
                 onCloseClick={() => setSelectedMarker(null)}
             >
                 <div>
-                    <h2>{`Marker ${selectedMarker.index}`}</h2>
+                    <h2>{`Point`}</h2>
                     <Button onClick={() => handleMarkerDelete(selectedMarker)}>
                         Delete point
                     </Button>

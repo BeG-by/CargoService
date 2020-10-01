@@ -1,4 +1,4 @@
-import React, { useEffect,  useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Formik, Form, ErrorMessage} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
@@ -11,6 +11,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
+import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
 
 const EMPTY_AUTO = {
     id: 0,
@@ -67,24 +68,26 @@ export default (props) => {
             lat: event.latLng.lat(),
             lng: event.latLng.lng(),
         }])
-        console.log("Add");
-        console.log(points);
         setPointIndex(pointIndex + 1);
     };
 
 
     const handleSubmit = (values) => {
-        const waybill = {};
-        waybill.points = points;
-        waybill.invoiceId = values.invoiceId;
-        waybill.autoId = values.autoId;
-        waybill.departureDate = values.departureDate;
-        waybill.arrivalDate = values.arrivalDate;
-        const saveWaybillRequest = async (waybill) => {
-            await saveWaybill(waybill);
-            props.onClose();
-        };
-        saveWaybillRequest(waybill);
+        if (points.length > 1) {
+            const waybill = {};
+            waybill.points = convertPointsToBackendApi(points);
+            waybill.invoiceId = values.invoiceId;
+            waybill.autoId = values.autoId;
+            waybill.departureDate = values.departureDate;
+            waybill.arrivalDate = values.arrivalDate;
+            const saveWaybillRequest = async (waybill) => {
+                await saveWaybill(waybill);
+                props.onClose();
+            };
+            saveWaybillRequest(waybill);
+        } else {
+            alert("It's necessary to put at least 200 points")
+        }
     };
 
     const handleAutoChange = (event) => {

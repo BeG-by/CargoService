@@ -32,12 +32,14 @@ export default function DriverMap(props) {
                             <h3>{dateToString(selectedMarker.passageDate)}</h3>
                         </div>
                         :
-                        <h2>Not passed</h2>
+                        <div>
+                            <h2>Not passed</h2>
+                            <Button onClick={() => handleMarkerPass(selectedMarker)}>
+                                Pass point
+                            </Button>
+                        </div>
                     }
 
-                    <Button onClick={() => handleMarkerPass(selectedMarker)}>
-                        Pass point
-                    </Button>
                 </div>
             </InfoWindow>);
 

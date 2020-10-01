@@ -46,14 +46,15 @@ export default function AbstractMap(props) {
                 onClick={handleMapClick}
                 onLoad={handleMapLoad}
             >
-                {markers.map(marker =>
-                    <Marker
+                {markers.map(marker => {
+                    return <Marker
                         key={`${marker.lng}_${marker.lat}`}
                         position={{lat: marker.lat, lng: marker.lng}}
                         onClick={() => onMarkerClick(marker)}
                         icon={marker.isPassed ? PASSED_MARKER_ICON : NOT_PASSED_MARKER_ICON}
                     />
-                )}
+                })}
+
                 <Polyline
                     geodesic={true}
                     options={{
@@ -61,8 +62,7 @@ export default function AbstractMap(props) {
                         strokeColor: POLYLINE_COLOR,
                         strokeOpacity: POLYLINE_OPACITY,
                         strokeWeight: 2,
-                        icons: [{offset: "0", repeat: "10px"},
-                        ],
+                        icons: [{offset: "0", repeat: "10px"},],
                     }}
                 />
                 {infoWindowComponent}

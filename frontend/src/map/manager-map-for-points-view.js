@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {InfoWindow} from "@react-google-maps/api";
 import AbstractMap from "./abstract-map";
+import {dateToString} from "./utils";
 
-export default function ManagerMapForPointAdding(props) {
+export default function ManagerMapForPointsView(props) {
     const markers = props.markers;
 
     const [selectedMarker, setSelectedMarker] = useState(null);
@@ -17,7 +18,10 @@ export default function ManagerMapForPointAdding(props) {
                 position={{lat: selectedMarker.lat, lng: selectedMarker.lng}}
                 onCloseClick={() => setSelectedMarker(null)}
             >
-                <h2>{`Marker ${selectedMarker.index}`}</h2>
+                {selectedMarker.isPassed ?
+                    <h2>{`Passed ${dateToString(selectedMarker.passageDate)}`}</h2>
+                    :
+                    <h2>Not passed</h2>}
             </InfoWindow>);
 
 

@@ -7,9 +7,19 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
+import DriverMap from "../../../map/driver-map";
+import {convertPointsFromBackendApi} from "../../../map/utils";
+import {connect} from "react-redux";
+import ManagerMapForPointsView from "../../../map/manager-map-for-points-view";
+
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
 
-export default function WaybillInfoContent(props) {
+export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     return (
         <div>
             <Paper>
@@ -100,12 +110,19 @@ export default function WaybillInfoContent(props) {
                         </ListItem>
                     </div>
                 </List>
-                {/*<DriverMap*/}
-                {/*    markers={props.waybill.points}*/}
-                {/*    onMarkerPass={handleMarkerPass}*/}
-                {/*/>*/}
+                {props.role === "DRIVER" ?
+                    <DriverMap
+                        markers={convertPointsFromBackendApi(props.waybill.points)}
+                        onMarkerPass={props.onUpdatePoint}
+                    />
+                    :
+                    <ManagerMapForPointsView
+                        markers={convertPointsFromBackendApi(props.waybill.points)}
+                    />
+                }
             </Paper>
         </div>
-    )
-        ;
-}
+    );
+})
+
+export default WaybillInfoContent;

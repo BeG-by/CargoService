@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
-import {getWaybillById} from "./request-utils";
+import {getWaybillById, updatePoint} from "./request-utils";
 import WaybillInfoContent from "./waybill-info-content";
+import {connect} from "react-redux";
 
 export const WaybillInfo = (props) => {
     const [waybill, setWaybill] = React.useState({
@@ -17,20 +18,22 @@ export const WaybillInfo = (props) => {
 
     async function fetchWaybill(cleanupFunction) {
         let selected = await getWaybillById(props.waybillId);
-        if(!cleanupFunction) setWaybill({
-            id: selected.id,
-            departureDate: selected.departureDate,
-            arrivalDate: selected.arrivalDate,
-            points: selected.points,
-            invoice: {id: selected.invoice.id, number: selected.invoice.number},
-            auto: {id: selected.auto.id, mark: selected.auto.mark, type: selected.auto.type},
-            driver: {
-                id: selected.invoice.driver.id,
-                name: selected.invoice.driver.name,
-                surname: selected.invoice.driver.surname},
-            shipper: selected.invoice.shipper,
-            consignee: selected.invoice.consignee,
-        });
+        if (!cleanupFunction)
+            setWaybill({
+                id: selected.id,
+                departureDate: selected.departureDate,
+                arrivalDate: selected.arrivalDate,
+                points: selected.points,
+                invoice: {id: selected.invoice.id, number: selected.invoice.number},
+                auto: {id: selected.auto.id, mark: selected.auto.mark, type: selected.auto.type},
+                driver: {
+                    id: selected.invoice.driver.id,
+                    name: selected.invoice.driver.name,
+                    surname: selected.invoice.driver.surname
+                },
+                shipper: selected.invoice.shipper,
+                consignee: selected.invoice.consignee,
+            });
     }
 
     useEffect(() => {
@@ -39,8 +42,18 @@ export const WaybillInfo = (props) => {
         return () => cleanupFunction = true;
     }, []);
 
+
+    const handleMarkerPass = async (point) => {
+        await updatePoint(point);
+        fetchWaybill(false);
+    }
+
     const content = <div>
-        <WaybillInfoContent waybill={waybill} action={fetchWaybill}/>
+        <WaybillInfoContent
+            waybill={waybill}
+            action={fetchWaybill}
+            onUpdatePoint={handleMarkerPass}
+        />
     </div>
 
     return (
