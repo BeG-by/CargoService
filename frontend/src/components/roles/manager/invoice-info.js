@@ -6,7 +6,6 @@ import {AssignVerificationInvoice} from "../../parts/dialogs/verify-invoice";
 import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
 import {CloseInvoice} from "../../parts/dialogs/close-invoice";
-import {EditInvoice} from "../../parts/dialogs/edit-invoice";
 import {connect} from "react-redux";
 
 const mapStateToProps = (store) => {
@@ -19,7 +18,6 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     const [form, setForm] = React.useState(null);
     const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
     const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
-    const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openCloseDialog, setOpenCloseDialog] = React.useState(false);
     const [invoice, setInvoice] = React.useState({
         id: 0,
@@ -43,7 +41,6 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         setOpenVerifyDialog(false);
         setOpenRejectDialog(false);
         setOpenCloseDialog(false);
-        setOpenEditDialog(false);
     };
 
     const handleVerifyOpen = () => {
@@ -56,12 +53,6 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         const form = <RejectVerificationInvoice handleClose={handleClose} invoice={invoice}/>
         setForm(form);
         setOpenRejectDialog(true);
-    }
-
-    const handleEditOpen = () => {
-        const form = <EditInvoice handleClose={handleClose} invoice={invoice}/>
-        setForm(form);
-        setOpenEditDialog(true);
     }
 
     const handleCloseOpen = () => {
@@ -116,15 +107,12 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     let verifyDisabled = false;
     let rejectDisabled = false;
     let closeDisabled = false;
-    let editDisabled = false;
 
     if (status.trim() === 'REGISTERED' && props.role === "MANAGER") {
         closeDisabled = true;
-        editDisabled = true;
     } else if (status.trim() === 'ACCEPTED' && checkPassage && props.role === "DRIVER") {
         verifyDisabled = true;
         rejectDisabled = true;
-        editDisabled = true;
     } else if (status.trim() === 'REJECTED' && props.role === "DISPATCHER") {
         verifyDisabled = true;
         rejectDisabled = true;
@@ -132,7 +120,6 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     } else {
         verifyDisabled = true;
         rejectDisabled = true;
-        editDisabled = true;
         closeDisabled = true;
     }
 
@@ -140,7 +127,6 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>
         <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>
         <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>
-        <OkButton content={'Edit'} handleClick={handleEditOpen} disabled={editDisabled}/>
     </div>
 
     return (
@@ -160,11 +146,6 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
                 dialogTitle="Closing"
                 handleClose={handleClose}
                 openDialog={openCloseDialog}
-                form={form}/>
-            <DialogWindow
-                dialogTitle="Editing"
-                handleClose={handleClose}
-                openDialog={openEditDialog}
                 form={form}/>
         </div>
     );

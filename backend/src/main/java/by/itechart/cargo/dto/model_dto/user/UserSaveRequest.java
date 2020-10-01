@@ -43,6 +43,10 @@ public class UserSaveRequest {
     @Valid
     private Address address;
 
+    @NotBlank(message = "Phone is mandatory")
+    @Size(max = 20, message = "Phone is too long (max is 20)")
+    private String phone;
+
     @Email(message = "Email is not valid")
     @Size(max = 64, message = "Patronymic is too long (max is 64)")
     @NotNull(message = "Email is mandatory")

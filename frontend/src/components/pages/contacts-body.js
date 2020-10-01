@@ -1,5 +1,4 @@
 import React from "react";
-import {BodyWrapper} from "./body-wrapper";
 
 //todo content
 export const ContactsBody = () => {
@@ -7,5 +6,3 @@ export const ContactsBody = () => {
         Here are our contacts: ...
     </h2>;
 }
-
-export default () => <BodyWrapper content={ContactsBody}/>

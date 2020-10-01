@@ -18,7 +18,7 @@ export const CloseInvoice = withRouter((props) => {
     return (
         <div className="form-signin">
             <div>
-                <i style={{fontSize: 16}}>Close the invoice?</i>
+                <i style={{fontSize: 16}}>Do you want to close the invoice?</i>
                 <div className='btn-row'>
                     <OkButton content='OK' handleClick={handleClose}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>

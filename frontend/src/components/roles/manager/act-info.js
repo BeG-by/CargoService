@@ -15,6 +15,10 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import TablePagination from "@material-ui/core/TablePagination";
+import HowToRegIcon from "@material-ui/icons/HowToReg";
+import StoreIcon from '@material-ui/icons/Store';
+import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
+import Divider from "@material-ui/core/Divider";
 
 const mapStateToProps = (store) => {
     return {
@@ -23,26 +27,40 @@ const mapStateToProps = (store) => {
 };
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
-    {label: "Measure", id: "measure", minWidth: 100, maxWidth: 100},
-    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
-    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
-    {label: "Status", id: "productStatus", minWidth: 100, maxWidth: 100},
-    {label: "Lost quantity", id: "lostQuantity", minWidth: 100, maxWidth: 100},
-    {label: "Comment", id: "comment", minWidth: 150, maxWidth: 150},
+    {label: "Name", id: "name", minWidth: 100},
+    {label: "Mass", id: "mass", minWidth: 50},
+    {label: "Measure", id: "massMeasure", minWidth: 100},
+    {label: "Price", id: "price", minWidth: 50},
+    {label: "Currency", id: "currency", minWidth: 50},
+    {label: "Quantity", id: "quantity", minWidth: 50},
+    {label: "Measure", id: "quantityMeasure", minWidth: 100},
+    {label: "Lost quantity", id: "lostQuantity", minWidth: 100},
+    {label: "Comment", id: "comment", minWidth: 100},
 ];
 
 export const ActInfo = connect(mapStateToProps)((props) => {
     const invoice = props.invoice;
     const act = props.act;
 
+    const losses = [];
+    invoice.products.forEach(p => {
+        if (p.lostQuantity > 0) {
+            losses.push(p);
+        }
+    })
+
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
     return (
         <div>
             <Paper>
@@ -50,7 +68,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <HowToRegIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -62,7 +80,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Driver"
                             />
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <HowToRegIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -73,9 +91,10 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Consignee worker"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -86,7 +105,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Shipper"
                             />
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -97,9 +116,10 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                 secondary="Consignee"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <DepartureBoardIcon/>
                             </ListItemIcon>
                             <ListItemText
                                 primary={
@@ -112,12 +132,12 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                         </ListItem>
                     </div>
                 </List>
-
+                <Divider/>
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom
                                 style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
-                        Products List:
+                        Lost products list:
                     </Typography>
                     <Table
                         aria-label="sticky table">
@@ -134,7 +154,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {invoice.products
+                            {losses
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((product) => {
                                     return (
@@ -161,12 +181,13 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                 <br/>
 
                 <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={invoice.products.length}
+                    count={losses.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
             </Paper>

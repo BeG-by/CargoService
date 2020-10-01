@@ -25,10 +25,10 @@ public class UserResponse {
     private LocalDate birthday;
     private Address address;
     private String email;
+    private String phone;
     private String passport;
     private String status;
     private Set<String> roles;
-
 
     public static UserResponse toUserResponse(User user) {
         return UserResponse.builder()
@@ -38,6 +38,7 @@ public class UserResponse {
                 .surname(user.getSurname())
                 .patronymic(user.getPatronymic())
                 .birthday(user.getBirthday())
+                .phone(user.getPhone())
                 .address(user.getAddress())
                 .email(user.getEmail())
                 .passport(user.getPassport())

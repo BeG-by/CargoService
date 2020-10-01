@@ -88,7 +88,10 @@ public class Product implements Serializable, Cloneable {
         ACCEPTED,
         VERIFIED,
         DELIVERED,
-        LOST
+        SPOILED,
+        STOLEN,
+        CONFISCATED,
+        DAMAGED_IN_CRASH
     }
 
     public enum Currency {

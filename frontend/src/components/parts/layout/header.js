@@ -13,6 +13,10 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
 import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import {Link} from "react-router-dom";
+import "../../App.css";
+import Avatar from "@material-ui/core/Avatar";
+import photo from "../../../resources/images/user_no_photo.png";
 
 const drawerWidth = DRAWER_WIDTH;
 
@@ -82,7 +86,6 @@ const getUserInfoRequest = () => {
 
 };
 
-
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
     const {user, company} = props;
@@ -119,40 +122,39 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     };
 
     const renderUserName = () => {
-
-        let userText;
-
-        if (user.name === undefined || user.surname === undefined) {
-            userText = headerText;
-        } else {
-            userText = user.name + " " + user.surname + ", " + user.roles;
-        }
-
-        return isAuthenticate ? userText : headerText
+        const userText = user.name === undefined || user.surname === undefined
+            ? headerText
+            : <Link to={"/profile"}
+                    className="link-item-white header-link" >
+                <Avatar alt="avatar"
+                        src={user.photo === null || user.photo === undefined
+                            ? photo
+                            : user.photo}
+                        style={{marginLeft: 20, marginRight: 20}}
+                />
+                {user.name + " " + user.surname + ", " + user.roles}
+            </Link>;
+        return isAuthenticate
+            ? userText
+            : headerText
     };
 
     const renderCompanyName = () => {
-
-        let companyName;
-
-        if (company.name === undefined) {
-            companyName = headerCompany;
-        } else {
-            companyName = company.name;
-        }
-
-        return isAuthenticate ? companyName : headerCompany
+        const companyName = company.name === undefined || company.name === null
+            ? headerCompany
+            : company.name;
+        return isAuthenticate
+            ? <Link to={"/main"} className="link-item-white">{companyName}</Link>
+            : headerCompany
     };
-
 
     const LoginButton = () => {
-        return isAuthenticate ?
-            <SignoutButton/> :
-            <SigninButton openDialog={openDialog}
-                          handleClickOpen={handleClickOpen}
-                          handleClose={handleClose}/>;
+        return isAuthenticate
+            ? <SignoutButton/>
+            : <SigninButton openDialog={openDialog}
+                            handleClickOpen={handleClickOpen}
+                            handleClose={handleClose}/>;
     };
-
 
     return (
         <AppBar className={clsx(classes.appBar, {
@@ -170,9 +172,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                     <MenuIcon/>
                 </IconButton>
                 <Typography className={classes.title} variant="h6" noWrap>
-                    {/*<Link to="/main" className="link-item-white">*/}
-                        {renderCompanyName()}
-                    {/*</Link>*/}
+                    {renderCompanyName()}
                 </Typography>
                 <div className={classes.grow}/>
                 <Typography className={classes.welcome}>

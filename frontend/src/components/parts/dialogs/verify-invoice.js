@@ -22,13 +22,14 @@ export const AssignVerificationInvoice = withRouter((props) => {
     return (
         <div className="form-signin">
             <div>
-                <i style={{fontSize: 16}}>Assign the status as "verified"?</i>
+                <i style={{fontSize: 16}}>Assign the invoice status as "verified"?</i>
                 <div className='btn-row'>
                     <OkButton content='OK' handleClick={handleVerify}/>
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>
                 </div>
             </div>
-        </div>);
+        </div>
+    );
 })
 
 export const RejectVerificationInvoice = withRouter((props) => {

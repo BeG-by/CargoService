@@ -23,7 +23,7 @@ public interface MessageConstant {
 
     String ACT_NOT_FOUND_MESSAGE = "Act not found";
 
+    String PRODUCT_NOT_FOUND_MESSAGE = "Product not found";
+
     String STORAGE_NOT_FOUND_MESSAGE = "Storage not found";
-
-
 }

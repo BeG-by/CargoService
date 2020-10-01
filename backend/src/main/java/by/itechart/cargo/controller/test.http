@@ -2,7 +2,7 @@ POST localhost:8080/v1/api/auth/login
 Content-Type: application/json
 
 {
-  "login": "manager",
+  "login": "admin",
   "password": "root"
 }
 
@@ -79,7 +79,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Invoices ---
 
-GET localhost:8080/v1/api/invoices/1
+GET localhost:8080/v1/api/invoices/4
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwODc2OTM5LCJleHAiOjE2MDE3NDA5Mzl9.2ZpS6JvEI1-rt36ectazoxVanaMVzkZ9R11m-NkOC3A
 
@@ -107,18 +107,11 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
     {
       "name": "test product",
       "quantity": 10,
-      "measure": "barrel",
+      "quantityMeasure": "BARREL",
       "price": 56,
-      "sum": 13,
-      "mass": "100 kg"
-    },
-    {
-      "name": "test product",
-      "quantity": 10,
-      "measure": "barrel",
-      "price": 56,
-      "sum": 13,
-      "mass": "100 kg"
+      "mass": "100",
+      "massMeasure": "TON",
+      "currency": "RUB"
     }
   ]
 }
@@ -241,65 +234,14 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 {
   "invoiceId": 1,
+  "registrationDate": "2020-09-28",
   "consigneeWorker": "Sergey Sergeev",
-  "registrationDate": "2020-09-27",
   "products": [
     {
-      "id": 28,
-      "invoiceId": 1,
-      "name": "beer",
-      "quantity": 5,
-      "measure": "bochka",
-      "price": 56,
-      "mass": "100 kg",
+      "id": 4,
       "productStatus": "LOST",
-      "lostQuantity": 2,
-      "comment": "all is gone"
-    }]
+      "comment": "all... all is gone",
+      "lostQuantity": 5
+    }
+  ]
 }
-
-###
-
-GET localhost:8080/v1/api/storages
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
-
-###
-
-POST localhost:8080/v1/api/storages
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
-
-{
-  "country": "Russia",
-  "city": "Smolensk",
-  "street": "Lenina",
-  "house": "32",
-  "email": "t3tt@mail.ru",
-  "phone": "376321234541"
-}
-###
-
-PUT localhost:8080/v1/api/storages
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
-
-{
-  "id": 5,
-  "country": "Russia",
-  "city": "Smolen3sk",
-  "street": "Lenina",
-  "house": "323",
-  "flat": "3",
-  "email": "t3tt3@mail.ru",
-  "phone": "376321234541",
-  "productOwnerId": 2,
-  "status": "ACTIVE"
-}
-###
-
-DELETE localhost:8080/v1/api/storages/5
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW5hZ2VyIiwicm9sZXMiOlsiTUFOQUdFUiJdLCJpYXQiOjE2MDEzMzY2MzksImV4cCI6MTYwMjIwMDYzOX0.ZI4lXFfcudZaZxO-k56vYhjU_uyaSDNuhJK_PnFE1Fw
-
-###

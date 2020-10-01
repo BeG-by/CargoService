@@ -13,11 +13,21 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import HowToRegIcon from '@material-ui/icons/HowToReg';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 import {getPointById, updatePoint} from "./request-utils";
 import fetchFieldFromObject from "../../forms/fetch-field-from-object";
 import CheckIcon from "@material-ui/icons/Check";
+import StoreIcon from '@material-ui/icons/Store';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import {DialogWindow} from "../../parts/dialogs/dialog";
+import {PassPoint} from "../../parts/dialogs/pass-point";
+import Divider from "@material-ui/core/Divider";
+import {InvoiceInfo} from "../manager/invoice-info";
+import {OkButton} from "../../parts/buttons/ok-button";
+import {connect} from "react-redux";
+import Button from "@material-ui/core/Button";
+import {UserInfo} from "../admin/user-info";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const columns = [
     {id: "place", label: "Place", minWidth: 200},
@@ -25,112 +35,161 @@ const columns = [
     {id: "passed", label: "Passed", minWidth: 200}
 ];
 
-export default function WaybillInfoContent(props) {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const WaybillInfoContent = connect(mapStateToProps)((props) => {
+    const role = props.role;
+    const waybill = props.waybill;
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [form, setForm] = React.useState(null);
+    const [pointPassedDialogOpen, setPointPassedDialogOpen] = React.useState(false);
+    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
+    const [title, setTitle] = React.useState("");
 
     const handleTableRowClick = async (p) => {
-        let selected = await getPointById(p.id);
-        //fixme вставить диалог подтвердить прохождение точки on
-        if (!selected.passed) {
-            await updatePoint(selected);
-            props.action();
+        if (role === "DRIVER") {
+            let selected = await getPointById(p.id);
+            if (!selected.passed) {
+                setTitle("Confirmation");
+                setForm(<PassPoint
+                    handleClose={handleClose}
+                    updatePoints={props.updatePoints}
+                    selected={selected}/>);
+                setPointPassedDialogOpen(true);
+            }
         }
+    };
+
+    const handleClose = () => {
+        setPointPassedDialogOpen(false);
+        setInvoiceInfoDialogOpen(false);
+        setUserInfoDialogOpen(false);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
     };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    const handleInvoiceInfoOpen = () => {
+        setForm(<InvoiceInfo invoiceId={waybill.invoice.id}/>);
+        setTitle("Invoice # " + waybill.invoice.number);
+        setInvoiceInfoDialogOpen(true);
+    }
+
+    const handleDriverInfoOpen = () => {
+        const id = waybill.driver.id;
+        setForm(<UserInfo userId={id}/>);
+        setTitle("Driver");
+        setUserInfoDialogOpen(true);
+    }
+
     return (
         <div>
+            <Button
+                color="primary"
+                variant="outlined"
+                onClick={handleInvoiceInfoOpen}>
+                {"See invoice info"}
+            </Button>
+
             <Paper>
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <LocalShippingIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Invoice #"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.invoice.number}
+                                        {waybill.auto.mark + " "
+                                        + waybill.auto.type}
                                     </React.Fragment>
                                 }
+                                secondary="Auto"
                             />
                             <ListItemIcon>
-                                <CheckCircleIcon/>
+                                <HowToRegIcon/>
                             </ListItemIcon>
-                            <ListItemText
-                                primary="Auto"
-                                secondary={
-                                    <React.Fragment>
-                                        {props.waybill.auto.mark} {props.waybill.auto.type}
-                                    </React.Fragment>
-                                }
-                            />
-                            <ListItemIcon>
-                                <CheckCircleIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="Driver"
-                                secondary={
-                                    <React.Fragment>
-                                        {props.waybill.driver.name} {props.waybill.driver.surname}
-                                    </React.Fragment>
-                                }
-                            />
+                            <Tooltip title="Click to see Driver info" arrow>
+                                <ListItemText
+                                    onClick={handleDriverInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            <strong style={{color: "#3f51b5"}}>
+                                                {waybill.driver.name + " "
+                                                + waybill.driver.surname}
+                                            </strong>
+                                        </React.Fragment>
+                                    }
+                                    secondary="Driver"
+                                />
+                            </Tooltip>
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
                                 <DepartureBoardIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Departure Date"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.departureDate}
+                                        {waybill.departureDate}
                                     </React.Fragment>
                                 }
+                                secondary="Departure Date"
                             />
                             <ListItemIcon>
                                 <DepartureBoardIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Arrival Date"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.arrivalDate}
+                                        {waybill.arrivalDate}
                                     </React.Fragment>
                                 }
+                                secondary="Arrival Date"
                             />
                         </ListItem>
+                        <Divider orientation="vertical" flexItem/>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                             <ListItemIcon>
-                                <HowToRegIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Shipper"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.shipper}
+                                        {waybill.shipper}
                                     </React.Fragment>
                                 }
+                                secondary="Shipper"
                             />
                             <ListItemIcon>
-                                <HowToRegIcon/>
+                                <StoreIcon/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Consignee"
-                                secondary={
+                                primary={
                                     <React.Fragment>
-                                        {props.waybill.consignee}
+                                        {waybill.consignee}
                                     </React.Fragment>
                                 }
+                                secondary="Consignee"
                             />
                         </ListItem>
                     </div>
                 </List>
+                <Divider/>
                 <TableContainer>
                     <Typography variant="h6"
                                 gutterBottom
@@ -152,7 +211,7 @@ export default function WaybillInfoContent(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.waybill.points
+                            {waybill.points
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((point) => {
                                     return (
@@ -185,15 +244,42 @@ export default function WaybillInfoContent(props) {
                     </Table>
                 </TableContainer>
                 <br/>
+
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={props.waybill.points.length}
+                    count={waybill.points.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+
+                <DialogWindow
+                    dialogTitle={title}
+                    handleClose={handleClose}
+                    openDialog={pointPassedDialogOpen}
+                    form={form}
+                />
+
+                <DialogWindow
+                    dialogTitle={title}
+                    fullWidth={true}
+                    maxWidth="md"
+                    handleClose={handleClose}
+                    openDialog={invoiceInfoDialogOpen}
+                    form={form}
+                />
+
+                <DialogWindow
+                    dialogTitle={title}
+                    fullWidth={true}
+                    maxWidth="xs"
+                    handleClose={handleClose}
+                    openDialog={userInfoDialogOpen}
+                    form={form}
                 />
             </Paper>
         </div>
     );
-}
+});

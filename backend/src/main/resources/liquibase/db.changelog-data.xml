@@ -61,6 +61,7 @@
             <column name="id_client_company" value="1"/>
             <column name="birthday" value="1990-03-11"/>
             <column name="email" value="sysadmin@gmail.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
         <insert tableName="user">
@@ -76,6 +77,7 @@
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1991-04-12"/>
             <column name="email" value="dispatcher@gmail.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
         <insert tableName="user">
@@ -91,6 +93,7 @@
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-12-23"/>
             <column name="email" value="manager@gmail.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
         <insert tableName="user">
@@ -106,6 +109,7 @@
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-01-01"/>
             <column name="email" value="admin@gmail.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
         <insert tableName="user">
@@ -121,6 +125,7 @@
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1999-03-01"/>
             <column name="email" value="driver@gmail.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
         <insert tableName="user">
@@ -137,6 +142,7 @@
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1981-08-03"/>
             <column name="email" value="owner@gmail.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
         <insert tableName="user">
@@ -150,6 +156,7 @@
             <column name="id_client_company" value="3"/>
             <column name="birthday" value="1983-01-01"/>
             <column name="email" value="admin@yandex.com"/>
+            <column name="phone" value="8(029)161-33-32"/>
         </insert>
 
 
@@ -310,7 +317,7 @@
             <column name="shipper" value="OOO 'Cool company', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Cool warehouse', Smolensk, Lenina 5 "/>
             <column name="id_driver" value="5"/>
-            <column name="id_user_registration" value="1"/>
+            <column name="id_user_registration" value="2"/>
             <column name="id_client_company" value="2"/>
             <column name="id_product_owner" value="1"/>
         </insert>
@@ -323,7 +330,7 @@
             <column name="shipper" value="OOO 'Евроопт', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Склад-7', Smolensk, Lenina 5 "/>
             <column name="id_driver" value="5"/>
-            <column name="id_user_registration" value="1"/>
+            <column name="id_user_registration" value="2"/>
             <column name="id_client_company" value="1"/>
             <column name="id_product_owner" value="1"/>
             <column name="comment" value="Consignee name error, check it out"/>
@@ -336,7 +343,7 @@
             <column name="shipper" value="OOO 'Склад-3', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Склад-7', Smolensk, Lenina 5 "/>
             <column name="id_driver" value="5"/>
-            <column name="id_user_registration" value="1"/>
+            <column name="id_user_registration" value="2"/>
             <column name="id_client_company" value="2"/>
             <column name="id_product_owner" value="2"/>
         </insert>

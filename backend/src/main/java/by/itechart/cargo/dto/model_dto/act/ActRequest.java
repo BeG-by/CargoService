@@ -1,7 +1,6 @@
 package by.itechart.cargo.dto.model_dto.act;
 
 import by.itechart.cargo.model.Act;
-import by.itechart.cargo.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +31,7 @@ public class ActRequest {
 
     @NotNull(message = "Lost products are mandatory")
     @Valid
-    private List<Product> products;
+    private List<ProductLostDto> products;
 
     public Act toAct() {
         return Act.builder()
