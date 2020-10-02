@@ -14,7 +14,7 @@ import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
 import ConfirmDeletingDialog from "../slide-dialog";
-import {makeRequest , USER_URL , handleRequestError} from "../request-util"
+import {makeRequest , USER_URL , handleRequestError} from "../../../parts/util/request-util"
 
 
 

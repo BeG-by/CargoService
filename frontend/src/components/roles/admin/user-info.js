@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {USER_URL, makeRequest} from "./request-util";
+import {USER_URL, makeRequest , handleRequestError} from "../../parts/util/request-util";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import {List} from "material-ui";
@@ -26,13 +26,6 @@ export const UserInfo = connect(mapStateToProps)((props) => {
         photo: null,
     });
 
-    function handleRequestError(error) {
-        if (error.response && error.response.status !== 500) {
-            alert("error");
-        } else {
-            alert("Cannot get response from server");
-        }
-    }
 
     async function fetchUser(cleanupFunction) {
         const id = props.userId;
@@ -59,7 +52,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                     phone: "",
                     photo: null
                 });
-                handleRequestError(err);
+                handleRequestError(err, alert); // TODO toast notification
             });
         return () => cleanupFunction = true;
     }, []);

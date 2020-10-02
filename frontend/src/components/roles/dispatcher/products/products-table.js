@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,6 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 100, maxWidth: 100, align: "center"},
@@ -24,30 +24,6 @@ const columns = [
     {id: "editDelete", label: "", minWidth: 60, maxWidth: 60, align: "center"}
 ];
 
-const fetchFieldFromObject = (obj, prop) => {
-    if (obj === undefined || obj === null) {
-        return null;
-    }
-
-    let index = prop.indexOf(".");
-    if (index > -1) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-
-    return obj[prop];
-};
-
-const useStyles = makeStyles({
-    root: {
-        // width: "100%",
-    },
-    container: {
-        maxHeight: 440,
-    },
-});
 
 export default (props) => {
     const onRowClick = props.onRowClick;
@@ -55,7 +31,6 @@ export default (props) => {
     const changeTotal = props.onAddProduct;
     const {onRowDelete} = props;
 
-    const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -64,7 +39,8 @@ export default (props) => {
         USD: 0,
         EURO: 0,
         RUB: 0,
-        weight: 0
+        weight: 0,
+        quantity: 0
     };
 
     useEffect(() => {
@@ -84,8 +60,9 @@ export default (props) => {
         setPage(0);
     };
 
-    const handleChangeTotal = (price, currency, weight, measure) => {
+    const handleChangeTotal = (price, currency, weight, measure, quantity) => {
         TOTAL[currency] = TOTAL[currency] + price;
+        TOTAL.quantity = TOTAL.quantity + quantity;
 
         switch (measure) {
             case "KG":
@@ -98,8 +75,8 @@ export default (props) => {
     };
 
     return (
-        <Paper className={classes.root}>
-            <TableContainer className={classes.container}>
+        <Paper>
+            <TableContainer>
                 <Table aria-label="sticky table">
                     <TableHead>
                         <TableRow>
@@ -120,7 +97,7 @@ export default (props) => {
                             .map((product) => {
 
                                 const sumRow = Number(product.quantity) * Number(product.price);
-                                handleChangeTotal(sumRow, product.currency, Number(product.mass), product.massMeasure);
+                                handleChangeTotal(sumRow, product.currency, Number(product.mass), product.massMeasure, Number(product.quantity));
 
                                 return (
                                     <TableRow
@@ -136,7 +113,8 @@ export default (props) => {
 
                                             if (column.id === "editDelete") {
                                                 return (
-                                                    <TableCell key={column.id} align={column.align} className="edit-delete-block">
+                                                    <TableCell key={column.id} align={column.align}
+                                                               className="edit-delete-block">
                                                         <Button
                                                             className="basket-table-btn"
                                                             color={"primary"}

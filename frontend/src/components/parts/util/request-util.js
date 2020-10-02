@@ -3,6 +3,12 @@ import axios from "axios";
 export const USER_URL = "/v1/api/users";
 export const AUTO_URL = "/v1/api/autos";
 export const STORAGE_URL = "/v1/api/storages";
+export const OWNER_URL = "/v1/api/owners";
+export const INVOICE_URL = "/v1/api/invoices";
+export const DRIVER_URL = "/v1/api/drivers";
+export const WAYBILL_URL = "/v1/api/waybills";
+export const POINT_URL = "/v1/api/waybills/points";
+export const ACT_URL = "/v1/api/acts";
 
 
 export const makeRequest = (method, url, data = null) => {
@@ -12,7 +18,7 @@ export const makeRequest = (method, url, data = null) => {
 };
 
 
-export const handleRequestError = (error , callback) => {
+export const handleRequestError = (error, callback) => {
     if (error.response && error.response.status !== 500) {
         callback("Operation was failed. " + error.response.data, "error");
     } else {

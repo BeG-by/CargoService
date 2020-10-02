@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
-import {getWaybillById, updatePoint} from "./request-utils";
 import WaybillInfoContent from "./waybill-info-content";
-import {connect} from "react-redux";
+import {handleRequestError, makeRequest, POINT_URL, WAYBILL_URL} from "../../parts/util/request-util";
 
 export const WaybillInfo = (props) => {
     const [waybill, setWaybill] = React.useState({
@@ -16,16 +15,11 @@ export const WaybillInfo = (props) => {
         consignee: "",
     });
 
-    function handleRequestError(error) {
-        if (error.response && error.response.status !== 500) {
-            alert("error");
-        } else {
-            alert("Cannot get response from server");
-        }
-    }
+    //TODO question. Second request ?
 
     async function fetchWaybill(cleanupFunction) {
-        let selected = await getWaybillById(props.waybillId);
+        let response = await makeRequest("GET", WAYBILL_URL + "/" + props.waybillId);
+        let selected = response.data;
         if (!cleanupFunction)
             setWaybill({
                 id: selected.id,
@@ -59,14 +53,14 @@ export const WaybillInfo = (props) => {
                     shipper: "",
                     consignee: "",
                 });
-                handleRequestError(err);
+                handleRequestError(err, alert); //TODO toast
             });
         return () => cleanupFunction = true;
     }, []);
 
 
     const handleMarkerPass = async (point) => {
-        await updatePoint(point);
+        await makeRequest("PUT", POINT_URL, point);
         fetchWaybill(false);
     }
 

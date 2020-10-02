@@ -12,7 +12,7 @@ import ClientDialog from "./client-dialog";
 import { makeGetAllClientsRequest } from "./request-utils";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
-import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [

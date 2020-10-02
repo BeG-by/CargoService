@@ -12,7 +12,7 @@ import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
-import {makeRequest, AUTO_URL, handleRequestError} from "../request-util";
+import {makeRequest, AUTO_URL, handleRequestError} from "../../../parts/util/request-util";
 import {AutoDialog} from "./auto-dialog";
 import ConfirmDeletingDialog from "../slide-dialog";
 

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,7 +11,7 @@ import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
-import {makeRequest, STORAGE_URL, handleRequestError} from "../../admin/request-util";
+import {handleRequestError, makeRequest, STORAGE_URL} from "../../../parts/util/request-util";
 import ConfirmDeletingDialog from "../../admin/slide-dialog";
 import {StorageDialog} from "./storage-dialog";
 
@@ -28,17 +27,7 @@ const columns = [
 ];
 
 
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-    },
-    container: {
-        maxHeight: 440,
-    },
-});
-
 export function StorageTable() {
-    const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -93,8 +82,8 @@ export function StorageTable() {
                 onClick={() => setFormDialogOpen(true)}>
                 Create storage
             </Button>
-            <Paper className={classes.root}>
-                <TableContainer className={classes.container}>
+            <Paper >
+                <TableContainer>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>

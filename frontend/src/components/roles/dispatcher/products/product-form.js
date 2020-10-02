@@ -3,9 +3,7 @@ import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
 import Button from "@material-ui/core/Button";
 import {ProductFormValidationSchema} from "./validation-shema";
-import ProductMassMeasureSelector from "./product-mass-measure-selector";
-import ProductQuantityMeasureSelector from "./product-quantity-measure-selector";
-import ProductCurrencySelector from "./product-currency-selector";
+import {ProductCurrencySelector, ProductMassMeasureSelector, ProductQuantityMeasureSelector} from "./product-selectors";
 
 export default function ProductForm(props) {
     const {initProductState, onSubmit} = props;

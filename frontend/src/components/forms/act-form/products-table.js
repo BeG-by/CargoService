@@ -8,7 +8,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import fetchFieldFromObject from "../fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},

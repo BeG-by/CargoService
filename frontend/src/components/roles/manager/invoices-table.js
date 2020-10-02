@@ -14,7 +14,7 @@ import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
-import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {connect} from "react-redux";
 import {BodyWrapper} from "../../pages/body-wrapper";
 

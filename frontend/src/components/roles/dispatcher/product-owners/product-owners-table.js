@@ -8,7 +8,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {makeGetAllProductOwnersRequest} from "../request-utils";
+import {makeRequest, OWNER_URL, handleRequestError} from "../../../parts/util/request-util";
 import InvoiceDialog from "../invoice/invoice-dialog";
 import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
@@ -74,16 +74,8 @@ export function ProductOwnersTable() {
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [toastComponent, showToastComponent] = useToast();
 
-    function handleRequestError(error) {
-        if (error.response && !error.response.status === 500) {
-            showToastComponent(error.response.data, "error");
-        } else {
-            showToastComponent("Cannot get response from server", "error");
-        }
-    }
-
     const updateTable = (isComponentMounted = true) => {
-        makeGetAllProductOwnersRequest()
+        makeRequest("GET", OWNER_URL)
             .then((response) => {
                 if (isComponentMounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but dont change state)
                     setProductOwners(response.data)
@@ -91,7 +83,7 @@ export function ProductOwnersTable() {
             })
             .catch((err) => {
                 setProductOwners([]);
-                handleRequestError(err);
+                handleRequestError(err, showToastComponent);
             })
     }
 

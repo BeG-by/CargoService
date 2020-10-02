@@ -17,6 +17,7 @@ import {Link} from "react-router-dom";
 import "../../App.css";
 import Avatar from "@material-ui/core/Avatar";
 import photo from "../../../resources/images/user_no_photo.png";
+import {makeRequest, USER_URL, handleRequestError} from "../util/request-util";
 
 const drawerWidth = DRAWER_WIDTH;
 
@@ -76,15 +77,6 @@ const mapActionsToProps = (dispatch) => {
     }
 };
 
-const getUserInfoRequest = () => {
-
-    const endpoint = "/v1/api/users/info";
-    return axios({
-        method: "GET",
-        url: endpoint,
-    })
-
-};
 
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
@@ -98,12 +90,12 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
     const getUserInfo = async () => {
         try {
-            const response = await getUserInfoRequest();
+            const response = await makeRequest("GET", USER_URL + "/info");
             const user = response.data.user;
             const clientCompany = response.data.company;
             props.changeUserAndCompany(user, clientCompany);
         } catch (error) {
-            alert(error); // TODO notification
+            handleRequestError(error, alert); // TODO notification
         }
     };
 
@@ -125,7 +117,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
         const userText = user.name === undefined || user.surname === undefined
             ? headerText
             : <Link to={"/profile"}
-                    className="link-item-white header-link" >
+                    className="link-item-white header-link">
                 <Avatar alt="avatar"
                         src={user.photo === null || user.photo === undefined
                             ? photo

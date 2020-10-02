@@ -7,11 +7,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {getAllWaybills, getWaybillById} from "./request-utils";
+import {handleRequestError, makeRequest, WAYBILL_URL} from "../../parts/util/request-util";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
-import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
@@ -48,16 +48,12 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [actDialogOpen, setActDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
 
-    function handleRequestError(error) {
-        if (error.response && error.response.status !== 500) {
-            alert("error");
-        } else {
-            alert("Cannot get response from server");
-        }
-    }
 
     async function fetchWaybills(cleanupFunction) {
-        if (!cleanupFunction) setWaybills(await getAllWaybills());
+        if (!cleanupFunction) {
+            let response = await makeRequest("GET" , WAYBILL_URL);
+            setWaybills(response.data);
+        }
     }
 
     useEffect(() => {
@@ -65,7 +61,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         fetchWaybills(cleanupFunction)
             .catch((err) => {
                 setWaybills([]);
-                handleRequestError(err);
+                handleRequestError(err, alert); // TODO toast
             });
         return () => cleanupFunction = true;
     }, []);
@@ -78,8 +74,11 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     let checkPassage = true;
     let checkLosses = true;
 
+    //TODO question. Second request ?
+
     const handleTableRowClick = async (wb) => {
-        foundWaybill = await getWaybillById(wb.id);
+        let response = await makeRequest("GET", WAYBILL_URL + "/" + wb.id);
+        foundWaybill = response.data;
         foundWaybill.points.forEach(p => {
             if (!p.passed) {
                 checkPassage = false;
