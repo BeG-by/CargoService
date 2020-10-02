@@ -77,14 +77,12 @@ const mapActionsToProps = (dispatch) => {
     }
 };
 
-
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
     const {user, company} = props;
     const isAuthenticate = localStorage.getItem("authorization") !== null;
     const headerText = "Manage your cargo with convenient digital tools";
     const headerCompany = "CARGO APP";
-
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -99,7 +97,6 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
         }
     };
 
-
     useEffect(() => {
         if (isAuthenticate) {
             getUserInfo();
@@ -109,32 +106,29 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     const handleClickOpen = () => {
         setOpenDialog(true);
     };
+
     const handleClose = () => {
         setOpenDialog(false);
     };
 
     const renderUserName = () => {
-        const userText = user.name === undefined || user.surname === undefined
+        const userText = !user.name || !user.surname
             ? headerText
             : <Link to={"/profile"}
                     className="link-item-white header-link">
                 <Avatar alt="avatar"
-                        src={user.photo === null || user.photo === undefined
+                        src={user.photo === undefined || user.photo === null
                             ? photo
                             : user.photo}
                         style={{marginLeft: 20, marginRight: 20}}
                 />
                 {user.name + " " + user.surname + ", " + user.roles}
             </Link>;
-        return isAuthenticate
-            ? userText
-            : headerText
+        return isAuthenticate ? userText : headerText
     };
 
     const renderCompanyName = () => {
-        const companyName = company.name === undefined || company.name === null
-            ? headerCompany
-            : company.name;
+        const companyName = company.name ? company.name : headerCompany;
         return isAuthenticate
             ? <Link to={"/main"} className="link-item-white">{companyName}</Link>
             : headerCompany

@@ -9,5 +9,4 @@ export const InfoBody = () => {
     </h2>;
 }
 
-
 export default () => <BodyWrapper content={InfoBody}/>

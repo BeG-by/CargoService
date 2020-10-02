@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import interceptors from "../../src/security/Interceptors";
-import {Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import {NotFound} from "./pages/error-page/error-404";
 import {Header} from "./parts/layout/header";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -19,13 +19,10 @@ import ProductOwnersTable from "./roles/dispatcher/product-owners/product-owners
 import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
 import AutoTable from "./roles/admin/autos/auto-table";
 import StorageTable from "./roles/dispatcher/storages/storages-table";
-
+import {ProfileBody} from "./pages/profile-body";
 
 export default function App() {
-
     const [openMenu, setOpenMenu] = React.useState(false);
-    const [openDialog, setOpenDialog] = React.useState(false);
-
 
     const handleMenuOpen = () => {
         setOpenMenu(true);
@@ -33,11 +30,6 @@ export default function App() {
     const handleMenuClose = () => {
         setOpenMenu(false);
     };
-
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
-
 
     return (
         <div className="App">
@@ -56,6 +48,7 @@ export default function App() {
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
                     <Route exact path="/main" component={MainBody}/>
+                    <Route exact path="/profile" component={ProfileBody}/>
                     <Route exact path="/waybill" component={WaybillsTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
                     <Route exact path={"/users"} component={UserTable}/>
@@ -63,6 +56,7 @@ export default function App() {
                     <Route exact path={"/owners"} component={ProductOwnersTable}/>
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
                     <Route exact path={"/storages"} component={StorageTable}/>
+                    <Route exact path={"/success"}><Redirect to={"/main"}/></Route>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>
