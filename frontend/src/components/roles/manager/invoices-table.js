@@ -79,7 +79,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         foundInvoice = await getInvoiceById(inv.id);
         setInvoice(() => ({
             id: foundInvoice.id,
-            invoiceStatus: foundInvoice.status,
+            status: foundInvoice.status,
             waybill: foundInvoice.waybill,
             number: foundInvoice.number,
         }));
@@ -166,7 +166,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
+                    rowsPerPageOptions={[10, 20, 50]}
                     component="div"
                     count={invoices.length}
                     rowsPerPage={rowsPerPage}
