@@ -28,7 +28,7 @@ export const StorageDialog = (props) => {
     const {open, onClose, storageId, refreshTable, showToast} = props;
     const [storage, setStorage] = useState(EMPTY_STORAGE);
 
-    const TITLE = "Storage Form";
+    const TITLE = "Storage";
 
     const isUpdateForm = storageId >= 0;
 

@@ -55,14 +55,14 @@ export const BodyWrapper = (props) => {
 
     return (
         <main
-            className={clsx(classes.content, {
-                [classes.contentShift]: props.openMenu,
-            })}
+            // className={clsx(classes.content, {
+            //     [classes.contentShift]: props.openMenu,
+            // })}
         >
-            <div className={classes.drawerHeader}/>
-            <div className={classes.mainField}>
+            {/*<div className={classes.drawerHeader}/>*/}
+            {/*<div className={classes.mainField}>*/}
                 {props.content()}
-            </div>
+            {/*</div>*/}
         </main>
     );
 }

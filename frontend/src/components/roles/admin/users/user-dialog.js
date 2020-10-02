@@ -39,7 +39,7 @@ export const UserDialog = (props) => {
     const {open, onClose, userId, refreshTable, showToast} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
-    const TITLE = "User Form";
+    const TITLE = "User";
 
     const isUpdateForm = userId >= 0;
 

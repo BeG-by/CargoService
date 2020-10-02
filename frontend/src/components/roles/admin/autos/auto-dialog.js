@@ -27,7 +27,7 @@ const EMPTY_AUTO = {
 export const AutoDialog = (props) => {
     const {open, onClose, autoId, refreshTable, showToast} = props;
     const [auto, setAuto] = useState(EMPTY_AUTO);
-    const TITLE = "Auto form";
+    const TITLE = "Auto";
 
     const isUpdateForm = autoId >= 0;
 

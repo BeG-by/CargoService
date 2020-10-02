@@ -26,7 +26,7 @@ export default function ConfirmDeletingDialog(props) {
     return (
         <div>
             <Button
-                className="basket-table-btn"
+                className="menu-table-btn"
                 color={"primary"}
                 startIcon={<DeleteIcon/>}
                 onClick={(e) => {

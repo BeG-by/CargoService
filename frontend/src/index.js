@@ -8,9 +8,7 @@ import {Provider} from "react-redux"
 import {rootReducer} from "./components/store/reducers";
 import {BrowserRouter} from "react-router-dom";
 
-
 const store = createStore(rootReducer);
-
 
 ReactDOM.render(
     <MuiThemeProvider>

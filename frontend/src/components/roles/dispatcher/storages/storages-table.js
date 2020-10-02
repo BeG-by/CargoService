@@ -7,27 +7,31 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
 import {handleRequestError, makeRequest, STORAGE_URL} from "../../../parts/util/request-util";
 import ConfirmDeletingDialog from "../../admin/slide-dialog";
 import {StorageDialog} from "./storage-dialog";
+import {Typography} from "@material-ui/core";
+import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 
+
+const MIN_WIDTH = 170;
+const ALIGN = "left";
 
 const columns = [
-    {id: "country", label: "Country", minWidth: 170, align: "center"},
-    {id: "city", label: "City", minWidth: 170, align: "center"},
-    {id: "street", label: "Street", minWidth: 170, align: "center"},
-    {id: "house", label: "House", minWidth: 100, align: "center"},
-    {id: "email", label: "Email", minWidth: 170, align: "center"},
-    {id: "phone", label: "Phone", minWidth: 100, align: "center"},
-    {id: "edit_delete", label: "", minWidth: 60, align: "center"}
+    {id: "country", label: "Country", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "city", label: "City", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "street", label: "Street", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "house", label: "House", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "email", label: "Email", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "phone", label: "Phone", minWidth: 140, align: ALIGN},
+    {id: "edit_delete", align: "right"}
 ];
 
 
-export function StorageTable() {
+export default function StorageTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -45,7 +49,7 @@ export function StorageTable() {
     const insertStorages = () => {
         makeRequest("GET", STORAGE_URL)
             .then(res => setStorages(res.data))
-            .catch(error => handleRequestError(error , showToastComponent))
+            .catch(error => handleRequestError(error, showToastComponent))
     };
 
 
@@ -75,15 +79,23 @@ export function StorageTable() {
 
 
     return (
-        <div className="storage-table-wrapper">
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setFormDialogOpen(true)}>
-                Create storage
-            </Button>
-            <Paper >
-                <TableContainer>
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Storages
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setFormDialogOpen(true)}
+                            className="add-table-btn"
+                        >
+                            <LibraryAddRoundedIcon/>
+                        </Button>
+                    </div>
+
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -91,7 +103,7 @@ export function StorageTable() {
                                     <TableCell
                                         key={column.id}
                                         align={column.align}
-                                        style={{minWidth: column.minWidth}}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -113,28 +125,28 @@ export function StorageTable() {
                                             tabIndex={-1}
                                             key={storage.id}
                                         >
-                                            <TableCell key={columns[0].id} align="center">
+                                            <TableCell key={columns[0].id} align={columns[0].align}>
                                                 {storage.address.country}
                                             </TableCell>
-                                            <TableCell key={columns[1].id} align="center">
+                                            <TableCell key={columns[1].id} align={columns[1].align}>
                                                 {storage.address.city}
                                             </TableCell>
-                                            <TableCell key={columns[2].id} align="center">
+                                            <TableCell key={columns[2].id} align={columns[2].align}>
                                                 {storage.address.street}
                                             </TableCell>
-                                            <TableCell key={columns[3].id} align="center">
+                                            <TableCell key={columns[3].id} align={columns[3].align}>
                                                 {storage.address.house}
                                             </TableCell>
-                                            <TableCell key={columns[4].id} align="center">
+                                            <TableCell key={columns[4].id} align={columns[4].align}>
                                                 {storage.email}
                                             </TableCell>
-                                            <TableCell key={columns[5].id} align="center">
+                                            <TableCell key={columns[5].id} align={columns[5].align}>
                                                 {storage.phone}
                                             </TableCell>
-                                            <TableCell key={columns[6].id} align="center">
+                                            <TableCell key={columns[6].id} align={columns[6].align}>
                                                 <div className="table-delete-edit-div">
                                                     <Button
-                                                        className="basket-table-btn"
+                                                        className="menu-table-btn"
                                                         color={"primary"}
                                                         startIcon={<EditIcon/>}
                                                         onClick={(e) => {
@@ -179,9 +191,6 @@ export function StorageTable() {
                 />
                 {toastComponent}
             </Paper>
-        </div>
+        </main>
     );
 }
-
-
-export default () => <BodyWrapper content={StorageTable}/>

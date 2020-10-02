@@ -16,7 +16,7 @@ export default function ProductOwnerDialog(props) {
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle id="form-dialog-title">
-                <span id="form-title">Product owner</span>
+                <span id="form-title">Client</span>
                 <IconButton aria-label="close"
                             onClick={handleClose}
                             className="close-user-dialog-btn"

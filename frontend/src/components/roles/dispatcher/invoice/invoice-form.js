@@ -10,7 +10,8 @@ import useToast from "../../../parts/toast-notification/useToast";
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
 import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
-import {makeRequest, DRIVER_URL, INVOICE_URL , handleRequestError} from "../../../parts/util/request-util";
+import {makeRequest, DRIVER_URL, INVOICE_URL, handleRequestError} from "../../../parts/util/request-util";
+import "../styles/invoice-form.css"
 
 const EMPTY_DRIVER = {
     name: "",
@@ -133,7 +134,7 @@ function InvoiceForm(props) {
 
     const fetchInitInvoiceState = async (id) => {
         try {
-            const res = await makeRequest("GET" , INVOICE_URL + "/" + id);
+            const res = await makeRequest("GET", INVOICE_URL + "/" + id);
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
@@ -364,18 +365,20 @@ function InvoiceForm(props) {
                                 </div>
                             </div>
                             <div className="product-table-wrapper">
-                                <h2>Products</h2>
-                                <Button variant="contained"
-                                        color="primary"
-                                        onClick={handleCreateNewProductClick}>
-                                    <LibraryAddRoundedIcon/>
-                                </Button>
-                                <ProductsTable
-                                    products={initInvoice.products}
-                                    onRowClick={handleProductTableClick}
-                                    onAddProduct={handleTotal}
-                                    onRowDelete={handleProductDelete}
-                                />
+                                    <div className="product-box">
+                                        <h2>Products</h2>
+                                        <Button variant="contained"
+                                                color="primary"
+                                                onClick={handleCreateNewProductClick}>
+                                            <LibraryAddRoundedIcon/>
+                                        </Button>
+                                    </div>
+                                    <ProductsTable
+                                        products={initInvoice.products}
+                                        onRowClick={handleProductTableClick}
+                                        onAddProduct={handleTotal}
+                                        onRowDelete={handleProductDelete}
+                                    />
                             </div>
                         </div>
                         <div className="reg-btn">
