@@ -28,7 +28,6 @@ function pointsComparator(p1, p2) {
 
 
 export function convertPointsFromBackendApi(pointsFromBackend) {
-    console.log(pointsFromBackend);
     let pointsWithCorrectApi = [];
     for (let point of pointsFromBackend) {
         pointsWithCorrectApi.push({
