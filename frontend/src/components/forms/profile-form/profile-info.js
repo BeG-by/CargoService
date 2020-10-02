@@ -8,6 +8,11 @@ import {bindActionCreators} from "redux";
 import {changePhoto} from "../../store/actions";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
+import {List} from "material-ui";
+import ListItem from "@material-ui/core/ListItem";
+import {Typography} from "@material-ui/core";
+import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
 
 class ProfileInfo extends React.Component {
 
@@ -102,23 +107,60 @@ class ProfileInfo extends React.Component {
     render() {
         return (
             <div>
-                <Tooltip title="Click to change photo" arrow>
-                    <img
-                        src={(this.state.file.base64 !== null
-                            && this.state.file.base64 !== undefined
-                            && this.state.file.base64.trim())
-                            ? this.state.file.base64
-                            : (this.state.user.photo !== null
-                                && this.state.user.photo !== undefined
-                                && this.state.user.photo.trim())
-                                ? this.state.user.photo
-                                : photo}
-                        width={100}
-                        height={100}
-                        alt="photo"
-                        onClick={this.uploadPhotoDialog}
-                    />
-                </Tooltip>
+                <Paper>
+                    <List style={{alignItems: "flex-start"}}>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <Typography variant="h6" gutterBottom>
+                                    {this.state.user.name}
+                                </Typography>
+                                <Tooltip title="Click to change photo" arrow>
+                                    <img
+                                        src={(this.state.file.base64 !== null
+                                            && this.state.file.base64 !== undefined
+                                            && this.state.file.base64.trim())
+                                            ? this.state.file.base64
+                                            : (this.state.user.photo !== null
+                                                && this.state.user.photo !== undefined
+                                                && this.state.user.photo.trim())
+                                                ? this.state.user.photo
+                                                : photo}
+                                        width={100}
+                                        height={100}
+                                        alt="photo"
+                                        onClick={this.uploadPhotoDialog}
+                                    />
+                                </Tooltip>
+                            </ListItem>
+                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItemText
+                                    primary={
+                                        <React.Fragment>
+                                            {this.state.user.birthday}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Birthday"
+                                />
+                                <ListItemText
+                                    primary={
+                                        <React.Fragment>
+                                            {this.state.user.email}
+                                        </React.Fragment>
+                                    }
+                                    secondary="E-mail"
+                                />
+                                <ListItemText
+                                    primary={
+                                        <React.Fragment>
+                                            {this.state.user.phone}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Contact phone"
+                                />
+                            </ListItem>
+                        </div>
+                    </List>
+                </Paper>
 
                 <DialogWindow
                     dialogTitle="Photo upload"
