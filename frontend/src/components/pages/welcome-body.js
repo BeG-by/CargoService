@@ -13,7 +13,7 @@ export const useStyles = makeStyles(() => ({
 export const WelcomeBody = () => {
     const classes = useStyles();
     return (
-        <div className={classes.drawerHeader}>
+        <div>
             <Typography
                 variant="h4"
                 style={{fontStyle: 'oblique'}}>

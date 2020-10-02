@@ -18,6 +18,7 @@ import {DRAWER_WIDTH} from "../../pages/body-wrapper";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
+import {ItemProfile} from "../drawer-items/item-profile";
 
 
 const drawerWidth = DRAWER_WIDTH;
@@ -45,7 +46,6 @@ const mapStateToProps = (store) => {
         role: store.user.roles[0]
     }
 };
-
 
 export const DrawerMenu = connect(mapStateToProps)((props) => {
 
@@ -80,7 +80,6 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
         default:
     }
 
-
     return (
         <Drawer
             className={classes.drawer}
@@ -101,11 +100,12 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
                 {components}
             </List>
             <List>
-                <ItemInfo/>
-                <ItemContacts/>
+                <ItemProfile/>
             </List>
             <Divider/>
             <List>
+                <ItemInfo/>
+                <ItemContacts/>
                 <ItemSendMail/>
             </List>
         </Drawer>

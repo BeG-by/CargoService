@@ -16,7 +16,6 @@ import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {connect} from "react-redux";
-import {BodyWrapper} from "../../pages/body-wrapper";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -80,7 +79,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         foundInvoice = await getInvoiceById(inv.id);
         setInvoice(() => ({
             id: foundInvoice.id,
-            invoiceStatus: foundInvoice.status,
+            status: foundInvoice.status,
             waybill: foundInvoice.waybill,
             number: foundInvoice.number,
         }));
@@ -167,7 +166,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
+                    rowsPerPageOptions={[10, 20, 50]}
                     component="div"
                     count={invoices.length}
                     rowsPerPage={rowsPerPage}
