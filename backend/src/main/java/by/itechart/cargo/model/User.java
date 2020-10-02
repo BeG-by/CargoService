@@ -50,6 +50,9 @@ public class User implements Serializable, Cloneable {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
+    @Column(name = "photo")
+    private String photo;
+
     @Embedded
     private Address address;
 

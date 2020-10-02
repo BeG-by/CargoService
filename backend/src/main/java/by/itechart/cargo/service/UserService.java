@@ -1,9 +1,6 @@
 package by.itechart.cargo.service;
 
-import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
-import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
-import by.itechart.cargo.dto.model_dto.user.UserResponse;
-import by.itechart.cargo.dto.model_dto.user.UserUpdateRequest;
+import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 
@@ -22,5 +19,7 @@ public interface UserService {
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
 
     void delete(long id) throws NotFoundException;
+
+    void updatePhoto(PhotoRequest photoRequest) throws NotFoundException;
 
 }

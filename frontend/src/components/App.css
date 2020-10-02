@@ -21,8 +21,8 @@
 .main-body-field {
     display: block;
     flex-direction: column;
-    padding: 70px 5px;
-    margin: 20px auto;
+    padding: 30px 5px;
+    margin: 80px auto;
     color: white;
     background: rgba(0, 0, 0, 0.4);
     max-width: 100%;

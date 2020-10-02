@@ -26,6 +26,7 @@ public class UserResponse {
     private Address address;
     private String email;
     private String phone;
+    private String photo;
     private String passport;
     private String status;
     private Set<String> roles;
@@ -39,6 +40,7 @@ public class UserResponse {
                 .patronymic(user.getPatronymic())
                 .birthday(user.getBirthday())
                 .phone(user.getPhone())
+                .photo(user.getPhoto())
                 .address(user.getAddress())
                 .email(user.getEmail())
                 .passport(user.getPassport())

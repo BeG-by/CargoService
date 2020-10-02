@@ -23,7 +23,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
         email: "",
         phone: "",
         role: "",
-        photo: null,
+        photo: "",
     });
 
 
@@ -37,6 +37,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
             email: selected.data.email,
             phone: selected.data.phone,
             photo: selected.data.photo,
+            role: selected.data.roles[0],
         });
     }
 
@@ -50,7 +51,8 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                     birthday: "",
                     email: "",
                     phone: "",
-                    photo: null
+                    role: "",
+                    photo: ""
                 });
                 handleRequestError(err, alert); // TODO toast notification
             });
@@ -67,9 +69,9 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                                 {user.name}
                             </Typography>
                             <img
-                                src={user.photo === null || user.photo === undefined
-                                    ? photo
-                                    : user.photo}
+                                src={user.photo !== undefined && user.photo !== null  && user.photo.trim()
+                                    ? user.photo
+                                    : photo}
                                 width={100}
                                 height={100}
                                 alt="avatar"/>
