@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import axios from "axios";
 import React, {useEffect} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -117,10 +116,14 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
             : <Link to={"/profile"}
                     className="link-item-white header-link">
                 <Avatar alt="avatar"
-                        src={user.photo === undefined || user.photo === null
-                            ? photo
-                            : user.photo}
                         style={{marginLeft: 20, marginRight: 20}}
+                        src={
+                            user.photo !== undefined
+                            && user.photo !== null
+                            && user.photo.trim()
+                                ? user.photo
+                                : photo
+                        }
                 />
                 {user.name + " " + user.surname + ", " + user.roles}
             </Link>;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ProductOwnersTable from "../roles/dispatcher/product-owners/product-owners-table";
 import InvoicesTable from "../roles/manager/invoices-table";
 import ClientsTable from "../roles/sysadmin/clients-table";
@@ -14,10 +14,11 @@ const mapStateToProps = (store) => {
 };
 
 export const MainBody = connect(mapStateToProps)((props) => {
+    const role = props.role;
+
     let content;
 
-    switch (props.role) {
-
+    switch (role) {
         case 'SYSADMIN':
             content = <ClientsTable/>;
             break;

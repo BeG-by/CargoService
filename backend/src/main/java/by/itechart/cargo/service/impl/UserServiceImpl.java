@@ -1,9 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.user.UserInfoResponse;
-import by.itechart.cargo.dto.model_dto.user.UserResponse;
-import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
-import by.itechart.cargo.dto.model_dto.user.UserUpdateRequest;
+import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
@@ -176,6 +173,16 @@ public class UserServiceImpl implements UserService {
                     return user;
                 })
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public void updatePhoto(PhotoRequest photoRequest) throws NotFoundException {
+        final long userId = jwtTokenUtil.getJwtUser().getId();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+        currentUser.setPhoto(photoRequest.getPhoto());
+        log.info("User photo has been updated");
     }
 
 }
