@@ -9,9 +9,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import InvoiceDialog from "./invoice-dialog";
-import {BodyWrapper} from "../../../pages/body-wrapper";
-import {makeGetAllInvoicesRequest} from "../request-utils";
 import useToast from "../../../parts/toast-notification/useToast";
+import {handleRequestError, INVOICE_URL, makeRequest} from "../../../parts/util/request-util";
+import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -26,19 +26,6 @@ const columns = [
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
-function fetchFieldFromObject(obj, prop) {
-    if (obj === undefined || obj === null) {
-        return;
-    }
-    let index = prop.indexOf(".");
-    if (index > -1) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-    return obj[prop];
-}
 
 const useStyles = makeStyles({
     root: {
@@ -50,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 
-export function InvoiceTable() {
+export default function InvoiceTable() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -61,16 +48,9 @@ export function InvoiceTable() {
 
     const [toastComponent, showToastComponent] = useToast();
 
-    function handleRequestError(error) {
-        if (error.response.status < 500) {
-            showToastComponent(error.response.data, "error");
-        } else {
-            showToastComponent("Cannot get response from server", "error");
-        }
-    }
 
     function fetchInvoices(mounted) {
-        makeGetAllInvoicesRequest()
+        makeRequest("GET", INVOICE_URL)
             .then((res) => {
                     if (mounted) {
                         setInvoices(res.data)
@@ -79,7 +59,7 @@ export function InvoiceTable() {
             )
             .catch((err) => {
                 setInvoices([]);
-                handleRequestError(err)
+                handleRequestError(err, showToastComponent)
             })
     }
 
@@ -180,5 +160,3 @@ export function InvoiceTable() {
         </div>
     );
 }
-
-export default () => <BodyWrapper content={InvoiceTable}/>

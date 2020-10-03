@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {Formik, Form} from "formik";
+import {Form, Formik} from "formik";
 import TextField from "@material-ui/core/TextField";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Grid from "@material-ui/core/Grid";
 import {Button} from "@material-ui/core";
-import {saveAct} from "../../roles/driver/request-utils";
 import {ActFormValidation} from "../../parts/validation/act-form-validation";
 import {ProductsTable} from "./products-table";
 import ProductsDialog from "./products-dialog";
 import FormikField from "../../roles/sysadmin/formik-field";
+import {ACT_URL, makeRequest} from "../../parts/util/request-util";
 
 export const ActForm = (props) => {
     const invoice = props.invoice;
@@ -101,7 +101,7 @@ export const ActForm = (props) => {
         act.consigneeWorker = values.consigneeWorker;
         act.products = statusProducts;
         const saveActRequest = async (act) => {
-            await saveAct(act);
+            await makeRequest("POST", ACT_URL, act);
             props.onClose();
         };
         saveActRequest(act);

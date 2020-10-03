@@ -4,10 +4,10 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
-import FormikField from "../formik-field";
+import FormikField from "../../../parts/util/formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {AUTO_URL, handleRequestError, makeRequest} from "../request-util"
+import {AUTO_URL, handleRequestError, makeRequest} from "../../../parts/util/request-util"
 import {AutoStatusSelector, AutoTypeSelector} from "./auto-selectors";
 import CustomDatePicker from "../custom-date-picker";
 
@@ -27,7 +27,7 @@ const EMPTY_AUTO = {
 export const AutoDialog = (props) => {
     const {open, onClose, autoId, refreshTable, showToast} = props;
     const [auto, setAuto] = useState(EMPTY_AUTO);
-    const TITLE = "Auto form"
+    const TITLE = "Auto";
 
     const isUpdateForm = autoId >= 0;
 
@@ -166,4 +166,4 @@ export const AutoDialog = (props) => {
             </Dialog>
         </div>
     );
-}
+};

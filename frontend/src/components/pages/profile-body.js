@@ -1,20 +1,29 @@
 import React from "react";
-import {UserInfo} from "../roles/admin/user-info";
 import {connect} from "react-redux";
+import {NotAuthorized} from "./error-page/error-401";
+import ProfileInfo from '../forms/profile-form/profile-info';
 
 const mapStateToProps = (store) => {
     return {
-        id: store.user.id
+        id: store.user.id,
     }
 };
 
 export const ProfileBody = connect(mapStateToProps)((props) => {
     const id = props.id;
-    return <div>
-        <h2>
-            Here is your personal info.
-        </h2>
-        <UserInfo userId={id}/>
-    </div>;
+
+    let contentBody = !id ? <NotAuthorized/>
+        : <div className="main-body-field">
+            <h1>
+                Profile info
+            </h1>
+            <ProfileInfo userId={id}/>
+        </div>;
+
+
+    return (
+        <main>
+            {contentBody}
+        </main>
+    );
 });
-//todo change password + avatar

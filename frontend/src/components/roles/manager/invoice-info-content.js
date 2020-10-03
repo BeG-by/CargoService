@@ -19,7 +19,7 @@ import StoreIcon from '@material-ui/icons/Store';
 import CommentIcon from '@material-ui/icons/Comment';
 import {ActInfo} from "./act-info";
 import {DialogWindow} from "../../parts/dialogs/dialog";
-import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import Tooltip from '@material-ui/core/Tooltip';
 import {WaybillInfo} from "../driver/waybill-info";
 import Divider from "@material-ui/core/Divider";

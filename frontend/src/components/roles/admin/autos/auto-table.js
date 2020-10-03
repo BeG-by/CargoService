@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,37 +7,31 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
-import {makeRequest, AUTO_URL, handleRequestError} from "../request-util";
+import {AUTO_URL, handleRequestError, makeRequest} from "../../../parts/util/request-util";
 import {AutoDialog} from "./auto-dialog";
 import ConfirmDeletingDialog from "../slide-dialog";
+import {Typography} from "@material-ui/core";
+import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 
+
+const MIN_WIDTH = 170;
+const ALIGN = "left";
 
 const columns = [
-    {id: "mark", label: "Mark", minWidth: 170, align: "center"},
-    {id: "number", label: "Number", minWidth: 170, align: "center"},
-    {id: "type", label: "Type", minWidth: 170, align: "center"},
-    {id: "consumption", label: "Consumption (liter / 100 km)", minWidth: 100, align: "center"},
-    {id: "dateOfIssue", label: "Date of issue", minWidth: 170, align: "center"},
-    {id: "status", label: "Status", minWidth: 100, align: "center"},
-    {id: "edit_delete", label: "", minWidth: 60, align: "center"}
+    {id: "mark", label: "Mark", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "number", label: "Number", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "type", label: "Type", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "consumption", label: "Consumption (liter / 100 km)", minWidth: 100, align: ALIGN},
+    {id: "dateOfIssue", label: "Date of issue", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "status", label: "Status", minWidth: 100, align: ALIGN},
+    {id: "edit_delete", label: "", align: "center"}
 ];
 
 
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-    },
-    container: {
-        maxHeight: 440,
-    },
-});
-
-export function AutoTable() {
-    const classes = useStyles();
+export default function AutoTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -56,7 +49,7 @@ export function AutoTable() {
     const insertAutos = () => {
         makeRequest("GET", AUTO_URL)
             .then(res => setAutos(res.data))
-            .catch(error => handleRequestError(error , showToastComponent))
+            .catch(error => handleRequestError(error, showToastComponent))
     };
 
 
@@ -85,15 +78,21 @@ export function AutoTable() {
     };
 
     return (
-        <div className="auto-table-wrapper">
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setFormDialogOpen(true)}>
-                Create auto
-            </Button>
-            <Paper className={classes.root}>
-                <TableContainer className={classes.container}>
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Autos
+                        </Typography>
+                        <Button variant="contained"
+                                color={"primary"}
+                                onClick={() => setFormDialogOpen(true)}
+                                className="add-table-btn"
+                        >
+                            <LibraryAddRoundedIcon/>
+                        </Button>
+                    </div>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -101,7 +100,7 @@ export function AutoTable() {
                                     <TableCell
                                         key={column.id}
                                         align={column.align}
-                                        style={{minWidth: column.minWidth}}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -123,28 +122,28 @@ export function AutoTable() {
                                             tabIndex={-1}
                                             key={auto.id}
                                         >
-                                            <TableCell key={columns[0].id} align="center">
+                                            <TableCell key={columns[0].id} align={columns[0].align}>
                                                 {auto.mark}
                                             </TableCell>
-                                            <TableCell key={columns[1].id} align="center">
+                                            <TableCell key={columns[1].id} align={columns[1].align}>
                                                 {auto.number}
                                             </TableCell>
-                                            <TableCell key={columns[2].id} align="center">
+                                            <TableCell key={columns[2].id} align={columns[2].align}>
                                                 {auto.autoType}
                                             </TableCell>
-                                            <TableCell key={columns[3].id} align="center">
+                                            <TableCell key={columns[3].id} align={columns[3].align}>
                                                 {auto.consumption}
                                             </TableCell>
-                                            <TableCell key={columns[4].id} align="center">
+                                            <TableCell key={columns[4].id} align={columns[4].align}>
                                                 {auto.dateOfIssue}
                                             </TableCell>
-                                            <TableCell key={columns[5].id} align="center">
+                                            <TableCell key={columns[5].id} align={columns[5].align}>
                                                 {auto.status}
                                             </TableCell>
-                                            <TableCell key={columns[6].id} align="center">
+                                            <TableCell key={columns[6].id} align={columns[6].align}>
                                                 <div className="table-delete-edit-div">
                                                     <Button
-                                                        className="basket-table-btn"
+                                                        className="menu-table-btn"
                                                         color={"primary"}
                                                         startIcon={<EditIcon/>}
                                                         onClick={(e) => {
@@ -188,9 +187,6 @@ export function AutoTable() {
                 />
                 {toastComponent}
             </Paper>
-        </div>
+        </main>
     );
 }
-
-
-export default () => <BodyWrapper content={AutoTable}/>

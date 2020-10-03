@@ -1,21 +1,17 @@
 import React, {useEffect, useState} from "react";
-import FormikField from "../formik-field";
+import FormikField from "../formik-field"
 import {Form, Formik} from "formik";
 import ItemList from "../item-list";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
 import {InvoiceFormValidation} from "./validation-shema";
 import {Button} from "@material-ui/core";
-import {
-    makeGetAllDriversRequest,
-    makeGetInvoiceByIdRequest,
-    makeSaveInvoiceRequest,
-    makeUpdateInvoiceRequest,
-} from "../request-utils";
 import useToast from "../../../parts/toast-notification/useToast";
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
 import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
+import {makeRequest, DRIVER_URL, INVOICE_URL, handleRequestError} from "../../../parts/util/request-util";
+import "../styles/invoice-form.css"
 
 const EMPTY_DRIVER = {
     name: "",
@@ -55,7 +51,8 @@ const TOTAL = {
     USD: 0,
     EURO: 0,
     RUB: 0,
-    weight: 0
+    weight: 0,
+    quantity: 0
 };
 
 function InvoiceForm(props) {
@@ -103,41 +100,41 @@ function InvoiceForm(props) {
         setProductIndex(0);
 
         onClose();
-    }
+    };
 
     const updateDriversList = async () => {
         try {
-            const res = await makeGetAllDriversRequest();
+            const res = await makeRequest("GET", DRIVER_URL);
             setDrivers(res.data);
         } catch (error) {
             setDrivers([]);
-            handleRequestError(error);
+            handleRequestError(error, showToastComponent);
         }
     };
 
     const sendInvoiceForSave = async (invoice) => {
         try {
-            await makeSaveInvoiceRequest(invoice);
+            await makeRequest("POST", INVOICE_URL, invoice);
             showToastComponent("Invoice has been saved");
             handleClose();
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error, showToastComponent);
         }
     };
 
     const sendInvoiceForUpdate = async (invoice) => {
         try {
-            await makeUpdateInvoiceRequest(invoice);
+            await makeRequest("PUT", INVOICE_URL, invoice);
             showToastComponent("Invoice has been updated");
             handleClose();
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error, showToastComponent);
         }
     };
 
     const fetchInitInvoiceState = async (id) => {
         try {
-            const res = await makeGetInvoiceByIdRequest(id);
+            const res = await makeRequest("GET", INVOICE_URL + "/" + id);
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
@@ -146,7 +143,7 @@ function InvoiceForm(props) {
             setInitInvoice(invoiceState);
         } catch (error) {
             setInitInvoice(INIT_INVOICE_STATE);
-            handleRequestError(error);
+            handleRequestError(error, showToastComponent);
         }
     };
 
@@ -234,13 +231,6 @@ function InvoiceForm(props) {
         });
     };
 
-    const handleRequestError = (error) => {
-        if (error.response && error.response.status !== 500) {
-            showToastComponent(error.response.data, "error");
-        } else {
-            showToastComponent("Cannot get response from server", "error");
-        }
-    };
 
     const handleTotal = (total) => {
         setTotal(total);
@@ -350,6 +340,14 @@ function InvoiceForm(props) {
                                         <Paper elevation={3} className="driver-info">
                                             <h2>Total</h2>
                                             <div>
+                                                <div>
+                                                    <p>Weight</p>
+                                                    {total.weight + " kg"}
+                                                </div>
+                                                <div>
+                                                    <p>Quantity</p>
+                                                    {total.quantity}
+                                                </div>
                                                 <p>Price</p>
                                                 {total.BYN === 0 ? "" :
                                                     <div>BYN: {total.BYN}</div>}
@@ -362,27 +360,25 @@ function InvoiceForm(props) {
                                                 {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
                                                     <div>0</div> : ""}
                                             </div>
-                                            <div>
-                                                <p>Weight</p>
-                                                {total.weight + " kg"}
-                                            </div>
                                         </Paper>
                                     </div>
                                 </div>
                             </div>
                             <div className="product-table-wrapper">
-                                <h2>Products</h2>
-                                <Button variant="contained"
-                                        color="primary"
-                                        onClick={handleCreateNewProductClick}>
-                                    <LibraryAddRoundedIcon/>
-                                </Button>
-                                <ProductsTable
-                                    products={initInvoice.products}
-                                    onRowClick={handleProductTableClick}
-                                    onAddProduct={handleTotal}
-                                    onRowDelete={handleProductDelete}
-                                />
+                                    <div className="product-box">
+                                        <h2>Products</h2>
+                                        <Button variant="contained"
+                                                color="primary"
+                                                onClick={handleCreateNewProductClick}>
+                                            <LibraryAddRoundedIcon/>
+                                        </Button>
+                                    </div>
+                                    <ProductsTable
+                                        products={initInvoice.products}
+                                        onRowClick={handleProductTableClick}
+                                        onAddProduct={handleTotal}
+                                        onRowDelete={handleProductDelete}
+                                    />
                             </div>
                         </div>
                         <div className="reg-btn">

@@ -1,23 +1,31 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  background: #20222a;
-  margin: 50px;
-  display: flex;
-  justify-content: center;
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen",
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: url(resources/images/welcome.jpg) no-repeat fixed;
-  background-size: cover;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /*background: url(resources/images/welcome.jpg) no-repeat fixed;*/
+    background-color: #e9f3f5 !important;
+    background-size: cover;
 }
 
+/*.track-background {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    bottom: 0;*/
+/*    min-width: 100%;*/
+/*    min-height: 100%;*/
+/*    background: url(resources/images/welcome.jpg) no-repeat fixed;*/
+/*}*/
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -29,6 +37,7 @@ code {
 .rdt {
     position: relative;
 }
+
 .rdtPicker {
     display: none;
     position: absolute;
@@ -40,9 +49,11 @@ code {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #f9f9f9;
 }
+
 .rdtOpen .rdtPicker {
     display: block;
 }
+
 .rdtStatic .rdtPicker {
     box-shadow: none;
     position: static;
@@ -56,14 +67,17 @@ code {
     width: 100%;
     margin: 0;
 }
+
 .rdtPicker td,
 .rdtPicker th {
     text-align: center;
     height: 28px;
 }
+
 .rdtPicker td {
     cursor: pointer;
 }
+
 .rdtPicker td.rdtDay:hover,
 .rdtPicker td.rdtHour:hover,
 .rdtPicker td.rdtMinute:hover,
@@ -72,13 +86,16 @@ code {
     background: #eeeeee;
     cursor: pointer;
 }
+
 .rdtPicker td.rdtOld,
 .rdtPicker td.rdtNew {
     color: #999999;
 }
+
 .rdtPicker td.rdtToday {
     position: relative;
 }
+
 .rdtPicker td.rdtToday:before {
     content: "";
     display: inline-block;
@@ -89,15 +106,18 @@ code {
     bottom: 4px;
     right: 4px;
 }
+
 .rdtPicker td.rdtActive,
 .rdtPicker td.rdtActive:hover {
     background-color: #428bca;
     color: #fff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+
 .rdtPicker td.rdtActive.rdtToday:before {
     border-bottom-color: #fff;
 }
+
 .rdtPicker td.rdtDisabled,
 .rdtPicker td.rdtDisabled:hover {
     background: none;
@@ -108,22 +128,27 @@ code {
 .rdtPicker td span.rdtOld {
     color: #999999;
 }
+
 .rdtPicker td span.rdtDisabled,
 .rdtPicker td span.rdtDisabled:hover {
     background: none;
     color: #999999;
     cursor: not-allowed;
 }
+
 .rdtPicker th {
     border-bottom: 1px solid #f9f9f9;
 }
+
 .rdtPicker .dow {
     width: 14.2857%;
     border-bottom: none;
 }
+
 .rdtPicker th.rdtSwitch {
     width: 100px;
 }
+
 .rdtPicker th.rdtNext,
 .rdtPicker th.rdtPrev {
     font-size: 21px;
@@ -147,9 +172,11 @@ code {
     color: #999999;
     cursor: not-allowed;
 }
+
 .rdtPicker thead tr:first-child th {
     cursor: pointer;
 }
+
 .rdtPicker thead tr:first-child th:hover {
     background: #eeeeee;
 }
@@ -163,6 +190,7 @@ code {
     background: none;
     cursor: pointer;
 }
+
 .rdtPicker button:hover {
     background-color: #eee;
 }
@@ -178,6 +206,7 @@ td.rdtYear {
     width: 25%;
     cursor: pointer;
 }
+
 td.rdtMonth:hover,
 td.rdtYear:hover {
     background: #eee;
@@ -216,9 +245,11 @@ td.rdtYear:hover {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
 }
+
 .rdtCounter .rdtBtn:hover {
     background: #eee;
 }
+
 .rdtCounter .rdtCount {
     height: 20%;
     font-size: 1.2em;

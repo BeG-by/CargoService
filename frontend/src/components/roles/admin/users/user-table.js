@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,65 +8,32 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import {UserDialog} from "./user-dialog";
-import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import EditIcon from '@material-ui/icons/Edit';
 import ConfirmDeletingDialog from "../slide-dialog";
-import {makeRequest , USER_URL , handleRequestError} from "../request-util"
+import {handleRequestError, makeRequest, USER_URL} from "../../../parts/util/request-util"
+import {Typography} from "@material-ui/core";
+import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 
 
+const MIN_WIDTH = 170;
+const ALIGN = "left";
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 170 , align: "center"},
-    {id: "surname", label: "Surname", minWidth: 170, align: "center"},
-    {id: "patronymic", label: "Patronymic", minWidth: 170, align: "center"},
-    {
-        id: "role",
-        label: "Role",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "birthday",
-        label: "Date of birth",
-        minWidth: 170,
-        align: "center",
-        format: (value) => value.toFixed(2),
-    },
-    {
-        id: "status",
-        label: "Status",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "email",
-        label: "Email",
-        minWidth: 170,
-        align: "center",
-    },
-    {
-        id: "edit_delete",
-        label: "",
-        minWidth: 60,
-        align: "center",
-    }
+    {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "surname", label: "Surname", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "patronymic", label: "Patronymic", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "role", label: "Role", minWidth: 150, align: "center"},
+    {id: "birthday", label: "Date of birth", minWidth: MIN_WIDTH, align: ALIGN, format: (value) => value.toFixed(2)},
+    {id: "status", label: "Status", minWidth: 150, align:ALIGN},
+    {id: "email", label: "Email", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "edit_delete", label: "", align: "right"}
 
 ];
 
 
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-    },
-    container: {
-        maxHeight: 440,
-    },
-});
-
-export function UserTable() {
-    const classes = useStyles();
+export default function UserTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -114,15 +80,21 @@ export function UserTable() {
     };
 
     return (
-        <div className="user-table-wrapper">
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setFormDialogOpen(true)}>
-                Create user
-            </Button>
-            <Paper className={classes.root}>
-                <TableContainer className={classes.container}>
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Users
+                        </Typography>
+                        <Button variant="contained"
+                                color={"primary"}
+                                onClick={() => setFormDialogOpen(true)}
+                                className="add-table-btn"
+                        >
+                            <LibraryAddRoundedIcon/>
+                        </Button>
+                    </div>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -130,7 +102,7 @@ export function UserTable() {
                                     <TableCell
                                         key={column.id}
                                         align={column.align}
-                                        style={{minWidth: column.minWidth}}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -154,31 +126,31 @@ export function UserTable() {
                                             tabIndex={-1}
                                             key={user.id}
                                         >
-                                            <TableCell key={columns[0].id} align="center">
+                                            <TableCell key={columns[0].id} align={columns[0].align}>
                                                 {user.name}
                                             </TableCell>
-                                            <TableCell key={columns[1].id} align="center">
+                                            <TableCell key={columns[1].id} align={columns[1].align}>
                                                 {user.surname}
                                             </TableCell>
-                                            <TableCell key={columns[2].id} align="center">
+                                            <TableCell key={columns[2].id} align={columns[2].align}>
                                                 {user.patronymic}
                                             </TableCell>
-                                            <TableCell key={columns[3].id} align="center">
+                                            <TableCell key={columns[3].id} align={columns[3].align}>
                                                 {roles}
                                             </TableCell>
-                                            <TableCell key={columns[4].id} align="center">
+                                            <TableCell key={columns[4].id} align={columns[4].align}>
                                                 {user.birthday}
                                             </TableCell>
-                                            <TableCell key={columns[5].id} align="center">
+                                            <TableCell key={columns[5].id} align={columns[5].align}>
                                                 {user.status}
                                             </TableCell>
-                                            <TableCell key={columns[6].id} align="center">
+                                            <TableCell key={columns[6].id} align={columns[6].align}>
                                                 {user.email}
                                             </TableCell>
-                                            <TableCell key={columns[7].id} align="center">
+                                            <TableCell key={columns[7].id} align={columns[7].align}>
                                                 <div className="table-delete-edit-div">
                                                     <Button
-                                                        className="basket-table-btn"
+                                                        className="menu-table-btn"
                                                         color={"primary"}
                                                         startIcon={<EditIcon/>}
                                                         onClick={(e) => {
@@ -221,9 +193,6 @@ export function UserTable() {
                 />
                 {toastComponent}
             </Paper>
-        </div>
+        </main>
     );
 }
-
-
-export default () => <BodyWrapper content={UserTable}/>

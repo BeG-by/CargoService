@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import axios from "axios";
 import React, {useEffect} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -12,11 +11,12 @@ import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
-import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import {DRAWER_WIDTH} from "../styles/styles";
 import {Link} from "react-router-dom";
 import "../../App.css";
 import Avatar from "@material-ui/core/Avatar";
 import photo from "../../../resources/images/user_no_photo.png";
+import {makeRequest, USER_URL, handleRequestError} from "../util/request-util";
 
 const drawerWidth = DRAWER_WIDTH;
 
@@ -76,37 +76,25 @@ const mapActionsToProps = (dispatch) => {
     }
 };
 
-const getUserInfoRequest = () => {
-
-    const endpoint = "/v1/api/users/info";
-    return axios({
-        method: "GET",
-        url: endpoint,
-    })
-
-};
-
 export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
     const {user, company} = props;
     const isAuthenticate = localStorage.getItem("authorization") !== null;
     const headerText = "Manage your cargo with convenient digital tools";
     const headerCompany = "CARGO APP";
-
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
 
     const getUserInfo = async () => {
         try {
-            const response = await getUserInfoRequest();
+            const response = await makeRequest("GET", USER_URL + "/info");
             const user = response.data.user;
             const clientCompany = response.data.company;
             props.changeUserAndCompany(user, clientCompany);
         } catch (error) {
-            alert(error); // TODO notification
+            handleRequestError(error, alert); // TODO notification
         }
     };
-
 
     useEffect(() => {
         if (isAuthenticate) {
@@ -117,32 +105,33 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     const handleClickOpen = () => {
         setOpenDialog(true);
     };
+
     const handleClose = () => {
         setOpenDialog(false);
     };
 
     const renderUserName = () => {
-        const userText = user.name === undefined || user.surname === undefined
+        const userText = !user.name || !user.surname
             ? headerText
             : <Link to={"/profile"}
-                    className="link-item-white header-link" >
+                    className="link-item-white header-link">
                 <Avatar alt="avatar"
-                        src={user.photo === null || user.photo === undefined
-                            ? photo
-                            : user.photo}
                         style={{marginLeft: 20, marginRight: 20}}
+                        src={
+                            user.photo !== undefined
+                            && user.photo !== null
+                            && user.photo.trim()
+                                ? user.photo
+                                : photo
+                        }
                 />
                 {user.name + " " + user.surname + ", " + user.roles}
             </Link>;
-        return isAuthenticate
-            ? userText
-            : headerText
+        return isAuthenticate ? userText : headerText
     };
 
     const renderCompanyName = () => {
-        const companyName = company.name === undefined || company.name === null
-            ? headerCompany
-            : company.name;
+        const companyName = company.name ? company.name : headerCompany;
         return isAuthenticate
             ? <Link to={"/main"} className="link-item-white">{companyName}</Link>
             : headerCompany

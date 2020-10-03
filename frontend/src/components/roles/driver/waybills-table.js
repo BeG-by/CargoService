@@ -7,29 +7,25 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {getAllWaybills, getWaybillById} from "./request-utils";
+import {handleRequestError, makeRequest, WAYBILL_URL} from "../../parts/util/request-util";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
-import fetchFieldFromObject from "../../forms/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
+import Button from "@material-ui/core/Button";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+
+const ALIGN = "left";
 
 const columns = [
-    {id: "invoiceNumber", label: "Invoice #", minWidth: 100},
-    {id: "status", label: "Invoice status", minWidth: 150},
-    {id: "auto", label: "Auto", minWidth: 100},
-    {
-        id: "departureDate",
-        label: "Departure Date",
-        minWidth: 150,
-    },
-    {
-        id: "arrivalDate",
-        label: "Arrival Date",
-        minWidth: 150,
-    },
+    {id: "invoiceNumber", label: "Invoice #", minWidth: 100, align: ALIGN},
+    {id: "status", label: "Invoice status", minWidth: 150, align: ALIGN},
+    {id: "auto", label: "Auto", minWidth: 100, align: ALIGN},
+    {id: "departureDate", label: "Departure Date", minWidth: 150, align: ALIGN},
+    {id: "arrivalDate", label: "Arrival Date", minWidth: 150, align: ALIGN},
 ];
 
 const mapStateToProps = (store) => {
@@ -48,16 +44,12 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [actDialogOpen, setActDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
 
-    function handleRequestError(error) {
-        if (error.response && error.response.status !== 500) {
-            alert("error");
-        } else {
-            alert("Cannot get response from server");
-        }
-    }
 
     async function fetchWaybills(cleanupFunction) {
-        if (!cleanupFunction) setWaybills(await getAllWaybills());
+        if (!cleanupFunction) {
+            let response = await makeRequest("GET", WAYBILL_URL);
+            setWaybills(response.data);
+        }
     }
 
     useEffect(() => {
@@ -65,7 +57,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         fetchWaybills(cleanupFunction)
             .catch((err) => {
                 setWaybills([]);
-                handleRequestError(err);
+                handleRequestError(err, alert); // TODO toast
             });
         return () => cleanupFunction = true;
     }, []);
@@ -78,8 +70,11 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     let checkPassage = true;
     let checkLosses = true;
 
+    //TODO question. Second request ?
+
     const handleTableRowClick = async (wb) => {
-        foundWaybill = await getWaybillById(wb.id);
+        let response = await makeRequest("GET", WAYBILL_URL + "/" + wb.id);
+        foundWaybill = response.data;
         foundWaybill.points.forEach(p => {
             if (!p.passed) {
                 checkPassage = false;
@@ -128,12 +123,14 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     };
 
     return (
-        <div>
-            <Paper>
-                <TableContainer>
-                    <Typography variant="h5" gutterBottom style={{textAlign: "left", margin: 15}}>
-                        Waybills
-                    </Typography>
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Waybills
+                        </Typography>
+                    </div>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -145,6 +142,10 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                         {column.label}
                                     </TableCell>
                                 ))}
+                                <TableCell
+                                    key={"edit-delete"}
+                                    style={{minWidth: 60}}
+                                />
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -169,6 +170,18 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                     </TableCell>
                                                 );
                                             })}
+                                            <TableCell>
+                                                <div className="table-delete-edit-div">
+                                                    <Button
+                                                        className="menu-table-btn"
+                                                        color={"primary"}
+                                                        startIcon={<VisibilityIcon/>}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleTableRowClick(waybill)
+                                                        }}/>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -216,6 +229,6 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 />
 
             </Paper>
-        </div>
+        </main>
     );
 })

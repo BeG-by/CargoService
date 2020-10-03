@@ -4,12 +4,12 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {Form, Formik} from "formik";
-import FormikField from "../formik-field";
+import FormikField from "../../../parts/util/formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import CustomDatePicker from "../custom-date-picker";
 import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
-import {USER_URL, handleRequestError, makeRequest} from "../request-util"
+import {USER_URL, handleRequestError, makeRequest} from "../../../parts/util/request-util"
 
 
 const EMPTY_USER = {
@@ -39,7 +39,7 @@ export const UserDialog = (props) => {
     const {open, onClose, userId, refreshTable, showToast} = props;
     const [user, setUser] = useState(EMPTY_USER);
 
-    const TITLE = "User Form";
+    const TITLE = "User";
 
     const isUpdateForm = userId >= 0;
 

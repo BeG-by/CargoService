@@ -4,9 +4,11 @@ import '../../App.css';
 
 export const NotFound = () => {
     return (
-        <div>
-            <h2>Page not found.</h2>
-            <ReturnButton buttonText="Return to Main Page" returnHandler="NotFound"/>
-        </div>
+        <main>
+            <div className="main-body-field">
+                <h2>Page not found.</h2>
+                <ReturnButton buttonText="Return to Main Page" returnHandler="NotFound"/>
+            </div>
+        </main>
     );
 }

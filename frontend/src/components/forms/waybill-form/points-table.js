@@ -9,7 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import CheckIcon from "@material-ui/icons/Check";
-import fetchFieldFromObject from "../fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 
 const columns = [
     { label: "Place", id: "place", minWidth: 150 },

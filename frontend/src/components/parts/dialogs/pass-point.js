@@ -2,13 +2,13 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import {OkButton} from "../buttons/ok-button";
 import {CancelButton} from "../buttons/cancel-button";
-import {updatePoint} from "../../roles/driver/request-utils";
+// import {updatePoint} from "../../roles/driver/request-utils";
 
 export const PassPoint = withRouter((props) => {
     const handlePass = async () => {
         const selectedPoint = props.selected;
-        await updatePoint(selectedPoint);
-        props.updatePoints();
+        // await updatePoint(selectedPoint); // TODO make request from parts/request-util
+        // props.updatePoints();
         props.handleClose();
     };
 

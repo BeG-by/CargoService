@@ -2,7 +2,7 @@ import React from "react";
 
 export default function fetchFieldFromObject(obj, prop) {
     if (obj === undefined || obj === null) {
-        return;
+        return null;
     }
     let index = prop.indexOf(".");
     if (index > -1) {

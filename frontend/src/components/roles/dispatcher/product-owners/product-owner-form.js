@@ -1,20 +1,15 @@
 import React, {useState, useEffect} from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import FormikField from "../formik-field";
+import FormikField from "../../../parts/util/formik-field";
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import {Formik, Form} from "formik";
-import {
-    makeDeleteProductOwnerRequest,
-    makeSaveProductOwnerRequest,
-    makeUpdateProductOwnerRequest,
-    makeGetProductOwnerByIdRequest,
-} from "../request-utils";
 import useToast from "../../../parts/toast-notification/useToast";
 import ProductOwnerTypeSelector from "./product-owner-type-selector";
-import FormDatePicker from "../form-date-picker";
+import CustomDatePicker from "../../../parts/util/custom-date-picker";
 import {ProductFormValidationSchema} from "./validation-shema";
+import {makeRequest, OWNER_URL, handleRequestError} from "../../../parts/util/request-util";
 
 const EMPTY_PRODUCT_OWNER = {
     id: -1,
@@ -56,54 +51,47 @@ export default function ProductOwnerForm(props) {
 
     async function getProductOwnerById(id) {
         try {
-            const response = await makeGetProductOwnerByIdRequest(id);
+            const response = await makeRequest("GET", OWNER_URL + "/" + id);
             setProductOwner(response.data);
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error, openToast);
         }
     }
 
     async function saveProductOwner(client) {
         try {
-            await makeSaveProductOwnerRequest(client);
+            await makeRequest("POST", OWNER_URL, client);
             openToast("Product owner has been saved", "success");
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose();
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error, openToast);
         }
     }
 
     async function updateProductOwner(productOwner) {
         productOwner.id = props.productOwnerId;
         try {
-            await makeUpdateProductOwnerRequest(productOwner);
+            await makeRequest("PUT", OWNER_URL, productOwner);
             openToast("Client has been updated", "success");
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose();
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error , openToast);
         }
     }
 
     async function deleteProductOwner() {
         try {
-            await makeDeleteProductOwnerRequest(props.productOwnerId);
+            await makeRequest("DELETE", OWNER_URL + "/" + props.productOwnerId);
             openToast("Client has been deleted", "success");
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose()
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error , openToast);
         }
     }
 
-    function handleRequestError(error) {
-        if (error.response.status < 500) {
-            openToast(error.response.data, "error");
-        } else {
-            openToast("Cannot get response from server", "error");
-        }
-    }
 
     const handleClose = () => {
         setProductOwner(EMPTY_PRODUCT_OWNER);
@@ -157,7 +145,7 @@ export default function ProductOwnerForm(props) {
                             label={"Phone"}
                             formikFieldName={"phone"}
                         />
-                        <FormDatePicker
+                        <CustomDatePicker
                             formikProps={formProps}
                             id="registrationDate"
                             formikFieldName="registrationDate"

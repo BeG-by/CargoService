@@ -7,7 +7,7 @@ import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {makeRequest, STORAGE_URL, handleRequestError} from "../../admin/request-util"
+import {makeRequest, STORAGE_URL, handleRequestError} from "../../../parts/util/request-util"
 
 
 const EMPTY_STORAGE = {
@@ -28,7 +28,7 @@ export const StorageDialog = (props) => {
     const {open, onClose, storageId, refreshTable, showToast} = props;
     const [storage, setStorage] = useState(EMPTY_STORAGE);
 
-    const TITLE = "Storage Form"
+    const TITLE = "Storage";
 
     const isUpdateForm = storageId >= 0;
 

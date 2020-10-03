@@ -3,7 +3,7 @@ import { ErrorMessage } from "formik";
 import DateFnsUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
-export default function FormDatePicker(props) {
+export default function CustomDatePicker(props) {
     const { formikProps, formikFieldName, id, label } = props;
 
     return (

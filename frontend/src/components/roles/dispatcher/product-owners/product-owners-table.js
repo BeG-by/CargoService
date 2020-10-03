@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,53 +7,32 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {makeGetAllProductOwnersRequest} from "../request-utils";
+import {handleRequestError, makeRequest, OWNER_URL} from "../../../parts/util/request-util";
 import InvoiceDialog from "../invoice/invoice-dialog";
-import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
 import Button from "@material-ui/core/Button";
 import ProductOwnerDialog from "./product-owner-dialog";
 import EditIcon from '@material-ui/icons/Edit';
+import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
+import {Typography} from "@material-ui/core";
+import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+
+const MAX_WIDTH = 170;
+const MIN_WIDTH = 170;
+const ALIGN = "left";
 
 const columns = [
-    {id: "name", label: "Name", minWidth: 170},
-    {id: "type", label: "Company type", minWidth: 170},
-    {id: "phone", label: "Phone", minWidth: 170, align: "center"},
-    {id: "address.country", label: "Country", minWidth: 170, align: "center"},
-    {id: "address.city", label: "City", minWidth: 170, align: "center"},
-    {id: "address.street", label: "Street", minWidth: 170, align: "center"},
-    {id: "address.house", label: "House", minWidth: 170, align: "center"},
-    {
-        id: "registrationDate",
-        label: "RegistrationDate",
-        minWidth: 170,
-        align: "center",
-    },
+    {id: "name", label: "Name", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "type", label: "Company type", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "phone", label: "Phone", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "address.country", label: "Country", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "address.city", label: "City", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "address.street", label: "Street", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "address.house", label: "House", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "registrationDate", label: "Date of registration", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
 ];
 
-function fetchFieldFromObject(obj, prop) {
-    if (obj === undefined || obj === null) {
-        return;
-    }
-    let index = prop.indexOf(".");
-    if (index > -1) {
-        return fetchFieldFromObject(
-            obj[prop.substring(0, index)],
-            prop.substr(index + 1)
-        );
-    }
-
-    return obj[prop];
-}
-
-const useStyles = makeStyles({
-    root: {
-        width: "100%",
-    },
-    container: {
-        maxHeight: 440,
-    },
-});
 
 const EMPTY_PRODUCT_OWNER = {
     name: "",
@@ -62,8 +40,7 @@ const EMPTY_PRODUCT_OWNER = {
     phone: "",
 };
 
-export function ProductOwnersTable() {
-    const classes = useStyles();
+export default function ProductOwnersTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [productOwnerDialogOpen, setProductOwnerDialogOpen] = useState(false);
@@ -74,16 +51,8 @@ export function ProductOwnersTable() {
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [toastComponent, showToastComponent] = useToast();
 
-    function handleRequestError(error) {
-        if (error.response && !error.response.status === 500) {
-            showToastComponent(error.response.data, "error");
-        } else {
-            showToastComponent("Cannot get response from server", "error");
-        }
-    }
-
     const updateTable = (isComponentMounted = true) => {
-        makeGetAllProductOwnersRequest()
+        makeRequest("GET", OWNER_URL)
             .then((response) => {
                 if (isComponentMounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but dont change state)
                     setProductOwners(response.data)
@@ -91,9 +60,9 @@ export function ProductOwnersTable() {
             })
             .catch((err) => {
                 setProductOwners([]);
-                handleRequestError(err);
+                handleRequestError(err, showToastComponent);
             })
-    }
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -108,7 +77,7 @@ export function ProductOwnersTable() {
     const handleEditProductOwnerClick = (productOwner) => {
         setProductOwnerDialogOpen(true);
         setSelectedProductOwnerId(productOwner.id)
-    }
+    };
 
     const handleTableRowClick = (productOwner) => {
         setSelectedProductOwner(productOwner);
@@ -118,7 +87,7 @@ export function ProductOwnersTable() {
     const handleCreateProductOwnerClick = () => {
         setSelectedProductOwnerId(-1);
         setProductOwnerDialogOpen(true);
-    }
+    };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -126,9 +95,21 @@ export function ProductOwnersTable() {
     };
 
     return (
-        <div>
-            <Paper className={classes.root}>
-                <TableContainer className={classes.container}>
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Clients
+                        </Typography>
+                        <Button variant="contained"
+                                color={"primary"}
+                                onClick={handleCreateProductOwnerClick}
+                                className="add-table-btn"
+                        >
+                            <LibraryAddRoundedIcon/>
+                        </Button>
+                    </div>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -136,16 +117,15 @@ export function ProductOwnersTable() {
                                     <TableCell
                                         key={column.id}
                                         align={column.align}
-                                        style={{minWidth: column.minWidth}}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                     >
                                         {column.label}
                                     </TableCell>
                                 ))}
                                 <TableCell
                                     key={"edit_product_owner"}
-                                    align={"center"}
+                                    align={"right"}
                                 >
-                                    <EditIcon/>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -177,13 +157,24 @@ export function ProductOwnersTable() {
                                                 );
                                             })}
                                             <TableCell key={"edit_product_owner"}>
-                                                <Button
-                                                    color={"primary"}
-                                                    startIcon={<EditIcon/>}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleEditProductOwnerClick(client)
-                                                    }}/>
+                                                <div className="table-delete-edit-div">
+                                                    <Button
+                                                        color={"primary"}
+                                                        className="menu-table-btn"
+                                                        startIcon={<NoteAddIcon/>}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleTableRowClick(client)
+                                                        }}/>
+                                                    <Button
+                                                        color={"primary"}
+                                                        className="menu-table-btn"
+                                                        startIcon={<EditIcon/>}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleEditProductOwnerClick(client)
+                                                        }}/>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -201,11 +192,6 @@ export function ProductOwnersTable() {
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
-                <Button variant="contained"
-                        color={"primary"}
-                        onClick={handleCreateProductOwnerClick}>
-                    Add product owner
-                </Button>
             </Paper>
 
             {toastComponent}
@@ -227,8 +213,6 @@ export function ProductOwnersTable() {
                     updateTable();
                 }}
             />
-        </div>
+        </main>
     );
 }
-
-export default () => <BodyWrapper content={ProductOwnersTable}/>

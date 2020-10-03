@@ -1,7 +1,6 @@
 import React from "react";
 import {Dialog} from "@material-ui/core";
 import InvoiceForm from "./invoice-form";
-import useStyles from "../styles";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import DialogTitle from "@material-ui/core/DialogTitle";

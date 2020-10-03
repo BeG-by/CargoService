@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {USER_URL, makeRequest} from "./request-util";
+import {USER_URL, makeRequest , handleRequestError} from "../../parts/util/request-util";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import {List} from "material-ui";
@@ -23,16 +23,9 @@ export const UserInfo = connect(mapStateToProps)((props) => {
         email: "",
         phone: "",
         role: "",
-        photo: null,
+        photo: "",
     });
 
-    function handleRequestError(error) {
-        if (error.response && error.response.status !== 500) {
-            alert("error");
-        } else {
-            alert("Cannot get response from server");
-        }
-    }
 
     async function fetchUser(cleanupFunction) {
         const id = props.userId;
@@ -44,6 +37,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
             email: selected.data.email,
             phone: selected.data.phone,
             photo: selected.data.photo,
+            role: selected.data.roles[0],
         });
     }
 
@@ -57,9 +51,10 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                     birthday: "",
                     email: "",
                     phone: "",
-                    photo: null
+                    role: "",
+                    photo: ""
                 });
-                handleRequestError(err);
+                handleRequestError(err, alert); // TODO toast notification
             });
         return () => cleanupFunction = true;
     }, []);
@@ -74,9 +69,9 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                                 {user.name}
                             </Typography>
                             <img
-                                src={user.photo === null || user.photo === undefined
-                                    ? photo
-                                    : user.photo}
+                                src={user.photo !== undefined && user.photo !== null  && user.photo.trim()
+                                    ? user.photo
+                                    : photo}
                                 width={100}
                                 height={100}
                                 alt="avatar"/>
