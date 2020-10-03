@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, {useEffect, useState} from "react";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,214 +8,189 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import ClientDialog from "./client-dialog";
-import { makeGetAllClientsRequest } from "./request-utils";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
 import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
-import {BodyWrapper} from "../../pages/body-wrapper";
+import {CLIENTS_URL, makeRequest, handleRequestError} from "../../parts/util/request-util";
+import {Typography} from "@material-ui/core";
+import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
+import EditIcon from "@material-ui/icons/Edit";
+import ConfirmDeletingDialog from "../admin/slide-dialog";
+
+
+const MIN_WIDTH = 170;
+const ALIGN = "left";
 
 const columns = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "type", label: "Company type", minWidth: 170 },
-  {
-    id: "payerAccountNumber",
-    label: "Payer account number",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "address.country",
-    label: "Country",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "address.city",
-    label: "City",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "address.street",
-    label: "Street",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "address.house",
-    label: "House",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "registrationDate",
-    label: "RegistrationDate",
-    minWidth: 170,
-    align: "center",
-    format: (value) => value.toFixed(2),
-  },
+    {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "type", label: "Company type", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "payerAccountNumber", label: "Payer account number", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "address.country", label: "Country", minWidth: 150, align: ALIGN},
+    {id: "address.city", label: "City", minWidth: 150, align: ALIGN},
+    {id: "address.street", label: "Street", minWidth: 150, align: ALIGN},
+    {id: "address.house", label: "House", minWidth: 150, align: ALIGN},
+    {id: "registrationDate", label: "Date of registration", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "edit_delete", label: "", align: "right"}
 ];
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-  },
-  container: {
-    maxHeight: 440,
-  },
-});
 
-function ClientsTable() {
-  const classes = useStyles();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+export default function ClientsTable() {
 
-  const [clients, setClients] = useState([]);
-  const [clientDialogOpen, setClientDialogOpen] = useState(false);
-  const [selectedClientCompanyId, setSelectedClientCompanyId] = useState(-1);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [toastComponent, showToastComponent] = useToast();
+    const [clients, setClients] = useState([]);
+    const [clientDialogOpen, setClientDialogOpen] = useState(false);
+    const [selectedClientCompanyId, setSelectedClientCompanyId] = useState(-1);
 
-  function handleRequestError(error) {
-    if (error.response && !error.response.status === 500) {
-      showToastComponent(error.response.data, "error");
-    } else {
-      showToastComponent("Cannot get response from server", "error");
+    const [toastComponent, showToastComponent] = useToast();
+
+    const REMOVE_TITLE = "Do you want to remove the client ?";
+
+
+    async function updateTable() {
+        try {
+            const response = await makeRequest("GET", CLIENTS_URL);
+            setClients(response.data);
+        } catch (error) {
+            handleRequestError(error, showToastComponent);
+        }
     }
-  }
 
-  async function updateTable() {
-    try {
-      const response = await makeGetAllClientsRequest();
-      setClients(response.data);
-    } catch (error) {
-      handleRequestError(error);
-    }
-  }
+    useEffect(() => {
+        updateTable();
+    }, []);
 
-  useEffect(() => {
-    updateTable();
-  }, []);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    const handleTableRowClick = (client) => {
+        setSelectedClientCompanyId(client.id);
+        setClientDialogOpen(true);
+    };
 
-  const handleTableRowClick = (client) => {
-    setSelectedClientCompanyId(client.id);
-    setClientDialogOpen(true);
-  };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+    const handleCreateNewClientCLick = () => {
+        setClientDialogOpen(true);
+    };
 
-  const handleCreateNewClientCLick = () => {
-    setClientDialogOpen(true);
-  };
+    return (
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Clients
+                        </Typography>
+                        <Button variant="contained"
+                                color={"primary"}
+                                onClick={handleCreateNewClientCLick}
+                                className="add-table-btn"
+                        >
+                            <LibraryAddRoundedIcon/>
+                        </Button>
+                    </div>
+                    <Table aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                {columns.map((column) => (
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
+                                    >
+                                        {column.label}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {clients
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((client) => {
+                                    return (
+                                        <TableRow
+                                            onClick={() => {
+                                                handleTableRowClick(client);
+                                            }}
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={client.id}
+                                        >
+                                            {columns.map((column) => {
+                                                let value = fetchFieldFromObject(client, column.id);
+                                                if (value === "SP") {
+                                                    value = "Sole proprietorship";
+                                                } else if (value === "JP") {
+                                                    value = "Juridical person";
+                                                }
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        {column.format && typeof value === "number"
+                                                            ? column.format(value)
+                                                            : value}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                            <div className="table-delete-edit-div">
+                                                <Button
+                                                    className="menu-table-btn"
+                                                    color={"primary"}
+                                                    startIcon={<EditIcon/>}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleTableRowClick(client)
+                                                    }}/>
+                                                {/*<ConfirmDeletingDialog //TODO remove client */}
+                                                {/*    id={user.id}*/}
+                                                {/*    onDelete={deleteSelectedUser}*/}
+                                                {/*    text={REMOVE_TITLE}*/}
+                                                {/*/>*/}
+                                            </div>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-  return (
-    <div>
-      <Paper className={classes.root}>
-        <TableContainer className={classes.container}>
-          <Table aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {clients
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((client) => {
-                  return (
-                    <TableRow
-                      onClick={() => {
-                        handleTableRowClick(client);
-                      }}
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={client.id}
-                    >
-                      {columns.map((column) => {
-                        let value = fetchFieldFromObject(client, column.id);
-                        if (value === "SP") {
-                          value = "Sole proprietorship";
-                        } else if (value === "JP") {
-                          value = "Juridical person";
-                        }
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={clients.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
 
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={clients.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-
-        <ClientDialog
-          open={clientDialogOpen}
-          clientCompanyId={selectedClientCompanyId}
-          onDelete={() => {
-            setClientDialogOpen(false);
-            setSelectedClientCompanyId(-1);
-            updateTable();
-          }}
-          onClose={() => {
-            setClientDialogOpen(false);
-            setSelectedClientCompanyId(-1);
-            updateTable();
-          }}
-          onSubmit={() => {
-            setClientDialogOpen(false);
-            setSelectedClientCompanyId(-1);
-            updateTable();
-          }}
-        />
-      </Paper>
-      <Button
-        onClick={handleCreateNewClientCLick}
-        variant="contained"
-        color="primary"
-      >
-        Add new client
-      </Button>
-
-      {toastComponent}
-    </div>
-  );
+                <ClientDialog
+                    open={clientDialogOpen}
+                    clientCompanyId={selectedClientCompanyId}
+                    onDelete={() => {
+                        setClientDialogOpen(false);
+                        setSelectedClientCompanyId(-1);
+                        updateTable();
+                    }}
+                    onClose={() => {
+                        setClientDialogOpen(false);
+                        setSelectedClientCompanyId(-1);
+                        updateTable();
+                    }}
+                    onSubmit={() => {
+                        setClientDialogOpen(false);
+                        setSelectedClientCompanyId(-1);
+                        updateTable();
+                    }}
+                />
+            </Paper>
+            {toastComponent}
+        </main>
+    );
 }
-
-
-export default () => <BodyWrapper content={ClientsTable}/>

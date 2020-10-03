@@ -1,11 +1,15 @@
 import React from "react";
-import {BodyWrapper} from "./body-wrapper";
 
 //todo content
 export const ContactsBody = () => {
-    return <h2>
-        Here are our contacts: ...
-    </h2>;
+    return(
+        <main className="text-body">
+            <h2>
+                Here are our contacts: ...
+            </h2>;
+        </main>
+    )
 }
 
-export default () => <BodyWrapper content={ContactsBody}/>
+
+export default ContactsBody;

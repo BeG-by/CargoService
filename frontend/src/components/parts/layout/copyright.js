@@ -10,6 +10,7 @@ const useStyles = makeStyles(() => ({
         paddingTop: '15px',
         textAlign: 'right',
         textDecoration: 'underline',
+        marginRight: "20px"
     }
 }));
 
@@ -17,7 +18,7 @@ export function Copyright() {
     const classes = useStyles();
     return (
         <Typography variant="body2" className={classes.footerCopyright}>
-            <Link color="inherit" href="https://www.itechart.by/">
+            <Link color="inherit" href="https://www.itechart.by/" target="_blank">
                 {'Copyright © iTechArt  '}
                 {new Date().getFullYear()}
             </Link>{' '}

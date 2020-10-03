@@ -48,21 +48,3 @@ export const useStyles = makeStyles((theme) => ({
         paddingTop: "20px",
     },
 }));
-
-
-export const BodyWrapper = (props) => {
-    const classes = useStyles();
-
-    return (
-        <main
-            // className={clsx(classes.content, {
-            //     [classes.contentShift]: props.openMenu,
-            // })}
-        >
-            {/*<div className={classes.drawerHeader}/>*/}
-            {/*<div className={classes.mainField}>*/}
-                {props.content()}
-            {/*</div>*/}
-        </main>
-    );
-}

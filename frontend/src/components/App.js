@@ -20,6 +20,7 @@ import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
 import AutoTable from "./roles/admin/autos/auto-table";
 import StorageTable from "./roles/dispatcher/storages/storages-table";
 import {ProfileBody} from "./pages/profile-body";
+import ClientsTable from "./roles/sysadmin/clients-table";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -57,6 +58,7 @@ export default function App() {
                     <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
                     <Route exact path={"/storages"} component={StorageTable}/>
                     <Route exact path={"/success"}><Redirect to={"/main"}/></Route>
+                    <Route exact path={"/clients"} component={ClientsTable}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>

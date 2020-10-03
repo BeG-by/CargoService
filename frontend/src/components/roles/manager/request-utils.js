@@ -11,15 +11,6 @@ export async function getInvoiceById(id) {
     });
 }
 
-export async function getActById(id) {
-    const endpoint = `/v1/api/acts/${id}`;
-    return await axios({
-        method: "get",
-        url: endpoint,
-    }).then((res) => {
-        return res.data;
-    });
-}
 
 export async function updateInvoiceStatus(invoice) {
     const endpoint = `/v1/api/invoices/status`;
@@ -32,15 +23,6 @@ export async function updateInvoiceStatus(invoice) {
     });
 }
 
-export async function getAllInvoices() {
-    const endpoint = `/v1/api/invoices`;
-    return await axios({
-        method: "get",
-        url: endpoint
-    }).then((res) => {
-        return res.data;
-    });
-}
 
 export async function getAllAutos() {
     const endpoint = `/v1/api/autos`;

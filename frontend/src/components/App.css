@@ -55,6 +55,19 @@ main {
 }
 
 
+
+/* Welcome, info, contacts, send email*/
+
+.welcome-body {
+    display: block;
+    text-align: center;
+}
+
+.text-body h2 {
+    text-align: center;
+    width: 75%;
+}
+
 /*----------------------------*/
 
 .link-item-black {
@@ -90,17 +103,3 @@ main {
     color: inherit;
     text-decoration: none;
 }
-
-/* User table styles (Eugene)*/
-
-
-
-/*#form-dialog-title #form-title {*/
-
-/*}*/
-
-
-/*.user-table-wrapper,*/
-/*.auto-table-wrapper {*/
-/*    text-align: end;*/
-/*}*/

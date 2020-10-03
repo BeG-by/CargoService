@@ -9,6 +9,7 @@ export const DRIVER_URL = "/v1/api/drivers";
 export const WAYBILL_URL = "/v1/api/waybills";
 export const POINT_URL = "/v1/api/waybills/points";
 export const ACT_URL = "/v1/api/acts";
+export const CLIENTS_URL = "/v1/api/clients/";
 
 
 export const makeRequest = (method, url, data = null) => {

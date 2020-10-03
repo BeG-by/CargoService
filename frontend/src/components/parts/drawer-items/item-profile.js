@@ -7,6 +7,6 @@ const path = "/profile";
 export const ItemProfile = () => {
     const icon = <PersonIcon color='primary'/>;
     return (
-        <DrawerItem text='Profile' icon={icon} path={path}/>
+        <DrawerItem text='Account' icon={icon} path={path}/>
     )
 }

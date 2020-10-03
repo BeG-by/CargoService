@@ -11,13 +11,19 @@ const mapStateToProps = (store) => {
 
 export const ProfileBody = connect(mapStateToProps)((props) => {
     const id = props.id;
+
+    let contentBody = !id ? <NotAuthorized/>
+        : <div className="main-body-field">
+            <h1>
+                Profile info
+            </h1>
+            <ProfileInfo userId={id}/>
+        </div>;
+
+
     return (
-        !id ? <NotAuthorized/>
-            : <div className="main-body-field">
-                <h1>
-                    Profile info
-                </h1>
-                <ProfileInfo userId={id}/>
-            </div>
+        <main>
+            {contentBody}
+        </main>
     );
 });

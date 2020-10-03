@@ -1,19 +1,23 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {BodyWrapper} from "./body-wrapper";
 
 export const useStyles = makeStyles(() => ({
     mainParagraph: {
         fontSize: "22px",
         paddingTop: "20px",
     },
+    backgroundImg: {
+        background: "url(resources/images/welcome.jpg) no-repeat fixed"
+    }
+
 }));
 
 export const WelcomeBody = () => {
     const classes = useStyles();
+
     return (
-        <div>
+        <main className="text-body welcome-body">
             <Typography
                 variant="h4"
                 style={{fontStyle: 'oblique'}}>
@@ -30,9 +34,8 @@ export const WelcomeBody = () => {
                 paragraph>
                 Please sign in to access all features you need.
             </Typography>
-        </div>
-
+        </main>
     );
 }
 
-export default () => <BodyWrapper content={WelcomeBody}/>
+export default WelcomeBody;

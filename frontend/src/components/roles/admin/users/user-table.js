@@ -85,7 +85,7 @@ export default function UserTable() {
                 <TableContainer className="table-container">
                     <div className="table-header-wrapper">
                         <Typography variant="h5" gutterBottom>
-                            Clients
+                            Users
                         </Typography>
                         <Button variant="contained"
                                 color={"primary"}

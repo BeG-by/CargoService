@@ -8,7 +8,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
-import {getAllInvoices, getInvoiceById} from "./request-utils";
 import {FillWaybillDialog} from "../../parts/dialogs/fill-waybill";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
@@ -16,19 +15,19 @@ import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
 import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {connect} from "react-redux";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import Button from "@material-ui/core/Button";
+import {handleRequestError, INVOICE_URL, makeRequest} from "../../parts/util/request-util";
+
+const ALIGN = "left";
 
 const columns = [
-    {id: "number", label: "Invoice #", minWidth: 100},
-    {id: "status", label: "Status", minWidth: 100},
-    {
-        id: "date",
-        label: "Registration Date",
-        minWidth: 150,
-        format: (value) => value.toFixed(2),
-    },
-    {id: "shipper", label: "Shipper", minWidth: 300},
-    {id: "consignee", label: "Consignee", minWidth: 300},
-    {id: "waybillId", label: "Waybill", minWidth: 100},
+    {id: "number", label: "Invoice #", minWidth: 100, align: ALIGN},
+    {id: "status", label: "Status", minWidth: 100, align: ALIGN},
+    {id: "date", label: "Date of registration", minWidth: 150, format: (value) => value.toFixed(2), align: ALIGN},
+    {id: "shipper", label: "Shipper", minWidth: 300, align: ALIGN},
+    {id: "consignee", label: "Consignee", minWidth: 300, align: ALIGN},
+    {id: "waybillId", label: "Waybill", minWidth: 100, align: "center"}
 ];
 
 const mapStateToProps = (store) => {
@@ -48,17 +47,10 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
     const role = props.role;
 
-    function handleRequestError(error) {
-        if (error.response && error.response.status !== 500) {
-            alert("error");
-        } else {
-            alert("Cannot get response from server");
-        }
-    }
-
     async function fetchInvoices(cleanupFunction) {
         if (!cleanupFunction) {
-            setInvoices(await getAllInvoices());
+            let response = await makeRequest("GET", INVOICE_URL);
+            setInvoices(response.data);
         }
     }
 
@@ -67,7 +59,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         fetchInvoices(cleanupFunction)
             .catch((err) => {
                 setInvoices([]);
-                handleRequestError(err);
+                handleRequestError(err, alert); // TODO notification
             });
         return () => cleanupFunction = true;
     }, []);
@@ -76,9 +68,12 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setPage(newPage);
     };
 
+    // TODO again two requests.
+
     let foundInvoice = {};
-    const handleTableRowClick = async (inv) => {
-        foundInvoice = await getInvoiceById(inv.id);
+    const handleTableRowClick = async (invoice) => {
+        let response = await makeRequest("GET", INVOICE_URL + "/" + invoice.id);
+        foundInvoice = response.data;
         setInvoice(() => ({
             id: foundInvoice.id,
             status: foundInvoice.status,
@@ -98,12 +93,12 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setForm(<InvoiceInfo invoiceId={foundInvoice.id}/>);
         setWaybillFillDialogOpen(false);
         setInvoiceInfoDialogOpen(true);
-    }
+    };
 
     const handleWaybillFormOpen = () => {
         setWaybillFillDialogOpen(false);
         setWaybillDialogOpen(true);
-    }
+    };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -117,12 +112,14 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     return (
-        <div>
-            <Paper>
-                <TableContainer>
-                    <Typography variant="h5" gutterBottom style={{textAlign: "left", margin: 15}}>
-                        Invoices
-                    </Typography>
+        <main>
+            <Paper className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="h5" gutterBottom>
+                            Invoices
+                        </Typography>
+                    </div>
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -134,6 +131,10 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                         {column.label}
                                     </TableCell>
                                 ))}
+                                <TableCell
+                                    key={"edit-delete"}
+                                    style={{minWidth: 60}}
+                                />
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -153,13 +154,25 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                             {columns.map((column) => {
                                                 const value = fetchFieldFromObject(invoice, column.id);
                                                 return (
-                                                    <TableCell key={column.id}>
+                                                    <TableCell key={column.id} align={column.align}>
                                                         {column.id === 'waybillId' && value !== null
                                                             ? <CheckIcon/>
                                                             : value}
                                                     </TableCell>
                                                 );
                                             })}
+                                            <TableCell>
+                                                <div className="table-delete-edit-div">
+                                                    <Button
+                                                        className="menu-table-btn"
+                                                        color={"primary"}
+                                                        startIcon={<VisibilityIcon/>}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleTableRowClick(invoice)
+                                                        }}/>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -206,9 +219,9 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     form={form}
                 />
             </Paper>
-        </div>
+        </main>
     );
-})
+});
 
 
 export default InvoicesTable;

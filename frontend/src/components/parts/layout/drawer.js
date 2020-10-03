@@ -11,14 +11,16 @@ import {ItemWaybillList} from "../drawer-items/item-waybill-list";
 import {ItemInfo} from "../drawer-items/item-info";
 import {ItemContacts} from "../drawer-items/item-contacts";
 import {ItemSendMail} from "../drawer-items/item-send-mail";
-import {ItemClientTable} from "../drawer-items/item-clients-company";
+import {ItemOwnerTable} from "../drawer-items/item-product-owner";
 import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
-import {DRAWER_WIDTH} from "../../pages/body-wrapper";
+import {DRAWER_WIDTH} from "../styles/styles";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
 import {ItemProfile} from "../drawer-items/item-profile";
+import ProductOwnersTable from "../../roles/dispatcher/product-owners/product-owners-table";
+import {ItemClientTable} from "../drawer-items/item-clients";
 
 
 const drawerWidth = DRAWER_WIDTH;
@@ -57,22 +59,26 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
         case 'SYSADMIN':
             components.push(<ItemClientTable key="Clients"/>);
             components.push(<Divider key='Divider'/>);
+            components.push(<Divider key='SecondDivider'/>);
             break;
         case 'ADMIN':
             components.push(<ItemUserTable key="Users"/>);
             components.push(<ItemAutosTable key="Autos"/>);
+            components.push(<ItemProfile key="Profile"/>)
             components.push(<Divider key='Divider'/>);
             break;
         case 'DISPATCHER':
-            components.push(<ItemClientTable key="Product owners"/>);
+            components.push(<ItemOwnerTable key="Product owners"/>);
             components.push(<ItemInvoices key='Invoices'/>);
             components.push(<ItemStorages key='Storages'/>);
+            components.push(<ItemProfile key="Profile"/>)
             components.push(<Divider key='Divider'/>);
             break;
         case 'DRIVER':
         case 'MANAGER':
             components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<ItemWaybillList key='Waybills'/>);
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='Divider'/>);
             break;
         case 'OWNER':
@@ -99,10 +105,6 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             <List>
                 {components}
             </List>
-            <List>
-                <ItemProfile/>
-            </List>
-            <Divider/>
             <List>
                 <ItemInfo/>
                 <ItemContacts/>

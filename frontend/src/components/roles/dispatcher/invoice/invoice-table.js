@@ -9,9 +9,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import InvoiceDialog from "./invoice-dialog";
-import {BodyWrapper} from "../../../pages/body-wrapper";
 import useToast from "../../../parts/toast-notification/useToast";
-import {makeRequest, INVOICE_URL, handleRequestError} from "../../../parts/util/request-util";
+import {handleRequestError, INVOICE_URL, makeRequest} from "../../../parts/util/request-util";
 import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
 
 const columns = [
@@ -38,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 
-export function InvoiceTable() {
+export default function InvoiceTable() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -60,7 +59,7 @@ export function InvoiceTable() {
             )
             .catch((err) => {
                 setInvoices([]);
-                handleRequestError(err , showToastComponent)
+                handleRequestError(err, showToastComponent)
             })
     }
 
@@ -161,5 +160,3 @@ export function InvoiceTable() {
         </div>
     );
 }
-
-export default () => <BodyWrapper content={InvoiceTable}/>

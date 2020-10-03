@@ -35,7 +35,7 @@ export const MainBody = connect(mapStateToProps)((props) => {
             content = <WaybillsTable/>;
             break;
         case 'OWNER':
-            content = () => {return "Owner..."}
+            content = () => {return "Owner..."};
             break;
         default:
             content = <NotAuthorized/>;
