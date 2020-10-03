@@ -1,0 +1,11 @@
+### All (1000) product owners in elasticsearch
+GET localhost:9200/product_owner/_search?pretty=true&q=*:*&size=1000
+
+###  All indexes in elasticsearch
+GET localhost:9200/_aliases?pretty=true
+
+### All indexes in the table form
+GET localhost:9200/_cat/indices?v
+
+### Delte product_onwer index
+DELETE localhost:9200/product_owner
