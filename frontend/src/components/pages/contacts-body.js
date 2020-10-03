@@ -3,10 +3,10 @@ import React from "react";
 //todo content
 export const ContactsBody = () => {
     return(
-        <main className="text-body">
+        <main className="main-body-field">
             <h2>
                 Here are our contacts: ...
-            </h2>;
+            </h2>
         </main>
     )
 }

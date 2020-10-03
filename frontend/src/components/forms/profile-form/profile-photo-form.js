@@ -7,18 +7,17 @@ export default class ProfilePhotoForm extends React.Component {
         super(props);
         this.state = {
             file: {},
-            error: false,
+            error: true,
             textError: ""
         };
         this.handleChange = this.handleChange.bind(this);
+        this.validateFilePresence = this.validateFilePresence.bind(this);
     }
 
     handleChange(e) {
-        this.removeValidation(); //не срабатывает (или через раз)
+        this.removeValidation();
         let file = e.target.files[0];
-        this.validateSize(file);
-        this.validateExt(file);
-        if (!this.state.error) {
+        if (this.validateSize(file) && this.validateExt(file)) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => {
@@ -40,7 +39,10 @@ export default class ProfilePhotoForm extends React.Component {
 
     validateSize(file) {
         if (file && file.size > 1000 * 1024) {
-            this.setState({error: true, textError: "File size is more than 1 mB"});
+            this.setState({error: true, textError: "File size is more than 1 mB", file: {}});
+            return false;
+        } else {
+            return true;
         }
     };
 
@@ -48,9 +50,16 @@ export default class ProfilePhotoForm extends React.Component {
         const ext = file.type.toLowerCase();
         if (file && ext !== 'image/jpg' && ext !== 'image/jpeg' && ext !== 'image/png'
             && ext !== 'image/gif' && ext !== 'image/bmp' && ext !== 'image/svg') {
-            this.setState({error: true, textError: "Wrong image extension"})
+            this.setState({error: true, textError: "Wrong image extension", file: {}});
+            return false;
+        } else {
+            return true;
         }
     };
+
+    validateFilePresence() {
+        this.setState({error: true, textError: "Choose file", file: {}});
+    }
 
     render() {
         return (
@@ -59,15 +68,15 @@ export default class ProfilePhotoForm extends React.Component {
                     type="file"
                     onChange={this.handleChange}
                     multiple={this.props.multiple}
-                    size="100"
+                    size="1000"
                     accept="image/*"/>
                 <br/>
-                {this.state.error ?<div className="error-message">{this.state.textError}</div> : ""}
+                {this.state.error ? <div className="error-message">{this.state.textError}</div> : ""}
                 <div className="btn-row">
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={this.state.error? null: this.props.onSubmit}
+                        onClick={this.state.error ? this.validateFilePresence : this.props.onSubmit}
                     >
                         Confirm
                     </Button>

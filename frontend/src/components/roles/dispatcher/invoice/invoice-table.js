@@ -12,6 +12,8 @@ import InvoiceDialog from "./invoice-dialog";
 import useToast from "../../../parts/toast-notification/useToast";
 import {handleRequestError, INVOICE_URL, makeRequest} from "../../../parts/util/request-util";
 import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
+import {connect} from "react-redux";
+import {NotAuthorized} from "../../../pages/error-page/error-401";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},
@@ -26,7 +28,6 @@ const columns = [
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 
-
 const useStyles = makeStyles({
     root: {
         width: "100%",
@@ -36,18 +37,21 @@ const useStyles = makeStyles({
     },
 });
 
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
-export default function InvoiceTable() {
+export const DispatcherInvoiceTable = connect(mapStateToProps)((props) => {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
     const [invoices, setInvoices] = useState([]);
     const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
-
     const [toastComponent, showToastComponent] = useToast();
-
+    const role = props.role;
 
     function fetchInvoices(mounted) {
         makeRequest("GET", INVOICE_URL)
@@ -86,6 +90,7 @@ export default function InvoiceTable() {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <div>
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
@@ -159,4 +164,4 @@ export default function InvoiceTable() {
             {toastComponent}
         </div>
     );
-}
+})

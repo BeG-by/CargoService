@@ -15,7 +15,8 @@ import ConfirmDeletingDialog from "../../admin/slide-dialog";
 import {StorageDialog} from "./storage-dialog";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
-
+import {NotAuthorized} from "../../../pages/error-page/error-401";
+import {connect} from "react-redux";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -30,16 +31,20 @@ const columns = [
     {id: "edit_delete", align: "right"}
 ];
 
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
-export default function StorageTable() {
+export const StorageTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
     const [storages, setStorages] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedStorageId, setSelectedStorageId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
-
+    const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the storage ?";
 
     useEffect(() => {
@@ -79,6 +84,7 @@ export default function StorageTable() {
 
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
@@ -193,4 +199,4 @@ export default function StorageTable() {
             </Paper>
         </main>
     );
-}
+})
