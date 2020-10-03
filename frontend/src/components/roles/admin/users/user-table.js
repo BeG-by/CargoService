@@ -15,6 +15,8 @@ import ConfirmDeletingDialog from "../slide-dialog";
 import {handleRequestError, makeRequest, USER_URL} from "../../../parts/util/request-util"
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
+import {NotAuthorized} from "../../../pages/error-page/error-401";
+import {connect} from "react-redux";
 
 
 const MIN_WIDTH = 170;
@@ -32,16 +34,20 @@ const columns = [
 
 ];
 
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
-export default function UserTable() {
+export const UserTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
     const [users, setUsers] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
-
+    const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the user ?";
 
     useEffect(() => {
@@ -80,6 +86,7 @@ export default function UserTable() {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
@@ -195,4 +202,4 @@ export default function UserTable() {
             </Paper>
         </main>
     );
-}
+})

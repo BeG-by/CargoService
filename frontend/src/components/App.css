@@ -89,8 +89,9 @@ main {
 .main-body-field {
     display: block;
     flex-direction: column;
-    padding: 30px 5px;
-    margin: 80px auto;
+    text-align: center;
+    padding: 30px 50px;
+    margin: 80px 80px;
     color: white;
     background: rgba(0, 0, 0, 0.4);
     max-width: 100%;

@@ -18,6 +18,7 @@ import {connect} from "react-redux";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";
 import {handleRequestError, INVOICE_URL, makeRequest} from "../../parts/util/request-util";
+import {NotAuthorized} from "../../pages/error-page/error-401";
 
 const ALIGN = "left";
 
@@ -112,6 +113,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">

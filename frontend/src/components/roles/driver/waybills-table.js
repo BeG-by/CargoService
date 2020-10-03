@@ -17,6 +17,7 @@ import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
 import Button from "@material-ui/core/Button";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import {NotAuthorized} from "../../pages/error-page/error-401";
 
 const ALIGN = "left";
 
@@ -43,6 +44,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [actFillDialogOpen, setActFillDialogOpen] = React.useState(false);
     const [actDialogOpen, setActDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
+    const role = props.role;
 
 
     async function fetchWaybills(cleanupFunction) {
@@ -123,6 +125,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
