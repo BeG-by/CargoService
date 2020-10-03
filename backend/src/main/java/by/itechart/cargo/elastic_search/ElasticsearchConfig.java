@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @Configuration
 @EnableElasticsearchRepositories
 @ComponentScan(basePackages = {"by.itechart.cargo.elastic_search"})
-public class Config {
+public class ElasticsearchConfig {
 
     @Bean
     public RestHighLevelClient client() {

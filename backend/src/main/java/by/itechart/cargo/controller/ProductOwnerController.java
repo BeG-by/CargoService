@@ -36,6 +36,10 @@ public class ProductOwnerController {
         return ResponseEntity.ok(productOwnerService.findById(id));
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProductOwner>> productOwner(@RequestParam String name) {
+        return ResponseEntity.ok(productOwnerService.findByName(name));
+    }
 
     @PutMapping
     public ResponseEntity<String> update(@RequestBody @Valid ProductOwnerUpdateRequest productOwnerUpdateRequest) throws NotFoundException, AlreadyExistException {

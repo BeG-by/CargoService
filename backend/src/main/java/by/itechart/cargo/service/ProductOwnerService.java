@@ -19,4 +19,6 @@ public interface ProductOwnerService {
     void update(ProductOwnerUpdateRequest productOwnerUpdateRequest) throws NotFoundException, AlreadyExistException;
 
     void delete(Long id) throws NotFoundException;
+
+    List<ProductOwner> findByName(String name);
 }

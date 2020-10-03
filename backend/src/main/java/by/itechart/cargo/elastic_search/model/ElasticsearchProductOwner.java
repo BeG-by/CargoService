@@ -1,5 +1,7 @@
-package by.itechart.cargo.elastic_search;
+package by.itechart.cargo.elastic_search.model;
 
+
+import by.itechart.cargo.model.ProductOwner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +14,14 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "product_owner")
-public class ProductOwnerES {
-
+public class ElasticsearchProductOwner {
     @Id
     private Long id;
 
     @Field(type = FieldType.Keyword)
     private String name;
+
+    public static ElasticsearchProductOwner fromProductOwner(ProductOwner productOwner) {
+        return new ElasticsearchProductOwner(productOwner.getId(), productOwner.getName());
+    }
 }
