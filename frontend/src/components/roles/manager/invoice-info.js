@@ -21,7 +21,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     const [openCloseDialog, setOpenCloseDialog] = React.useState(false);
     const [invoice, setInvoice] = React.useState({
         id: 0,
-        invoiceStatus: "",
+        status: "",
         products: [],
         number: "",
         registrationDate: "",
@@ -65,7 +65,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         let selected = await getInvoiceById(props.invoiceId);
         if (!cleanupFunction) setInvoice({
             id: selected.id,
-            invoiceStatus: selected.status,
+            status: selected.status,
             products: selected.products,
             number: selected.number,
             registrationDate: selected.registrationDate,
@@ -103,7 +103,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         return () => cleanupFunction = true;
     }, []);
 
-    let status = invoice.invoiceStatus;
+    let status = invoice.status;
     let verifyDisabled = false;
     let rejectDisabled = false;
     let closeDisabled = false;

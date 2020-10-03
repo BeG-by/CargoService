@@ -215,7 +215,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                 <DialogWindow
                     dialogTitle={"Invoice # " + invoice.number}
                     fullWidth={true}
-                    maxWidth="md"
+                    maxWidth="xl"
                     handleClose={handleClose}
                     openDialog={invoiceInfoDialogOpen}
                     form={form}

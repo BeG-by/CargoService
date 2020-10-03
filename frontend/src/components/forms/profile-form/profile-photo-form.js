@@ -68,7 +68,7 @@ export default class ProfilePhotoForm extends React.Component {
                     type="file"
                     onChange={this.handleChange}
                     multiple={this.props.multiple}
-                    size="100"
+                    size="1000"
                     accept="image/*"/>
                 <br/>
                 {this.state.error ? <div className="error-message">{this.state.textError}</div> : ""}
