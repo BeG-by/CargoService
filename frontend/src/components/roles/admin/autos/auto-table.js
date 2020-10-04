@@ -15,7 +15,8 @@ import {AutoDialog} from "./auto-dialog";
 import ConfirmDeletingDialog from "../slide-dialog";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
-
+import {connect} from "react-redux";
+import {NotAuthorized} from "../../../pages/error-page/error-401";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -30,16 +31,20 @@ const columns = [
     {id: "edit_delete", label: "", align: "center"}
 ];
 
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
-export default function AutoTable() {
+export const AutoTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
     const [autos, setAutos] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedAutoId, setSelectedAutoId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
-
+    const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the auto ?";
 
     useEffect(() => {
@@ -78,6 +83,7 @@ export default function AutoTable() {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
@@ -189,4 +195,4 @@ export default function AutoTable() {
             </Paper>
         </main>
     );
-}
+})

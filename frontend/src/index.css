@@ -10,7 +10,7 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /*background: url(resources/images/welcome.jpg) no-repeat fixed;*/
+    background: url(resources/images/welcome.jpg) no-repeat fixed;
     background-color: #e9f3f5 !important;
     background-size: cover;
 }

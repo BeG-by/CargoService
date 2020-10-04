@@ -16,7 +16,8 @@ import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import EditIcon from "@material-ui/icons/Edit";
 import ConfirmDeletingDialog from "../admin/slide-dialog";
-
+import {connect} from "react-redux";
+import {NotAuthorized} from "../../pages/error-page/error-401";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -33,20 +34,21 @@ const columns = [
     {id: "edit_delete", label: "", align: "right"}
 ];
 
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
 
-export default function ClientsTable() {
-
+export const ClientsTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
     const [clients, setClients] = useState([]);
     const [clientDialogOpen, setClientDialogOpen] = useState(false);
     const [selectedClientCompanyId, setSelectedClientCompanyId] = useState(-1);
-
     const [toastComponent, showToastComponent] = useToast();
-
+    const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the client ?";
-
 
     async function updateTable() {
         try {
@@ -80,6 +82,7 @@ export default function ClientsTable() {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
@@ -132,9 +135,7 @@ export default function ClientsTable() {
                                                 }
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        {column.format && typeof value === "number"
-                                                            ? column.format(value)
-                                                            : value}
+                                                        {value}
                                                     </TableCell>
                                                 );
                                             })}
@@ -193,4 +194,4 @@ export default function ClientsTable() {
             {toastComponent}
         </main>
     );
-}
+})

@@ -6,7 +6,7 @@ export const NotAuthorized = () => {
         <main>
             <div className="main-body-field">
                 <h2>You are not authorized.</h2>
-                <ReturnButton buttonText="Go to Login Page" returnHandler="NotAuthorized"/>
+                <ReturnButton buttonText="Go to Welcome Page" returnHandler="NotAuthorized"/>
             </div>
         </main>
     )

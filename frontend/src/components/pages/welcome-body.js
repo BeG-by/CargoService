@@ -17,7 +17,7 @@ export const WelcomeBody = () => {
     const classes = useStyles();
 
     return (
-        <main className="text-body welcome-body">
+        <main className="text-body welcome-body main-body-field">
             <Typography
                 variant="h4"
                 style={{fontStyle: 'oblique'}}>

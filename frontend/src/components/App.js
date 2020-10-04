@@ -14,13 +14,13 @@ import InfoBody from "./pages/info-body";
 import SendMailBody from "./pages/send-mail-body";
 import ContactsBody from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
-import UserTable from "./roles/admin/users/user-table";
-import ProductOwnersTable from "./roles/dispatcher/product-owners/product-owners-table";
-import DispatcherInvoiceTable from "./roles/dispatcher/invoice/invoice-table";
-import AutoTable from "./roles/admin/autos/auto-table";
-import StorageTable from "./roles/dispatcher/storages/storages-table";
+import {UserTable} from "./roles/admin/users/user-table";
+import {ProductOwnersTable} from "./roles/dispatcher/product-owners/product-owners-table";
+import {DispatcherInvoiceTable} from "./roles/dispatcher/invoice/invoice-table";
+import {AutoTable} from "./roles/admin/autos/auto-table";
+import {StorageTable} from "./roles/dispatcher/storages/storages-table";
 import {ProfileBody} from "./pages/profile-body";
-import ClientsTable from "./roles/sysadmin/clients-table";
+import {ClientsTable} from "./roles/sysadmin/clients-table";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);

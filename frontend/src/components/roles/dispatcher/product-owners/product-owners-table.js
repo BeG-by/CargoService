@@ -17,6 +17,8 @@ import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {Typography} from "@material-ui/core";
 import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import {NotAuthorized} from "../../../pages/error-page/error-401";
+import {connect} from "react-redux";
 
 const MAX_WIDTH = 170;
 const MIN_WIDTH = 170;
@@ -33,23 +35,28 @@ const columns = [
     {id: "registrationDate", label: "Date of registration", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
 ];
 
-
 const EMPTY_PRODUCT_OWNER = {
     name: "",
     type: "SP",
     phone: "",
 };
 
-export default function ProductOwnersTable() {
+const mapStateToProps = (store) => {
+    return {
+        role: store.user.roles[0]
+    }
+};
+
+export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [productOwnerDialogOpen, setProductOwnerDialogOpen] = useState(false);
     const [selectedProductOwnerId, setSelectedProductOwnerId] = useState(-1);
-
     const [productOwners, setProductOwners] = useState([]);
     const [selectedProductOwner, setSelectedProductOwner] = useState(EMPTY_PRODUCT_OWNER);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [toastComponent, showToastComponent] = useToast();
+    const role = props.role;
 
     const updateTable = (isComponentMounted = true) => {
         makeRequest("GET", OWNER_URL)
@@ -95,6 +102,7 @@ export default function ProductOwnersTable() {
     };
 
     return (
+        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
@@ -215,4 +223,4 @@ export default function ProductOwnersTable() {
             />
         </main>
     );
-}
+})
