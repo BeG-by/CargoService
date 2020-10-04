@@ -46,7 +46,6 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
     const role = props.role;
 
-
     async function fetchWaybills(cleanupFunction) {
         if (!cleanupFunction) {
             let response = await makeRequest("GET", WAYBILL_URL);
@@ -126,112 +125,112 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
 
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
-        <main>
-            <Paper className="table-paper">
-                <TableContainer className="table-container">
-                    <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
-                            Waybills
-                        </Typography>
-                    </div>
-                    <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                                <TableCell
-                                    key={"edit-delete"}
-                                    style={{minWidth: 60}}
-                                />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {waybills
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((waybill) => {
-                                    return (
-                                        <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(waybill);
-                                            }}
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={waybill.id}
+            <main>
+                <Paper className="table-paper">
+                    <TableContainer className="table-container">
+                        <div className="table-header-wrapper">
+                            <Typography variant="h5" gutterBottom>
+                                Waybills
+                            </Typography>
+                        </div>
+                        <Table aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    {columns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                         >
-                                            {columns.map((column) => {
-                                                const value = fetchFieldFromObject(waybill, column.id);
-                                                return (
-                                                    <TableCell key={column.id}>
-                                                        {value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell>
-                                                <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<VisibilityIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(waybill)
-                                                        }}/>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
+                                    <TableCell
+                                        key={"edit-delete"}
+                                        style={{minWidth: 60}}
+                                    />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {waybills
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((waybill) => {
+                                        return (
+                                            <TableRow
+                                                onClick={() => {
+                                                    handleTableRowClick(waybill);
+                                                }}
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={waybill.id}
+                                            >
+                                                {columns.map((column) => {
+                                                    const value = fetchFieldFromObject(waybill, column.id);
+                                                    return (
+                                                        <TableCell key={column.id}>
+                                                            {value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                                <TableCell>
+                                                    <div className="table-delete-edit-div">
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<VisibilityIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(waybill)
+                                                            }}/>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
-                <TablePagination
-                    rowsPerPageOptions={[10, 20, 30]}
-                    component="div"
-                    count={waybills.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
+                    <TablePagination
+                        rowsPerPageOptions={[10, 20, 30]}
+                        component="div"
+                        count={waybills.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
 
-                <ActDialog
-                    waybill={waybill}
-                    open={actDialogOpen}
-                    onClose={() => {
-                        setActDialogOpen(false);
-                        fetchWaybills(false)
-                            .catch((err) => {
-                                setWaybills([]);
-                                handleRequestError(err);
-                            });
-                    }}
-                />
+                    <ActDialog
+                        waybill={waybill}
+                        open={actDialogOpen}
+                        onClose={() => {
+                            setActDialogOpen(false);
+                            fetchWaybills(false)
+                                .catch((err) => {
+                                    setWaybills([]);
+                                    handleRequestError(err);
+                                });
+                        }}
+                    />
 
-                <DialogWindow
-                    dialogTitle="Confirmation"
-                    handleClose={handleClose}
-                    openDialog={actFillDialogOpen}
-                    form={form}
-                />
+                    <DialogWindow
+                        dialogTitle="Confirmation"
+                        handleClose={handleClose}
+                        openDialog={actFillDialogOpen}
+                        form={form}
+                    />
 
-                <DialogWindow
-                    dialogTitle={"Waybill to invoice # " + waybill.invoice.number}
-                    fullWidth={true}
-                    maxWidth="xl"
-                    handleClose={handleClose}
-                    openDialog={waybillInfoDialogOpen}
-                    form={form}
-                />
+                    <DialogWindow
+                        dialogTitle={"Waybill to invoice # " + waybill.invoice.number}
+                        fullWidth={true}
+                        maxWidth="xl"
+                        handleClose={handleClose}
+                        openDialog={waybillInfoDialogOpen}
+                        form={form}
+                    />
 
-            </Paper>
-        </main>
+                </Paper>
+            </main>
     );
 })

@@ -24,6 +24,7 @@ import {WaybillInfo} from "../driver/waybill-info";
 import Divider from "@material-ui/core/Divider";
 import {UserInfo} from "../admin/user-info";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {Typography} from "@material-ui/core";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
@@ -40,9 +41,19 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         alignItems: "flex-start"
     },
+    boldText: {
+        fontWeight: "bold",
+    },
+    tableHeader: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 5,
+        fontSize: 20
+    }
 }));
 
-let CURRENCY;
+let CURRENCY; //fixme поменять когда внесут в инвойс
 
 function priceProduct(price, quantity, currency) {
     CURRENCY = currency;
@@ -63,6 +74,10 @@ function countTotalWeight(products) {
     return products.map((p) => weightProduct(p.massMeasure, p.mass)).reduce((sum, p) => sum + p, 0);
 }
 
+function countTotalQuantity(products) {
+    return products.map((p) => p.quantity).reduce((sum, p) => sum + p, 0);
+}
+
 export default function InvoiceInfoContent(props) {
     const styles = useStyles();
     const invoice = props.invoice;
@@ -70,6 +85,7 @@ export default function InvoiceInfoContent(props) {
     const waybill = props.invoice.waybill;
     const totalSum = countTotalSum(invoice.products);
     const totalWeight = countTotalWeight(invoice.products);
+    const totalQuantity = countTotalQuantity(invoice.products);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
     const [actInfoDialogOpen, setActInfoDialogOpen] = React.useState(false);
@@ -93,31 +109,29 @@ export default function InvoiceInfoContent(props) {
     }
 
     const handleDriverInfoOpen = () => {
-        if (invoice.driver) {
-            const id = invoice.driver.id;
-            setForm(<UserInfo userId={id}/>);
+        const user = invoice.driver;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
             setTitle("Driver");
             setUserInfoDialogOpen(true);
         }
     }
 
     const handleDispatcherInfoOpen = () => {
-        if (invoice.registrationUser) {
-            const id = invoice.registrationUser.id;
-            setForm(<UserInfo userId={id}/>);
+        const user = invoice.registrationUser;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
             setTitle("Dispatcher");
             setUserInfoDialogOpen(true);
         }
     }
 
     const handleManagerInfoOpen = () => {
-        if (invoice.checkingUser) {
-        const id = invoice.checkingUser.id;
-        if (id !== null && id !== "undefined") {
-            setForm(<UserInfo userId={id}/>);
+        const user = invoice.checkingUser;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
             setTitle("Manager");
             setUserInfoDialogOpen(true);
-        }
         }
     }
 
@@ -327,16 +341,38 @@ export default function InvoiceInfoContent(props) {
                     </Paper>
 
                     <Paper className={`${styles.infoPiece} table-paper`}>
+                        <Typography className={styles.tableHeader}>
+                            CARGO LIST
+                        </Typography>
                         <TableRow>
-                            <TableCell style={{fontSize: 20}}>PRODUCTS</TableCell>
-                            <TableCell colSpan={1}>Quantity:</TableCell>
+                            <TableCell colSpan={1}>
+                                Owner :
+                            </TableCell>
                             <TableCell align="right"
-                                       style={{fontWeight: "bold"}}>{invoice.products.length}</TableCell>
-                            <TableCell colSpan={1}>Weight:</TableCell>
-                            <TableCell align="right" style={{fontWeight: "bold"}}>{totalWeight + " KG"}</TableCell>
-                            <TableCell colSpan={1}>Total Sum:</TableCell>
+                                       className={styles.boldText}>
+                                {invoice.productOwnerDTO.name}
+                            </TableCell>
+                            <TableCell colSpan={1}>
+                                Quantity :
+                            </TableCell>
                             <TableCell align="right"
-                                       style={{fontWeight: "bold"}}>{totalSum + " " + CURRENCY}</TableCell>
+                                       className={styles.boldText}>
+                                {totalQuantity + " items"}
+                            </TableCell>
+                            <TableCell colSpan={1}>
+                                Weight :
+                            </TableCell>
+                            <TableCell align="right"
+                                       className={styles.boldText}>
+                                {totalWeight + " KG"}
+                            </TableCell>
+                            <TableCell colSpan={1}>
+                                Total Sum :
+                            </TableCell>
+                            <TableCell align="right"
+                                       className={styles.boldText}>
+                                {totalSum + " " + CURRENCY}
+                            </TableCell>
                         </TableRow>
 
                         <TableContainer style={{maxHeight: "80%"}}>

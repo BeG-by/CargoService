@@ -27,7 +27,6 @@ public class ProductLostDto {
     @Size(max = 500, message = "Comment is too long (max is 500 symbols)")
     private String comment;
 
-    @NotNull(message = "Lost quantity is mandatory")
     @Positive(message = "Lost quantity cannot be negative or zero")
     private Integer lostQuantity;
 

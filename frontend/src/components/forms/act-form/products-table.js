@@ -45,6 +45,7 @@ export const ProductsTable = (props) => {
     };
 
     const handleTableRowClick = (product) => {
+
         onRowClick(product);
     };
 

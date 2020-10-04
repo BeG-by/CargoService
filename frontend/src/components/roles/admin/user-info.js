@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import {USER_URL, makeRequest , handleRequestError} from "../../parts/util/request-util";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import {List} from "material-ui";
@@ -15,7 +14,6 @@ const mapStateToProps = (store) => {
 };
 
 export const UserInfo = connect(mapStateToProps)((props) => {
-    const userRole = props.role;
     const [user, setUser] = React.useState({
         id: 0,
         name: "",
@@ -27,35 +25,22 @@ export const UserInfo = connect(mapStateToProps)((props) => {
     });
 
 
-    async function fetchUser(cleanupFunction) {
-        const id = props.userId;
-        let selected = await makeRequest("GET", USER_URL + "/" + id);
+    function fetchUser(cleanupFunction) {
+        let selected = props.user
         if (!cleanupFunction) setUser({
-            id: selected.data.id,
-            name: selected.data.name + " " + selected.data.surname,
-            birthday: selected.data.birthday,
-            email: selected.data.email,
-            phone: selected.data.phone,
-            photo: selected.data.photo,
-            role: selected.data.roles[0],
+            id: selected.id,
+            name: selected.name + " " + selected.surname,
+            birthday: selected.birthday,
+            email: selected.email,
+            phone: selected.phone,
+            photo: selected.photo,
+            role: selected.roles[0],
         });
     }
 
     useEffect(() => {
         let cleanupFunction = false;
-        fetchUser(cleanupFunction)
-            .catch((err) => {
-                setUser({
-                    id: 0,
-                    name: "",
-                    birthday: "",
-                    email: "",
-                    phone: "",
-                    role: "",
-                    photo: ""
-                });
-                handleRequestError(err, alert); // TODO toast notification
-            });
+        fetchUser(cleanupFunction);
         return () => cleanupFunction = true;
     }, []);
 

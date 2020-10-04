@@ -129,7 +129,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [invoices, setInvoices] = React.useState([]);
-    const [invoice, setInvoice] = React.useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
+    const [selectedInvoice, setSelectedInvoice] = React.useState({id: 0, waybillId: null, status: "", number: ""});
     const [form, setForm] = React.useState(null);
     const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
@@ -165,29 +165,24 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setPage(newPage);
     };
 
-    // fixme again two requests.
-
-    let foundInvoice = {};
     const handleTableRowClick = async (invoice) => {
-        let response = await makeRequest("GET", INVOICE_URL + "/" + invoice.id);
-        foundInvoice = response.data;
-        setInvoice(() => ({
-            id: foundInvoice.id,
-            status: foundInvoice.status,
-            waybill: foundInvoice.waybill,
-            number: foundInvoice.number,
-        }));
-        if (foundInvoice.status === "ACCEPTED"
-            && foundInvoice.waybill === null) {
+        setSelectedInvoice({
+            id: invoice.id,
+            status: invoice.status,
+            waybillId: invoice.waybillId,
+            number: invoice.number,
+        });
+        if (invoice.status === "ACCEPTED"
+            && invoice.waybillId === null) {
             setForm(FillWaybillDialog(handleWaybillFormOpen, handleInvoiceInfoOpen));
             setWaybillFillDialogOpen(true);
         } else {
-            handleInvoiceInfoOpen();
+            handleInvoiceInfoOpen(invoice.id);
         }
     };
 
-    const handleInvoiceInfoOpen = () => {
-        setForm(<InvoiceInfo invoiceId={foundInvoice.id}/>);
+    const handleInvoiceInfoOpen = (id) => {
+        setForm(<InvoiceInfo invoiceId={id}/>);
         setWaybillFillDialogOpen(false);
         setInvoiceInfoDialogOpen(true);
     };
@@ -283,7 +278,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     />
 
                     <WaybillDialog
-                        invoice={invoice}
+                        invoice={selectedInvoice}
                         open={waybillDialogOpen}
                         onClose={() => {
                             setWaybillDialogOpen(false);
@@ -303,7 +298,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     />
 
                     <DialogWindow
-                        dialogTitle={"Invoice # " + invoice.number}
+                        dialogTitle={"Invoice # " + selectedInvoice.number}
                         fullWidth={true}
                         maxWidth="xl"
                         handleClose={handleClose}
@@ -314,6 +309,5 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
             </main>
     );
 });
-
 
 export default InvoicesTable;

@@ -29,11 +29,13 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         closeDate: "",
         shipper: "",
         consignee: "",
-        driver: {id: 0, name: "", surname: ""},
-        registrationUser: {id: 0},
-        checkingUser: {id: 0},
-        waybill: null,
-        act: null,
+        comment: "",
+        driver: {},
+        registrationUser: {},
+        checkingUser: {},
+        waybill: {},
+        act: {},
+        productOwnerDTO: {}
     });
     const [checkPassage, setCheckPassage] = React.useState(true);
 
@@ -73,20 +75,13 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
             closeDate: selected.closeDate,
             shipper: selected.shipper,
             consignee: selected.consignee,
-            driver: {id: selected.driver.id, name: selected.driver.name, surname: selected.driver.surname},
-            registrationUser: {
-                id: selected.registrationUser.id,
-                name: selected.registrationUser.name,
-                surname: selected.registrationUser.surname
-            },
-            checkingUser: selected.checkingUser === null ? null : {
-                id: selected.checkingUser.id,
-                name: selected.checkingUser.name,
-                surname: selected.checkingUser.surname
-            },
+            driver: selected.driver,
+            registrationUser: selected.registrationUser,
+            checkingUser: selected.checkingUser,
             waybill: selected.waybill,
             act: selected.act,
             comment: selected.comment,
+            productOwnerDTO: selected.productOwnerDTO,
         });
         if (selected.waybill === null) {
             setCheckPassage(false);

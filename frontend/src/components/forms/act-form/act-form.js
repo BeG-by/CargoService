@@ -17,7 +17,6 @@ export const ActForm = (props) => {
 
     const EMPTY_PRODUCT = {
         id: 0,
-        idx: -1,
         invoiceId: invoice.id,
         productStatus: "",
         lostQuantity: 0,
@@ -66,7 +65,7 @@ export const ActForm = (props) => {
         setProducts((prevState) => {
             const temp = [...prevState];
             for (let el of temp) {
-                if (el.idx === product.idx) {
+                if (el.id === product.id) {
                     el.id = product.id;
                     el.productStatus = product.productStatus;
                     el.lostQuantity = product.lostQuantity;
@@ -90,7 +89,8 @@ export const ActForm = (props) => {
     const handleSubmit = (values) => {
         let statusProducts = [];
         products.forEach(p => {
-            if (p.lostQuantity === 0) {
+            if (p.productStatus === "ACCEPTED") {
+                p.comment = "delivered";
                 p.productStatus = "DELIVERED";
             }
             statusProducts.push(p);

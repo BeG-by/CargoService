@@ -10,7 +10,8 @@ export const WaybillInfo = (props) => {
         points: [],
         invoice: {id: 0, number: "", checkingUser: {}},
         auto: {id: 0, mark: "", type: ""},
-        driver: {id: 0, name: "", surname: ""},
+        driver: {},
+        checkingUser: {},
         shipper: "",
         consignee: "",
     });
@@ -32,11 +33,8 @@ export const WaybillInfo = (props) => {
                     checkingUser: selected.invoice.checkingUser,
                 },
                 auto: {id: selected.auto.id, mark: selected.auto.mark, type: selected.auto.autoType},
-                driver: {
-                    id: selected.invoice.driver.id,
-                    name: selected.invoice.driver.name,
-                    surname: selected.invoice.driver.surname
-                },
+                driver: selected.invoice.driver,
+                checkingUser: selected.invoice.checkingUser,
                 shipper: selected.invoice.shipper,
                 consignee: selected.invoice.consignee,
             });

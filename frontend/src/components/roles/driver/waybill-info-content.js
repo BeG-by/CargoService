@@ -65,18 +65,18 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     }
 
     const handleDriverInfoOpen = () => {
-        if (waybill.driver) {
-            const id = waybill.driver.id;
-            setForm(<UserInfo userId={id}/>);
+        const user = waybill.driver;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
             setTitle("Driver");
             setUserInfoDialogOpen(true);
         }
     }
 
     const handleManagerInfoOpen = () => {
-        if (invoice.checkingUser) {
-            const id = invoice.checkingUser.id;
-            setForm(<UserInfo userId={id}/>);
+        const user = waybill.checkingUser;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
             setTitle("Manager");
             setUserInfoDialogOpen(true);
         }
@@ -119,8 +119,8 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                                 primary={
                                                     <React.Fragment>
                                                         <strong style={{color: "#3f51b5"}}>
-                                                            {invoice.checkingUser.name + " "
-                                                            + invoice.checkingUser.surname}
+                                                            {waybill.checkingUser.name + " "
+                                                            + waybill.checkingUser.surname}
                                                         </strong>
                                                     </React.Fragment>
                                                 }
