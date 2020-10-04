@@ -18,6 +18,7 @@ import HowToRegIcon from "@material-ui/icons/HowToReg";
 import StoreIcon from '@material-ui/icons/Store';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 import Divider from "@material-ui/core/Divider";
+import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 
 const mapStateToProps = (store) => {
     return {
@@ -40,6 +41,14 @@ const columns = [
 export const ActInfo = connect(mapStateToProps)((props) => {
     const invoice = props.invoice;
     const act = props.act;
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('status');
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     const losses = [];
     invoice.products.forEach(p => {
@@ -140,20 +149,14 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     </Typography>
                     <Table
                         aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        style={{minWidth: column.minWidth, fontSize: 16, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
+                        <EnhancedTableHead
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                        />
                         <TableBody>
-                            {losses
+                            {stableSort(losses, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((product) => {
                                     return (

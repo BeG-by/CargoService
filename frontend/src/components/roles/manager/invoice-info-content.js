@@ -25,6 +25,7 @@ import Divider from "@material-ui/core/Divider";
 import {UserInfo} from "../admin/user-info";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Typography} from "@material-ui/core";
+import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
@@ -93,6 +94,14 @@ export default function InvoiceInfoContent(props) {
     const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
     const [form, setForm] = React.useState(null);
     const [title, setTitle] = React.useState("");
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('status');
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     const handleActInfoOpen = () => {
         if (act) {
@@ -377,20 +386,14 @@ export default function InvoiceInfoContent(props) {
 
                         <TableContainer style={{maxHeight: "80%"}}>
                             <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                style={{minWidth: column.minWidth, fontSize: 14, color: "#3f51b5"}}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
+                                <EnhancedTableHead
+                                    columns={columns}
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onRequestSort={handleRequestSort}
+                                />
                                 <TableBody>
-                                    {invoice.products
+                                    {stableSort(invoice.products, getComparator(order, orderBy))
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((product) => {
                                             return (
