@@ -19,6 +19,7 @@ import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import {NotAuthorized} from "../../../pages/error-page/error-401";
 import {connect} from "react-redux";
+import TextSearch from "../../../parts/search/text-search";
 
 const MAX_WIDTH = 170;
 const MIN_WIDTH = 170;
@@ -49,7 +50,9 @@ const mapStateToProps = (store) => {
 
 export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(7);
+    const [amountProductOwners, setAmountProductOwners] = useState(0);
+
     const [productOwnerDialogOpen, setProductOwnerDialogOpen] = useState(false);
     const [selectedProductOwnerId, setSelectedProductOwnerId] = useState(-1);
     const [productOwners, setProductOwners] = useState([]);
@@ -58,11 +61,12 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const [toastComponent, showToastComponent] = useToast();
     const role = props.role;
 
-    const updateTable = (isComponentMounted = true) => {
-        makeRequest("GET", OWNER_URL)
+    const updateTable = (isComponentMounted = true, newPage = page, newRowsPerPage = rowsPerPage) => {
+        makeRequest("GET", OWNER_URL + `?requestedPage=${newPage}&productOwnersPerPage=${newRowsPerPage}`)
             .then((response) => {
-                if (isComponentMounted) { //todo: is it a valid way to avoid memory leak? (we make axios request but dont change state)
-                    setProductOwners(response.data)
+                if (isComponentMounted) {
+                    setAmountProductOwners(response.data.totalAmountProductOwners);
+                    setProductOwners(response.data.productOwners);
                 }
             })
             .catch((err) => {
@@ -71,6 +75,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
             })
     };
 
+
     useEffect(() => {
         let mounted = true;
         updateTable(mounted);
@@ -78,7 +83,9 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     }, []);
 
     const handleChangePage = (event, newPage) => {
+        console.log("Change page")
         setPage(newPage);
+        updateTable(true, newPage);
     };
 
     const handleEditProductOwnerClick = (productOwner) => {
@@ -99,128 +106,149 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        updateTable(true, page, +event.target.value)
     };
+
+    const updateTableWithSearch = (searchStr) => {
+        searchStr = searchStr.trim();
+        if (searchStr === "") {
+            updateTable();
+        } else {
+            const uri = `${OWNER_URL}/filter?name=${searchStr}&requestedPage=${page}&productOwnersPerPage=${rowsPerPage}`;
+            makeRequest("GET", uri)
+                .then((response) => {
+                    setAmountProductOwners(response.data.totalAmountProductOwners);
+                    setProductOwners(response.data.productOwners);
+                })
+                .catch((err) => {
+                    setProductOwners([]);
+                    handleRequestError(err, showToastComponent);
+                })
+        }
+    }
 
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
-        <main>
-            <Paper className="table-paper">
-                <TableContainer className="table-container">
-                    <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
-                            Clients
-                        </Typography>
-                        <Button variant="contained"
-                                color={"primary"}
-                                onClick={handleCreateProductOwnerClick}
-                                className="add-table-btn"
-                        >
-                            <LibraryAddRoundedIcon/>
-                        </Button>
-                    </div>
-                    <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                                <TableCell
-                                    key={"edit_product_owner"}
-                                    align={"right"}
+            <main>
+                <Paper className="table-paper">
+                    <TableContainer className="table-container">
+                        <div className="table-header-wrapper">
+                            <Typography variant="h5" gutterBottom>
+                                Clients
+                            </Typography>
+                            <div className="table-header-right-part">
+                                <TextSearch onFieldChange={updateTableWithSearch}/>
+                                <Button variant="contained"
+                                        color={"primary"}
+                                        onClick={handleCreateProductOwnerClick}
+                                        className="add-table-btn"
                                 >
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {productOwners
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((client) => {
-                                    return (
-                                        <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(client);
-                                            }}
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={client.id}
+                                    <LibraryAddRoundedIcon/>
+                                </Button>
+                            </div>
+                        </div>
+                        <Table aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    {columns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                         >
-                                            {columns.map((column) => {
-                                                let value = fetchFieldFromObject(client, column.id);
-                                                if (value === "SP") {
-                                                    value = "Sole proprietorship";
-                                                } else if (value === "JP") {
-                                                    value = "Juridical person";
-                                                }
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell key={"edit_product_owner"}>
-                                                <div className="table-delete-edit-div">
-                                                    <Button
-                                                        color={"primary"}
-                                                        className="menu-table-btn"
-                                                        startIcon={<NoteAddIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(client)
-                                                        }}/>
-                                                    <Button
-                                                        color={"primary"}
-                                                        className="menu-table-btn"
-                                                        startIcon={<EditIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleEditProductOwnerClick(client)
-                                                        }}/>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
+                                    <TableCell
+                                        key={"edit_product_owner"}
+                                        align={"right"}
+                                    >
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {productOwners
+                                    .map((client) => {
+                                        return (
+                                            <TableRow
+                                                onClick={() => {
+                                                    handleTableRowClick(client);
+                                                }}
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={client.id}
+                                            >
+                                                {columns.map((column) => {
+                                                    let value = fetchFieldFromObject(client, column.id);
+                                                    if (value === "SP") {
+                                                        value = "Sole proprietorship";
+                                                    } else if (value === "JP") {
+                                                        value = "Juridical person";
+                                                    }
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                                <TableCell key={"edit_product_owner"}>
+                                                    <div className="table-delete-edit-div">
+                                                        <Button
+                                                            color={"primary"}
+                                                            className="menu-table-btn"
+                                                            startIcon={<NoteAddIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(client)
+                                                            }}/>
+                                                        <Button
+                                                            color={"primary"}
+                                                            className="menu-table-btn"
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleEditProductOwnerClick(client)
+                                                            }}/>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={productOwners.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    <TablePagination
+                        rowsPerPageOptions={[7, 15, 30]}
+                        component="div"
+                        count={amountProductOwners}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                </Paper>
+
+                {toastComponent}
+
+                <InvoiceDialog
+                    productOwner={selectedProductOwner}
+                    open={invoiceDialogOpen}
+                    onClose={() => {
+                        setInvoiceDialogOpen(false);
+                    }}
                 />
-            </Paper>
 
-            {toastComponent}
-
-            <InvoiceDialog
-                productOwner={selectedProductOwner}
-                open={invoiceDialogOpen}
-                onClose={() => {
-                    setInvoiceDialogOpen(false);
-                }}
-            />
-
-            <ProductOwnerDialog
-                open={productOwnerDialogOpen}
-                productOwnerId={selectedProductOwnerId}
-                onClose={() => {
-                    setProductOwnerDialogOpen(false);
-                    setSelectedProductOwnerId(-1);
-                    updateTable();
-                }}
-            />
-        </main>
+                <ProductOwnerDialog
+                    open={productOwnerDialogOpen}
+                    productOwnerId={selectedProductOwnerId}
+                    onClose={() => {
+                        setProductOwnerDialogOpen(false);
+                        setSelectedProductOwnerId(-1);
+                        updateTable();
+                    }}
+                />
+            </main>
     );
 })

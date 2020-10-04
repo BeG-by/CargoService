@@ -1,9 +1,10 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerTableResponse;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
-import by.itechart.cargo.elastic_search.model.ElasticsearchProductOwner;
-import by.itechart.cargo.elastic_search.repository.ElasticsearchProductOwnerRepository;
+import by.itechart.cargo.elasticsearch.model.ElasticsearchProductOwner;
+import by.itechart.cargo.elasticsearch.repository.ElasticsearchProductOwnerRepository;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
@@ -14,6 +15,7 @@ import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.service.ProductOwnerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,6 +35,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     private final ElasticsearchProductOwnerRepository elasticSearchProductOwnerRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private boolean isDataInserted;
 
     @Autowired
     public ProductOwnerServiceImpl(ProductOwnerRepository productOwnerRepository,
@@ -43,12 +46,37 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         this.jwtTokenUtil = jwtTokenUtil;
         this.clientCompanyRepository = clientCompanyRepository;
         this.elasticSearchProductOwnerRepository = elasticSearchProductOwnerRepository;
+        this.isDataInserted = false;
     }
 
+    private void insertDataForTest() {
+        ElasticsearchProductOwner first = new ElasticsearchProductOwner(1L, "Евроопт", 2L);
+        ElasticsearchProductOwner second = new ElasticsearchProductOwner(2L, "МАГАЗИН-ИП-РОГОВ", 2L);
+        ElasticsearchProductOwner third = new ElasticsearchProductOwner(4L, "Ninja", 2L);
+        ElasticsearchProductOwner fourth = new ElasticsearchProductOwner(5L, "NANI", 2L);
+        ElasticsearchProductOwner fifth = new ElasticsearchProductOwner(6L, "Ninoral", 2L);
+
+        elasticSearchProductOwnerRepository.save(first);
+        elasticSearchProductOwnerRepository.save(second);
+        elasticSearchProductOwnerRepository.save(third);
+        elasticSearchProductOwnerRepository.save(fourth);
+        elasticSearchProductOwnerRepository.save(fifth);
+    }
 
     @Override
-    public List<ProductOwner> findAll() {
-        return productOwnerRepository.findByClientCompanyAndStatus(jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwner.Status.ACTIVE);
+    public ProductOwnerTableResponse findAll(int requestedPage, int productOwnersPerPage) {
+        if (!isDataInserted) {
+            insertDataForTest();
+            isDataInserted = true;
+        }
+        PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
+        int totalAmount = productOwnerRepository.countAllByClientCompanyAndStatus
+                (jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwner.Status.ACTIVE);
+
+        List<ProductOwner> productOwners = productOwnerRepository.findAllByClientCompanyAndStatus(
+                jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwner.Status.ACTIVE, pageRequest);
+
+        return new ProductOwnerTableResponse(totalAmount, productOwners);
     }
 
     @Override
@@ -114,12 +142,18 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         log.info("Product owner has been deleted {}", productOwner);
     }
 
+
     @Override
-    public List<ProductOwner> findByName(String name) {
-        List<ElasticsearchProductOwner> elasticsearchProductOwners = elasticSearchProductOwnerRepository.findByNameStartsWith(name);
-        List<Long> ids = elasticsearchProductOwners.stream()
+    public ProductOwnerTableResponse findByName(String name, int requestedPage, int productOwnersPerPage) {
+        PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
+
+        Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
+        List<Long> ids = elasticSearchProductOwnerRepository
+                .findAllByNameStartsWithAndClientCompanyId(name, clientCompanyId, pageRequest).stream()
                 .map(ElasticsearchProductOwner::getId)
                 .collect(Collectors.toList());
-        return productOwnerRepository.findByIdIsIn(ids);
+        List<ProductOwner> productOwners = productOwnerRepository.findByIdIsIn(ids);
+
+        return new ProductOwnerTableResponse(ids.size(), productOwners);
     }
 }

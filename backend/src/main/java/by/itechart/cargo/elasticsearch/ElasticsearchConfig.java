@@ -1,4 +1,4 @@
-package by.itechart.cargo.elastic_search;
+package by.itechart.cargo.elasticsearch;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 @Configuration
 @EnableElasticsearchRepositories
-@ComponentScan(basePackages = {"by.itechart.cargo.elastic_search"})
+@ComponentScan(basePackages = {"by.itechart.cargo.elasticsearch"})
 public class ElasticsearchConfig {
 
     @Bean

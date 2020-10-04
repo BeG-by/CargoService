@@ -1,4 +1,4 @@
-package by.itechart.cargo.elastic_search.model;
+package by.itechart.cargo.elasticsearch.model;
 
 
 import by.itechart.cargo.model.ProductOwner;
@@ -15,13 +15,20 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @AllArgsConstructor
 @Document(indexName = "product_owner")
 public class ElasticsearchProductOwner {
+
     @Id
     private Long id;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Text)
     private String name;
 
+    @Field(type = FieldType.Long)
+    private Long clientCompanyId;
+
     public static ElasticsearchProductOwner fromProductOwner(ProductOwner productOwner) {
-        return new ElasticsearchProductOwner(productOwner.getId(), productOwner.getName());
+        return new ElasticsearchProductOwner(
+                productOwner.getId(),
+                productOwner.getName(),
+                productOwner.getClientCompany().getId());
     }
 }

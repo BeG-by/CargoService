@@ -7,5 +7,5 @@ GET localhost:9200/_aliases?pretty=true
 ### All indexes in the table form
 GET localhost:9200/_cat/indices?v
 
-### Delte product_onwer index
+### Delete product_onwer index
 DELETE localhost:9200/product_owner
