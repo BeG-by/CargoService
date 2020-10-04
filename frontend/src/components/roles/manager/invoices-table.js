@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import PropTypes from 'prop-types';
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,6 +20,8 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";
 import {handleRequestError, INVOICE_URL, makeRequest} from "../../parts/util/request-util";
 import {NotAuthorized} from "../../pages/error-page/error-401";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const ALIGN = "left";
 
@@ -30,6 +33,91 @@ const columns = [
     {id: "consignee", label: "Consignee", minWidth: 300, align: ALIGN},
     {id: "waybillId", label: "Waybill", minWidth: 100, align: "center"}
 ];
+
+const useStyles = makeStyles((theme) => ({
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    },
+}));
+
+function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
+
+function getComparator(order, orderBy) {
+    return order === 'desc'
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
+
+function EnhancedTableHead(props) {
+    const classes = useStyles();
+    const {order, orderBy, onRequestSort} = props;
+    const createSortHandler = (property) => (event) => {
+        onRequestSort(event, property);
+    };
+
+    return (
+        <TableHead>
+            <TableRow>
+                {columns.map((column) => (
+                    <TableCell
+                        key={column.id}
+                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
+                        sortDirection={orderBy === column.id ? order : false}
+                    >
+                        <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : 'asc'}
+                            onClick={createSortHandler(column.id)}
+                        >
+                            {column.label}
+                            {orderBy === column.id
+                                ? <span className={classes.visuallyHidden}>
+                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                  </span>
+                                : null}
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+                <TableCell
+                    key={"edit-delete"}
+                    style={{minWidth: 60}}
+                />
+            </TableRow>
+        </TableHead>
+    );
+}
+
+EnhancedTableHead.propTypes = {
+    onRequestSort: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    orderBy: PropTypes.string.isRequired,
+};
 
 const mapStateToProps = (store) => {
     return {
@@ -47,6 +135,14 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
     const role = props.role;
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('status');
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     async function fetchInvoices(cleanupFunction) {
         if (!cleanupFunction) {
@@ -69,7 +165,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setPage(newPage);
     };
 
-    // TODO again two requests.
+    // fixme again two requests.
 
     let foundInvoice = {};
     const handleTableRowClick = async (invoice) => {
@@ -112,116 +208,110 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setWaybillDialogOpen(false);
     };
 
+    const handleShowClick = () => {
+        alert("show");
+    }
+
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
-        <main>
-            <Paper className="table-paper">
-                <TableContainer className="table-container">
-                    <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
-                            Invoices
-                        </Typography>
-                    </div>
-                    <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                                <TableCell
-                                    key={"edit-delete"}
-                                    style={{minWidth: 60}}
-                                />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {invoices
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((invoice) => {
-                                    return (
-                                        <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(invoice);
-                                            }}
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={invoice.id}
-                                        >
-                                            {columns.map((column) => {
-                                                const value = fetchFieldFromObject(invoice, column.id);
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {column.id === 'waybillId' && value !== null
-                                                            ? <CheckIcon/>
-                                                            : value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell>
-                                                <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<VisibilityIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(invoice)
-                                                        }}/>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+            <main>
+                <Paper className="table-paper">
+                    <TableContainer className="table-container">
+                        <div className="table-header-wrapper">
+                            <Typography variant="h5" gutterBottom>
+                                Invoices
+                            </Typography>
+                        </div>
+                        <Table aria-label="sticky table">
+                            <EnhancedTableHead
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
 
-                <TablePagination
-                    rowsPerPageOptions={[10, 20, 50]}
-                    component="div"
-                    count={invoices.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
+                            />
+                            <TableBody>
+                                {stableSort(invoices, getComparator(order, orderBy))
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((invoice) => {
+                                        return (
+                                            <TableRow
+                                                onClick={() => {
+                                                    handleTableRowClick(invoice);
+                                                }}
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={invoice.id}
+                                            >
+                                                {columns.map((column) => {
+                                                    const value = fetchFieldFromObject(invoice, column.id);
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {column.id === 'waybillId' && value !== null
+                                                                ? <CheckIcon/>
+                                                                : value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                                <TableCell>
+                                                    <div className="table-delete-edit-div">
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<VisibilityIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleShowClick(invoice)
+                                                            }}/>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
-                <WaybillDialog
-                    invoice={invoice}
-                    open={waybillDialogOpen}
-                    onClose={() => {
-                        setWaybillDialogOpen(false);
-                        fetchInvoices(false)
-                            .catch((err) => {
-                                setInvoices([]);
-                                handleRequestError(err);
-                            });
-                    }}
-                />
+                    <TablePagination
+                        rowsPerPageOptions={[10, 20, 50]}
+                        component="div"
+                        count={invoices.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
 
-                <DialogWindow
-                    dialogTitle="Confirmation"
-                    handleClose={handleClose}
-                    openDialog={waybillFillDialogOpen}
-                    form={form}
-                />
+                    <WaybillDialog
+                        invoice={invoice}
+                        open={waybillDialogOpen}
+                        onClose={() => {
+                            setWaybillDialogOpen(false);
+                            fetchInvoices(false)
+                                .catch((err) => {
+                                    setInvoices([]);
+                                    handleRequestError(err);
+                                });
+                        }}
+                    />
 
-                <DialogWindow
-                    dialogTitle={"Invoice # " + invoice.number}
-                    fullWidth={true}
-                    maxWidth="xl"
-                    handleClose={handleClose}
-                    openDialog={invoiceInfoDialogOpen}
-                    form={form}
-                />
-            </Paper>
-        </main>
+                    <DialogWindow
+                        dialogTitle="Confirmation"
+                        handleClose={handleClose}
+                        openDialog={waybillFillDialogOpen}
+                        form={form}
+                    />
+
+                    <DialogWindow
+                        dialogTitle={"Invoice # " + invoice.number}
+                        fullWidth={true}
+                        maxWidth="xl"
+                        handleClose={handleClose}
+                        openDialog={invoiceInfoDialogOpen}
+                        form={form}
+                    />
+                </Paper>
+            </main>
     );
 });
 

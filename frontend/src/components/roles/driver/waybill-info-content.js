@@ -18,6 +18,7 @@ import {connect} from "react-redux";
 import Button from "@material-ui/core/Button";
 import {UserInfo} from "../admin/user-info";
 import Tooltip from "@material-ui/core/Tooltip";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const mapStateToProps = (store) => {
     return {
@@ -25,9 +26,26 @@ const mapStateToProps = (store) => {
     }
 };
 
+const useStyles = makeStyles((theme) => ({
+    infoPiece: {
+        flexDirection: "column",
+        alignItems: "flex-start"
+    },
+    half: {
+        width: "50%",
+    },
+    centerButton: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center"
+    }
+}));
+
 export const WaybillInfoContent = connect(mapStateToProps)((props) => {
+    const styles = useStyles();
     const role = props.role;
     const waybill = props.waybill;
+    const invoice = waybill.invoice;
     const [form, setForm] = React.useState(null);
     const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
     const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
@@ -39,143 +57,210 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     };
 
     const handleInvoiceInfoOpen = () => {
-        setForm(<InvoiceInfo invoiceId={waybill.invoice.id}/>);
-        setTitle("Invoice # " + waybill.invoice.number);
-        setInvoiceInfoDialogOpen(true);
+        if (invoice) {
+            setForm(<InvoiceInfo invoiceId={invoice.id}/>);
+            setTitle("Invoice # " + invoice.number);
+            setInvoiceInfoDialogOpen(true);
+        }
     }
 
     const handleDriverInfoOpen = () => {
-        const id = waybill.driver.id;
-        setForm(<UserInfo userId={id}/>);
-        setTitle("Driver");
-        setUserInfoDialogOpen(true);
+        if (waybill.driver) {
+            const id = waybill.driver.id;
+            setForm(<UserInfo userId={id}/>);
+            setTitle("Driver");
+            setUserInfoDialogOpen(true);
+        }
+    }
+
+    const handleManagerInfoOpen = () => {
+        if (invoice.checkingUser) {
+            const id = invoice.checkingUser.id;
+            setForm(<UserInfo userId={id}/>);
+            setTitle("Manager");
+            setUserInfoDialogOpen(true);
+        }
     }
 
     return (
         <div>
-            <Button
-                color="primary"
-                variant="outlined"
-                onClick={handleInvoiceInfoOpen}>
-                {"See invoice info"}
-            </Button>
+            <div className="info-content">
+                <div className="info-content-column">
+                    <Paper className={`${styles.infoPiece} table-paper`}>
+                        <List className="info-content">
+                            <div className="info-content-row">
+                                <ListItem className="info-content-column">
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <HowToRegIcon/>
+                                        </ListItemIcon>
+                                        <Tooltip title="Click to see Driver info" arrow>
+                                            <ListItemText
+                                                onClick={handleDriverInfoOpen}
+                                                primary={
+                                                    <React.Fragment>
+                                                        <strong style={{color: "#3f51b5"}}>
+                                                            {waybill.driver.name + " "
+                                                            + waybill.driver.surname}
+                                                        </strong>
+                                                    </React.Fragment>
+                                                }
+                                                secondary="Driver"
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <HowToRegIcon/>
+                                        </ListItemIcon>
+                                        <Tooltip title="Click to see Manager info" arrow>
+                                            <ListItemText
+                                                onClick={handleManagerInfoOpen}
+                                                primary={
+                                                    <React.Fragment>
+                                                        <strong style={{color: "#3f51b5"}}>
+                                                            {invoice.checkingUser.name + " "
+                                                            + invoice.checkingUser.surname}
+                                                        </strong>
+                                                    </React.Fragment>
+                                                }
+                                                secondary="Manager"
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                </ListItem>
+                                <Divider/>
+                                <ListItem className="info-content-column">
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <LocalShippingIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                <React.Fragment>
+                                                    {waybill.auto.mark}
+                                                </React.Fragment>
+                                            }
+                                            secondary="Auto mark"
+                                        />
+                                    </div>
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <LocalShippingIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                <React.Fragment>
+                                                    {waybill.auto.type}
+                                                </React.Fragment>
+                                            }
+                                            secondary="Auto type"
+                                        />
+                                    </div>
+                                </ListItem>
+                                <Divider/>
+                                <ListItem className="info-content-column">
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <DepartureBoardIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                <React.Fragment>
+                                                    {waybill.departureDate}
+                                                </React.Fragment>
+                                            }
+                                            secondary="Departure Date"
+                                        />
+                                    </div>
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <DepartureBoardIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                <React.Fragment>
+                                                    {waybill.arrivalDate}
+                                                </React.Fragment>
+                                            }
+                                            secondary="Arrival Date"
+                                        />
+                                    </div>
+                                </ListItem>
+                                <Divider/>
+                                <ListItem className="info-content-column">
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <StoreIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                <React.Fragment>
+                                                    {waybill.shipper}
+                                                </React.Fragment>
+                                            }
+                                            secondary="Shipper"
+                                        />
+                                    </div>
+                                    <div className={styles.half}>
+                                        <ListItemIcon>
+                                            <StoreIcon/>
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                <React.Fragment>
+                                                    {waybill.consignee}
+                                                </React.Fragment>
+                                            }
+                                            secondary="Consignee"
+                                        />
+                                    </div>
+                                </ListItem>
+                            </div>
+                        </List>
+                        <div className={styles.centerButton}>
+                            <Button
+                                color="primary"
+                                variant="outlined"
+                                onClick={handleInvoiceInfoOpen}>
+                                {"See invoice info"}
+                            </Button>
+                        </div>
+                    </Paper>
 
-            <Paper>
-                <List style={{alignItems: "flex-start"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <LocalShippingIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.auto.mark + " "
-                                        + waybill.auto.type}
-                                    </React.Fragment>
-                                }
-                                secondary="Auto"
+                    <Paper className={`${styles.infoPiece} table-paper`}
+                           style={{padding: 20}}>
+                        {role === "DRIVER" ?
+                            <DriverMap
+                                markers={convertPointsFromBackendApi(waybill.points)}
+                                onMarkerPass={props.onUpdatePoint}
                             />
-                            <ListItemIcon>
-                                <HowToRegIcon/>
-                            </ListItemIcon>
-                            <Tooltip title="Click to see Driver info" arrow>
-                                <ListItemText
-                                    onClick={handleDriverInfoOpen}
-                                    primary={
-                                        <React.Fragment>
-                                            <strong style={{color: "#3f51b5"}}>
-                                                {waybill.driver.name + " "
-                                                + waybill.driver.surname}
-                                            </strong>
-                                        </React.Fragment>
-                                    }
-                                    secondary="Driver"
-                                />
-                            </Tooltip>
-                        </ListItem>
-                        <Divider orientation="vertical" flexItem/>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <DepartureBoardIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.departureDate}
-                                    </React.Fragment>
-                                }
-                                secondary="Departure Date"
+                            :
+                            <ManagerMapForPointsView
+                                markers={convertPointsFromBackendApi(waybill.points)}
                             />
-                            <ListItemIcon>
-                                <DepartureBoardIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.arrivalDate}
-                                    </React.Fragment>
-                                }
-                                secondary="Arrival Date"
-                            />
-                        </ListItem>
-                        <Divider orientation="vertical" flexItem/>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <StoreIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.shipper}
-                                    </React.Fragment>
-                                }
-                                secondary="Shipper"
-                            />
-                            <ListItemIcon>
-                                <StoreIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.consignee}
-                                    </React.Fragment>
-                                }
-                                secondary="Consignee"
-                            />
-                        </ListItem>
-                    </div>
-                </List>
-      
-                {props.role === "DRIVER" ?
-                    <DriverMap
-                        markers={convertPointsFromBackendApi(props.waybill.points)}
-                        onMarkerPass={props.onUpdatePoint}
-                    />
-                    :
-                    <ManagerMapForPointsView
-                        markers={convertPointsFromBackendApi(props.waybill.points)}
-                    />
-                }
+                        }
+                    </Paper>
+                </div>
+            </div>
 
-                <DialogWindow
-                    dialogTitle={title}
-                    fullWidth={true}
-                    maxWidth="md"
-                    handleClose={handleClose}
-                    openDialog={invoiceInfoDialogOpen}
-                    form={form}
-                />
+            <DialogWindow
+                dialogTitle={title}
+                fullWidth={true}
+                maxWidth="xl"
+                handleClose={handleClose}
+                openDialog={invoiceInfoDialogOpen}
+                form={form}
+            />
 
-                <DialogWindow
-                    dialogTitle={title}
-                    fullWidth={true}
-                    maxWidth="xs"
-                    handleClose={handleClose}
-                    openDialog={userInfoDialogOpen}
-                    form={form}
-                />
-            </Paper>
+            <DialogWindow
+                dialogTitle={title}
+                fullWidth={true}
+                maxWidth="xs"
+                handleClose={handleClose}
+                openDialog={userInfoDialogOpen}
+                form={form}
+            />
         </div>
     );
 })

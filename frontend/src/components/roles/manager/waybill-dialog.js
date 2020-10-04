@@ -9,7 +9,7 @@ export default function WaybillDialog(props) {
         <div>
             <Dialog
                 fullWidth="true"
-                maxWidth="md"
+                maxWidth="xl"
                 open={props.open}
                 onClose={props.onClose}
                 aria-labelledby="form-dialog-title"

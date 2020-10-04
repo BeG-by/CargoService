@@ -225,7 +225,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 <DialogWindow
                     dialogTitle={"Waybill to invoice # " + waybill.invoice.number}
                     fullWidth={true}
-                    maxWidth="md"
+                    maxWidth="xl"
                     handleClose={handleClose}
                     openDialog={waybillInfoDialogOpen}
                     form={form}

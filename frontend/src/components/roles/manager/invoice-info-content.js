@@ -7,7 +7,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TablePagination from "@material-ui/core/TablePagination";
 import React from "react";
-import {Typography} from "@material-ui/core";
 import {List} from "material-ui";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -24,6 +23,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {WaybillInfo} from "../driver/waybill-info";
 import Divider from "@material-ui/core/Divider";
 import {UserInfo} from "../admin/user-info";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
@@ -34,6 +34,13 @@ const columns = [
     {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
     {label: "Measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
 ];
+
+const useStyles = makeStyles((theme) => ({
+    infoPiece: {
+        flexDirection: "column",
+        alignItems: "flex-start"
+    },
+}));
 
 let CURRENCY;
 
@@ -57,6 +64,7 @@ function countTotalWeight(products) {
 }
 
 export default function InvoiceInfoContent(props) {
+    const styles = useStyles();
     const invoice = props.invoice;
     const act = props.invoice.act;
     const waybill = props.invoice.waybill;
@@ -71,35 +79,45 @@ export default function InvoiceInfoContent(props) {
     const [title, setTitle] = React.useState("");
 
     const handleActInfoOpen = () => {
-        setForm(<ActInfo act={act} invoice={invoice}/>);
-        setActInfoDialogOpen(true);
+        if (act) {
+            setForm(<ActInfo act={act} invoice={invoice}/>);
+            setActInfoDialogOpen(true);
+        }
     }
 
     const handleWaybillInfoOpen = () => {
-        setForm(<WaybillInfo waybillId={waybill.id}/>);
-        setWaybillInfoDialogOpen(true);
+        if (waybill) {
+            setForm(<WaybillInfo waybillId={waybill.id}/>);
+            setWaybillInfoDialogOpen(true);
+        }
     }
 
     const handleDriverInfoOpen = () => {
-        const id = invoice.driver.id;
-        setForm(<UserInfo userId={id}/>);
-        setTitle("Driver");
-        setUserInfoDialogOpen(true);
+        if (invoice.driver) {
+            const id = invoice.driver.id;
+            setForm(<UserInfo userId={id}/>);
+            setTitle("Driver");
+            setUserInfoDialogOpen(true);
+        }
     }
 
     const handleDispatcherInfoOpen = () => {
-        const id = invoice.registrationUser.id;
-        setForm(<UserInfo userId={id}/>);
-        setTitle("Dispatcher");
-        setUserInfoDialogOpen(true);
+        if (invoice.registrationUser) {
+            const id = invoice.registrationUser.id;
+            setForm(<UserInfo userId={id}/>);
+            setTitle("Dispatcher");
+            setUserInfoDialogOpen(true);
+        }
     }
 
     const handleManagerInfoOpen = () => {
+        if (invoice.checkingUser) {
         const id = invoice.checkingUser.id;
         if (id !== null && id !== "undefined") {
             setForm(<UserInfo userId={id}/>);
             setTitle("Manager");
             setUserInfoDialogOpen(true);
+        }
         }
     }
 
@@ -115,12 +133,12 @@ export default function InvoiceInfoContent(props) {
 
     return (
         <div>
-            <div style={{alignItems: "flex-start"}}>
-                <div style={{display: "flex", flexDirection: "row"}}>
-                    <Paper style={{flexDirection: "column", alignItems: "flex-start"}}>
-                        <List style={{alignItems: "flex-start"}}>
-                            <div style={{display: "flex", flexDirection: "row"}}>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+            <div className="info-content">
+                <div className="info-content-column">
+                    <Paper className={`${styles.infoPiece} table-paper`}>
+                        <List className="info-content">
+                            <div className="info-content-column">
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <CheckCircleIcon/>
                                     </ListItemIcon>
@@ -166,7 +184,7 @@ export default function InvoiceInfoContent(props) {
                                     </Tooltip>
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <DepartureBoardIcon/>
                                     </ListItemIcon>
@@ -202,7 +220,7 @@ export default function InvoiceInfoContent(props) {
                                     />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <HowToRegIcon/>
                                     </ListItemIcon>
@@ -259,8 +277,8 @@ export default function InvoiceInfoContent(props) {
                                 </ListItem>
                             </div>
                             <Divider/>
-                            <div style={{display: "flex", flexDirection: "row"}}>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <div className="info-content-column">
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <StoreIcon/>
                                     </ListItemIcon>
@@ -274,7 +292,7 @@ export default function InvoiceInfoContent(props) {
                                     />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <StoreIcon/>
                                     </ListItemIcon>
@@ -289,7 +307,7 @@ export default function InvoiceInfoContent(props) {
                                 </ListItem>
                             </div>
                             <Divider/>
-                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItem className={styles.infoPiece}>
                                 <ListItemIcon>
                                     <CommentIcon/>
                                 </ListItemIcon>
@@ -303,13 +321,12 @@ export default function InvoiceInfoContent(props) {
                                 />
                             </ListItem>
                         </List>
-                        <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div className="btn-row">
                             {props.buttons}
                         </div>
                     </Paper>
-                    <div style={{flexDirection: "column", minWidth: 50, alignItems: "flex-start"}}>
-                    </div>
-                    <Paper style={{flexDirection: "column", alignItems: "flex-start"}}>
+
+                    <Paper className={`${styles.infoPiece} table-paper`}>
                         <TableRow>
                             <TableCell style={{fontSize: 20}}>PRODUCTS</TableCell>
                             <TableCell colSpan={1}>Quantity:</TableCell>
@@ -389,7 +406,7 @@ export default function InvoiceInfoContent(props) {
             <DialogWindow
                 dialogTitle={"Waybill to invoice # " + invoice.number}
                 fullWidth={true}
-                maxWidth="md"
+                maxWidth="xl"
                 handleClose={handleClose}
                 openDialog={waybillInfoDialogOpen}
                 form={form}
