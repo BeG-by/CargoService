@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FormikField from "../formik-field"
 import {Form, Formik} from "formik";
-import ItemList from "../item-list";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
 import {InvoiceFormValidation} from "./validation-shema";
@@ -12,8 +11,10 @@ import {connect} from "react-redux";
 import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
 import {makeRequest, DRIVER_URL, INVOICE_URL, handleRequestError} from "../../../parts/util/request-util";
 import "../styles/invoice-form.css"
+import DriverSearch from "./driver-search";
 
-const EMPTY_DRIVER = {
+
+export const EMPTY_DRIVER = {
     name: "",
     surname: "",
     passport: "",
@@ -236,6 +237,18 @@ function InvoiceForm(props) {
         setTotal(total);
     };
 
+    function handleDriverSelect(driver) {
+        if (driver === null) {
+            setInitInvoice((prevState) => {
+                return {...prevState, driver: EMPTY_DRIVER};
+            })
+        } else {
+            setInitInvoice((prevState) => {
+                return {...prevState, driver: driver};
+            })
+        }
+    }
+
     return (
         <React.Fragment>
             <Formik
@@ -291,15 +304,10 @@ function InvoiceForm(props) {
                                                     label={"Consignee"}
                                                     formikFieldName={"consignee"}
                                                 />
-                                                <ItemList
-                                                    items={drivers}
-                                                    onRowClick={(item) => {
-                                                        setInitInvoice((prevState) => {
-                                                            return {...prevState, driver: item};
-                                                        });
-                                                    }}
+                                                <DriverSearch
+                                                    drivers={drivers}
+                                                    onDriverSelect={handleDriverSelect}
                                                 />
-
                                                 <div className="registration-date">
                                                     <div>
                                                         <p>Date of registration</p>
@@ -365,20 +373,20 @@ function InvoiceForm(props) {
                                 </div>
                             </div>
                             <div className="product-table-wrapper">
-                                    <div className="product-box">
-                                        <h2>Products</h2>
-                                        <Button variant="contained"
-                                                color="primary"
-                                                onClick={handleCreateNewProductClick}>
-                                            <LibraryAddRoundedIcon/>
-                                        </Button>
-                                    </div>
-                                    <ProductsTable
-                                        products={initInvoice.products}
-                                        onRowClick={handleProductTableClick}
-                                        onAddProduct={handleTotal}
-                                        onRowDelete={handleProductDelete}
-                                    />
+                                <div className="product-box">
+                                    <h2>Products</h2>
+                                    <Button variant="contained"
+                                            color="primary"
+                                            onClick={handleCreateNewProductClick}>
+                                        <LibraryAddRoundedIcon/>
+                                    </Button>
+                                </div>
+                                <ProductsTable
+                                    products={initInvoice.products}
+                                    onRowClick={handleProductTableClick}
+                                    onAddProduct={handleTotal}
+                                    onRowDelete={handleProductDelete}
+                                />
                             </div>
                         </div>
                         <div className="reg-btn">
@@ -405,7 +413,7 @@ function InvoiceForm(props) {
 
         </React.Fragment>
     );
-};
+}
 
 const mapStateToProps = (store) => {
     return {
