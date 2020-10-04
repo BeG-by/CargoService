@@ -44,11 +44,15 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
+    size: {
+        fontSize: 18,
+        fontWeight: "bold"
+    }
 }));
 
 export default function EnhancedTableHead(props) {
     const classes = useStyles();
-    const {order, orderBy, onRequestSort} = props;
+    const {order, orderBy, onRequestSort, fsize, menu} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -59,7 +63,8 @@ export default function EnhancedTableHead(props) {
                 {props.columns.map((column) => (
                     <TableCell
                         key={column.id}
-                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
+                        className={fsize ? fsize : classes.size}
+                        style={{minWidth: column.minWidth, color: "#3f51b5"}}
                         sortDirection={orderBy === column.id ? order : false}
                     >
                         <TableSortLabel
@@ -76,10 +81,12 @@ export default function EnhancedTableHead(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
+                {menu ?
                 <TableCell
                     key={"edit-delete"}
                     style={{minWidth: 60}}
                 />
+                : null}
             </TableRow>
         </TableHead>
     );
@@ -89,4 +96,6 @@ EnhancedTableHead.propTypes = {
     onRequestSort: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
+    fsize: PropTypes.object,
+    menu: PropTypes.bool
 };

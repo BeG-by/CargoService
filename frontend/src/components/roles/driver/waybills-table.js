@@ -143,6 +143,8 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                         </div>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
+                                fsize={20}
+                                menu={true}
                                 columns={columns}
                                 order={order}
                                 orderBy={orderBy}

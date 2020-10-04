@@ -26,6 +26,7 @@ import {UserInfo} from "../admin/user-info";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Typography} from "@material-ui/core";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
+import {countTotalQuantity, countTotalSum, countTotalWeight, CURRENCY} from "../../parts/util/cargo-total-info";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
@@ -51,33 +52,12 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         marginTop: 5,
         fontSize: 20
+    },
+    fsize: {
+        fontSize: 12,
+        fontWeight: "bold"
     }
 }));
-
-let CURRENCY; //fixme поменять когда внесут в инвойс
-
-function priceProduct(price, quantity, currency) {
-    CURRENCY = currency;
-    return price * quantity;
-}
-
-function weightProduct(measure, mass) {
-    return measure === "KG"
-        ? +mass
-        : +mass * 1000;
-}
-
-function countTotalSum(products) {
-    return products.map((p) => priceProduct(p.price, p.quantity, p.currency)).reduce((sum, p) => sum + p, 0);
-}
-
-function countTotalWeight(products) {
-    return products.map((p) => weightProduct(p.massMeasure, p.mass)).reduce((sum, p) => sum + p, 0);
-}
-
-function countTotalQuantity(products) {
-    return products.map((p) => p.quantity).reduce((sum, p) => sum + p, 0);
-}
 
 export default function InvoiceInfoContent(props) {
     const styles = useStyles();
@@ -349,11 +329,11 @@ export default function InvoiceInfoContent(props) {
                         </div>
                     </Paper>
 
-                    <Paper className={`${styles.infoPiece} table-paper`}>
+                    <Paper className={`${styles.infoPiece} table-paper`} style={{maxWidth: "60%"}}>
                         <Typography className={styles.tableHeader}>
                             CARGO LIST
                         </Typography>
-                        <TableRow>
+                        <TableRow className={styles.tableHeader}>
                             <TableCell colSpan={1}>
                                 Owner :
                             </TableCell>
@@ -387,6 +367,8 @@ export default function InvoiceInfoContent(props) {
                         <TableContainer style={{maxHeight: "80%"}}>
                             <Table stickyHeader aria-label="sticky table">
                                 <EnhancedTableHead
+                                    fsize={styles.fsize}
+                                    menu={false}
                                     columns={columns}
                                     order={order}
                                     orderBy={orderBy}

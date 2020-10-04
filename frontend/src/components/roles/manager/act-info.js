@@ -8,7 +8,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import TableContainer from "@material-ui/core/TableContainer";
 import {Typography} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,6 +18,8 @@ import StoreIcon from '@material-ui/icons/Store';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 import Divider from "@material-ui/core/Divider";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
+import {countTotalQuantity, countTotalSum, countTotalWeight, CURRENCY} from "../../parts/util/cargo-total-info";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const mapStateToProps = (store) => {
     return {
@@ -26,29 +27,43 @@ const mapStateToProps = (store) => {
     }
 };
 
+const useStyles = makeStyles((theme) => ({
+    infoPiece: {
+        flexDirection: "column",
+        alignItems: "flex-start"
+    },
+    boldText: {
+        fontWeight: "bold",
+    },
+    tableHeader: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 5,
+        fontSize: 20
+    },
+    fsize: {
+        fontSize: 12,
+        fontWeight: "bold"
+    }
+}));
+
 const columns = [
-    {label: "Name", id: "name", minWidth: 100},
-    {label: "Mass", id: "mass", minWidth: 50},
-    {label: "Measure", id: "massMeasure", minWidth: 100},
-    {label: "Price", id: "price", minWidth: 50},
-    {label: "Currency", id: "currency", minWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50},
-    {label: "Measure", id: "quantityMeasure", minWidth: 100},
-    {label: "Lost quantity", id: "lostQuantity", minWidth: 100},
-    {label: "Comment", id: "comment", minWidth: 100},
+    {label: "Name", id: "name", width: 100},
+    {label: "Mass", id: "mass", width: 50},
+    {label: "Measure", id: "massMeasure", width: 50},
+    {label: "Price", id: "price", width: 50},
+    {label: "Currency", id: "currency", width: 50},
+    {label: "Quantity", id: "quantity", width: 50},
+    {label: "Measure", id: "quantityMeasure", width: 50},
+    {label: "Lost", id: "lostQuantity", width: 50},
+    {label: "Comment", id: "comment", width: 50},
 ];
 
 export const ActInfo = connect(mapStateToProps)((props) => {
+    const styles = useStyles();
     const invoice = props.invoice;
     const act = props.act;
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('status');
-
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
 
     const losses = [];
     invoice.products.forEach(p => {
@@ -57,8 +72,19 @@ export const ActInfo = connect(mapStateToProps)((props) => {
         }
     })
 
+    const totalSum = countTotalSum(losses);
+    const totalWeight = countTotalWeight(losses);
+    const totalQuantity = countTotalQuantity(losses);
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('status');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -71,10 +97,10 @@ export const ActInfo = connect(mapStateToProps)((props) => {
 
     return (
         <div>
-            <Paper>
-                <List style={{alignItems: "flex-start"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+            <Paper className="table-paper">
+                <List className="info-content">
+                    <div className="info-content-column">
+                        <ListItem className={styles.infoPiece}>
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
@@ -100,7 +126,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             />
                         </ListItem>
                         <Divider orientation="vertical" flexItem/>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                        <ListItem className={styles.infoPiece}>
                             <ListItemIcon>
                                 <StoreIcon/>
                             </ListItemIcon>
@@ -125,7 +151,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             />
                         </ListItem>
                         <Divider orientation="vertical" flexItem/>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                        <ListItem className={styles.infoPiece}>
                             <ListItemIcon>
                                 <DepartureBoardIcon/>
                             </ListItemIcon>
@@ -141,15 +167,52 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     </div>
                 </List>
                 <Divider/>
+
+                <Typography variant="h6"
+                            gutterBottom
+                            className={styles.tableHeader}>
+                    LOST CARGO
+                </Typography>
+
+            <div className={styles.tableHeader}>
+                <TableRow>
+                    <TableCell colSpan={1}>
+                        Owner :
+                    </TableCell>
+                    <TableCell align="right"
+                               className={styles.boldText}>
+                        {invoice.productOwnerDTO.name}
+                    </TableCell>
+                    <TableCell colSpan={1}>
+                        Quantity :
+                    </TableCell>
+                    <TableCell align="right"
+                               className={styles.boldText}>
+                        {totalQuantity + " items"}
+                    </TableCell>
+                    <TableCell colSpan={1}>
+                        Weight :
+                    </TableCell>
+                    <TableCell align="right"
+                               className={styles.boldText}>
+                        {totalWeight + " KG"}
+                    </TableCell>
+                    <TableCell colSpan={1}>
+                        Total Sum :
+                    </TableCell>
+                    <TableCell align="right"
+                               className={styles.boldText}>
+                        {totalSum + " " + CURRENCY}
+                    </TableCell>
+                </TableRow>
+            </div>
+
                 <TableContainer>
-                    <Typography variant="h6"
-                                gutterBottom
-                                style={{textAlign: "center", marginTop: 15, marginLeft: 15}}>
-                        Lost products list:
-                    </Typography>
                     <Table
                         aria-label="sticky table">
                         <EnhancedTableHead
+                            fsize={styles.fsize}
+                            menu={false}
                             columns={columns}
                             order={order}
                             orderBy={orderBy}

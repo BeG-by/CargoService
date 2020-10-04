@@ -37,6 +37,7 @@ main {
     border-width: 1px;
     border-style: dashed;
     margin-bottom: 20px;
+    padding: 5px;
 }
 
 .table-delete-edit-div {

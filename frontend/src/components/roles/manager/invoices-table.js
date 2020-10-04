@@ -131,6 +131,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         </div>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
+                                fsize={18}
+                                menu={true}
                                 columns={columns}
                                 order={order}
                                 orderBy={orderBy}
