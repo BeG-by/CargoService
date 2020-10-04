@@ -10,7 +10,6 @@ export default function DriverSearch(props) {
     const [inputValue, setInputValue] = useState("");
     const [selectedDriver, setSelectedDriver] = useState("");
 
-
     return (
         <Autocomplete
             id={"driver_autocomplete_field"}

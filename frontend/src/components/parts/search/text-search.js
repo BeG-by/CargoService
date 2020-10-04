@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
-import axios from "axios";
 
 export default function TextSearch(props) {
     const {onFieldChange} = props;

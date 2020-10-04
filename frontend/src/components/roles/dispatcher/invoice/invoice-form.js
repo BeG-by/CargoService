@@ -9,16 +9,39 @@ import useToast from "../../../parts/toast-notification/useToast";
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
 import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
-import {makeRequest, DRIVER_URL, INVOICE_URL, handleRequestError} from "../../../parts/util/request-util";
+import {
+    DATA_FOR_INVOICE_CREATING_URL,
+    handleRequestError,
+    INVOICE_URL,
+    makeRequest
+} from "../../../parts/util/request-util";
 import "../styles/invoice-form.css"
 import DriverSearch from "./driver-search";
+import StorageSearchDialog from "./storage-search/storage-search-dialog";
+import TextField from "@material-ui/core/TextField";
 
+
+const STORAGE_TITLE_SHIPPER = "Shipper";
+const STORAGE_TITLE_CONSIGNEE = "Consignee";
 
 export const EMPTY_DRIVER = {
     name: "",
     surname: "",
     passport: "",
 };
+
+const EMPTY_STORAGE = {
+    id: -1,
+    address: {
+        country: "",
+        city: "",
+        street: "",
+        house: "",
+        flat: "",
+    },
+    phone: "",
+    email: "",
+}
 
 const EMPTY_PRODUCT_OWNER = {
     name: "",
@@ -39,8 +62,8 @@ const EMPTY_PRODUCT = {
 
 const INIT_INVOICE_STATE = {
     number: "",
-    shipper: "",
-    consignee: "",
+    shipper: EMPTY_STORAGE,
+    consignee: EMPTY_STORAGE,
     registrationDate: "",
     driver: EMPTY_DRIVER,
     productOwner: EMPTY_PRODUCT_OWNER,
@@ -59,7 +82,12 @@ const TOTAL = {
 function InvoiceForm(props) {
     const {onClose} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
+
     const [drivers, setDrivers] = useState([]);
+    const [storages, setStorages] = useState([]);
+    const [storageDialogOpen, setStorageDialogOpen] = useState(false);
+    const [storageDialogTitle, setStorageDialogTitle] = useState(STORAGE_TITLE_SHIPPER)
+
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [productIndex, setProductIndex] = useState(0);
@@ -67,7 +95,7 @@ function InvoiceForm(props) {
     const [total, setTotal] = useState(TOTAL);
 
     useEffect(() => {
-        updateDriversList();
+        updateDriversAndStorages();
         if (props.invoiceId !== null && props.invoiceId !== undefined) {
             fetchInitInvoiceState(props.invoiceId);
         } else {
@@ -103,10 +131,12 @@ function InvoiceForm(props) {
         onClose();
     };
 
-    const updateDriversList = async () => {
+    const updateDriversAndStorages = async () => {
         try {
-            const res = await makeRequest("GET", DRIVER_URL);
-            setDrivers(res.data);
+            const res = await makeRequest("GET", DATA_FOR_INVOICE_CREATING_URL);
+            console.log(res.data);
+            setDrivers(res.data.drivers);
+            setStorages(res.data.storages);
         } catch (error) {
             setDrivers([]);
             handleRequestError(error, showToastComponent);
@@ -237,7 +267,7 @@ function InvoiceForm(props) {
         setTotal(total);
     };
 
-    function handleDriverSelect(driver) {
+    const handleDriverSelect = (driver) => {
         if (driver === null) {
             setInitInvoice((prevState) => {
                 return {...prevState, driver: EMPTY_DRIVER};
@@ -246,6 +276,31 @@ function InvoiceForm(props) {
             setInitInvoice((prevState) => {
                 return {...prevState, driver: driver};
             })
+        }
+    }
+
+    const handleStorageSelect = (storage) => {
+        if (storage !== null) {
+            if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
+                setInitInvoice((prevState) => {
+                    return {...prevState, consignee: storage};
+                })
+            } else {
+                setInitInvoice((prevState) => {
+                    return {...prevState, shipper: storage};
+                })
+            }
+        } else {
+            if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
+                setInitInvoice((prevState) => {
+                    return {...prevState, consignee: EMPTY_STORAGE};
+                })
+            } else {
+                setInitInvoice((prevState) => {
+                    return {...prevState, shipper: EMPTY_STORAGE};
+                })
+            }
+
         }
     }
 
@@ -291,19 +346,27 @@ function InvoiceForm(props) {
                                                     label={"Invoice number"}
                                                     formikFieldName={"invoiceNumber"}
                                                 />
-
-                                                <FormikField
-                                                    formikProps={formProps}
+                                                <TextField
                                                     id={"shipper"}
+                                                    value={initInvoice.shipper.email}
+                                                    onClick={() => {
+                                                        setStorageDialogTitle(STORAGE_TITLE_SHIPPER)
+                                                        setStorageDialogOpen(true)
+                                                    }}
                                                     label={"Shipper"}
-                                                    formikFieldName={"shipper"}
+                                                    fullWidth
                                                 />
-                                                <FormikField
-                                                    formikProps={formProps}
+                                                <TextField
                                                     id={"consignee"}
+                                                    value={initInvoice.consignee.email}
+                                                    onClick={() => {
+                                                        setStorageDialogTitle(STORAGE_TITLE_CONSIGNEE)
+                                                        setStorageDialogOpen(true)
+                                                    }}
                                                     label={"Consignee"}
-                                                    formikFieldName={"consignee"}
+                                                    fullWidth
                                                 />
+
                                                 <DriverSearch
                                                     drivers={drivers}
                                                     onDriverSelect={handleDriverSelect}
@@ -409,6 +472,19 @@ function InvoiceForm(props) {
                 initProductState={selectedProduct}
                 onSubmit={handleProductDialogSubmit}
                 onClose={handleProductDialogClose}
+            />
+
+            <StorageSearchDialog
+                open={storageDialogOpen}
+                storages={storages}
+                onSelect={handleStorageSelect}
+                title={storageDialogTitle}
+                onClose={() => setStorageDialogOpen(false)}
+                prevStorage={storageDialogTitle === STORAGE_TITLE_CONSIGNEE ?
+                    initInvoice.consignee.id === -1 ? null : initInvoice.consignee
+                    :
+                    initInvoice.shipper.id === -1 ? null : initInvoice.shipper
+                }
             />
 
         </React.Fragment>
