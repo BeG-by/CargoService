@@ -1,110 +1,76 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import EditIcon from '@material-ui/icons/Edit';
 import DialogContent from "@material-ui/core/DialogContent";
 import {handleRequestError, makeRequest, USER_URL} from "../../parts/util/request-util";
 import {Form, Formik} from "formik";
 import FormikField from "../../parts/util/formik-field";
 import {copyUser} from "../../parts/util/function-util";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import {PhoneScheme} from "./validation-scheme";
 
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
-});
 
 export default function ChangePhoneDialog(props) {
 
-    const {changeUser, user, showToastComponent} = props;
-
-    const [phone, setPhone] = useState("");
-    const [open, setOpen] = useState(false);
-
-
-    // useEffect(() => {
-    //     setPhone(user.phone)
-    // }, [user]);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setPhone("");
-        setOpen(false);
-    };
-
+    const {showToastComponent, user, changeUser, open, onClose} = props;
 
     return (
-        <div>
-            <Button
-                color="primary"
-                startIcon={<EditIcon/>}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleClickOpen();
-                }}/>
-            <Dialog
-                open={open}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle id="alert-dialog-slide-title">Change phone number</DialogTitle>
-                <DialogContent>
-                    <Formik
-                        enableReinitialize
-                        initialValues={{
-                            phone: user.phone,
-                        }}
-                        onSubmit={(values) => {
-                            const phone = values.phone;
+        <Dialog open={open} onClose={onClose} className="phone-dialog-container">
+            <DialogTitle id="form-dialog-title">
+                <span id="form-title">Phone</span>
+                <IconButton aria-label="close"
+                            onClick={onClose}
+                            className="close-user-dialog-btn"
+                >
+                    <CloseIcon/>
+                </IconButton>
+            </DialogTitle>
+            <DialogContent>
+                <Formik
+                    enableReinitialize
+                    validationSchema={PhoneScheme}
+                    initialValues={{
+                        phone: user.phone,
+                    }}
+                    onSubmit={(values) => {
+                        const phone = values.phone;
 
-                            makeRequest("PUT", USER_URL + "/phone", {phone})
-                                .then(res => {
-                                    showToastComponent("Phone has been updated", "success");
-                                    user.phone = phone;
-                                    changeUser(copyUser(user));
-                                    handleClose();
-                                }).catch(error => handleRequestError(error, showToastComponent))
+                        makeRequest("PUT", USER_URL + "/phone", {phone})
+                            .then(res => {
+                                showToastComponent("Phone has been updated", "success");
+                                user.phone = phone;
+                                changeUser(copyUser(user));
+                                onClose();
+                            }).catch(error => handleRequestError(error, showToastComponent))
 
-                        }}
-                    >
-                        {(formProps) => {
-                            return (
-                                <Form>
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"phone"}
-                                        label={"Phone"}
-                                        formikFieldName={"phone"}
-                                    />
-                                    <DialogActions>
-                                        <Button
-                                            color="primary"
-                                            type="submit"
-                                            disabled={formProps.listener}
-                                        >
-                                            Update
-                                        </Button>
-                                        <Button
-                                            onClick={handleClose}
-                                            color="primary">
-                                            Cancel
-                                        </Button>
-                                    </DialogActions>
-                                </Form>
-                            );
-                        }}
-                    </Formik>
-
-                </DialogContent>
-            </Dialog>
-        </div>
+                    }}
+                >
+                    {(formProps) => {
+                        return (
+                            <Form className="phone-form">
+                                <FormikField
+                                    formikProps={formProps}
+                                    id={"phone"}
+                                    label={"Phone"}
+                                    formikFieldName={"phone"}
+                                />
+                                <div className="btn-form-wrapper">
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        disabled={formProps.listener}
+                                    >
+                                        Update
+                                    </Button>
+                                </div>
+                            </Form>
+                        );
+                    }}
+                </Formik>
+            </DialogContent>
+        </Dialog>
     );
 }

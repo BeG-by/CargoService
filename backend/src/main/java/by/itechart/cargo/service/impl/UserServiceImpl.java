@@ -2,6 +2,7 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
+import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Role;
@@ -198,6 +199,35 @@ public class UserServiceImpl implements UserService {
 
         currentUser.setPhone(phoneRequest.getPhone());
         log.info("User photo has been save {}", currentUser);
+    }
+
+    @Override
+    public void updatePassword(PasswordRequest passwordRequest) throws IncorrectPasswordException {
+
+        final String currentPassword = jwtTokenUtil.getJwtUser().getPassword();
+        final String oldPassword = passwordRequest.getOldPassword();
+        final String newPassword = passwordRequest.getNewPassword();
+        final String confirmNewPassword = passwordRequest.getConfirmNewPassword();
+
+        final boolean matches = passwordEncoder.matches(oldPassword, currentPassword);
+
+        if (!matches) {
+            throw new IncorrectPasswordException("Old password is incorrect");
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new IncorrectPasswordException("New password doesn't match with confirm password");
+        }
+
+        final long userId = jwtTokenUtil.getJwtUser().getId();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+
+        userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    return user;
+                });
     }
 
 }

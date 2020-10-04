@@ -53,3 +53,35 @@
 .phone-item-div button {
     padding: 0;
 }
+
+/* forms styles */
+
+.phone-form,
+.password-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-form button {
+    margin-top: 10px;
+    width: 130px;
+}
+
+.password-form button {
+    margin-top: 10px;
+    width: 200px;
+}
+
+
+.password-dialog {
+     width: 500px;
+ }
+
+.phone-dialog-container .MuiDialog-paperWidthSm {
+    width: 300px;
+}
+
+.btn-form-wrapper {
+    display: flex;
+    justify-content: center;
+}

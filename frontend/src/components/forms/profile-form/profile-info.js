@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {handleRequestError, makeRequest, USER_URL} from "../../parts/util/request-util";
 import photo from "../../../resources/images/user_no_photo.png";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -14,6 +14,8 @@ import "./profile-style.css";
 import Button from "@material-ui/core/Button";
 import ChangePhoneDialog from "./phone-dialog";
 import useToast from "../../parts/toast-notification/useToast";
+import EditIcon from "@material-ui/icons/Edit";
+import ChangePassword from "./password-dialog";
 
 
 const mapActionsToProps = (dispatch) => {
@@ -34,6 +36,8 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
     const {user, changeUser} = props;
 
     const [toastComponent, showToastComponent] = useToast();
+    const [openPhone, showPhoneDialog] = useState(false);
+    const [openPassword, showPasswordDialog] = useState(false);
 
     const maxSizeOfImg = 12000000;
     let avatar = user.photo === "" || user.photo === null ? photo : user.photo;
@@ -48,19 +52,19 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
             if (file.type.match("image.*")) {
 
                 if (file.size > maxSizeOfImg) {
-                    alert("File is to large. Max size is :" + maxSizeOfImg / 1000000 + "MB");
+                    showToastComponent("File is to large. Max size is :" + maxSizeOfImg / 1000000 + "MB" , "error");
                     return;
                 }
 
                 if (file.name.length > 100) {
-                    alert("File name is too long (maximum is 100 characters).");
+                    showToastComponent("File name is too long (maximum is 100 characters)" , "error");
                     return;
                 }
 
                 reader.readAsDataURL(file);
 
             } else {
-                alert("Incorrect file type.")
+                showToastComponent("Incorrect file type" , "error")
             }
         }
 
@@ -119,6 +123,7 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                                 color="primary"
                                 variant="outlined"
                                 onClick={() => {
+                                    showPasswordDialog(true);
                                 }}>
                                 Change password
                             </Button>
@@ -146,11 +151,12 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                                                     {user.phone}
                                                 </div>
                                             </React.Fragment>
-                                            <ChangePhoneDialog
-                                                changeUser={changeUser}
-                                                user={user}
-                                                showToastComponent={showToastComponent}
-                                            />
+                                            <Button
+                                                color="primary"
+                                                startIcon={<EditIcon/>}
+                                                onClick={() => {
+                                                    showPhoneDialog(true);
+                                                }}/>
                                         </div>
                                     }
                                     secondary="Contact phone"
@@ -175,7 +181,23 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                         </div>
                     </div>
                 </div>
+
+                <ChangePhoneDialog
+                    changeUser={changeUser}
+                    user={user}
+                    showToastComponent={showToastComponent}
+                    open={openPhone}
+                    onClose={() => showPhoneDialog(false)}
+                />
+
+                <ChangePassword
+                    showToastComponent={showToastComponent}
+                    open={openPassword}
+                    onClose={() => showPasswordDialog(false)}
+                />
+
                 {toastComponent}
+
             </Paper>
         </main>
     )
