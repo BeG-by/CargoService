@@ -274,4 +274,4 @@ export const UserDialog = (props) => {
             </Dialog>
         </div>
     );
-}
+};

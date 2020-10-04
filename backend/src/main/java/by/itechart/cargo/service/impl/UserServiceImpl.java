@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
         log.info("User has been saved {}", userDb);
     }
 
+    //TODO photo, phone
 
     @Override
     public void update(UserUpdateRequest request) throws NotFoundException, AlreadyExistException {
@@ -180,9 +181,23 @@ public class UserServiceImpl implements UserService {
         final long userId = jwtTokenUtil.getJwtUser().getId();
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
         currentUser.setPhoto(photoRequest.getPhoto());
-        log.info("User photo has been updated");
+        log.info("User photo has been save {}", currentUser);
+    }
+
+    @Override
+    public void updatePhone(PhoneRequest phoneRequest) throws NotFoundException {
+        final long userId = jwtTokenUtil.getJwtUser().getId();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        currentUser.setPhone(phoneRequest.getPhone());
+        log.info("User photo has been save {}", currentUser);
     }
 
 }

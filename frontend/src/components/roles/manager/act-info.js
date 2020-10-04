@@ -12,7 +12,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/function-util";
 import TablePagination from "@material-ui/core/TablePagination";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
 import StoreIcon from '@material-ui/icons/Store';

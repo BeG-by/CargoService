@@ -22,4 +22,6 @@ public interface UserService {
 
     void updatePhoto(PhotoRequest photoRequest) throws NotFoundException;
 
+    void updatePhone(PhoneRequest photoRequest) throws NotFoundException;
+
 }

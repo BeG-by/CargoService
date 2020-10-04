@@ -48,11 +48,18 @@ public class UserController {
         return ResponseEntity.ok("User has been updated");
     }
 
-    @PutMapping("/{id}/photo")
+    @PutMapping("/photo")
     public ResponseEntity<String> updatePhoto(@RequestBody @Valid PhotoRequest photoRequest)
             throws NotFoundException {
         userService.updatePhoto(photoRequest);
         return ResponseEntity.ok("Photo has been updated");
+    }
+
+    @PutMapping("/phone")
+    public ResponseEntity<String> updatePhone(@RequestBody @Valid PhoneRequest phoneRequest)
+            throws NotFoundException {
+        userService.updatePhone(phoneRequest);
+        return ResponseEntity.ok("Phone has been updated");
     }
 
     @GetMapping("/info")

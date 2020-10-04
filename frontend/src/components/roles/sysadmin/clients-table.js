@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import ClientDialog from "./client-dialog";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
-import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/function-util";
 import {CLIENTS_URL, makeRequest, handleRequestError} from "../../parts/util/request-util";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";

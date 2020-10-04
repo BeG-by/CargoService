@@ -1,182 +1,182 @@
 import React from 'react';
-import ProfilePhotoForm from './profile-photo-form';
 import {handleRequestError, makeRequest, USER_URL} from "../../parts/util/request-util";
 import photo from "../../../resources/images/user_no_photo.png";
-import {DialogWindow} from "../../parts/dialogs/dialog";
 import Tooltip from "@material-ui/core/Tooltip";
 import {bindActionCreators} from "redux";
-import {changePhoto} from "../../store/actions";
-import {withRouter} from "react-router-dom";
+import {changeUser} from "../../store/actions";
 import {connect} from "react-redux";
-import {List} from "material-ui";
 import ListItem from "@material-ui/core/ListItem";
 import {Typography} from "@material-ui/core";
 import ListItemText from "@material-ui/core/ListItemText";
 import Paper from "@material-ui/core/Paper";
+import {copyUser} from "../../parts/util/function-util";
+import "./profile-style.css";
+import Button from "@material-ui/core/Button";
+import ChangePhoneDialog from "./phone-dialog";
+import useToast from "../../parts/toast-notification/useToast";
 
-class ProfileInfo extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            photoDialog: false,
-            photoForm: null,
-            file: {},
-            user: {
-                id: 0,
-                name: "",
-                birthday: "",
-                email: "",
-                phone: "",
-                role: "",
-                photo: "",
-            },
-            updatedUser: {}
-        }
-        this.handleClose = this.handleClose.bind(this);
-        this.saveFile = this.saveFile.bind(this);
-        this.getFile = this.getFile.bind(this);
-        this.uploadPhotoDialog = this.uploadPhotoDialog.bind(this);
+const mapActionsToProps = (dispatch) => {
+    return {
+        changeUser: bindActionCreators(changeUser, dispatch)
     }
+};
 
-    componentDidMount() {
-        let cleanupFunction = false;
-        this.fetchUser(cleanupFunction)
-            .catch((err) => {
-                this.setState({
-                    user: {
-                        id: 0,
-                        name: "",
-                        birthday: "",
-                        email: "",
-                        phone: "",
-                        role: "",
-                        photo: ""
-                    }
-                });
-                handleRequestError(err, alert); // TODO toast notification
-            });
-        return () => cleanupFunction = true;
+const mapStateToProps = (store) => {
+    return {
+        user: store.user
     }
+};
 
-    async fetchUser(cleanupFunction = false) {
-        const id = this.props.userId;
-        let selected = await makeRequest("GET", USER_URL + "/" + id);
-        if (!cleanupFunction) {
-            this.setState({
-                updatedUser: selected.data,
-                user: {
-                    id: selected.data.id,
-                    name: selected.data.name + " " + selected.data.surname,
-                    birthday: selected.data.birthday,
-                    email: selected.data.email,
-                    phone: selected.data.phone,
-                    photo: selected.data.photo,
-                    role: selected.data.roles[0],
+
+export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) => {
+
+    const {user, changeUser} = props;
+
+    const [toastComponent, showToastComponent] = useToast();
+
+    const maxSizeOfImg = 12000000;
+    let avatar = user.photo === "" || user.photo === null ? photo : user.photo;
+    let location = user.address !== null ? user.address.country + ", " + user.address.city : "";
+
+
+    const handleChange = (e) => {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+
+        if (file !== undefined) {
+            if (file.type.match("image.*")) {
+
+                if (file.size > maxSizeOfImg) {
+                    alert("File is to large. Max size is :" + maxSizeOfImg / 1000000 + "MB");
+                    return;
                 }
-            });
+
+                if (file.name.length > 100) {
+                    alert("File name is too long (maximum is 100 characters).");
+                    return;
+                }
+
+                reader.readAsDataURL(file);
+
+            } else {
+                alert("Incorrect file type.")
+            }
         }
-        this.props.changePhoto(this.state.updatedUser);
-    }
 
-    getFile(file) {
-        this.setState({file: file})
-    }
+        reader.onload = () => {
+            user.photo = reader.result;
 
-    saveFile() {
-        const endpoint = USER_URL + "/" + this.props.userId + "/photo";
-        makeRequest("PUT", endpoint, {"photo": this.state.file.base64});
-        this.setState({photoDialog: false});
-        this.fetchUser();
-    }
+            makeRequest("PUT", USER_URL + "/photo", {photo: user.photo})
+                .then(res => changeUser(copyUser(user)))
+                .catch(error => handleRequestError(error, alert))
 
-    handleClose() {
-        this.setState({photoDialog: false, file: {}});
-    }
+        };
 
-    uploadPhotoDialog() {
-        this.setState({
-            photoForm: <ProfilePhotoForm
-                onClose={this.handleClose}
-                onSubmit={this.saveFile}
-                onDone={this.getFile}/>,
-            photoDialog: true
-        })
-    }
+    };
 
-    render() {
-        return (
-            <div>
-                <Paper>
-                    <List style={{alignItems: "flex-start"}}>
-                        <div style={{display: "flex", flexDirection: "row"}}>
-                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                                <Typography variant="h6" gutterBottom>
-                                    {this.state.user.name}
-                                </Typography>
-                                <Tooltip title="Click to change photo" arrow>
-                                    <img
-                                        src={(this.state.file.base64 !== null
-                                            && this.state.file.base64 !== undefined
-                                            && this.state.file.base64.trim())
-                                            ? this.state.file.base64
-                                            : (this.state.user.photo !== null
-                                                && this.state.user.photo !== undefined
-                                                && this.state.user.photo.trim())
-                                                ? this.state.user.photo
-                                                : photo}
-                                        width={100}
-                                        height={100}
-                                        alt="photo"
-                                        onClick={this.uploadPhotoDialog}
-                                    />
-                                </Tooltip>
-                            </ListItem>
+    return (
+        <main>
+            <Paper className="profile-container">
+                <header>
+                    <Typography variant="h4" gutterBottom>
+                        Account
+                    </Typography>
+                </header>
+                <div className="profile-content-container">
+                    <div className="left-box">
+                        <div>
+                            <Tooltip title="Click to change photo" arrow>
+                                <img
+                                    src={avatar}
+                                    alt="photo"
+                                    className="profile-avatar"
+                                    onClick={() => {
+                                        document.getElementById("hidden-input").click();
+                                    }}
+                                />
+                            </Tooltip>
+                            <input
+                                type="file"
+                                onChange={handleChange}
+                                multiple={false}
+                                size="1000"
+                                accept="image/*"
+                                hidden={true}
+                                id="hidden-input"
+                            />
                             <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
                                 <ListItemText
                                     primary={
                                         <React.Fragment>
-                                            {this.state.user.birthday}
+                                            {location}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Location"
+                                />
+                            </ListItem>
+                            <Button
+                                color="primary"
+                                variant="outlined"
+                                onClick={() => {
+                                }}>
+                                Change password
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="right-box">
+                        <div className="info-box">
+                            <Typography variant="h5" gutterBottom>
+                                Info
+                            </Typography>
+                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItemText
+                                    primary={
+                                        <React.Fragment>
+                                            {user.email}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Email"
+                                />
+                                <ListItemText
+                                    primary={
+                                        <div className="phone-item-div">
+                                            <React.Fragment>
+                                                <div className="phone-text">
+                                                    {user.phone}
+                                                </div>
+                                            </React.Fragment>
+                                            <ChangePhoneDialog
+                                                changeUser={changeUser}
+                                                user={user}
+                                                showToastComponent={showToastComponent}
+                                            />
+                                        </div>
+                                    }
+                                    secondary="Contact phone"
+                                />
+                                <ListItemText
+                                    primary={
+                                        <React.Fragment>
+                                            {user.passport}
+                                        </React.Fragment>
+                                    }
+                                    secondary="Passport"
+                                />
+                                <ListItemText
+                                    primary={
+                                        <React.Fragment>
+                                            {user.birthday}
                                         </React.Fragment>
                                     }
                                     secondary="Birthday"
                                 />
-                                <ListItemText
-                                    primary={
-                                        <React.Fragment>
-                                            {this.state.user.email}
-                                        </React.Fragment>
-                                    }
-                                    secondary="E-mail"
-                                />
-                                <ListItemText
-                                    primary={
-                                        <React.Fragment>
-                                            {this.state.user.phone}
-                                        </React.Fragment>
-                                    }
-                                    secondary="Contact phone"
-                                />
                             </ListItem>
                         </div>
-                    </List>
-                </Paper>
-
-                <DialogWindow
-                    dialogTitle="Photo upload"
-                    handleClose={this.handleClose}
-                    openDialog={this.state.photoDialog}
-                    form={this.state.photoForm}
-                />
-            </div>
-        )
-    }
-}
-
-const mapActionsToProps = (dispatch) => {
-    return {
-        changePhoto: bindActionCreators(changePhoto, dispatch)
-    }
-};
-
-export default withRouter(connect(null, mapActionsToProps)(ProfileInfo));
+                    </div>
+                </div>
+                {toastComponent}
+            </Paper>
+        </main>
+    )
+});
