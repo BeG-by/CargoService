@@ -1,11 +1,9 @@
 import React, {useEffect} from "react";
-import PropTypes from 'prop-types';
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import WaybillDialog from "./waybill-dialog";
@@ -20,8 +18,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";
 import {handleRequestError, INVOICE_URL, makeRequest} from "../../parts/util/request-util";
 import {NotAuthorized} from "../../pages/error-page/error-401";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 
 const ALIGN = "left";
 
@@ -33,91 +30,6 @@ const columns = [
     {id: "consignee", label: "Consignee", minWidth: 300, align: ALIGN},
     {id: "waybillId", label: "Waybill", minWidth: 100, align: "center"}
 ];
-
-const useStyles = makeStyles((theme) => ({
-    visuallyHidden: {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 1,
-        margin: -1,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        top: 20,
-        width: 1,
-    },
-}));
-
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-}
-
-function EnhancedTableHead(props) {
-    const classes = useStyles();
-    const {order, orderBy, onRequestSort} = props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
-
-    return (
-        <TableHead>
-            <TableRow>
-                {columns.map((column) => (
-                    <TableCell
-                        key={column.id}
-                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                        sortDirection={orderBy === column.id ? order : false}
-                    >
-                        <TableSortLabel
-                            active={orderBy === column.id}
-                            direction={orderBy === column.id ? order : 'asc'}
-                            onClick={createSortHandler(column.id)}
-                        >
-                            {column.label}
-                            {orderBy === column.id
-                                ? <span className={classes.visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                  </span>
-                                : null}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
-                <TableCell
-                    key={"edit-delete"}
-                    style={{minWidth: 60}}
-                />
-            </TableRow>
-        </TableHead>
-    );
-}
-
-EnhancedTableHead.propTypes = {
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-};
 
 const mapStateToProps = (store) => {
     return {
@@ -219,10 +131,10 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         </div>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
+                                columns={columns}
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-
                             />
                             <TableBody>
                                 {stableSort(invoices, getComparator(order, orderBy))

@@ -4,7 +4,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import {handleRequestError, makeRequest, WAYBILL_URL} from "../../parts/util/request-util";
@@ -18,6 +17,7 @@ import {connect} from "react-redux";
 import Button from "@material-ui/core/Button";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import {NotAuthorized} from "../../pages/error-page/error-401";
+import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 
 const ALIGN = "left";
 
@@ -40,11 +40,19 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [waybills, setWaybills] = React.useState([]);
     const [waybill, setWaybill] = React.useState({id: 0, invoice: {}});
-    const [form, setForm] = React.useState(null);
     const [actFillDialogOpen, setActFillDialogOpen] = React.useState(false);
     const [actDialogOpen, setActDialogOpen] = React.useState(false);
     const [waybillInfoDialogOpen, setWaybillInfoDialogOpen] = React.useState(false);
+    const [form, setForm] = React.useState(null);
     const role = props.role;
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('status');
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     async function fetchWaybills(cleanupFunction) {
         if (!cleanupFunction) {
@@ -134,24 +142,14 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                             </Typography>
                         </div>
                         <Table aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                    <TableCell
-                                        key={"edit-delete"}
-                                        style={{minWidth: 60}}
-                                    />
-                                </TableRow>
-                            </TableHead>
+                            <EnhancedTableHead
+                                columns={columns}
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                            />
                             <TableBody>
-                                {waybills
+                                {stableSort(waybills, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((waybill) => {
                                         return (

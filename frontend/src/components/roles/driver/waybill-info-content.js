@@ -86,7 +86,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
         <div>
             <div className="info-content">
                 <div className="info-content-column">
-                    <Paper className={`${styles.infoPiece} table-paper`}>
+                    <Paper className={`${styles.infoPiece} table-paper`} style={{minWidth: "35%"}}>
                         <List className="info-content">
                             <div className="info-content-row">
                                 <ListItem className="info-content-column">
