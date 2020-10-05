@@ -47,11 +47,13 @@ public class Invoice implements Serializable, Cloneable {
     @Column(name = "close_date")
     private LocalDate closeDate;
 
-    @Column(name = "shipper", nullable = false)
-    private String shipper;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_shipper", nullable = false)
+    private Storage shipper;
 
-    @Column(name = "consignee", nullable = false)
-    private String consignee;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_consignee", nullable = false)
+    private Storage consignee;
 
     @Column(name = "comment")
     private String comment;

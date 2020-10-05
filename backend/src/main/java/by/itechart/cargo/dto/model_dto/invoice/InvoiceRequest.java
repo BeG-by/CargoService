@@ -33,11 +33,11 @@ public class InvoiceRequest {
     @NotNull (message = "Product owner id is mandatory")
     private Long productOwnerId;
 
-    @Size(max = 255, message = "Shipper is too long (max is 255)")
-    private String shipper;
+    @Positive(message = "Shipper id is mandatory")
+    private Long shipperId;
 
-    @Size(max = 255, message = "Consignee is too long (max is 255)")
-    private String consignee;
+    @Positive(message = "Consignee id is mandatory")
+    private Long consigneeId;
 
     @NotNull (message = "Invoice status is mandatory")
     @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED|CLOSED_WITH_ACT",
@@ -57,8 +57,6 @@ public class InvoiceRequest {
                 .number(invoiceNumber)
                 .registrationDate(registrationDate)
                 .status(status)
-                .shipper(shipper)
-                .consignee(consignee)
                 .products(products)
                 .build();
     }

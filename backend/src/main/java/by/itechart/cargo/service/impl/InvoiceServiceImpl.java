@@ -88,6 +88,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         final Long driverId = invoiceRequest.getDriverId();
         final Long productOwnerId = invoiceRequest.getProductOwnerId();
 
+        Storage shipper = storageRepository
+                .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
+                .orElseThrow(() -> new NotFoundException("Shipper with doesn't exists"));
+        invoice.setShipper(shipper);
+
+        Storage consignee = storageRepository
+                .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
+                .orElseThrow(() -> new NotFoundException("Consignee with doesn't exists"));
+        invoice.setConsignee(consignee);
+
+
         ProductOwner productOwner = productOwnerRepository
                 .findById(productOwnerId)
                 .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
@@ -150,14 +161,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         final User user = userRepository.getOne(currentUser.getId());
         invoice.setRegistrationUser(user);
 
+        Storage shipper = storageRepository
+                .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
+                .orElseThrow(() -> new NotFoundException("Shipper with doesn't exists"));
+        invoice.setShipper(shipper);
+
+        Storage consignee = storageRepository
+                .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
+                .orElseThrow(() -> new NotFoundException("Consignee with doesn't exists"));
+        invoice.setConsignee(consignee);
+
         invoice.setNumber(invoiceRequest.getInvoiceNumber());
         if (invoiceRequest.getStatus() == null) {
             invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
             invoice.setStatus(invoiceRequest.getStatus());
         }
-        invoice.setShipper(invoiceRequest.getShipper());
-        invoice.setConsignee(invoiceRequest.getConsignee());
 
         invoice.getProducts().forEach(p -> p.setInvoice(null));
         invoice.getProducts().clear();

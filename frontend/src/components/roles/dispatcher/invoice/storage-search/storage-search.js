@@ -23,7 +23,7 @@ export default function StorageSearch(props) {
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            getOptionLabel={(storage) => storage === "" ? "" : `${storage.address.country} ${storage.address.city} ${storage.address.street} ${storage.phone} ${storage.email}`}
+            getOptionLabel={(storage) => storage === "" ? "" : `${storage.address.country}  ${storage.address.city}  ${storage.address.street}   ${storage.email}  ${storage.phone}`}
             options={storages}
             renderInput={(params) => <TextField {...params} label="Storages" fullWidth/>}
         />

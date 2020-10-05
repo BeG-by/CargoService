@@ -93,9 +93,6 @@ public class StorageServiceImpl implements StorageService {
         }
 
         storage.setClientCompany(clientCompanyRepository.getOne(companyId));
-        if (productOwnerId != null) {
-            storage.setProductOwner(productOwnerRepository.getOne(productOwnerId));
-        }
 
         storageRepository.save(storage);
 
@@ -127,7 +124,6 @@ public class StorageServiceImpl implements StorageService {
                     .filter(p -> !p.getStatus().equals(ProductOwner.Status.DELETED))
                     .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
 
-            storage.setProductOwner(productOwner);
         }
 
         storage.setAddress(new Address(

@@ -1,6 +1,7 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
 import by.itechart.cargo.model.Invoice;
+import by.itechart.cargo.model.Storage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,8 @@ public class InvoiceTableResponse {
     private String status;
     private String number;
     private String date;
-    private String shipper;
-    private String consignee;
+    private Storage shipper;
+    private Storage consignee;
     private String waybillId;
 
     public InvoiceTableResponse toInvoiceTableResponse(Invoice invoice) {

@@ -2,14 +2,12 @@ package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -44,11 +42,6 @@ public class Storage {
     @Enumerated(EnumType.STRING)
     @Type(type = "storage_status")
     private Status status;
-
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_product_owner")
-    @JsonIgnore
-    private ProductOwner productOwner;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_client_company")

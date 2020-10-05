@@ -106,9 +106,19 @@ function InvoiceForm(props) {
     const handleSubmit = (values) => {
         let invoice = {};
         invoice.invoiceNumber = values.invoiceNumber;
-        invoice.shipper = values.shipper;
-        invoice.consignee = values.consignee;
 
+        if (initInvoice.consignee.id === -1) {
+            showToastComponent("Select consignee", "error");
+            return;
+        }
+
+        if (initInvoice.shipper.id === -1) {
+            showToastComponent("Select shipper", "error");
+            return;
+        }
+
+        invoice.shipperId = initInvoice.shipper.id;
+        invoice.consigneeId = initInvoice.consignee.id;
         invoice.productOwnerId = initInvoice.productOwner.id;
         invoice.products = initInvoice.products;
         invoice.registrationDate = initInvoice.registrationDate;
@@ -134,7 +144,6 @@ function InvoiceForm(props) {
     const updateDriversAndStorages = async () => {
         try {
             const res = await makeRequest("GET", DATA_FOR_INVOICE_CREATING_URL);
-            console.log(res.data);
             setDrivers(res.data.drivers);
             setStorages(res.data.storages);
         } catch (error) {
@@ -166,6 +175,7 @@ function InvoiceForm(props) {
     const fetchInitInvoiceState = async (id) => {
         try {
             const res = await makeRequest("GET", INVOICE_URL + "/" + id);
+            console.log(res.data);
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
@@ -310,8 +320,6 @@ function InvoiceForm(props) {
                 enableReinitialize
                 initialValues={{
                     invoiceNumber: initInvoice.number,
-                    shipper: initInvoice.shipper,
-                    consignee: initInvoice.consignee,
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={InvoiceFormValidation}
