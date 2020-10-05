@@ -7,7 +7,7 @@ import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

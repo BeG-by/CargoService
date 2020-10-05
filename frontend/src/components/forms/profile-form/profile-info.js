@@ -195,7 +195,7 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                                 <div className="content-div content-padding">{user.phone}</div>
                             </div>
                             <div>
-                                <Tooltip title="Click to change phone number" arrow>
+                                <Tooltip title="Click to change your phone number" arrow>
                                     <Button
                                         color="primary"
                                         startIcon={<EditIcon/>}

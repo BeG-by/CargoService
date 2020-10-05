@@ -8,7 +8,7 @@ import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Auto;
 import by.itechart.cargo.repository.AutoRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

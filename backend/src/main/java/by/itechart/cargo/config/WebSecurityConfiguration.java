@@ -1,11 +1,12 @@
-package by.itechart.cargo.security;
+package by.itechart.cargo.config;
 
 
-import by.itechart.cargo.security.jwt.JwtTokenFilter;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenFilter;
+import by.itechart.cargo.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,12 +14,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenUtil jwtTokenUtil;
@@ -34,7 +33,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    JwtTokenFilter jwtTokenFilterBean() {
+    public JwtTokenFilter jwtTokenFilterBean() {
         return new JwtTokenFilter(jwtTokenUtil);
     }
 
@@ -44,21 +43,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    // TODO create config directory
-    @Bean
-    public CommonsRequestLoggingFilter logFilter() {
 
-        CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
-
-        filter.setIncludeQueryString(true);
-        filter.setIncludePayload(true);
-        filter.setIncludeHeaders(true);
-        filter.setMaxPayloadLength(10000);
-        return filter;
-    }
-
-
-    // TODO roles configurations
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

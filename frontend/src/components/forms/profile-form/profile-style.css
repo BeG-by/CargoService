@@ -4,6 +4,7 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 20px 10px 25px;
+    margin-bottom: 80px;
     border-radius: 30px;
     border-color: #3f51b5;
     border-width: 1px;
@@ -71,7 +72,6 @@
     width: 100%;
 }
 
-
 .content-div, .content-padding {
     flex-basis: 80%;
     font-weight: 400;
@@ -93,41 +93,9 @@
     border-radius: 100px;
 }
 
-
-.profile-container h6,
-.profile-container h5,
-.profile-container h4,
-.profile-container h3,
-.profile-container p {
-    color: #3f51b5 !important;
-}
-
 .profile-container h4 {
     margin-left: 10px;
-}
-
-.left-box {
-    flex-basis: 50%;
-}
-
-.right-box {
-    flex-basis: 50%;
-}
-
-.info-box .MuiListItem-gutters {
-    padding: 0;
-}
-
-.info-box .MuiListItemText-multiline {
-}
-
-.phone-item-div {
-    display: flex;
-    justify-content: start;
-}
-
-.phone-item-div button {
-    padding: 0;
+    color: #3f51b5 !important;
 }
 
 /* forms styles */

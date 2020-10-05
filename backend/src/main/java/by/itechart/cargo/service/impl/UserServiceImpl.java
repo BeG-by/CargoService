@@ -10,7 +10,7 @@ import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

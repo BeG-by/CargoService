@@ -69,6 +69,7 @@ public class UserSaveRequest {
                 .birthday(birthday)
                 .address(address)
                 .email(email)
+                .phone(phone)
                 .passport(passport)
                 .build();
     }
