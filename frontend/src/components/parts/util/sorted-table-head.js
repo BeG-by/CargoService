@@ -44,15 +44,17 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    size: {
+    menuColumn: {
+        minWidth: 60,
         fontSize: 18,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        color: "#3f51b5"
     }
 }));
 
 export default function EnhancedTableHead(props) {
     const classes = useStyles();
-    const {order, orderBy, onRequestSort, fsize, menu} = props;
+    const {order, orderBy, onRequestSort, firstMenu, secondMenu} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -60,11 +62,22 @@ export default function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
+                {firstMenu ?
+                    <TableCell
+                        key={"edit-delete"}
+                        className={classes.menuColumn}
+                    />
+                    : null}
                 {props.columns.map((column) => (
                     <TableCell
                         key={column.id}
-                        className={fsize ? fsize : classes.size}
-                        style={{minWidth: column.minWidth, color: "#3f51b5"}}
+                        style={{minWidth: column.minWidth,
+                            width: column.width,
+                            maxWidth: column.maxWidth,
+                            align: column.align,
+                            fontSize: column.fontSize,
+                            fontWeight: "bold",
+                            color: "#3f51b5"}}
                         sortDirection={orderBy === column.id ? order : false}
                     >
                         <TableSortLabel
@@ -81,11 +94,13 @@ export default function EnhancedTableHead(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                {menu ?
+                {secondMenu ?
                 <TableCell
-                    key={"edit-delete"}
-                    style={{minWidth: 60}}
-                />
+                    key={"show"}
+                    className={classes.menuColumn}
+                >
+                    Info
+                </TableCell>
                 : null}
             </TableRow>
         </TableHead>
@@ -96,6 +111,6 @@ EnhancedTableHead.propTypes = {
     onRequestSort: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
-    fsize: PropTypes.object,
-    menu: PropTypes.bool
+    firstMenu: PropTypes.bool,
+    secondMenu: PropTypes.bool
 };

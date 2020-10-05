@@ -1,11 +1,6 @@
-let cargoCurrency = ""; //fixme поменять когда внесут в инвойс
-
-function priceProduct(price, quantity, currency) {
-    cargoCurrency = currency;
+function priceProduct(price, quantity) {
     return price * quantity;
 }
-
-export const CURRENCY = cargoCurrency;
 
 function weightProduct(measure, mass) {
     return measure === "KG"
@@ -14,7 +9,11 @@ function weightProduct(measure, mass) {
 }
 
 export const countTotalSum = (products) => {
-    return products.map((p) => priceProduct(p.price, p.quantity, p.currency)).reduce((sum, p) => sum + p, 0);
+    return products.map((p) => priceProduct(p.price, p.quantity)).reduce((sum, p) => sum + p, 0);
+}
+
+export const countTotalLostSum = (products) => {
+    return products.map((p) => priceProduct(p.price, p.lostQuantity)).reduce((sum, p) => sum + p, 0);
 }
 
 export const countTotalWeight = (products) => {
@@ -23,4 +22,8 @@ export const countTotalWeight = (products) => {
 
 export const countTotalQuantity = (products) => {
     return products.map((p) => p.quantity).reduce((sum, p) => sum + p, 0);
+}
+
+export const countTotalLostQuantity = (products) => {
+    return products.map((p) => p.lostQuantity).reduce((sum, p) => sum + p, 0);
 }

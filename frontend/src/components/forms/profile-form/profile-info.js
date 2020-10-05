@@ -84,7 +84,7 @@ class ProfileInfo extends React.Component {
     }
 
     saveFile() {
-        const endpoint = USER_URL + "/" + this.props.userId + "/photo";
+        const endpoint = USER_URL + "/photo";
         makeRequest("PUT", endpoint, {"photo": this.state.file.base64});
         this.setState({photoDialog: false});
         this.fetchUser();

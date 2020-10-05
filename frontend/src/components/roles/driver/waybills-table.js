@@ -18,15 +18,18 @@ import Button from "@material-ui/core/Button";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import {NotAuthorized} from "../../pages/error-page/error-401";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
-const ALIGN = "left";
+const LEFT = "left";
+const CENTER = "center";
+const SIZE = 18;
 
 const columns = [
-    {id: "invoiceNumber", label: "Invoice #", minWidth: 100, align: ALIGN},
-    {id: "status", label: "Invoice status", minWidth: 150, align: ALIGN},
-    {id: "auto", label: "Auto", minWidth: 100, align: ALIGN},
-    {id: "departureDate", label: "Departure Date", minWidth: 150, align: ALIGN},
-    {id: "arrivalDate", label: "Arrival Date", minWidth: 150, align: ALIGN},
+    {id: "invoiceNumber", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {id: "status", label: "Invoice status", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "auto", label: "Auto", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {id: "departureDate", label: "Departure Date", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "arrivalDate", label: "Arrival Date", minWidth: 150, align: CENTER, fontSize: SIZE},
 ];
 
 const mapStateToProps = (store) => {
@@ -137,14 +140,15 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 <Paper className="table-paper">
                     <TableContainer className="table-container">
                         <div className="table-header-wrapper">
-                            <Typography variant="h5" gutterBottom>
-                                Waybills
+                            <Typography variant="button" display="block" gutterBottom
+                                        style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
+                                <LibraryBooksIcon/> Waybills
                             </Typography>
                         </div>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
-                                fsize={20}
-                                menu={true}
+                                firstMenu={false}
+                                secondMenu={true}
                                 columns={columns}
                                 order={order}
                                 orderBy={orderBy}
@@ -167,7 +171,9 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                 {columns.map((column) => {
                                                     const value = fetchFieldFromObject(waybill, column.id);
                                                     return (
-                                                        <TableCell key={column.id}>
+                                                        <TableCell key={column.id}
+                                                                   align={column.align}
+                                                                   style={{minWidth: column.minWidth, maxWidth: column.maxWidth}}>
                                                             {value}
                                                         </TableCell>
                                                     );

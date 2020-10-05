@@ -18,8 +18,11 @@ import StoreIcon from '@material-ui/icons/Store';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 import Divider from "@material-ui/core/Divider";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
-import {countTotalQuantity, countTotalSum, countTotalWeight, CURRENCY} from "../../parts/util/cargo-total-info";
+import {countTotalLostQuantity, countTotalLostSum, countTotalWeight} from "../../parts/util/cargo-total-info";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {UserInfo} from "../admin/user-info";
+import Tooltip from "@material-ui/core/Tooltip";
+import {DialogWindow} from "../../parts/dialogs/dialog";
 
 const mapStateToProps = (store) => {
     return {
@@ -41,23 +44,22 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         marginTop: 5,
         fontSize: 20
-    },
-    fsize: {
-        fontSize: 12,
-        fontWeight: "bold"
     }
 }));
 
+const LEFT = "left";
+const SIZE = 12;
+
 const columns = [
-    {label: "Name", id: "name", width: 100},
-    {label: "Mass", id: "mass", width: 50},
-    {label: "Measure", id: "massMeasure", width: 50},
-    {label: "Price", id: "price", width: 50},
-    {label: "Currency", id: "currency", width: 50},
-    {label: "Quantity", id: "quantity", width: 50},
-    {label: "Measure", id: "quantityMeasure", width: 50},
-    {label: "Lost", id: "lostQuantity", width: 50},
-    {label: "Comment", id: "comment", width: 50},
+    {label: "Name", id: "name", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Measure", id: "massMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Measure", id: "quantityMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Lost", id: "lostQuantity", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Comment", id: "comment", minWidth: 50, align: LEFT, fontSize: SIZE},
 ];
 
 export const ActInfo = connect(mapStateToProps)((props) => {
@@ -72,13 +74,16 @@ export const ActInfo = connect(mapStateToProps)((props) => {
         }
     })
 
-    const totalSum = countTotalSum(losses);
+    const totalLostSum = countTotalLostSum(losses);
     const totalWeight = countTotalWeight(losses);
-    const totalQuantity = countTotalQuantity(losses);
+    const totalLostQuantity = countTotalLostQuantity(losses);
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('status');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [form, setForm] = React.useState(null);
+    const [title, setTitle] = React.useState("");
+    const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -95,6 +100,19 @@ export const ActInfo = connect(mapStateToProps)((props) => {
         setPage(0);
     };
 
+    const handleDriverInfoOpen = () => {
+        const user = invoice.driver;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
+            setTitle("Driver");
+            setUserInfoDialogOpen(true);
+        }
+    }
+
+    const handleClose = () => {
+        setUserInfoDialogOpen(false);
+    };
+
     return (
         <div>
             <Paper className="table-paper">
@@ -104,15 +122,20 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {invoice.driver.name + " " +
-                                        invoice.driver.surname}
-                                    </React.Fragment>
-                                }
-                                secondary="Driver"
-                            />
+                            <Tooltip title="Click to see Driver info" arrow>
+                                <ListItemText
+                                    onClick={handleDriverInfoOpen}
+                                    primary={
+                                        <React.Fragment>
+                                            <strong style={{color: "#3f51b5"}}>
+                                                {invoice.driver.name + " "
+                                                + invoice.driver.surname}
+                                            </strong>
+                                        </React.Fragment>
+                                    }
+                                    secondary="Driver"
+                                />
+                            </Tooltip>
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
@@ -184,25 +207,25 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                         {invoice.productOwnerDTO.name}
                     </TableCell>
                     <TableCell colSpan={1}>
-                        Quantity :
+                        Lost items :
                     </TableCell>
                     <TableCell align="right"
                                className={styles.boldText}>
-                        {totalQuantity + " items"}
+                        {totalLostQuantity + " items"}
                     </TableCell>
                     <TableCell colSpan={1}>
-                        Weight :
+                        Lost weight :
                     </TableCell>
                     <TableCell align="right"
                                className={styles.boldText}>
                         {totalWeight + " KG"}
                     </TableCell>
                     <TableCell colSpan={1}>
-                        Total Sum :
+                        Lost Sum :
                     </TableCell>
                     <TableCell align="right"
                                className={styles.boldText}>
-                        {totalSum + " " + CURRENCY}
+                        {totalLostSum + " " + (invoice.currency ? invoice.currency : "")}
                     </TableCell>
                 </TableRow>
             </div>
@@ -211,8 +234,8 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     <Table
                         aria-label="sticky table">
                         <EnhancedTableHead
-                            fsize={styles.fsize}
-                            menu={false}
+                            firstMenu={false}
+                            secondMenu={false}
                             columns={columns}
                             order={order}
                             orderBy={orderBy}
@@ -232,7 +255,9 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                                             {columns.map((column) => {
                                                 const value = fetchFieldFromObject(product, column.id);
                                                 return (
-                                                    <TableCell key={column.id}>
+                                                    <TableCell key={column.id}
+                                                               align={column.align}
+                                                               style={{minWidth: column.minWidth, maxWidth: column.maxWidth}}>
                                                         {value}
                                                     </TableCell>
                                                 );
@@ -255,6 +280,14 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
 
+                <DialogWindow
+                    dialogTitle={title}
+                    fullWidth={true}
+                    maxWidth="xs"
+                    handleClose={handleClose}
+                    openDialog={userInfoDialogOpen}
+                    form={form}
+                />
             </Paper>
         </div>
     );

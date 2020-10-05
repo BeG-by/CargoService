@@ -19,7 +19,7 @@ export default function WaybillDialog(props) {
                     {"Waybill to invoice # "}{props.invoice.number}
                 </DialogTitleCustomized>
                 <DialogContent>
-                    <WaybillForm invoice={props.invoice} onClose={props.onClose}/>
+                    <WaybillForm invoice={props.invoice} onClose={props.onClose} onSave={props.onSave}/>
                 </DialogContent>
             </Dialog>
         </div>

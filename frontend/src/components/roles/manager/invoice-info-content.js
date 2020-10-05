@@ -26,16 +26,19 @@ import {UserInfo} from "../admin/user-info";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Typography} from "@material-ui/core";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
-import {countTotalQuantity, countTotalSum, countTotalWeight, CURRENCY} from "../../parts/util/cargo-total-info";
+import {countTotalQuantity, countTotalSum, countTotalWeight} from "../../parts/util/cargo-total-info";
+
+const LEFT = "left";
+const SIZE = 12;
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
-    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
-    {label: "Measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
-    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
-    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
-    {label: "Measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
+    {label: "Name", id: "name", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Measure", id: "massMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Measure", id: "quantityMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -52,10 +55,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         marginTop: 5,
         fontSize: 20
-    },
-    fsize: {
-        fontSize: 12,
-        fontWeight: "bold"
     }
 }));
 
@@ -329,7 +328,7 @@ export default function InvoiceInfoContent(props) {
                         </div>
                     </Paper>
 
-                    <Paper className={`${styles.infoPiece} table-paper`} style={{maxWidth: "60%"}}>
+                    <Paper className={`${styles.infoPiece} table-paper`} style={{maxWidth: "60%", minWidth: "55%"}}>
                         <Typography className={styles.tableHeader}>
                             CARGO LIST
                         </Typography>
@@ -360,15 +359,15 @@ export default function InvoiceInfoContent(props) {
                             </TableCell>
                             <TableCell align="right"
                                        className={styles.boldText}>
-                                {totalSum + " " + CURRENCY}
+                                {totalSum + " " + (invoice.currency ? invoice.currency : "")}
                             </TableCell>
                         </TableRow>
 
                         <TableContainer style={{maxHeight: "80%"}}>
                             <Table stickyHeader aria-label="sticky table">
                                 <EnhancedTableHead
-                                    fsize={styles.fsize}
-                                    menu={false}
+                                    firstMenu={false}
+                                    secondMenu={false}
                                     columns={columns}
                                     order={order}
                                     orderBy={orderBy}
@@ -388,7 +387,9 @@ export default function InvoiceInfoContent(props) {
                                                     {columns.map((column) => {
                                                         const value = fetchFieldFromObject(product, column.id);
                                                         return (
-                                                            <TableCell key={column.id}>
+                                                            <TableCell align={column.align}
+                                                                       style={{minWidth: column.minWidth, maxWidth: column.maxWidth}}
+                                                                       key={column.id}>
                                                                 {value}
                                                             </TableCell>
                                                         );
