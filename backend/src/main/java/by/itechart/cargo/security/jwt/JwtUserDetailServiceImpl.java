@@ -46,6 +46,8 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .status(user.getStatus())
                 .clientCompany(user.getClientCompany())
                 .roles(user.getRoles())
+                .phone(user.getPhone())
+                .photo(user.getPhoto())
                 .authorities(createGrantedAuthority(user.getRoles()))
                 .isEnable(user.getStatus().equals(User.Status.ACTIVE))
                 .build();
