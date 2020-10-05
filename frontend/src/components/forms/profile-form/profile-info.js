@@ -74,6 +74,7 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                 .then(res => changeUser(copyUser(user)))
                 .catch(error => handleRequestError(error, alert))
 
+
         };
 
     };

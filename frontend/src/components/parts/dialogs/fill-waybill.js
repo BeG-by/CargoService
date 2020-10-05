@@ -9,8 +9,8 @@ export const FillWaybillDialog = (ok, cancel) => {
             <br/>
             for this invoice?</i>
             <div className='btn-row'>
-                <OkButton content='Fill in' handleClick={ok}/>
-                <CancelButton content='Show invoice' handleClick={cancel}/>
+                <OkButton content='OK' handleClick={ok}/>
+                <CancelButton content='Cancel' handleClick={cancel}/>
             </div>
     </div>);
 }

@@ -7,7 +7,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TablePagination from "@material-ui/core/TablePagination";
 import React from "react";
-import {Typography} from "@material-ui/core";
 import {List} from "material-ui";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -24,44 +23,49 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {WaybillInfo} from "../driver/waybill-info";
 import Divider from "@material-ui/core/Divider";
 import {UserInfo} from "../admin/user-info";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import {Typography} from "@material-ui/core";
+import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
+import {countTotalQuantity, countTotalSum, countTotalWeight} from "../../parts/util/cargo-total-info";
+
+const LEFT = "left";
+const SIZE = 12;
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 150, maxWidth: 150},
-    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 50},
-    {label: "Measure", id: "massMeasure", minWidth: 100, maxWidth: 100},
-    {label: "Price", id: "price", minWidth: 50, maxWidth: 50},
-    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 50},
-    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 50},
-    {label: "Measure", id: "quantityMeasure", minWidth: 100, maxWidth: 100},
+    {label: "Name", id: "name", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {label: "Mass", id: "mass", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Measure", id: "massMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Price", id: "price", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Currency", id: "currency", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Measure", id: "quantityMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
 ];
 
-let CURRENCY;
-
-function priceProduct(price, quantity, currency) {
-    CURRENCY = currency;
-    return price * quantity;
-}
-
-function weightProduct(measure, mass) {
-    return measure === "KG"
-        ? +mass
-        : +mass * 1000;
-}
-
-function countTotalSum(products) {
-    return products.map((p) => priceProduct(p.price, p.quantity, p.currency)).reduce((sum, p) => sum + p, 0);
-}
-
-function countTotalWeight(products) {
-    return products.map((p) => weightProduct(p.massMeasure, p.mass)).reduce((sum, p) => sum + p, 0);
-}
+const useStyles = makeStyles((theme) => ({
+    infoPiece: {
+        flexDirection: "column",
+        alignItems: "flex-start"
+    },
+    boldText: {
+        fontWeight: "bold",
+    },
+    tableHeader: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 5,
+        fontSize: 20
+    }
+}));
 
 export default function InvoiceInfoContent(props) {
+    const styles = useStyles();
     const invoice = props.invoice;
     const act = props.invoice.act;
     const waybill = props.invoice.waybill;
     const totalSum = countTotalSum(invoice.products);
     const totalWeight = countTotalWeight(invoice.products);
+    const totalQuantity = countTotalQuantity(invoice.products);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage] = React.useState(10);
     const [actInfoDialogOpen, setActInfoDialogOpen] = React.useState(false);
@@ -69,35 +73,51 @@ export default function InvoiceInfoContent(props) {
     const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
     const [form, setForm] = React.useState(null);
     const [title, setTitle] = React.useState("");
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('status');
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     const handleActInfoOpen = () => {
-        setForm(<ActInfo act={act} invoice={invoice}/>);
-        setActInfoDialogOpen(true);
+        if (act) {
+            setForm(<ActInfo act={act} invoice={invoice}/>);
+            setActInfoDialogOpen(true);
+        }
     }
 
     const handleWaybillInfoOpen = () => {
-        setForm(<WaybillInfo waybillId={waybill.id}/>);
-        setWaybillInfoDialogOpen(true);
+        if (waybill) {
+            setForm(<WaybillInfo waybillId={waybill.id}/>);
+            setWaybillInfoDialogOpen(true);
+        }
     }
 
     const handleDriverInfoOpen = () => {
-        const id = invoice.driver.id;
-        setForm(<UserInfo userId={id}/>);
-        setTitle("Driver");
-        setUserInfoDialogOpen(true);
+        const user = invoice.driver;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
+            setTitle("Driver");
+            setUserInfoDialogOpen(true);
+        }
     }
 
     const handleDispatcherInfoOpen = () => {
-        const id = invoice.registrationUser.id;
-        setForm(<UserInfo userId={id}/>);
-        setTitle("Dispatcher");
-        setUserInfoDialogOpen(true);
+        const user = invoice.registrationUser;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
+            setTitle("Dispatcher");
+            setUserInfoDialogOpen(true);
+        }
     }
 
     const handleManagerInfoOpen = () => {
-        const id = invoice.checkingUser.id;
-        if (id !== null && id !== "undefined") {
-            setForm(<UserInfo userId={id}/>);
+        const user = invoice.checkingUser;
+        if (user) {
+            setForm(<UserInfo user={user}/>);
             setTitle("Manager");
             setUserInfoDialogOpen(true);
         }
@@ -115,12 +135,12 @@ export default function InvoiceInfoContent(props) {
 
     return (
         <div>
-            <div style={{alignItems: "flex-start"}}>
-                <div style={{display: "flex", flexDirection: "row"}}>
-                    <Paper style={{flexDirection: "column", alignItems: "flex-start"}}>
-                        <List style={{alignItems: "flex-start"}}>
-                            <div style={{display: "flex", flexDirection: "row"}}>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+            <div className="info-content">
+                <div className="info-content-column">
+                    <Paper className={`${styles.infoPiece} table-paper`} style={{minWidth: "40%"}}>
+                        <List className="info-content">
+                            <div className="info-content-column">
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <CheckCircleIcon/>
                                     </ListItemIcon>
@@ -166,7 +186,7 @@ export default function InvoiceInfoContent(props) {
                                     </Tooltip>
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <DepartureBoardIcon/>
                                     </ListItemIcon>
@@ -202,7 +222,7 @@ export default function InvoiceInfoContent(props) {
                                     />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <HowToRegIcon/>
                                     </ListItemIcon>
@@ -259,8 +279,8 @@ export default function InvoiceInfoContent(props) {
                                 </ListItem>
                             </div>
                             <Divider/>
-                            <div style={{display: "flex", flexDirection: "row"}}>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <div className="info-content-column">
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <StoreIcon/>
                                     </ListItemIcon>
@@ -274,7 +294,7 @@ export default function InvoiceInfoContent(props) {
                                     />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
-                                <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                                <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <StoreIcon/>
                                     </ListItemIcon>
@@ -289,7 +309,7 @@ export default function InvoiceInfoContent(props) {
                                 </ListItem>
                             </div>
                             <Divider/>
-                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
+                            <ListItem className={styles.infoPiece}>
                                 <ListItemIcon>
                                     <CommentIcon/>
                                 </ListItemIcon>
@@ -303,41 +323,58 @@ export default function InvoiceInfoContent(props) {
                                 />
                             </ListItem>
                         </List>
-                        <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <div className="btn-row">
                             {props.buttons}
                         </div>
                     </Paper>
-                    <div style={{flexDirection: "column", minWidth: 50, alignItems: "flex-start"}}>
-                    </div>
-                    <Paper style={{flexDirection: "column", alignItems: "flex-start"}}>
-                        <TableRow>
-                            <TableCell style={{fontSize: 20}}>PRODUCTS</TableCell>
-                            <TableCell colSpan={1}>Quantity:</TableCell>
+
+                    <Paper className={`${styles.infoPiece} table-paper`} style={{maxWidth: "60%", minWidth: "55%"}}>
+                        <Typography className={styles.tableHeader}>
+                            CARGO LIST
+                        </Typography>
+                        <TableRow className={styles.tableHeader}>
+                            <TableCell colSpan={1}>
+                                Owner :
+                            </TableCell>
                             <TableCell align="right"
-                                       style={{fontWeight: "bold"}}>{invoice.products.length}</TableCell>
-                            <TableCell colSpan={1}>Weight:</TableCell>
-                            <TableCell align="right" style={{fontWeight: "bold"}}>{totalWeight + " KG"}</TableCell>
-                            <TableCell colSpan={1}>Total Sum:</TableCell>
+                                       className={styles.boldText}>
+                                {invoice.productOwnerDTO.name}
+                            </TableCell>
+                            <TableCell colSpan={1}>
+                                Quantity :
+                            </TableCell>
                             <TableCell align="right"
-                                       style={{fontWeight: "bold"}}>{totalSum + " " + CURRENCY}</TableCell>
+                                       className={styles.boldText}>
+                                {totalQuantity + " items"}
+                            </TableCell>
+                            <TableCell colSpan={1}>
+                                Weight :
+                            </TableCell>
+                            <TableCell align="right"
+                                       className={styles.boldText}>
+                                {totalWeight + " KG"}
+                            </TableCell>
+                            <TableCell colSpan={1}>
+                                Total Sum :
+                            </TableCell>
+                            <TableCell align="right"
+                                       className={styles.boldText}>
+                                {totalSum + " " + (invoice.currency ? invoice.currency : "")}
+                            </TableCell>
                         </TableRow>
 
                         <TableContainer style={{maxHeight: "80%"}}>
                             <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                style={{minWidth: column.minWidth, fontSize: 14, color: "#3f51b5"}}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
+                                <EnhancedTableHead
+                                    firstMenu={false}
+                                    secondMenu={false}
+                                    columns={columns}
+                                    order={order}
+                                    orderBy={orderBy}
+                                    onRequestSort={handleRequestSort}
+                                />
                                 <TableBody>
-                                    {invoice.products
+                                    {stableSort(invoice.products, getComparator(order, orderBy))
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((product) => {
                                             return (
@@ -350,7 +387,9 @@ export default function InvoiceInfoContent(props) {
                                                     {columns.map((column) => {
                                                         const value = fetchFieldFromObject(product, column.id);
                                                         return (
-                                                            <TableCell key={column.id}>
+                                                            <TableCell align={column.align}
+                                                                       style={{minWidth: column.minWidth, maxWidth: column.maxWidth}}
+                                                                       key={column.id}>
                                                                 {value}
                                                             </TableCell>
                                                         );
@@ -389,7 +428,7 @@ export default function InvoiceInfoContent(props) {
             <DialogWindow
                 dialogTitle={"Waybill to invoice # " + invoice.number}
                 fullWidth={true}
-                maxWidth="md"
+                maxWidth="xl"
                 handleClose={handleClose}
                 openDialog={waybillInfoDialogOpen}
                 form={form}

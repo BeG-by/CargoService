@@ -8,9 +8,10 @@ export const WaybillInfo = (props) => {
         departureDate: "",
         arrivalDate: "",
         points: [],
-        invoice: {id: 0, number: ""},
+        invoice: {id: 0, number: "", checkingUser: {}},
         auto: {id: 0, mark: "", type: ""},
-        driver: {id: 0, name: "", surname: ""},
+        driver: {},
+        checkingUser: {},
         shipper: "",
         consignee: "",
     });
@@ -26,13 +27,14 @@ export const WaybillInfo = (props) => {
                 departureDate: selected.departureDate,
                 arrivalDate: selected.arrivalDate,
                 points: selected.points,
-                invoice: {id: selected.invoice.id, number: selected.invoice.number},
-                auto: {id: selected.auto.id, mark: selected.auto.mark, type: selected.auto.type},
-                driver: {
-                    id: selected.invoice.driver.id,
-                    name: selected.invoice.driver.name,
-                    surname: selected.invoice.driver.surname
+                invoice: {
+                    id: selected.invoice.id,
+                    number: selected.invoice.number,
+                    checkingUser: selected.invoice.checkingUser,
                 },
+                auto: {id: selected.auto.id, mark: selected.auto.mark, type: selected.auto.autoType},
+                driver: selected.invoice.driver,
+                checkingUser: selected.invoice.checkingUser,
                 shipper: selected.invoice.shipper,
                 consignee: selected.invoice.consignee,
             });
@@ -47,7 +49,7 @@ export const WaybillInfo = (props) => {
                     departureDate: "",
                     arrivalDate: "",
                     points: [],
-                    invoice: {id: 0, number: ""},
+                    invoice: {id: 0, number: "", checkingUser: {}},
                     auto: {id: 0, mark: "", type: ""},
                     driver: {id: 0, name: "", surname: ""},
                     shipper: "",

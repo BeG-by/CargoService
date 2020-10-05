@@ -20,7 +20,7 @@ export default function ActDialog(props) {
                     {"Act to invoice # " + invoice.number}
                 </DialogTitleCustomized>
                 <DialogContent>
-                    <ActForm invoice={invoice} onClose={props.onClose}/>
+                    <ActForm invoice={invoice} onSave={props.onSave} onClose={props.onClose}/>
                 </DialogContent>
             </Dialog>
         </div>

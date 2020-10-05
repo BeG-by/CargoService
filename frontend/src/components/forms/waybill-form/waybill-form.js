@@ -7,20 +7,20 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
 import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
 import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
+import Paper from "@material-ui/core/Paper";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const EMPTY_AUTO = {
     id: 0,
     mark: "",
     autoType: "",
 };
-
 
 const mapStateToProps = (store) => {
     return {
@@ -91,7 +91,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             waybill.arrivalDate = values.arrivalDate;
             const saveWaybillRequest = async (waybill) => {
                 await saveWaybill(waybill);
-                props.onClose();
+                props.onSave();
             };
             saveWaybillRequest(waybill);
         } else {
@@ -129,73 +129,101 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             >
                 {(formProps) => (
                     <Form>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-label">Select auto</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={selectedAuto.id}
-                                onChange={handleAutoChange}
-                                name={"autoId"}
-                            >
-                                {options.map(option => {
-                                    return (
-                                        <MenuItem
-                                            key={option.value}
+                        <div className="info-content">
+                            <div className="info-content-column">
+                                <Paper className={`table-paper`}
+                                       style={{flexDirection: "column", alignItems: "flex-start", minWidth: "35%", padding: 10}}>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="demo-simple-select-label">Select auto</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={selectedAuto.id}
+                                            onChange={handleAutoChange}
                                             name={"autoId"}
-                                            value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    )
-                                })}
-                            </Select>
-                            <label style={{color: "#f50057"}}>
-                                <ErrorMessage name={"autoId"}/>
-                            </label>
-                        </FormControl>
+                                        >
+                                            {options.map(option => {
+                                                return (
+                                                    <MenuItem
+                                                        key={option.value}
+                                                        name={"autoId"}
+                                                        value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                )
+                                            })}
+                                        </Select>
+                                        <label style={{color: "#f50057"}}>
+                                            <ErrorMessage name={"autoId"}/>
+                                        </label>
+                                    </FormControl>
 
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                <DatePickerField
-                                    formikProps={formProps}
-                                    id="departureDate"
-                                    formikFieldName="departureDate"
-                                    label="Departure date"
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <DatePickerField
-                                    formikProps={formProps}
-                                    id="arrivalDate"
-                                    formikFieldName="arrivalDate"
-                                    label="Arrival date"
-                                />
-                            </Grid>
-                        </Grid>
-                        <br/>
-                        <ManagerMapForPointAdding
-                            markers={points}
-                            onMarkerAdd={handlePointAdd}
-                            onMarkerDelete={handlePointDelete}
-                        />
-                        <br/>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <DatePickerField
+                                                formikProps={formProps}
+                                                id="departureDate"
+                                                formikFieldName="departureDate"
+                                                label="Departure date"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <DatePickerField
+                                                formikProps={formProps}
+                                                id="arrivalDate"
+                                                formikFieldName="arrivalDate"
+                                                label="Arrival date"
+                                            />
+                                        </Grid>
+                                    </Grid>
 
-                        <div className='btn-row'>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
 
-                            >
-                                Save waybill
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={props.onClose}
-                            >
-                                Cancel
-                            </Button>
+                                    <TextField name="shipper"
+                                               label="Shipper"
+                                               type="text"
+                                               id="shipper"
+                                               disabled={true}
+                                               defaultValue={invoice.shipper}
+                                               style={{width: "100%"}}/>
+
+                                    <br/><br/>
+                                    <TextField name="consignee"
+                                               label="Consignee"
+                                               type="text"
+                                               id="consignee"
+                                               disabled={true}
+                                               defaultValue={invoice.consignee}
+                                               style={{width: "100%"}}/>
+
+                                    <br/><br/>
+                                    <div className='btn-row'>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+
+                                        >
+                                            Save waybill
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={props.onClose}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </Paper>
+
+                                <Paper className={`table-paper`}
+                                       style={{flexDirection: "column", alignItems: "flex-start", padding: 10}}>
+                                    <ManagerMapForPointAdding
+                                        markers={points}
+                                        onMarkerAdd={handlePointAdd}
+                                        onMarkerDelete={handlePointDelete}
+                                    />
+                                </Paper>
+                            </div>
                         </div>
                     </Form>
                 )}
