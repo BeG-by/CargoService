@@ -92,6 +92,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             const saveWaybillRequest = async (waybill) => {
                 await saveWaybill(waybill);
                 props.onSave();
+                props.onClose();
             };
             saveWaybillRequest(waybill);
         } else {

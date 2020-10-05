@@ -94,7 +94,9 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                         <ListItemIcon>
                                             <HowToRegIcon/>
                                         </ListItemIcon>
-                                        <Tooltip title="Click to see Driver info" arrow>
+                                        <Tooltip className="link-pointer"
+                                                 title="Click to see Driver info"
+                                                 arrow>
                                             <ListItemText
                                                 onClick={handleDriverInfoOpen}
                                                 primary={
@@ -109,11 +111,14 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                             />
                                         </Tooltip>
                                     </div>
+
                                     <div className={styles.half}>
                                         <ListItemIcon>
                                             <HowToRegIcon/>
                                         </ListItemIcon>
-                                        <Tooltip title="Click to see Manager info" arrow>
+                                        <Tooltip className="link-pointer"
+                                                 title="Click to see Manager info"
+                                                 arrow>
                                             <ListItemText
                                                 onClick={handleManagerInfoOpen}
                                                 primary={
@@ -130,6 +135,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                     </div>
                                 </ListItem>
                                 <Divider/>
+
                                 <ListItem className="info-content-column">
                                     <div className={styles.half}>
                                         <ListItemIcon>
@@ -144,6 +150,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                             secondary="Auto mark"
                                         />
                                     </div>
+
                                     <div className={styles.half}>
                                         <ListItemIcon>
                                             <LocalShippingIcon/>
@@ -159,6 +166,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                     </div>
                                 </ListItem>
                                 <Divider/>
+
                                 <ListItem className="info-content-column">
                                     <div className={styles.half}>
                                         <ListItemIcon>
@@ -173,6 +181,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                             secondary="Departure Date"
                                         />
                                     </div>
+
                                     <div className={styles.half}>
                                         <ListItemIcon>
                                             <DepartureBoardIcon/>
@@ -188,6 +197,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                     </div>
                                 </ListItem>
                                 <Divider/>
+
                                 <ListItem className="info-content-column">
                                     <div className={styles.half}>
                                         <ListItemIcon>
@@ -202,6 +212,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                             secondary="Shipper"
                                         />
                                     </div>
+
                                     <div className={styles.half}>
                                         <ListItemIcon>
                                             <StoreIcon/>
@@ -218,6 +229,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                 </ListItem>
                             </div>
                         </List>
+
                         <div className={styles.centerButton}>
                             <Button
                                 color="primary"

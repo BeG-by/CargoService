@@ -9,9 +9,7 @@ import Button from "@material-ui/core/Button";
 import {RejectInvoiceValidation} from "../validation/reject-invoice-validation";
 import {FillWaybillDialog} from "./fill-waybill";
 import WaybillDialog from "../../roles/manager/waybill-dialog";
-import {handleRequestError} from "../util/request-util";
 import {DialogWindow} from "./dialog";
-import Paper from "@material-ui/core/Paper";
 
 export const AssignVerificationInvoice = withRouter((props) => {
     const [selectedInvoice, setSelectedInvoice] = React.useState({});

@@ -17,6 +17,8 @@ import "../../App.css";
 import Avatar from "@material-ui/core/Avatar";
 import photo from "../../../resources/images/user_no_photo.png";
 import {makeRequest, USER_URL, handleRequestError} from "../util/request-util";
+import Badge from "@material-ui/core/Badge";
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const drawerWidth = DRAWER_WIDTH;
 
@@ -61,6 +63,9 @@ const useStyles = makeStyles((theme) => ({
     hide: {
         display: 'none',
     },
+    spaceAround: {
+        marginRight: 20
+    }
 }));
 
 const mapStateToProps = (store) => {
@@ -113,10 +118,16 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     const renderUserName = () => {
         const userText = !user.name || !user.surname
             ? headerText
-            : <Link to={"/profile"}
+            : user.name + " " + user.surname + ", " + user.roles;
+        return isAuthenticate ? userText : headerText
+    };
+
+    const renderUserPhoto = () => {
+        return isAuthenticate
+            ? <Link to={"/profile"}
                     className="link-item-white header-link">
                 <Avatar alt="avatar"
-                        style={{marginLeft: 20, marginRight: 20}}
+                        className={classes.spaceAround}
                         src={
                             user.photo !== undefined
                             && user.photo !== null
@@ -125,10 +136,9 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                                 : photo
                         }
                 />
-                {user.name + " " + user.surname + ", " + user.roles}
-            </Link>;
-        return isAuthenticate ? userText : headerText
-    };
+            </Link>
+            : null;
+    }
 
     const renderCompanyName = () => {
         const companyName = company.name ? company.name : headerCompany;
@@ -136,6 +146,23 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
             ? <Link to={"/main"} className="link-item-white">{companyName}</Link>
             : headerCompany
     };
+
+    const handleRefresh = () => {
+        window.location.reload();
+    };
+
+    const renderUserNotifications = () => {
+        return isAuthenticate
+            ? <IconButton onClick={handleRefresh}
+                          aria-label="documents for work"
+                          color="inherit">
+                <Badge badgeContent={17}
+                       color="secondary">
+                    <NotificationsIcon/>
+                </Badge>
+            </IconButton>
+            : null;
+    }
 
     const LoginButton = () => {
         return isAuthenticate
@@ -168,6 +195,12 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                     {renderUserName()}
                 </Typography>
                 <div className={classes.grow}/>
+                <div className={classes.spaceAround}>
+                    {renderUserNotifications()}
+                </div>
+                <div className={classes.spaceAround}>
+                    {renderUserPhoto()}
+                </div>
                 <LoginButton/>
             </Toolbar>
         </AppBar>
