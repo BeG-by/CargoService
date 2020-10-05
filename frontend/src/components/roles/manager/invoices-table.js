@@ -12,7 +12,7 @@ import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {InvoiceInfo} from "./invoice-info";
 import CheckIcon from '@material-ui/icons/Check';
-import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/function-util";
 import {connect} from "react-redux";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";

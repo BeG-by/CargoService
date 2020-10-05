@@ -43,6 +43,7 @@ main {
 .main-table-paper {
     max-width: 100%;
     height: 100%;
+    border-style: solid;
 }
 
 .table-delete-edit-div {
@@ -59,7 +60,9 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #3f51b5;
 }
+
 
 /* document info*/
 
@@ -69,6 +72,9 @@ main {
 
 .direction-column {
     flex-direction: column;
+
+#form-title {
+    font-size: 1.6rem;
 }
 
 .info-content-row {

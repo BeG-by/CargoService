@@ -32,6 +32,8 @@ public class JwtUserDetails implements UserDetails {
     private String passport;
     private User.Status status;
     private ClientCompany clientCompany;
+    private String phone;
+    private String photo;
     private Set<Role> roles;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isEnable;
@@ -51,6 +53,8 @@ public class JwtUserDetails implements UserDetails {
                 .status(status)
                 .clientCompany(clientCompany)
                 .roles(roles)
+                .photo(photo)
+                .phone(phone)
                 .build();
     }
 

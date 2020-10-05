@@ -2,13 +2,13 @@ package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
+import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -53,6 +53,20 @@ public class UserController {
             throws NotFoundException {
         userService.updatePhoto(photoRequest);
         return ResponseEntity.ok("Photo has been updated");
+    }
+
+    @PutMapping("/phone")
+    public ResponseEntity<String> updatePhone(@RequestBody @Valid PhoneRequest phoneRequest)
+            throws NotFoundException {
+        userService.updatePhone(phoneRequest);
+        return ResponseEntity.ok("Phone has been updated");
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<String> updatePassword(@RequestBody @Valid PasswordRequest passwordRequest)
+            throws IncorrectPasswordException {
+        userService.updatePassword(passwordRequest);
+        return ResponseEntity.ok("Phone has been updated");
     }
 
     @GetMapping("/info")

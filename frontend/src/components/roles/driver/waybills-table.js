@@ -10,7 +10,7 @@ import {handleRequestError, makeRequest, WAYBILL_URL} from "../../parts/util/req
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
-import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../parts/util/function-util";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import ActDialog from "./act-dialog";
 import {connect} from "react-redux";

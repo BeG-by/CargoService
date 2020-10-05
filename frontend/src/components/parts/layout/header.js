@@ -10,7 +10,7 @@ import {SignoutButton} from "../buttons/signout-button";
 import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {changeUserAndCompany} from "../../store/actions";
+import {changeUserAndCompany, changeUser} from "../../store/actions";
 import {DRAWER_WIDTH} from "../styles/styles";
 import {Link} from "react-router-dom";
 import "../../App.css";

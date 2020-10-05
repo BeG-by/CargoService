@@ -1,0 +1,162 @@
+.profile-container {
+    width: 750px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 10px 25px;
+    border-radius: 30px;
+    border-color: #3f51b5;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #3f51b5;
+}
+
+.divider, .divider-margin {
+    border: 1px dashed #dadce0;
+}
+
+.divider-margin {
+    margin-top: 10px;
+}
+
+.add-margin {
+    margin-bottom: 10px;
+}
+/* header */
+
+.profile-container .MuiTypography-h4 {
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.header-text,
+.notice-text {
+    color: #5f6368;
+    font-weight: 300;
+    padding: 10px;
+}
+
+.notice-text{
+    flex-basis: 79%;
+}
+
+/*---*/
+
+.profile-content-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.box1 {
+    padding: 10px;
+}
+
+.box4 {
+    padding-bottom: 17px;
+}
+
+.box2, .box3, .box4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box3 {
+    width: 100%;
+}
+
+
+.content-div, .content-padding {
+    flex-basis: 80%;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.content-padding {
+    padding: 10px;
+}
+
+.without-padding {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.profile-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 100px;
+}
+
+
+.profile-container h6,
+.profile-container h5,
+.profile-container h4,
+.profile-container h3,
+.profile-container p {
+    color: #3f51b5 !important;
+}
+
+.profile-container h4 {
+    margin-left: 10px;
+}
+
+.left-box {
+    flex-basis: 50%;
+}
+
+.right-box {
+    flex-basis: 50%;
+}
+
+.info-box .MuiListItem-gutters {
+    padding: 0;
+}
+
+.info-box .MuiListItemText-multiline {
+}
+
+.phone-item-div {
+    display: flex;
+    justify-content: start;
+}
+
+.phone-item-div button {
+    padding: 0;
+}
+
+/* forms styles */
+
+.phone-form,
+.password-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-form button {
+    margin-top: 10px;
+    width: 130px;
+}
+
+.password-form button {
+    margin-top: 10px;
+    width: 200px;
+}
+
+.password-dialog {
+    width: 500px;
+}
+
+.phone-dialog-container .MuiDialog-paperWidthSm {
+    width: 300px;
+}
+
+.btn-form-wrapper {
+    display: flex;
+    justify-content: center;
+}

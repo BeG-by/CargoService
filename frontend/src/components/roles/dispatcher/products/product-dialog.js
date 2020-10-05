@@ -32,5 +32,4 @@ export default function ProductDialog(props) {
             </DialogContent>
         </Dialog>
     );
-}
-;
+};
