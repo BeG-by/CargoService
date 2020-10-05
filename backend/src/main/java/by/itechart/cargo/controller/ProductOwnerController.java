@@ -1,7 +1,7 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerPaginationResponse;
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
@@ -29,7 +29,7 @@ public class ProductOwnerController {
     @GetMapping
     public ResponseEntity<ProductOwnerPaginationResponse> productOwners(@RequestParam int requestedPage,
                                                                         @RequestParam int productOwnersPerPage) {
-        return ResponseEntity.ok(productOwnerService.findAll(requestedPage, productOwnersPerPage));
+        return ResponseEntity.ok(productOwnerService.findWithPagination(requestedPage, productOwnersPerPage));
     }
 
     @GetMapping("/{id}")
@@ -38,9 +38,9 @@ public class ProductOwnerController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<ProductOwnerPaginationResponse> productOwner(@RequestParam String name,
-                                                                       @RequestParam int requestedPage,
-                                                                       @RequestParam int productOwnersPerPage) {
+    public ResponseEntity<ProductOwnerPaginationResponse> findByNameWithPagination(@RequestParam String name,
+                                                                                   @RequestParam int requestedPage,
+                                                                                   @RequestParam int productOwnersPerPage) {
         return ResponseEntity.ok(productOwnerService.findByName(name, requestedPage, productOwnersPerPage));
     }
 

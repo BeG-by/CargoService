@@ -1,10 +1,12 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.DriversAndStoragesDTO;
+import by.itechart.cargo.dto.model_dto.invoice.InvoicePaginationResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
+import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
+import by.itechart.cargo.elasticsearch.repository.ElasticsearchInvoiceRepository;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.*;
@@ -14,6 +16,7 @@ import by.itechart.cargo.security.jwt.JwtUserDetails;
 import by.itechart.cargo.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -36,6 +39,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final ProductOwnerRepository productOwnerRepository;
     private final RoleRepository roleRepository;
     private final StorageRepository storageRepository;
+    private final ElasticsearchInvoiceRepository elasticsearchInvoiceRepository;
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
@@ -44,7 +48,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                               UserRepository userRepository,
                               JwtTokenUtil jwtTokenUtil,
                               StorageRepository storageRepository,
-                              RoleRepository roleRepository) {
+                              RoleRepository roleRepository,
+                              ElasticsearchInvoiceRepository elasticsearchInvoiceRepository) {
 
         this.invoiceRepository = invoiceRepository;
         this.clientCompanyRepository = clientCompanyRepository;
@@ -53,25 +58,57 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.productOwnerRepository = productOwnerRepository;
         this.storageRepository = storageRepository;
         this.roleRepository = roleRepository;
+        this.elasticsearchInvoiceRepository = elasticsearchInvoiceRepository;
     }
 
     @Override
-    public List<Invoice> findAll() {
-        return invoiceRepository.findByClientCompany(jwtTokenUtil.getJwtUser().getClientCompany());
+    public InvoicePaginationResponse findAll(int requestedPage, int invoicesPerPage) {
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        Long clientCompanyId = jwtUser.getClientCompany().getId();
+        if (isDispatcherRole(jwtUser)) {
+            long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId());
+            List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId(), pageRequest);
+            return new InvoicePaginationResponse(amountInvoices, invoices);
+        } else {
+            long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndCheckingUserId(clientCompanyId, jwtUser.getId());
+            List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndCheckingUserId(clientCompanyId, jwtUser.getId(), pageRequest);
+            return new InvoicePaginationResponse(amountInvoices, invoices);
+        }
+        //todo: add driver or by client company
     }
 
     @Override
-    public List<InvoiceTableResponse> findAllTableData() {
-        return findAll().stream()
-                .map(invoice -> new InvoiceTableResponse().toInvoiceTableResponse(invoice))
-                .collect(Collectors.toList());
+    public InvoicePaginationResponse findAllByNumberStartsWith(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        Long clientCompanyId = jwtUser.getClientCompany().getId();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        if (isDispatcherRole(jwtUser)) {
+            List<Long> ids = elasticsearchInvoiceRepository.findAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(
+                    numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
+                    .map(ElasticsearchInvoice::getId)
+                    .collect(Collectors.toList());
+
+            Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(numberStartStr, clientCompanyId, jwtUser.getId());
+            List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
+            return new InvoicePaginationResponse(totalAmount, invoices);
+        } else {
+            List<Long> ids = elasticsearchInvoiceRepository.findALlByNumberStartsWithAndClientCompanyIdAndCheckingUserId(
+                    numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
+                    .map(ElasticsearchInvoice::getId)
+                    .collect(Collectors.toList());
+
+            Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndCheckingUserId(numberStartStr, clientCompanyId, jwtUser.getId());
+            List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
+            return new InvoicePaginationResponse(totalAmount, invoices);
+        }
     }
 
     @Override
     public InvoiceResponse findById(long id) throws NotFoundException {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
-        return new InvoiceResponse().toInvoiceResponse(invoice);
+        Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
+        return InvoiceResponse.toInvoiceResponse(invoiceRepository.findByIdAndClientCompanyId(id, clientCompanyId));
     }
 
 
@@ -129,6 +166,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         final Invoice invoiceDb = invoiceRepository.save(invoice);
+        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(invoiceDb));
 
         log.info("Invoice has been saved {}", invoiceDb);
 
@@ -185,6 +223,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setInvoice(invoice);
             p.setProductStatus(Product.Status.ACCEPTED);
         });
+
+        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(invoice));
         log.info("Invoice has been updated {}", invoiceRequest);
     }
 
@@ -214,4 +254,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return new DriversAndStoragesDTO(drivers, storages);
     }
 
+    private boolean isDispatcherRole(JwtUserDetails jwtUser) {
+        return jwtUser.getRoles().stream().map(Role::getRole).anyMatch(roleType -> roleType.equals(Role.RoleType.DISPATCHER));
+    }
 }

@@ -31,7 +31,7 @@ public class InvoiceResponse {
     private Act act;
     private String comment;
 
-    public InvoiceResponse toInvoiceResponse(Invoice invoice) {
+    public static InvoiceResponse toInvoiceResponse(Invoice invoice) {
         InvoiceResponse response = new InvoiceResponse();
         response.setId(invoice.getId());
         response.setStatus(invoice.getStatus());

@@ -26,8 +26,6 @@ const columns = [
     {id: "number", label: "Invoice #", minWidth: 100, align: ALIGN},
     {id: "status", label: "Status", minWidth: 100, align: ALIGN},
     {id: "date", label: "Date of registration", minWidth: 150, format: (value) => value.toFixed(2), align: ALIGN},
-    {id: "shipper", label: "Shipper", minWidth: 300, align: ALIGN},
-    {id: "consignee", label: "Consignee", minWidth: 300, align: ALIGN},
     {id: "waybillId", label: "Waybill", minWidth: 100, align: "center"}
 ];
 

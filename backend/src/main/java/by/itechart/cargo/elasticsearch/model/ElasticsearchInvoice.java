@@ -24,7 +24,17 @@ public class ElasticsearchInvoice {
     @Field(type = FieldType.Long)
     Long clientCompanyId;
 
-    public static ElasticsearchInvoice fromInvoice(Invoice invoice){
-        return new ElasticsearchInvoice(invoice.getId(), invoice.getNumber(), invoice.getClientCompany().getId());
+    @Field(type = FieldType.Long)
+    Long registrationUserId;
+
+    @Field(type = FieldType.Long)
+    Long checkingUserId;
+
+    public static ElasticsearchInvoice fromInvoice(Invoice invoice) {
+        return new ElasticsearchInvoice(invoice.getId(),
+                invoice.getNumber(),
+                invoice.getClientCompany().getId(),
+                invoice.getRegistrationUser().getId(),
+                invoice.getCheckingUser().getId());
     }
 }

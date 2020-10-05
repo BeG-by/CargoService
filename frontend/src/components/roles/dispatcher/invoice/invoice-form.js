@@ -175,7 +175,6 @@ function InvoiceForm(props) {
     const fetchInitInvoiceState = async (id) => {
         try {
             const res = await makeRequest("GET", INVOICE_URL + "/" + id);
-            console.log(res.data);
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
@@ -310,7 +309,6 @@ function InvoiceForm(props) {
                     return {...prevState, shipper: EMPTY_STORAGE};
                 })
             }
-
         }
     }
 

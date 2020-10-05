@@ -64,7 +64,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     }
 
     @Override
-    public ProductOwnerPaginationResponse findAll(int requestedPage, int productOwnersPerPage) {
+    public ProductOwnerPaginationResponse findWithPagination(int requestedPage, int productOwnersPerPage) {
         if (!isDataInserted) {
             insertDataForTest();
             isDataInserted = true;

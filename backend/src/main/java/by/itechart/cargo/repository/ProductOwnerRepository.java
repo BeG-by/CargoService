@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ProductOwnerRepository extends JpaRepository<ProductOwner, Long> {
 
-    Integer countAllByClientCompanyAndStatus(ClientCompany clientCompany, ProductOwner.Status status);
+    Long countAllByClientCompanyAndStatus(ClientCompany clientCompany, ProductOwner.Status status);
 
     List<ProductOwner> findAllByClientCompanyAndStatus(ClientCompany clientCompany, ProductOwner.Status status, Pageable pageable);
 

@@ -129,7 +129,7 @@ export default function ProductOwnerForm(props) {
                     registrationDate: productOwner.registrationDate,
                 }}
                 onSubmit={handleSubmit}
-                validationSchema={ProductFormValidationSchema}
+                // validationSchema={ProductFormValidationSchema}
             >
                 {(formProps) => (
                     <Form>

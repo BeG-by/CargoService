@@ -267,7 +267,7 @@ export default function InvoiceInfoContent(props) {
                                     <ListItemText
                                         primary={
                                             <React.Fragment>
-                                                {invoice.shipper}
+                                                {`${invoice.shipper.country} ${invoice.shipper.city} ${invoice.shipper.street} ${invoice.shipper.email}`}
                                             </React.Fragment>
                                         }
                                         secondary="Shipper"
@@ -281,7 +281,7 @@ export default function InvoiceInfoContent(props) {
                                     <ListItemText
                                         primary={
                                             <React.Fragment>
-                                                {invoice.consignee}
+                                                {`${invoice.consignee.country} ${invoice.consignee.city} ${invoice.consignee.street} ${invoice.consignee.email}`}
                                             </React.Fragment>
                                         }
                                         secondary="Consignee"

@@ -1,10 +1,7 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.DriversAndStoragesDTO;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
-import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
+import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.InvoiceService;
@@ -34,8 +31,16 @@ public class InvoiceController {
     }
 
     @GetMapping("/data-for-creating")
-    public ResponseEntity<DriversAndStoragesDTO> findDataForInvoiceCreating(){
+    public ResponseEntity<DriversAndStoragesDTO> findDataForInvoiceCreating() {
         return ResponseEntity.ok(invoiceService.findDataForInvoiceCreating());
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<InvoicePaginationResponse> findByNameOrStatusWithPagination(@RequestParam String nameOrStatus,
+                                                                                      @RequestParam int requestedPage,
+                                                                                      @RequestParam int invoicesPerPage) {
+        return ResponseEntity.ok(invoiceService.findAllByNameAndStatusWithPagination(
+                nameOrStatus, requestedPage, invoicesPerPage));
     }
 
     @GetMapping("/{id}")

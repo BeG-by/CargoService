@@ -9,7 +9,7 @@ import by.itechart.cargo.model.ProductOwner;
 
 public interface ProductOwnerService {
 
-    ProductOwnerPaginationResponse findAll(int requestedPage, int productOwnersPerPage);
+    ProductOwnerPaginationResponse findWithPagination(int requestedPage, int productOwnersPerPage);
 
     ProductOwnerPaginationResponse findByName(String name, int requestedPage, int productOwnersPerPage);
 
