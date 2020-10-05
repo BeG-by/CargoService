@@ -90,7 +90,6 @@ export const DispatcherInvoiceTable = connect(mapStateToProps)((props) => {
     };
 
     return (
-        role === "UNKNOWN" ? <NotAuthorized/> :
         <div>
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>

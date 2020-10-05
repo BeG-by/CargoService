@@ -10,15 +10,14 @@ import {SignoutButton} from "../buttons/signout-button";
 import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {changeUserAndCompany, changeUser} from "../../store/actions";
-import {DRAWER_WIDTH} from "../styles/styles";
+import {changeUserAndCompany} from "../../store/actions";
 import {Link} from "react-router-dom";
 import "../../App.css";
 import Avatar from "@material-ui/core/Avatar";
 import photo from "../../../resources/images/user_no_photo.png";
 import {makeRequest, USER_URL, handleRequestError} from "../util/request-util";
 
-const drawerWidth = DRAWER_WIDTH;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     appBar: {

@@ -1,4 +1,5 @@
 import {ACTION_CHANGE_USER, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
+import {NOT_AUTH} from "../../security/private-route";
 
 const initState = {
     user: {
@@ -19,7 +20,7 @@ const initState = {
         birthday: "",
         email: "",
         status: "",
-        roles: ["UNKNOWN"],
+        roles: [NOT_AUTH],
         photo: "",
         phone: ""
     },

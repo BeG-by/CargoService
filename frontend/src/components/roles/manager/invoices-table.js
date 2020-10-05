@@ -119,7 +119,6 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     }
 
     return (
-        role === "UNKNOWN" ? <NotAuthorized/> :
             <main>
                 <Paper className="table-paper main-table-paper">
                     <div className="table-header-wrapper">

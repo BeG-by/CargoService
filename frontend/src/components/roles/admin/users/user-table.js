@@ -86,7 +86,6 @@ export const UserTable = connect(mapStateToProps)((props) => {
     };
 
     return (
-        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">
@@ -202,4 +201,4 @@ export const UserTable = connect(mapStateToProps)((props) => {
             </Paper>
         </main>
     );
-})
+});

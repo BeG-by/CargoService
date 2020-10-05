@@ -14,7 +14,6 @@ import {ItemSendMail} from "../drawer-items/item-send-mail";
 import {ItemOwnerTable} from "../drawer-items/item-product-owner";
 import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
-import {DRAWER_WIDTH} from "../styles/styles";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
@@ -22,7 +21,7 @@ import {ItemProfile} from "../drawer-items/item-profile";
 import {ItemClientTable} from "../drawer-items/item-clients";
 
 
-const drawerWidth = DRAWER_WIDTH;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
