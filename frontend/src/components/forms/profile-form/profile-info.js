@@ -5,9 +5,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import {bindActionCreators} from "redux";
 import {changeUser} from "../../store/actions";
 import {connect} from "react-redux";
-import ListItem from "@material-ui/core/ListItem";
 import {Typography} from "@material-ui/core";
-import ListItemText from "@material-ui/core/ListItemText";
 import Paper from "@material-ui/core/Paper";
 import {copyUser} from "../../parts/util/function-util";
 import "./profile-style.css";
@@ -41,7 +39,8 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
 
     const maxSizeOfImg = 12000000;
     let avatar = user.photo === "" || user.photo === null ? photo : user.photo;
-    let location = user.address !== null ? user.address.country + ", " + user.address.city : "";
+    let location = user.address !== null ? user.address.country + ", " + user.address.city + ", " + user.address.street + ", " + user.address.house : "";
+    let role = user.roles[0][0] + user.roles[0].slice(1).toLowerCase();
 
 
     const handleChange = (e) => {
@@ -52,19 +51,19 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
             if (file.type.match("image.*")) {
 
                 if (file.size > maxSizeOfImg) {
-                    showToastComponent("File is to large. Max size is :" + maxSizeOfImg / 1000000 + "MB" , "error");
+                    showToastComponent("File is to large. Max size is :" + maxSizeOfImg / 1000000 + "MB", "error");
                     return;
                 }
 
                 if (file.name.length > 100) {
-                    showToastComponent("File name is too long (maximum is 100 characters)" , "error");
+                    showToastComponent("File name is too long (maximum is 100 characters)", "error");
                     return;
                 }
 
                 reader.readAsDataURL(file);
 
             } else {
-                showToastComponent("Incorrect file type" , "error")
+                showToastComponent("Incorrect file type", "error")
             }
         }
 
@@ -86,99 +85,147 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                     <Typography variant="h4" gutterBottom>
                         Account
                     </Typography>
+                    <div className="header-text">
+                        Some information may be visible to other users of the system
+                    </div>
                 </header>
                 <div className="profile-content-container">
-                    <div className="left-box">
-                        <div>
-                            <Tooltip title="Click to change photo" arrow>
-                                <img
-                                    src={avatar}
-                                    alt="photo"
-                                    className="profile-avatar"
-                                    onClick={() => {
-                                        document.getElementById("hidden-input").click();
-                                    }}
+                    <div className="box1">
+                        <div className="box2">
+                            <div className="box3">
+                                <div className="item-name">Photo</div>
+                                <div className="notice-text">A photo helps personalize your account</div>
+                            </div>
+                            <div>
+                                <Tooltip title="Click to change photo" arrow>
+                                    <img
+                                        src={avatar}
+                                        alt="photo"
+                                        className="profile-avatar"
+                                        onClick={() => {
+                                            document.getElementById("hidden-input").click();
+                                        }}
+                                    />
+                                </Tooltip>
+                                <input
+                                    type="file"
+                                    onChange={handleChange}
+                                    multiple={false}
+                                    size="1000"
+                                    accept="image/*"
+                                    hidden={true}
+                                    id="hidden-input"
                                 />
-                            </Tooltip>
-                            <input
-                                type="file"
-                                onChange={handleChange}
-                                multiple={false}
-                                size="1000"
-                                accept="image/*"
-                                hidden={true}
-                                id="hidden-input"
-                            />
-                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                                <ListItemText
-                                    primary={
-                                        <React.Fragment>
-                                            {location}
-                                        </React.Fragment>
-                                    }
-                                    secondary="Location"
-                                />
-                            </ListItem>
-                            <Button
-                                color="primary"
-                                variant="outlined"
-                                onClick={() => {
-                                    showPasswordDialog(true);
-                                }}>
-                                Change password
-                            </Button>
+                            </div>
+                        </div>
+                        <div className="divider"/>
+                    </div>
+                    <div className="box">
+                        <div className="box1">
+                            <div className="box4">
+                                <div className="item-name">Name</div>
+                                <div className="content-div">
+                                    <div>{user.name} {user.surname} {user.patronymic}</div>
+                                </div>
+                            </div>
+                            <div className="divider"/>
                         </div>
                     </div>
-                    <div className="right-box">
-                        <div className="info-box">
-                            <Typography variant="h5" gutterBottom>
-                                Info
-                            </Typography>
-                            <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                                <ListItemText
-                                    primary={
-                                        <React.Fragment>
-                                            {user.email}
-                                        </React.Fragment>
-                                    }
-                                    secondary="Email"
-                                />
-                                <ListItemText
-                                    primary={
-                                        <div className="phone-item-div">
-                                            <React.Fragment>
-                                                <div className="phone-text">
-                                                    {user.phone}
-                                                </div>
-                                            </React.Fragment>
-                                            <Button
-                                                color="primary"
-                                                startIcon={<EditIcon/>}
-                                                onClick={() => {
-                                                    showPhoneDialog(true);
-                                                }}/>
-                                        </div>
-                                    }
-                                    secondary="Contact phone"
-                                />
-                                <ListItemText
-                                    primary={
-                                        <React.Fragment>
-                                            {user.passport}
-                                        </React.Fragment>
-                                    }
-                                    secondary="Passport"
-                                />
-                                <ListItemText
-                                    primary={
-                                        <React.Fragment>
-                                            {user.birthday}
-                                        </React.Fragment>
-                                    }
-                                    secondary="Birthday"
-                                />
-                            </ListItem>
+                    <div className="box">
+                        <div className="box1">
+                            <div className="box4">
+                                <div className="item-name">Role</div>
+                                <div className="content-div">
+                                    <div>{role}</div>
+                                </div>
+                            </div>
+                            <div className="divider"/>
                         </div>
+                    </div>
+                    <div className="box">
+                        <div className="box1">
+                            <div className="box4">
+                                <div className="item-name">Address</div>
+                                <div className="content-div">
+                                    <div>{location}</div>
+                                </div>
+                            </div>
+                            <div className="divider"/>
+                        </div>
+                    </div>
+                    <div className="box">
+                        <div className="box1">
+                            <div className="box4">
+                                <div className="item-name">Passport</div>
+                                <div className="content-div">
+                                    <div>{user.passport}</div>
+                                </div>
+                            </div>
+                            <div className="divider"/>
+                        </div>
+                    </div>
+
+                    <div className="box">
+                        <div className="box1">
+                            <div className="box4">
+                                <div className="item-name">Date of birth</div>
+                                <div className="content-div">
+                                    <div>{user.birthday}</div>
+                                </div>
+                            </div>
+                            <div className="divider"/>
+                        </div>
+                    </div>
+                    <div className="box">
+                        <div className="box1">
+                            <div className="box4">
+                                <div className="item-name">Email</div>
+                                <div className="content-div">
+                                    <div>{user.email}</div>
+                                </div>
+                            </div>
+                            <div className="divider"/>
+                        </div>
+                    </div>
+                    <div className="box1 without-padding add-margin">
+                        <div className="box2">
+                            <div className="box3">
+                                <div className="item-name">Phone</div>
+                                <div className="content-div content-padding">{user.phone}</div>
+                            </div>
+                            <div>
+                                <Tooltip title="Click to change phone number" arrow>
+                                    <Button
+                                        color="primary"
+                                        startIcon={<EditIcon/>}
+                                        onClick={() => {
+                                            showPhoneDialog(true);
+                                        }}
+                                    />
+                                </Tooltip>
+                            </div>
+                        </div>
+                        <div className="divider-margin"/>
+                    </div>
+                    <div className="box1 without-padding">
+                        <div className="box2">
+                            <div className="box3">
+                                <div className="item-name">Password</div>
+                                <div className="notice-text">Here you can change your password</div>
+                            </div>
+                            <div>
+                                <Tooltip title="Click to change your password" arrow>
+                                    <Button
+                                        color="primary"
+                                        startIcon={<EditIcon/>}
+                                        onClick={() => {
+                                            showPasswordDialog(true);
+                                        }}
+                                    />
+                                </Tooltip>
+                            </div>
+                        </div>
+                        <div className="divider-margin"/>
                     </div>
                 </div>
 
@@ -197,7 +244,6 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                 />
 
                 {toastComponent}
-
             </Paper>
         </main>
     )

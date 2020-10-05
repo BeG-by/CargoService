@@ -35,7 +35,7 @@ main {
     border-radius: 30px;
     border-color: #3f51b5;
     border-width: 1px;
-    border-style: dashed;
+    border-style: solid;
 }
 
 .table-delete-edit-div {
@@ -52,6 +52,11 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #3f51b5;
+}
+
+#form-title {
+    font-size: 1.6rem;
 }
 
 
