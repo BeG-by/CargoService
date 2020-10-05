@@ -12,6 +12,8 @@ public interface StorageRepository extends JpaRepository<Storage, Long> {
     @Query("FROM Storage s WHERE s.clientCompany.id = :clientCompanyId AND s.status <> 'DELETED'")
     List<Storage> findAllWithoutDeleted(Long clientCompanyId);
 
+    List<Storage> findByIdIsInAndStatus(List<Long> ids, Storage.Status status);
+
     Optional<Storage> findByIdAndClientCompanyId(Long storageId, Long clientCompany);
 
     Optional<Storage> findByEmailAndClientCompanyId(String email, Long clientCompany);

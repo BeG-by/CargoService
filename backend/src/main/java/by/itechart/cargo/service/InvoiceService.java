@@ -1,5 +1,6 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.DriversAndStoragesDTO;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
@@ -22,4 +23,6 @@ public interface InvoiceService {
     void updateInvoice(InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException;
 
     void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException;
+
+    DriversAndStoragesDTO findDataForInvoiceCreating();
 }

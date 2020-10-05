@@ -2,6 +2,8 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.storage.StorageSaveRequest;
 import by.itechart.cargo.dto.model_dto.storage.StorageUpdateRequest;
+import by.itechart.cargo.elasticsearch.model.ElasticsearchStorage;
+import by.itechart.cargo.elasticsearch.repository.ElasticsearchStorageRepository;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Address;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static by.itechart.cargo.service.constant.MessageConstant.PRODUCT_OWNER_NOT_FOUND_MESSAGE;
 import static by.itechart.cargo.service.constant.MessageConstant.STORAGE_NOT_FOUND_MESSAGE;
@@ -30,24 +33,42 @@ public class StorageServiceImpl implements StorageService {
     private final StorageRepository storageRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final ProductOwnerRepository productOwnerRepository;
+    private final ElasticsearchStorageRepository elasticsearchStorageRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private boolean isDataInserted;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               ProductOwnerRepository productOwnerRepository,
-                              JwtTokenUtil jwtTokenUtil) {
+                              JwtTokenUtil jwtTokenUtil,
+                              ElasticsearchStorageRepository elasticsearchStorageRepository) {
 
         this.storageRepository = storageRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.productOwnerRepository = productOwnerRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.elasticsearchStorageRepository = elasticsearchStorageRepository;
+        this.isDataInserted = false;
     }
 
     @Override
     public List<Storage> findAll() {
+        if (!isDataInserted) {
+            insertTestData();
+        }
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         return storageRepository.findAllWithoutDeleted(companyId);
+    }
+
+    private void insertTestData() {
+        ElasticsearchStorage first = new ElasticsearchStorage(1L, "Belarus", "Minsk", "Gikalo", "tractor@email.com", "37532338390", 2L);
+        ElasticsearchStorage second = new ElasticsearchStorage(2L, "Belarus", "Minsk", "Nemiga", "storage@email.com", "37532038990", 2L);
+        ElasticsearchStorage third = new ElasticsearchStorage(3L, "Belarus", "Grodno", "Lenina", "storage3@email.com", "37532333990", 2L);
+
+        elasticsearchStorageRepository.save(first);
+        elasticsearchStorageRepository.save(second);
+        elasticsearchStorageRepository.save(third);
     }
 
     @Override

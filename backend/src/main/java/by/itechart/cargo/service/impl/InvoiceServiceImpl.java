@@ -1,16 +1,13 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.dto.model_dto.DriversAndStoragesDTO;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.ClientCompany;
-import by.itechart.cargo.model.Product;
-import by.itechart.cargo.model.User;
-import by.itechart.cargo.model.Invoice;
-import by.itechart.cargo.model.ProductOwner;
+import by.itechart.cargo.model.*;
 import by.itechart.cargo.repository.*;
 import by.itechart.cargo.security.jwt.JwtTokenUtil;
 import by.itechart.cargo.security.jwt.JwtUserDetails;
@@ -37,19 +34,25 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final ProductOwnerRepository productOwnerRepository;
+    private final RoleRepository roleRepository;
+    private final StorageRepository storageRepository;
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                               ProductOwnerRepository productOwnerRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               UserRepository userRepository,
-                              JwtTokenUtil jwtTokenUtil) {
+                              JwtTokenUtil jwtTokenUtil,
+                              StorageRepository storageRepository,
+                              RoleRepository roleRepository) {
 
         this.invoiceRepository = invoiceRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.productOwnerRepository = productOwnerRepository;
+        this.storageRepository = storageRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -175,12 +178,21 @@ public class InvoiceServiceImpl implements InvoiceService {
             foundInvoice.setCheckingDate(LocalDate.now());
             foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
         } else if (invoice.getStatus().equals(Invoice.Status.CLOSED)
-                   || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
+                || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
         }
         foundInvoice.setStatus(invoice.getStatus());
         foundInvoice.setComment(invoice.getComment());
         log.info("Invoice status has been updated {}", foundInvoice);
+    }
+
+    @Override
+    public DriversAndStoragesDTO findDataForInvoiceCreating() {
+        ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
+        List<Storage> storages = storageRepository.findAllWithoutDeleted(clientCompany.getId());
+        Role driverRole = roleRepository.getByRole(Role.RoleType.DRIVER);
+        List<User> drivers = userRepository.findAllByClientCompanyIdAndRoles(clientCompany.getId(), driverRole);
+        return new DriversAndStoragesDTO(drivers, storages);
     }
 
 }

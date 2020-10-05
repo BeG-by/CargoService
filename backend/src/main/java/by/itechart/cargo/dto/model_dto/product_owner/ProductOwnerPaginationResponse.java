@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ProductOwnerTableResponse {
-    int totalAmountProductOwners;
+public class ProductOwnerPaginationResponse {
+    Long totalAmountProductOwners;
     List<ProductOwner> productOwners;
 }

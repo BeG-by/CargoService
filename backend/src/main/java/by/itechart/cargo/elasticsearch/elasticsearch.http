@@ -1,6 +1,9 @@
 ### All (1000) product owners in elasticsearch
 GET localhost:9200/product_owner/_search?pretty=true&q=*:*&size=1000
 
+### All (1000) storages in elasticsearch
+GET localhost:9200/storage/_search?pretty=true&q=*:*&size=1000
+
 ###  All indexes in elasticsearch
 GET localhost:9200/_aliases?pretty=true
 

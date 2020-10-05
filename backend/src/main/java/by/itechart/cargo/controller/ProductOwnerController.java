@@ -1,7 +1,7 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
-import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerTableResponse;
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerPaginationResponse;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/owners")
@@ -28,8 +27,8 @@ public class ProductOwnerController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductOwnerTableResponse> productOwners(@RequestParam int requestedPage,
-                                                                   @RequestParam int productOwnersPerPage) {
+    public ResponseEntity<ProductOwnerPaginationResponse> productOwners(@RequestParam int requestedPage,
+                                                                        @RequestParam int productOwnersPerPage) {
         return ResponseEntity.ok(productOwnerService.findAll(requestedPage, productOwnersPerPage));
     }
 
@@ -39,9 +38,9 @@ public class ProductOwnerController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<ProductOwnerTableResponse> productOwner(@RequestParam String name,
-                                                           @RequestParam int requestedPage,
-                                                           @RequestParam int productOwnersPerPage) {
+    public ResponseEntity<ProductOwnerPaginationResponse> productOwner(@RequestParam String name,
+                                                                       @RequestParam int requestedPage,
+                                                                       @RequestParam int productOwnersPerPage) {
         return ResponseEntity.ok(productOwnerService.findByName(name, requestedPage, productOwnersPerPage));
     }
 

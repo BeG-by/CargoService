@@ -1,5 +1,6 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.DriversAndStoragesDTO;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
@@ -30,6 +31,11 @@ public class InvoiceController {
     @GetMapping
     public ResponseEntity<List<InvoiceTableResponse>> findAll() {
         return ResponseEntity.ok(invoiceService.findAllTableData());
+    }
+
+    @GetMapping("/data-for-creating")
+    public ResponseEntity<DriversAndStoragesDTO> findDataForInvoiceCreating(){
+        return ResponseEntity.ok(invoiceService.findDataForInvoiceCreating());
     }
 
     @GetMapping("/{id}")

@@ -1,7 +1,7 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
-import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerTableResponse;
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerPaginationResponse;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchProductOwner;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchProductOwnerRepository;
@@ -64,19 +64,19 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     }
 
     @Override
-    public ProductOwnerTableResponse findAll(int requestedPage, int productOwnersPerPage) {
+    public ProductOwnerPaginationResponse findAll(int requestedPage, int productOwnersPerPage) {
         if (!isDataInserted) {
             insertDataForTest();
             isDataInserted = true;
         }
         PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
-        int totalAmount = productOwnerRepository.countAllByClientCompanyAndStatus
+        long totalAmount = productOwnerRepository.countAllByClientCompanyAndStatus
                 (jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwner.Status.ACTIVE);
 
         List<ProductOwner> productOwners = productOwnerRepository.findAllByClientCompanyAndStatus(
                 jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwner.Status.ACTIVE, pageRequest);
 
-        return new ProductOwnerTableResponse(totalAmount, productOwners);
+        return new ProductOwnerPaginationResponse(totalAmount, productOwners);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
 
     @Override
-    public ProductOwnerTableResponse findByName(String name, int requestedPage, int productOwnersPerPage) {
+    public ProductOwnerPaginationResponse findByName(String name, int requestedPage, int productOwnersPerPage) {
         PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
 
         Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
@@ -152,8 +152,8 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
                 .findAllByNameStartsWithAndClientCompanyId(name, clientCompanyId, pageRequest).stream()
                 .map(ElasticsearchProductOwner::getId)
                 .collect(Collectors.toList());
-        List<ProductOwner> productOwners = productOwnerRepository.findByIdIsIn(ids);
 
-        return new ProductOwnerTableResponse(ids.size(), productOwners);
+        List<ProductOwner> productOwners = productOwnerRepository.findByIdIsIn(ids);
+        return new ProductOwnerPaginationResponse((long) ids.size(), productOwners);
     }
 }
