@@ -121,17 +121,18 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
             <main>
-                <Paper className="table-paper">
+                <Paper className="table-paper main-table-paper">
+                    <div className="table-header-wrapper">
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
+                            <LibraryBooksIcon/>
+                            Invoices
+                        </Typography>
+                    </div>
+
                     <TableContainer className="table-container">
-                        <div className="table-header-wrapper">
-                            <Typography variant="button" display="block" gutterBottom
-                                        style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
-                                <LibraryBooksIcon/> Invoices
-                            </Typography>
-                        </div>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
-                                fsize={18}
                                 firstMenu={true}
                                 secondMenu={true}
                                 columns={columns}

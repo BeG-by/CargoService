@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
     menuColumn: {
         minWidth: 60,
         fontSize: 18,
-        fontWeight: "bold",
         color: "#3f51b5"
     }
 }));
@@ -76,7 +75,6 @@ export default function EnhancedTableHead(props) {
                             maxWidth: column.maxWidth,
                             align: column.align,
                             fontSize: column.fontSize,
-                            fontWeight: "bold",
                             color: "#3f51b5"}}
                         sortDirection={orderBy === column.id ? order : false}
                     >

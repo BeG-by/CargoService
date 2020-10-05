@@ -102,7 +102,7 @@ export const ActForm = (props) => {
         act.products = statusProducts;
         const saveActRequest = async (act) => {
             await makeRequest("POST", ACT_URL, act);
-            props.onClose();
+            props.onSave();
         };
         saveActRequest(act);
     };
@@ -184,7 +184,6 @@ export const ActForm = (props) => {
                                 variant="contained"
                                 color="primary"
                                 type="submit"
-
                             >
                                 Save act
                             </Button>

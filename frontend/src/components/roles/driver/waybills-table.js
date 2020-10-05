@@ -19,6 +19,8 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import {NotAuthorized} from "../../pages/error-page/error-401";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import Tooltip from "@material-ui/core/Tooltip";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 
 const LEFT = "left";
 const CENTER = "center";
@@ -60,7 +62,28 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     async function fetchWaybills(cleanupFunction) {
         if (!cleanupFunction) {
             let response = await makeRequest("GET", WAYBILL_URL);
-            setWaybills(response.data);
+            let data = response.data;
+            data.forEach(waybill => {
+                let checkPassage = true;
+                let checkLosses = true;
+                if (!waybill.points) {
+                    checkPassage = false;
+                } else {
+                    waybill.points.forEach(p => {
+                        if (!p.passed) {
+                            checkPassage = false;
+                        }
+                    });
+                }
+                waybill.invoice.products.forEach(p => {
+                    if (p.lostQuantity > 0) {
+                        checkLosses = false;
+                    }
+                });
+                waybill.checkPassage = checkPassage;
+                waybill.checkLosses = checkLosses;
+            })
+            setWaybills(data);
         }
     }
 
@@ -78,42 +101,21 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         setPage(newPage);
     };
 
-    let foundWaybill = {};
-    let checkPassage = true;
-    let checkLosses = true;
 
     //TODO question. Second request ?
 
     const handleTableRowClick = async (wb) => {
         let response = await makeRequest("GET", WAYBILL_URL + "/" + wb.id);
-        foundWaybill = response.data;
-        foundWaybill.points.forEach(p => {
-            if (!p.passed) {
-                checkPassage = false;
-            }
-        });
-        foundWaybill.invoice.products.forEach(p => {
-            if (p.lostQuantity > 0) {
-                checkLosses = false;
-            }
-        })
+        const data = response.data;
         setWaybill(() => ({
-            id: foundWaybill.id,
-            invoice: foundWaybill.invoice,
+            id: data.id,
+            invoice: data.invoice,
         }));
-        if (checkPassage
-            && checkLosses
-            && foundWaybill.invoice.status !== "CLOSED"
-            && foundWaybill.invoice.status !== "CLOSED_WITH_ACT") {
-            setForm(FillActDialog(handleActFormOpen, handleWaybillInfoOpen));
-            setActFillDialogOpen(true);
-        } else {
-            handleWaybillInfoOpen();
-        }
+        handleWaybillInfoOpen(data.id);
     };
 
-    const handleWaybillInfoOpen = () => {
-        setForm(<WaybillInfo waybillId={foundWaybill.id}/>);
+    const handleWaybillInfoOpen = (id) => {
+        setForm(<WaybillInfo waybillId={id}/>);
         setActFillDialogOpen(false);
         setWaybillInfoDialogOpen(true);
     }
@@ -134,20 +136,33 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         setActDialogOpen(false);
     };
 
+    const handleActFill = async (wb) => {
+        let response = await makeRequest("GET", WAYBILL_URL + "/" + wb.id);
+        const data = response.data;
+        setWaybill(() => ({
+            id: data.id,
+            invoice: data.invoice,
+        }));
+        setForm(FillActDialog(handleActFormOpen, handleClose));
+        setActFillDialogOpen(true);
+    }
+
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
             <main>
-                <Paper className="table-paper">
+                <Paper className="table-paper main-table-paper">
+                    <div className="table-header-wrapper">
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
+                            <LibraryBooksIcon/>
+                            Waybills
+                        </Typography>
+                    </div>
+
                     <TableContainer className="table-container">
-                        <div className="table-header-wrapper">
-                            <Typography variant="button" display="block" gutterBottom
-                                        style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
-                                <LibraryBooksIcon/> Waybills
-                            </Typography>
-                        </div>
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
-                                firstMenu={false}
+                                firstMenu={true}
                                 secondMenu={true}
                                 columns={columns}
                                 order={order}
@@ -160,26 +175,53 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                     .map((waybill) => {
                                         return (
                                             <TableRow
-                                                onClick={() => {
-                                                    handleTableRowClick(waybill);
-                                                }}
                                                 hover
                                                 role="checkbox"
                                                 tabIndex={-1}
                                                 key={waybill.id}
                                             >
+                                                <TableCell>
+                                                    {waybill.checkPassage
+                                                    && waybill.checkLosses
+                                                    && waybill.invoice.status !== "CLOSED"
+                                                    && waybill.invoice.status !== "CLOSED_WITH_ACT"
+                                                    && role === "DRIVER"
+                                                        ? <Tooltip title="Click to fill in act of losses"
+                                                                   arrow
+                                                                   className="table-delete-edit-div">
+                                                            <Button
+                                                                className="menu-table-btn"
+                                                                color={"secondary"}
+                                                                startIcon={<PostAddIcon/>}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleActFill(waybill);
+                                                                }}/>
+                                                        </Tooltip>
+                                                        : null
+                                                    }
+                                                </TableCell>
                                                 {columns.map((column) => {
                                                     const value = fetchFieldFromObject(waybill, column.id);
                                                     return (
                                                         <TableCell key={column.id}
                                                                    align={column.align}
-                                                                   style={{minWidth: column.minWidth, maxWidth: column.maxWidth}}>
-                                                            {value}
+                                                                   style={{
+                                                                       minWidth: column.minWidth,
+                                                                       maxWidth: column.maxWidth
+                                                                   }}>
+                                                            {column.id === "invoiceNumber"
+                                                                ? waybill.invoice.number
+                                                                : column.id === "status"
+                                                                    ? waybill.invoice.status
+                                                                    : value}
                                                         </TableCell>
                                                     );
                                                 })}
                                                 <TableCell>
-                                                    <div className="table-delete-edit-div">
+                                                    <Tooltip title="Click to fill in act of losses"
+                                                             arrow
+                                                             className="table-delete-edit-div">
                                                         <Button
                                                             className="menu-table-btn"
                                                             color={"primary"}
@@ -188,7 +230,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                                 e.stopPropagation();
                                                                 handleTableRowClick(waybill)
                                                             }}/>
-                                                    </div>
+                                                    </Tooltip>
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -212,6 +254,8 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                         open={actDialogOpen}
                         onClose={() => {
                             setActDialogOpen(false);
+                        }}
+                        onSave={() => {
                             fetchWaybills(false)
                                 .catch((err) => {
                                     setWaybills([]);
