@@ -2,7 +2,7 @@ POST localhost:8080/v1/api/auth/login
 Content-Type: application/json
 
 {
-  "login": "admin",
+  "login": "dispatcher",
   "password": "root"
 }
 
@@ -20,13 +20,13 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 GET localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIkFETUlOIl0sImlhdCI6MTYwMTE0OTg2NCwiZXhwIjoxNjAyMDEzODY0fQ.mOdrvZWRApJcpa3FaW6ROFwJPIfhlM9gcx23dCl5gWw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaXNwYXRjaGVyIiwicm9sZXMiOlsiRElTUEFUQ0hFUiJdLCJpYXQiOjE2MDE4NjM1NzIsImV4cCI6MTYwMjcyNzU3Mn0.ZgUF0XbqJh42rLLPiKge1zhCvh1GEE3fWqUzU15hpCQ
 
 ###
 
 POST localhost:8080/v1/api/users
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwNjkyNTg1LCJleHAiOjE2MDE1NTY1ODV9.IS6oFE36ybMUjmaB9VEo6RBu14LfhAnz2XFeHV1dNUw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaXNwYXRjaGVyIiwicm9sZXMiOlsiRElTUEFUQ0hFUiJdLCJpYXQiOjE2MDE4NjM1NzIsImV4cCI6MTYwMjcyNzU3Mn0.ZgUF0XbqJh42rLLPiKge1zhCvh1GEE3fWqUzU15hpCQ
 
 {
   "login": "admin3",
@@ -43,6 +43,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
     "flat": "13"
   },
   "email": "test3@mail.com",
+  "phone": "31233",
   "roles": [
     "ADMIN"
   ]
@@ -81,7 +82,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 GET localhost:8080/v1/api/invoices/4
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4iXSwiaWF0IjoxNjAwODc2OTM5LCJleHAiOjE2MDE3NDA5Mzl9.2ZpS6JvEI1-rt36ectazoxVanaMVzkZ9R11m-NkOC3A
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaXNwYXRjaGVyIiwicm9sZXMiOlsiRElTUEFUQ0hFUiJdLCJpYXQiOjE2MDE4NTkxODIsImV4cCI6MTYwMjcyMzE4Mn0.RESk4vbtagVlsH3q6Iwu57teAyrw29nttDnSLrVAjto
 
 ###
 
