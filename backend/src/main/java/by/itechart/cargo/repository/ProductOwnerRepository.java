@@ -16,7 +16,11 @@ public interface ProductOwnerRepository extends JpaRepository<ProductOwner, Long
 
     List<ProductOwner> findByIdIsIn(List<Long> ids);
 
+    Optional<ProductOwner> findByIdAndClientCompanyId(Long id, Long clientCompanyId);
+
     Optional<ProductOwner> findByNameAndClientCompanyAndStatus(String name, ClientCompany clientCompany, ProductOwner.Status status);
 
     Optional<ProductOwner> findByIdAndClientCompanyAndStatus(Long id, ClientCompany clientCompany, ProductOwner.Status status);
+
+    Optional<ProductOwner> findByIdAndClientCompanyIdAndStatus(Long id, Long clientCompanyId, ProductOwner.Status status);
 }

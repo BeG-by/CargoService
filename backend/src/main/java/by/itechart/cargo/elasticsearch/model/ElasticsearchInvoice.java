@@ -30,11 +30,15 @@ public class ElasticsearchInvoice {
     @Field(type = FieldType.Long)
     Long checkingUserId;
 
+    @Field(type = FieldType.Long)
+    Long driverId;
+
     public static ElasticsearchInvoice fromInvoice(Invoice invoice) {
         return new ElasticsearchInvoice(invoice.getId(),
                 invoice.getNumber(),
                 invoice.getClientCompany().getId(),
                 invoice.getRegistrationUser().getId(),
-                invoice.getCheckingUser().getId());
+                invoice.getCheckingUser().getId(),
+                invoice.getDriver().getId());
     }
 }

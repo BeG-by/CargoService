@@ -12,7 +12,15 @@ public interface ElasticsearchInvoiceRepository extends ElasticsearchRepository<
 
     List<ElasticsearchInvoice> findALlByNumberStartsWithAndClientCompanyIdAndCheckingUserId(String number, Long clientCompanyId, Long registrationUserId, Pageable pageable);
 
+    List<ElasticsearchInvoice> findALlByNumberStartsWithAndClientCompanyIdAndDriverId(String number, Long driverId, Long clientCompanyId, Pageable pageable);
+
+    List<ElasticsearchInvoice> findALlByNumberStartsWithAndClientCompanyId(String number, Long clientCompanyId, Pageable pageable);
+
+    Long countAllByNumberStartsWithAndClientCompanyId(String number, Long clientCompanyId);
+
     Long countAllByNumberStartsWithAndClientCompanyIdAndCheckingUserId(String number, Long clientCompanyId, Long checkingUserId);
 
     Long countAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(String number, Long clientCompanyId, Long registrationUserId);
+
+    Long countAllByNumberStartsWithAndClientCompanyIdAndDriverId(String number, Long clientCompanyId, Long driverId);
 }

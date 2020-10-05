@@ -16,7 +16,7 @@ import {
     makeRequest
 } from "../../../parts/util/request-util";
 import "../styles/invoice-form.css"
-import DriverSearch from "./driver-search";
+import PersonSearch from "./driver-search";
 import StorageSearchDialog from "./storage-search/storage-search-dialog";
 import TextField from "@material-ui/core/TextField";
 
@@ -24,7 +24,15 @@ import TextField from "@material-ui/core/TextField";
 const STORAGE_TITLE_SHIPPER = "Shipper";
 const STORAGE_TITLE_CONSIGNEE = "Consignee";
 
+export const EMPTY_MANAGER = {
+    id: -1,
+    name: "",
+    surname: "",
+    passport: "",
+};
+
 export const EMPTY_DRIVER = {
+    id: -1,
     name: "",
     surname: "",
     passport: "",
@@ -66,6 +74,7 @@ const INIT_INVOICE_STATE = {
     consignee: EMPTY_STORAGE,
     registrationDate: "",
     driver: EMPTY_DRIVER,
+    manager: EMPTY_MANAGER,
     productOwner: EMPTY_PRODUCT_OWNER,
     products: [],
 };
@@ -84,6 +93,7 @@ function InvoiceForm(props) {
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
 
     const [drivers, setDrivers] = useState([]);
+    const [managers, setManagers] = useState([]);
     const [storages, setStorages] = useState([]);
     const [storageDialogOpen, setStorageDialogOpen] = useState(false);
     const [storageDialogTitle, setStorageDialogTitle] = useState(STORAGE_TITLE_SHIPPER)
@@ -95,7 +105,7 @@ function InvoiceForm(props) {
     const [total, setTotal] = useState(TOTAL);
 
     useEffect(() => {
-        updateDriversAndStorages();
+        updateDriversAndStoragesAndManagers();
         if (props.invoiceId !== null && props.invoiceId !== undefined) {
             fetchInitInvoiceState(props.invoiceId);
         } else {
@@ -103,26 +113,45 @@ function InvoiceForm(props) {
         }
     }, [props.invoiceId, props.productOwner]);
 
-    const handleSubmit = (values) => {
-        let invoice = {};
-        invoice.invoiceNumber = values.invoiceNumber;
-
+    const validateInvoice = () => {
         if (initInvoice.consignee.id === -1) {
             showToastComponent("Select consignee", "error");
-            return;
+            return false;
         }
 
         if (initInvoice.shipper.id === -1) {
             showToastComponent("Select shipper", "error");
+            return false;
+        }
+
+        if (initInvoice.driver.id === -1) {
+            showToastComponent("Select driver", "error");
+            return false;
+        }
+
+        if (initInvoice.manager.id === -1) {
+            showToastComponent("Select manager", "error");
+            return false;
+        }
+
+        return true;
+    }
+
+    const handleSubmit = (values) => {
+        let invoice = {};
+
+        if (!validateInvoice()) {
             return;
         }
 
+        invoice.invoiceNumber = values.invoiceNumber;
         invoice.shipperId = initInvoice.shipper.id;
         invoice.consigneeId = initInvoice.consignee.id;
         invoice.productOwnerId = initInvoice.productOwner.id;
         invoice.products = initInvoice.products;
         invoice.registrationDate = initInvoice.registrationDate;
         invoice.driverId = initInvoice.driver.id;
+        invoice.managerId = initInvoice.manager.id;
         invoice.status = "REGISTERED";
 
         if (props.invoiceId !== null && props.invoiceId !== undefined) {
@@ -141,11 +170,12 @@ function InvoiceForm(props) {
         onClose();
     };
 
-    const updateDriversAndStorages = async () => {
+    const updateDriversAndStoragesAndManagers = async () => {
         try {
             const res = await makeRequest("GET", DATA_FOR_INVOICE_CREATING_URL);
             setDrivers(res.data.drivers);
             setStorages(res.data.storages);
+            setManagers(res.data.managers);
         } catch (error) {
             setDrivers([]);
             handleRequestError(error, showToastComponent);
@@ -288,6 +318,18 @@ function InvoiceForm(props) {
         }
     }
 
+    const handleManagerSelect = (manager) => {
+        if (manager === null) {
+            setInitInvoice((prevState) => {
+                return {...prevState, manager: EMPTY_DRIVER};
+            })
+        } else {
+            setInitInvoice((prevState) => {
+                return {...prevState, manager: manager};
+            })
+        }
+    }
+
     const handleStorageSelect = (storage) => {
         if (storage !== null) {
             if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
@@ -373,9 +415,15 @@ function InvoiceForm(props) {
                                                     fullWidth
                                                 />
 
-                                                <DriverSearch
-                                                    drivers={drivers}
-                                                    onDriverSelect={handleDriverSelect}
+                                                <PersonSearch
+                                                    persons={drivers}
+                                                    onPersonSelect={handleDriverSelect}
+                                                    label={"Drivers"}
+                                                />
+                                                <PersonSearch
+                                                    persons={managers}
+                                                    onPersonSelect={handleManagerSelect}
+                                                    label={"Managers"}
                                                 />
                                                 <div className="registration-date">
                                                     <div>

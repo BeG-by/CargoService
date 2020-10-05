@@ -30,7 +30,7 @@ public class InvoiceRequest {
     //todo: validate?
     private LocalDate registrationDate;
 
-    @NotNull (message = "Product owner id is mandatory")
+    @NotNull(message = "Product owner id is mandatory")
     private Long productOwnerId;
 
     @Positive(message = "Shipper id is mandatory")
@@ -39,13 +39,16 @@ public class InvoiceRequest {
     @Positive(message = "Consignee id is mandatory")
     private Long consigneeId;
 
-    @NotNull (message = "Invoice status is mandatory")
+    @NotNull(message = "Invoice status is mandatory")
     @EnumNamePattern(regexp = "REGISTERED|ACCEPTED|REJECTED|CLOSED|CLOSED_WITH_ACT",
             message = "Type must be one of InvoiceStatus types")
     private Invoice.Status status;
 
-    @NotNull(message = "Driver id number is mandatory")
+    @Positive(message = "Driver id number is mandatory")
     private Long driverId;
+
+    @Positive(message = "Manager id number is mandatory")
+    private Long managerId;
 
     @NotNull(message = "Products is mandatory")
     @Valid

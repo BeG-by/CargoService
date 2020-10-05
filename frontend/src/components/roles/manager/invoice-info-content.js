@@ -7,7 +7,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TablePagination from "@material-ui/core/TablePagination";
 import React from "react";
-import {Typography} from "@material-ui/core";
 import {List} from "material-ui";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -267,7 +266,7 @@ export default function InvoiceInfoContent(props) {
                                     <ListItemText
                                         primary={
                                             <React.Fragment>
-                                                {`${invoice.shipper.country} ${invoice.shipper.city} ${invoice.shipper.street} ${invoice.shipper.email}`}
+                                                {`${invoice.shipper.address.country} ${invoice.shipper.address.city} ${invoice.shipper.address.street} ${invoice.shipper.email}`}
                                             </React.Fragment>
                                         }
                                         secondary="Shipper"
@@ -281,7 +280,7 @@ export default function InvoiceInfoContent(props) {
                                     <ListItemText
                                         primary={
                                             <React.Fragment>
-                                                {`${invoice.consignee.country} ${invoice.consignee.city} ${invoice.consignee.street} ${invoice.consignee.email}`}
+                                                {`${invoice.consignee.address.country} ${invoice.consignee.address.city} ${invoice.consignee.address.street} ${invoice.consignee.email}`}
                                             </React.Fragment>
                                         }
                                         secondary="Consignee"

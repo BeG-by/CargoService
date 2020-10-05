@@ -1,10 +1,6 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.DriversAndStoragesDTO;
-import by.itechart.cargo.dto.model_dto.invoice.InvoicePaginationResponse;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
-import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
+import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchInvoiceRepository;
 import by.itechart.cargo.exception.AlreadyExistException;
@@ -66,17 +62,44 @@ public class InvoiceServiceImpl implements InvoiceService {
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
-        if (isDispatcherRole(jwtUser)) {
-            long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId());
-            List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId(), pageRequest);
-            return new InvoicePaginationResponse(amountInvoices, invoices);
-        } else {
-            long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndCheckingUserId(clientCompanyId, jwtUser.getId());
-            List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndCheckingUserId(clientCompanyId, jwtUser.getId(), pageRequest);
-            return new InvoicePaginationResponse(amountInvoices, invoices);
-        }
-        //todo: add driver or by client company
+
+        long amountInvoices = invoiceRepository.countAllByClientCompanyId(clientCompanyId);
+        List<Invoice> invoices = invoiceRepository.findAllByClientCompanyId(clientCompanyId, pageRequest);
+        return new InvoicePaginationResponse(amountInvoices, invoices);
+
     }
+
+    @Override
+    public InvoicePaginationResponse findAllForDriver(int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndDriverId(jwtUser.getClientCompany().getId(), jwtUser.getId());
+        List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndDriverId(jwtUser.getClientCompany().getId(), jwtUser.getId(), pageRequest);
+        return new InvoicePaginationResponse(amountInvoices, invoices);
+
+    }
+
+    @Override
+    public InvoicePaginationResponse findAllForManager(int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndCheckingUserId(jwtUser.getClientCompany().getId(), jwtUser.getId());
+        List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndCheckingUserId(jwtUser.getClientCompany().getId(), jwtUser.getId(), pageRequest);
+        return new InvoicePaginationResponse(amountInvoices, invoices);
+    }
+
+    @Override
+    public InvoicePaginationResponse findAllForDispatcher(int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndRegistrationUserId(jwtUser.getClientCompany().getId(), jwtUser.getId());
+        List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndRegistrationUserId(jwtUser.getClientCompany().getId(), jwtUser.getId(), pageRequest);
+        return new InvoicePaginationResponse(amountInvoices, invoices);
+    }
+
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWith(String numberStartStr, int requestedPage, int invoicesPerPage) {
@@ -84,25 +107,64 @@ public class InvoiceServiceImpl implements InvoiceService {
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
 
-        if (isDispatcherRole(jwtUser)) {
-            List<Long> ids = elasticsearchInvoiceRepository.findAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(
-                    numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
-                    .map(ElasticsearchInvoice::getId)
-                    .collect(Collectors.toList());
 
-            Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(numberStartStr, clientCompanyId, jwtUser.getId());
-            List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
-            return new InvoicePaginationResponse(totalAmount, invoices);
-        } else {
-            List<Long> ids = elasticsearchInvoiceRepository.findALlByNumberStartsWithAndClientCompanyIdAndCheckingUserId(
-                    numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
-                    .map(ElasticsearchInvoice::getId)
-                    .collect(Collectors.toList());
+        List<Long> ids = elasticsearchInvoiceRepository
+                .findALlByNumberStartsWithAndClientCompanyId(numberStartStr, clientCompanyId, pageRequest).stream()
+                .map(ElasticsearchInvoice::getId)
+                .collect(Collectors.toList());
 
-            Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndCheckingUserId(numberStartStr, clientCompanyId, jwtUser.getId());
-            List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
-            return new InvoicePaginationResponse(totalAmount, invoices);
-        }
+        long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyId(numberStartStr, clientCompanyId);
+        List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
+
+        return new InvoicePaginationResponse(totalAmount, invoices);
+    }
+
+    @Override
+    public InvoicePaginationResponse findAllByNumberStartsWithForDriver(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        Long clientCompanyId = jwtUser.getClientCompany().getId();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        List<Long> ids = elasticsearchInvoiceRepository
+                .findALlByNumberStartsWithAndClientCompanyIdAndDriverId(numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
+                .map(ElasticsearchInvoice::getId)
+                .collect(Collectors.toList());
+
+        Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndDriverId(numberStartStr, clientCompanyId, jwtUser.getId());
+        List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
+        return new InvoicePaginationResponse(totalAmount, invoices);
+    }
+
+    @Override
+    public InvoicePaginationResponse findAllByNumberStartsWithForManager(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        Long clientCompanyId = jwtUser.getClientCompany().getId();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        List<Long> ids = elasticsearchInvoiceRepository
+                .findALlByNumberStartsWithAndClientCompanyIdAndCheckingUserId(numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
+                .map(ElasticsearchInvoice::getId)
+                .collect(Collectors.toList());
+
+        Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndCheckingUserId(numberStartStr, clientCompanyId, jwtUser.getId());
+        List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
+        return new InvoicePaginationResponse(totalAmount, invoices);
+    }
+
+    @Override
+    public InvoicePaginationResponse findAllByNumberStartsWithForDispatcher(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
+        Long clientCompanyId = jwtUser.getClientCompany().getId();
+        PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
+
+        List<Long> ids = elasticsearchInvoiceRepository
+                .findAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(numberStartStr, clientCompanyId, jwtUser.getId(), pageRequest).stream()
+                .map(ElasticsearchInvoice::getId)
+                .collect(Collectors.toList());
+
+        Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(numberStartStr, clientCompanyId, jwtUser.getId());
+        List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
+        return new InvoicePaginationResponse(totalAmount, invoices);
     }
 
     @Override
@@ -116,37 +178,43 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
 
+        final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
+        final Long companyId = currentUser.getClientCompany().getId();
+        final Long driverId = invoiceRequest.getDriverId();
+        final Long managerId = invoiceRequest.getManagerId();
+        final Long productOwnerId = invoiceRequest.getProductOwnerId();
+
         if (invoiceRepository.findByNumber(invoice.getNumber()).isPresent()) {
             throw new AlreadyExistException(String.format("Invoice with number \"%s\" exists", invoice.getNumber()));
         }
 
-        final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
-        final Long companyId = currentUser.getClientCompany().getId();
-        final Long driverId = invoiceRequest.getDriverId();
-        final Long productOwnerId = invoiceRequest.getProductOwnerId();
-
         Storage shipper = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Shipper with doesn't exists"));
+                .orElseThrow(() -> new NotFoundException("Shipper doesn't exists"));
         invoice.setShipper(shipper);
 
         Storage consignee = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Consignee with doesn't exists"));
+                .orElseThrow(() -> new NotFoundException("Consignee doesn't exists"));
         invoice.setConsignee(consignee);
 
-
         ProductOwner productOwner = productOwnerRepository
-                .findById(productOwnerId)
-                .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
+                .findByIdAndClientCompanyIdAndStatus(productOwnerId, companyId, ProductOwner.Status.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("Product owner doesn't exists"));
         invoice.setProductOwner(productOwner);
 
+        //todo: check on role
         User driver = userRepository
-                .findById(driverId)
-                .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
-
-
+                .findByIdAndClientCompanyId(driverId, companyId)
+                .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
         invoice.setDriver(driver);
+
+
+        //todo: check on role
+        User manager = userRepository
+                .findByIdAndClientCompanyId(managerId, companyId)
+                .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
+        invoice.setCheckingUser(manager);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         invoice.setClientCompany(clientCompany);
@@ -159,6 +227,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             p.setProductStatus(Product.Status.ACCEPTED);
         });
 
+
+        //todo: fix it in frontend
         if (invoiceRequest.getStatus() == null) {
             invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
@@ -177,21 +247,25 @@ public class InvoiceServiceImpl implements InvoiceService {
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = invoiceRequest.getDriverId();
+        final Long managerId = invoiceRequest.getDriverId();
 
         Invoice invoice = invoiceRepository
                 .findById(invoiceRequest.getId())
                 .orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
 
         User driver = userRepository
-                .findById(driverId)
-                .orElseThrow(() -> new NotFoundException(String.format("Driver with id \"%d\" doesn't exists", driverId)));
-
-        Optional<Invoice> invoiceByNumber = invoiceRepository.findByNumber(invoiceRequest.getInvoiceNumber());
-        if (invoiceByNumber.isPresent() && !invoiceByNumber.get().getId().equals(invoiceRequest.getId())) {
-            throw new AlreadyExistException(String.format("Invoice with number \"%s\" exists", invoiceRequest.getInvoiceNumber()));
-        }
-
+                .findByIdAndClientCompanyId(driverId, companyId)
+                .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
         invoice.setDriver(driver);
+
+        User manager = userRepository
+                .findByIdAndClientCompanyId(managerId, companyId)
+                .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
+        invoice.setCheckingUser(manager);
+
+        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
+            throw new AlreadyExistException("Invoice already exists");
+        }
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         invoice.setClientCompany(clientCompany);
@@ -201,15 +275,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Storage shipper = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Shipper with doesn't exists"));
+                .orElseThrow(() -> new NotFoundException("Shipper doesn't exists"));
         invoice.setShipper(shipper);
 
         Storage consignee = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Consignee with doesn't exists"));
+                .orElseThrow(() -> new NotFoundException("Consignee doesn't exists"));
         invoice.setConsignee(consignee);
 
         invoice.setNumber(invoiceRequest.getInvoiceNumber());
+
+        //todo: fix it
         if (invoiceRequest.getStatus() == null) {
             invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
@@ -229,13 +305,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    //todo: refactor method
     public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
         Invoice foundInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow(() ->
                 new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
         if (invoice.getStatus().equals(Invoice.Status.ACCEPTED)) {
             foundInvoice.setCheckingDate(LocalDate.now());
-            foundInvoice.setCheckingUser(userRepository.getOne(jwtTokenUtil.getJwtUser().getId()));
         } else if (invoice.getStatus().equals(Invoice.Status.CLOSED)
                 || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
@@ -246,15 +322,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public DriversAndStoragesDTO findDataForInvoiceCreating() {
+    public DataForInvoiceCreating findDataForInvoiceCreating() {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
         List<Storage> storages = storageRepository.findAllWithoutDeleted(clientCompany.getId());
+
         Role driverRole = roleRepository.getByRole(Role.RoleType.DRIVER);
         List<User> drivers = userRepository.findAllByClientCompanyIdAndRoles(clientCompany.getId(), driverRole);
-        return new DriversAndStoragesDTO(drivers, storages);
+
+        Role managerRole = roleRepository.getByRole(Role.RoleType.MANAGER);
+        List<User> managers = userRepository.findAllByClientCompanyIdAndRoles(clientCompany.getId(), managerRole);
+
+        return new DataForInvoiceCreating(drivers, storages, managers);
     }
 
-    private boolean isDispatcherRole(JwtUserDetails jwtUser) {
-        return jwtUser.getRoles().stream().map(Role::getRole).anyMatch(roleType -> roleType.equals(Role.RoleType.DISPATCHER));
+    private boolean isValidInvoiceNumberForUpdate(InvoiceRequest invoiceRequest) {
+        Optional<Invoice> invoiceByNumber = invoiceRepository.findByNumber(invoiceRequest.getInvoiceNumber());
+        return invoiceByNumber.isEmpty() || invoiceByNumber.get().getId().equals(invoiceRequest.getId());
     }
 }

@@ -5,7 +5,11 @@ export const AUTO_URL = "/v1/api/autos";
 export const STORAGE_URL = "/v1/api/storages";
 export const OWNER_URL = "/v1/api/owners";
 export const INVOICE_URL = "/v1/api/invoices";
-export const DATA_FOR_INVOICE_CREATING_URL = "/v1/api/invoices/data-for-creating";
+export const MANAGER_INVOICES_URL = "/v1/api/invoices/manager";
+export const DRIVER_INVOICES_URL = "/v1/api/invoices/driver";
+export const DISPATCHER_INVOICES_URL = "/v1/api/invoices/dispatcher";
+
+export const DATA_FOR_INVOICE_CREATING_URL = "/v1/api/invoices/initial/data";
 export const WAYBILL_URL = "/v1/api/waybills";
 export const POINT_URL = "/v1/api/waybills/points";
 export const ACT_URL = "/v1/api/acts";

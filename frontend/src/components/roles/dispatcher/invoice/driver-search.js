@@ -3,28 +3,28 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 
-export default function DriverSearch(props) {
-    const drivers = props.drivers;
-    const onDriverSelect = props.onDriverSelect;
+export default function PersonSearch(props) {
+    const persons = props.persons;
+    const onPersonSelect = props.onPersonSelect;
+    const label = props.label;
 
     const [inputValue, setInputValue] = useState("");
-    const [selectedDriver, setSelectedDriver] = useState("");
+    const [selectedPerson, setSelectedPerson] = useState("");
 
     return (
         <Autocomplete
-            id={"driver_autocomplete_field"}
-            value={selectedDriver}
+            value={selectedPerson}
             onChange={(event, newValue) => {
-                setSelectedDriver(newValue);
-                onDriverSelect(newValue);
+                setSelectedPerson(newValue);
+                onPersonSelect(newValue);
             }}
             inputValue={inputValue}
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            getOptionLabel={(driver) => driver === "" ? "" : `${driver.name} ${driver.surname}`}
-            options={drivers}
-            renderInput={(params) => <TextField {...params} label="Drivers"/>}
+            getOptionLabel={(person) => person === "" ? "" : `${person.name} ${person.surname}`}
+            options={persons}
+            renderInput={(params) => <TextField {...params} label={label}/>}
         />
     )
 }

@@ -17,7 +17,7 @@ import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {connect} from "react-redux";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";
-import {handleRequestError, INVOICE_URL, makeRequest} from "../../parts/util/request-util";
+import {handleRequestError, INVOICE_URL, makeRequest, MANAGER_INVOICES_URL} from "../../parts/util/request-util";
 import {NotAuthorized} from "../../pages/error-page/error-401";
 
 const ALIGN = "left";
@@ -48,8 +48,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
     async function fetchInvoices(cleanupFunction) {
         if (!cleanupFunction) {
-            let response = await makeRequest("GET", INVOICE_URL);
-            setInvoices(response.data);
+            let response = await makeRequest("GET", MANAGER_INVOICES_URL + "?requestedPage=0&invoicesPerPage=20");
+            setInvoices(response.data.invoices);
         }
     }
 
