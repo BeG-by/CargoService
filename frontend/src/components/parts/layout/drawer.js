@@ -19,7 +19,6 @@ import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
 import {ItemProfile} from "../drawer-items/item-profile";
-import ProductOwnersTable from "../../roles/dispatcher/product-owners/product-owners-table";
 import {ItemClientTable} from "../drawer-items/item-clients";
 
 

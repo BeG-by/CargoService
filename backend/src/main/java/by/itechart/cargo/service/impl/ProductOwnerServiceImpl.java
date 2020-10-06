@@ -11,7 +11,7 @@ import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.ProductOwner;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.ProductOwnerRepository;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.ProductOwnerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

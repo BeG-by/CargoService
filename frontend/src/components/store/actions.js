@@ -1,4 +1,4 @@
-import {ACTION_CHANGE_PHOTO, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
+import {ACTION_CHANGE_USER, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
 
 export const changeUserAndCompany = (newUser, newCompany) => {
     return {
@@ -10,11 +10,11 @@ export const changeUserAndCompany = (newUser, newCompany) => {
     }
 };
 
-export const changePhoto = (newUser) => {
+export const changeUser = (newUser) => {
     return {
-        type: ACTION_CHANGE_PHOTO,
+        type: ACTION_CHANGE_USER,
         payload: {
             user: newUser
         }
     }
-}
+};

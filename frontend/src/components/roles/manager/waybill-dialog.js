@@ -9,7 +9,7 @@ export default function WaybillDialog(props) {
         <div>
             <Dialog
                 fullWidth="true"
-                maxWidth="md"
+                maxWidth="xl"
                 open={props.open}
                 onClose={props.onClose}
                 aria-labelledby="form-dialog-title"
@@ -19,7 +19,7 @@ export default function WaybillDialog(props) {
                     {"Waybill to invoice # "}{props.invoice.number}
                 </DialogTitleCustomized>
                 <DialogContent>
-                    <WaybillForm invoice={props.invoice} onClose={props.onClose}/>
+                    <WaybillForm invoice={props.invoice} onClose={props.onClose} onSave={props.onSave}/>
                 </DialogContent>
             </Dialog>
         </div>

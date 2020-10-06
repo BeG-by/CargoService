@@ -1,4 +1,4 @@
-package by.itechart.cargo.security.jwt;
+package by.itechart.cargo.security;
 
 import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
@@ -46,6 +46,8 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
                 .status(user.getStatus())
                 .clientCompany(user.getClientCompany())
                 .roles(user.getRoles())
+                .phone(user.getPhone())
+                .photo(user.getPhoto())
                 .authorities(createGrantedAuthority(user.getRoles()))
                 .isEnable(user.getStatus().equals(User.Status.ACTIVE))
                 .build();
@@ -53,7 +55,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
 
 
     private List<GrantedAuthority> createGrantedAuthority(Set<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().toString())).collect(Collectors.toList());
+        return roles.stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r.getRole().toString())).collect(Collectors.toList());
     }
 
 }

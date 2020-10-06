@@ -7,6 +7,7 @@ import {getInvoiceById} from "./request-utils";
 import InvoiceInfoContent from "./invoice-info-content";
 import {CloseInvoice} from "../../parts/dialogs/close-invoice";
 import {connect} from "react-redux";
+import {EditInvoice} from "../../parts/dialogs/edit-invoice";
 
 const mapStateToProps = (store) => {
     return {
@@ -19,6 +20,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     const [openVerifyDialog, setOpenVerifyDialog] = React.useState(false);
     const [openRejectDialog, setOpenRejectDialog] = React.useState(false);
     const [openCloseDialog, setOpenCloseDialog] = React.useState(false);
+    const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [invoice, setInvoice] = React.useState({
         id: 0,
         status: "",
@@ -32,8 +34,11 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         driver: {id: 0, name: "", surname: ""},
         registrationUser: {id: 0},
         checkingUser: {id: 0},
-        waybill: null,
-        act: null,
+        consignee: "",
+        comment: "",
+        waybill: {},
+        act: {},
+        productOwnerDTO: {}
     });
     const [checkPassage, setCheckPassage] = React.useState(true);
 
@@ -41,6 +46,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         setOpenVerifyDialog(false);
         setOpenRejectDialog(false);
         setOpenCloseDialog(false);
+        setOpenEditDialog(false);
     };
 
     const handleVerifyOpen = () => {
@@ -61,6 +67,12 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         setOpenCloseDialog(true);
     }
 
+    const handleEditOpen = () => {
+        const form = <EditInvoice handleClose={handleClose} invoice={invoice}/>
+        setForm(form);
+        setOpenEditDialog(true);
+    }
+
     async function fetchInvoice(cleanupFunction) {
         let selected = await getInvoiceById(props.invoiceId);
         if (!cleanupFunction) setInvoice({
@@ -73,20 +85,13 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
             closeDate: selected.closeDate,
             shipper: selected.shipper,
             consignee: selected.consignee,
-            driver: {id: selected.driver.id, name: selected.driver.name, surname: selected.driver.surname},
-            registrationUser: {
-                id: selected.registrationUser.id,
-                name: selected.registrationUser.name,
-                surname: selected.registrationUser.surname
-            },
-            checkingUser: selected.checkingUser === null ? null : {
-                id: selected.checkingUser.id,
-                name: selected.checkingUser.name,
-                surname: selected.checkingUser.surname
-            },
+            driver: selected.driver,
+            registrationUser: selected.registrationUser,
+            checkingUser: selected.checkingUser,
             waybill: selected.waybill,
             act: selected.act,
             comment: selected.comment,
+            productOwnerDTO: selected.productOwnerDTO,
         });
         if (selected.waybill === null) {
             setCheckPassage(false);
@@ -107,12 +112,15 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     let verifyDisabled = false;
     let rejectDisabled = false;
     let closeDisabled = false;
+    let editDisabled = false;
 
     if (status.trim() === 'REGISTERED' && props.role === "MANAGER") {
         closeDisabled = true;
+        editDisabled = true;
     } else if (status.trim() === 'ACCEPTED' && checkPassage && props.role === "DRIVER") {
         verifyDisabled = true;
         rejectDisabled = true;
+        editDisabled = true;
     } else if (status.trim() === 'REJECTED' && props.role === "DISPATCHER") {
         verifyDisabled = true;
         rejectDisabled = true;
@@ -121,12 +129,14 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         verifyDisabled = true;
         rejectDisabled = true;
         closeDisabled = true;
+        editDisabled = true;
     }
 
     let buttons = <div className='btn-row'>
         <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>
         <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>
         <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>
+        <OkButton content={'Edit'} handleClick={handleCloseOpen} disabled={editDisabled}/>
     </div>
 
     return (
@@ -146,6 +156,11 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
                 dialogTitle="Closing"
                 handleClose={handleClose}
                 openDialog={openCloseDialog}
+                form={form}/>
+            <DialogWindow
+                dialogTitle="Editing"
+                handleClose={handleClose}
+                openDialog={openEditDialog}
                 form={form}/>
         </div>
     );

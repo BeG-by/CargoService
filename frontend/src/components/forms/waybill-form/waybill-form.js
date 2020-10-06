@@ -12,13 +12,13 @@ import {convertPointsToBackendApi} from "../../../map/utils";
 import {connect} from "react-redux";
 import AutoSearch from "./auto-search";
 import useToast from "../../parts/toast-notification/useToast";
+import Paper from "@material-ui/core/Paper";
 
 const EMPTY_AUTO = {
     id: -1,
     mark: "",
     autoType: "",
 };
-
 
 const mapStateToProps = (store) => {
     return {
@@ -94,7 +94,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             waybill.arrivalDate = values.arrivalDate;
             const saveWaybillRequest = async (waybill) => {
                 await saveWaybill(waybill);
-                props.onClose();
+                props.onSave();
             };
             saveWaybillRequest(waybill);
         } else {

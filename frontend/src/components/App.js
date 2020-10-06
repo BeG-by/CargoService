@@ -19,8 +19,8 @@ import {ProductOwnersTable} from "./roles/dispatcher/product-owners/product-owne
 import {DispatcherInvoiceTable} from "./roles/dispatcher/invoice/invoice-table";
 import {AutoTable} from "./roles/admin/autos/auto-table";
 import {StorageTable} from "./roles/dispatcher/storages/storages-table";
-import {ProfileBody} from "./pages/profile-body";
 import {ClientsTable} from "./roles/sysadmin/clients-table";
+import {ProfileInfo} from "./forms/profile-form/profile-info";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -49,7 +49,7 @@ export default function App() {
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
                     <Route exact path="/main" component={MainBody}/>
-                    <Route exact path="/profile" component={ProfileBody}/>
+                    <Route exact path="/profile" component={ProfileInfo}/>
                     <Route exact path="/waybill" component={WaybillsTable}/>
                     <Route exact path={"/invoice"} component={InvoicesTable}/>
                     <Route exact path={"/users"} component={UserTable}/>

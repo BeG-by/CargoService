@@ -7,27 +7,23 @@ import {DialogTitleCustomized} from "../../parts/dialogs/dialog-title-customized
 export default function ProductsDialog(props) {
     const {open, onClose, onSubmit, initProductState} = props;
 
-    const handleClose = () => {
-        onClose();
-    };
-
     return (
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={onClose}
             aria-labelledby="form-dialog-title"
             fullWidth="true"
             maxWidth="sm"
         >
             <DialogTitleCustomized
-                onClose={handleClose}>
+                onClose={onClose}>
                 Lost product
             </DialogTitleCustomized>
             <DialogContent>
                 <ProductsForm
                     initProductState={initProductState}
                     onSubmit={onSubmit}
-                    onClose={handleClose}
+                    onClose={onClose}
                 />
             </DialogContent>
         </Dialog>

@@ -15,7 +15,7 @@ import ProductOwnerDialog from "./product-owner-dialog";
 import EditIcon from '@material-ui/icons/Edit';
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {Typography} from "@material-ui/core";
-import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../../parts/util/function-util";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import {NotAuthorized} from "../../../pages/error-page/error-401";
 import {connect} from "react-redux";

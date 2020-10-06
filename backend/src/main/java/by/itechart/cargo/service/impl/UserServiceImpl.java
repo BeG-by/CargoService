@@ -2,6 +2,7 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
+import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Role;
@@ -9,7 +10,7 @@ import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,7 @@ public class UserServiceImpl implements UserService {
         log.info("User has been saved {}", userDb);
     }
 
+    //TODO photo, phone
 
     @Override
     public void update(UserUpdateRequest request) throws NotFoundException, AlreadyExistException {
@@ -180,9 +182,52 @@ public class UserServiceImpl implements UserService {
         final long userId = jwtTokenUtil.getJwtUser().getId();
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
         currentUser.setPhoto(photoRequest.getPhoto());
-        log.info("User photo has been updated");
+        log.info("User photo has been save {}", currentUser);
+    }
+
+    @Override
+    public void updatePhone(PhoneRequest phoneRequest) throws NotFoundException {
+        final long userId = jwtTokenUtil.getJwtUser().getId();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        currentUser.setPhone(phoneRequest.getPhone());
+        log.info("User photo has been save {}", currentUser);
+    }
+
+    @Override
+    public void updatePassword(PasswordRequest passwordRequest) throws IncorrectPasswordException {
+
+        final String currentPassword = jwtTokenUtil.getJwtUser().getPassword();
+        final String oldPassword = passwordRequest.getOldPassword();
+        final String newPassword = passwordRequest.getNewPassword();
+        final String confirmNewPassword = passwordRequest.getConfirmNewPassword();
+
+        final boolean matches = passwordEncoder.matches(oldPassword, currentPassword);
+
+        if (!matches) {
+            throw new IncorrectPasswordException("Old password is incorrect");
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new IncorrectPasswordException("New password doesn't match with confirm password");
+        }
+
+        final long userId = jwtTokenUtil.getJwtUser().getId();
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+
+        userRepository.findByIdAndClientCompanyId(userId, companyId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    return user;
+                });
     }
 
 }

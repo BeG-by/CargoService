@@ -3,13 +3,12 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import FormikField from "../../../parts/util/formik-field";
 import DeleteIcon from '@material-ui/icons/Delete';
-
 import {Formik, Form} from "formik";
 import useToast from "../../../parts/toast-notification/useToast";
 import ProductOwnerTypeSelector from "./product-owner-type-selector";
 import CustomDatePicker from "../../../parts/util/custom-date-picker";
 import {ProductFormValidationSchema} from "./validation-shema";
-import {makeRequest, OWNER_URL, handleRequestError} from "../../../parts/util/request-util";
+import {makeRequest, OWNER_URL, handleRequestError, STORAGE_URL} from "../../../parts/util/request-util";
 
 const EMPTY_PRODUCT_OWNER = {
     id: -1,
@@ -77,7 +76,7 @@ export default function ProductOwnerForm(props) {
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose();
         } catch (error) {
-            handleRequestError(error , openToast);
+            handleRequestError(error, openToast);
         }
     }
 
@@ -88,7 +87,7 @@ export default function ProductOwnerForm(props) {
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose()
         } catch (error) {
-            handleRequestError(error , openToast);
+            handleRequestError(error, openToast);
         }
     }
 
@@ -175,7 +174,6 @@ export default function ProductOwnerForm(props) {
                             label={"Street"}
                             formikFieldName={"street"}
                         />
-
                         <FormikField
                             formikProps={formProps}
                             id={"house"}

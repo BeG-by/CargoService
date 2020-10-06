@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../../parts/util/function-util";
 
 const columns = [
     {label: "Name", id: "name", minWidth: 100, maxWidth: 100, align: "center"},
@@ -116,7 +116,7 @@ export default (props) => {
                                                     <TableCell key={column.id} align={column.align}
                                                                className="edit-delete-block">
                                                         <Button
-                                                            className="basket-table-btn"
+                                                            className="menu-table-btn"
                                                             color={"primary"}
                                                             startIcon={<EditIcon/>}
                                                             onClick={(e) => {
@@ -125,7 +125,7 @@ export default (props) => {
                                                             }}/>
 
                                                         <Button
-                                                            className="basket-table-btn"
+                                                            className="menu-table-btn"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 onRowDelete(product.id);

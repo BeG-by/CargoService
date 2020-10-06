@@ -1,4 +1,4 @@
-package by.itechart.cargo.security.jwt;
+package by.itechart.cargo.security;
 
 import by.itechart.cargo.model.Role;
 import io.jsonwebtoken.*;

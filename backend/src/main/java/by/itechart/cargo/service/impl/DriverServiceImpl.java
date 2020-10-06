@@ -5,7 +5,7 @@ import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Role;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
-import by.itechart.cargo.security.jwt.JwtTokenUtil;
+import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.DriverService;
 import org.springframework.stereotype.Service;
 

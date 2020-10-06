@@ -7,8 +7,33 @@ import {Form, Formik} from "formik";
 import FormikField from "../../roles/sysadmin/formik-field";
 import Button from "@material-ui/core/Button";
 import {RejectInvoiceValidation} from "../validation/reject-invoice-validation";
+import {FillWaybillDialog} from "./fill-waybill";
+import WaybillDialog from "../../roles/manager/waybill-dialog";
+import {handleRequestError} from "../util/request-util";
+import {DialogWindow} from "./dialog";
+import Paper from "@material-ui/core/Paper";
 
 export const AssignVerificationInvoice = withRouter((props) => {
+    const [selectedInvoice, setSelectedInvoice] = React.useState({});
+    const [form, setForm] = React.useState(null);
+    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
+    const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
+
+    const handleClose = () => {
+        props.history.push("/success");
+    }
+
+    const handleWaybillFill = () => {
+        setSelectedInvoice(props.invoice);
+        setForm(FillWaybillDialog(handleWaybillFormOpen, handleClose));
+        setWaybillFillDialogOpen(true);
+    }
+
+    const handleWaybillFormOpen = () => {
+        setWaybillFillDialogOpen(false);
+        setWaybillDialogOpen(true);
+    };
+
     const handleVerify = async () => {
         const invoice = {
             id: props.invoice.id,
@@ -16,7 +41,7 @@ export const AssignVerificationInvoice = withRouter((props) => {
             comment: "Invoice checked, errors: none"
         };
         await updateInvoiceStatus(invoice);
-        props.history.push("/success");
+        handleWaybillFill();
     }
 
     return (
@@ -28,6 +53,20 @@ export const AssignVerificationInvoice = withRouter((props) => {
                     <CancelButton content='Cancel' handleClick={props.handleClose}/>
                 </div>
             </div>
+
+            <WaybillDialog
+                invoice={selectedInvoice}
+                open={waybillDialogOpen}
+                onClose={handleClose}
+                onSave={handleClose}
+            />
+
+            <DialogWindow
+                dialogTitle="Confirmation"
+                handleClose={handleClose}
+                openDialog={waybillFillDialogOpen}
+                form={form}
+            />
         </div>
     );
 })

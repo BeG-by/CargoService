@@ -2,6 +2,7 @@ package by.itechart.cargo.service;
 
 import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
+import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 
 import java.util.List;
@@ -21,5 +22,9 @@ public interface UserService {
     void delete(long id) throws NotFoundException;
 
     void updatePhoto(PhotoRequest photoRequest) throws NotFoundException;
+
+    void updatePhone(PhoneRequest photoRequest) throws NotFoundException;
+
+    void updatePassword(PasswordRequest passwordRequest) throws IncorrectPasswordException;
 
 }

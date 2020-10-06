@@ -11,7 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import InvoiceDialog from "./invoice-dialog";
 import useToast from "../../../parts/toast-notification/useToast";
 import {handleRequestError, INVOICE_URL, makeRequest} from "../../../parts/util/request-util";
-import fetchFieldFromObject from "../../../parts/util/fetch-field-from-object";
+import fetchFieldFromObject from "../../../parts/util/function-util";
 import {connect} from "react-redux";
 import {NotAuthorized} from "../../../pages/error-page/error-401";
 
