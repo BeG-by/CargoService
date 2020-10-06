@@ -16,7 +16,7 @@ import {
     makeRequest
 } from "../../../parts/util/request-util";
 import "../styles/invoice-form.css"
-import PersonSearch from "./driver-search";
+import PersonSearch from "./person-search";
 import StorageSearchDialog from "./storage-search/storage-search-dialog";
 import TextField from "@material-ui/core/TextField";
 

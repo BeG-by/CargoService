@@ -20,7 +20,6 @@ import {
     DISPATCHER_INVOICES_URL,
     DRIVER_INVOICES_URL,
     handleRequestError,
-    INVOICE_URL,
     makeRequest,
     MANAGER_INVOICES_URL
 } from "../../parts/util/request-util";
@@ -40,15 +39,11 @@ const CENTER = "center";
 const SIZE = 18;
 
 const columns = [
-    {id: "number", label: "Invoice #", minWidth: 100, align: ALIGN},
-    {id: "status", label: "Status", minWidth: 100, align: ALIGN},
-    {id: "waybillId", label: "Waybill", minWidth: 100, align: "center"}
-
     {id: "number", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
     {id: "status", label: "Status", minWidth: 100, align: LEFT, fontSize: SIZE},
-  //  {id: "date", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
-  //  {id: "shipper", label: "Shipper", minWidth: 300, align: LEFT, fontSize: SIZE},
-  //  {id: "consignee", label: "Consignee", minWidth: 300, align: LEFT, fontSize: SIZE},
+    {id: "registrationDate", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "shipper", label: "Shipper", minWidth: 300, align: LEFT, fontSize: SIZE},
+    {id: "consignee", label: "Consignee", minWidth: 300, align: LEFT, fontSize: SIZE},
     {id: "waybillId", label: "Waybill", minWidth: 100, align: CENTER, fontSize: SIZE}
 ];
 
@@ -58,10 +53,28 @@ const mapStateToProps = (store) => {
     }
 };
 
+
+const convertShipperAndConsigneeToStringInInvoices = (invoices) => {
+    for (let i = 0; i < invoices.length; i++) {
+        invoices[i] = convertShipperAndConsigneeToString(invoices[i]);
+    }
+    return invoices;
+}
+
+const convertShipperAndConsigneeToString = (invoice) => {
+    let shipperAddress = invoice.shipper.address;
+    let consigneeAddress = invoice.consignee.address;
+    return {
+        ...invoice,
+        shipper: `${shipperAddress.country} ${shipperAddress.city} ${shipperAddress.street}  ${shipperAddress.house}`,
+        consignee: `${consigneeAddress.country} ${consigneeAddress.city} ${consigneeAddress.street} ${consigneeAddress.house}`
+    };
+}
+
+
 export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [searchNumber, setSearchNumber] = useState("");
     const [ToastComponent, openToast] = useToast();
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
@@ -111,7 +124,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
     const fetchInvoicesForManager = async (params) => {
         let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
-        setInvoices(response.data.invoices);
+        setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     }
 
     const fetchInvoicesForDriver = async (params) => {
@@ -137,7 +150,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     const handleTableRowClick = (invoice) => {
-        setSelectedInvoice(invoice);
+        setInvoice(invoice);
         handleInvoiceInfoOpen(invoice.id);
     };
 
@@ -169,7 +182,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     const handleWaybillFillClick = (invoice) => {
-        setSelectedInvoice(invoice);
+        setInvoice(invoice);
         setForm(FillWaybillDialog(handleWaybillFormOpen, handleClose));
         setWaybillFillDialogOpen(true);
     }
@@ -188,9 +201,9 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     </div>
 
                     <TableContainer className="table-container">
-                       <TextSearch
-                                onFieldChange={handleSearchFieldChange}
-                            />
+                        <TextSearch
+                            onFieldChange={handleSearchFieldChange}
+                        />
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
                                 firstMenu={true}
@@ -323,10 +336,6 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
                     <WaybillDialog
                         invoice={invoice}
-                        open={waybillDialogOpen}
-                        onClose={() => {
-                            setWaybillDialogOpen(false);
-
                         open={waybillDialogOpen}
                         onClose={() => {
                             setWaybillDialogOpen(false);

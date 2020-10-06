@@ -51,6 +51,8 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
     const [title, setTitle] = React.useState("");
 
+    console.log(waybill)
+
     const handleClose = () => {
         setInvoiceInfoDialogOpen(false);
         setUserInfoDialogOpen(false);
@@ -196,7 +198,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                         <ListItemText
                                             primary={
                                                 <React.Fragment>
-                                                    {waybill.shipper}
+                                                    {`${waybill.shipper.address.country}  ${waybill.shipper.address.city}  ${waybill.shipper.address.street}`}
                                                 </React.Fragment>
                                             }
                                             secondary="Shipper"
@@ -209,7 +211,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                         <ListItemText
                                             primary={
                                                 <React.Fragment>
-                                                    {waybill.consignee}
+                                                    {`${waybill.consignee.address.country}  ${waybill.consignee.address.city}  ${waybill.consignee.address.street}`}
                                                 </React.Fragment>
                                             }
                                             secondary="Consignee"
@@ -228,92 +230,6 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                         </div>
                     </Paper>
 
-            <Paper>
-                <List style={{alignItems: "flex-start"}}>
-                    <div style={{display: "flex", flexDirection: "row"}}>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <LocalShippingIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.auto.mark + " "
-                                        + waybill.auto.type}
-                                    </React.Fragment>
-                                }
-                                secondary="Auto"
-                            />
-                            <ListItemIcon>
-                                <HowToRegIcon/>
-                            </ListItemIcon>
-                            <Tooltip title="Click to see Driver info" arrow>
-                                <ListItemText
-                                    onClick={handleDriverInfoOpen}
-                                    primary={
-                                        <React.Fragment>
-                                            <strong style={{color: "#3f51b5"}}>
-                                                {waybill.driver.name + " "
-                                                + waybill.driver.surname}
-                                            </strong>
-                                        </React.Fragment>
-                                    }
-                                    secondary="Driver"
-                                />
-                            </Tooltip>
-                        </ListItem>
-                        <Divider orientation="vertical" flexItem/>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <DepartureBoardIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.departureDate}
-                                    </React.Fragment>
-                                }
-                                secondary="Departure Date"
-                            />
-                            <ListItemIcon>
-                                <DepartureBoardIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {waybill.arrivalDate}
-                                    </React.Fragment>
-                                }
-                                secondary="Arrival Date"
-                            />
-                        </ListItem>
-                        <Divider orientation="vertical" flexItem/>
-                        <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
-                            <ListItemIcon>
-                                <StoreIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {`${waybill.shipper.address.country}  ${waybill.shipper.address.city}  ${waybill.shipper.address.street}`}
-                                    </React.Fragment>
-                                }
-                                secondary="Shipper"
-                            />
-                            <ListItemIcon>
-                                <StoreIcon/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={
-                                    <React.Fragment>
-                                        {`${waybill.consignee.address.country}  ${waybill.consignee.address.city}  ${waybill.consignee.address.street}`}
-                                    </React.Fragment>
-                                }
-                                secondary="Consignee"
-                            />
-                        </ListItem>
-                    </div>
-                </List>
                     <Paper className={`${styles.infoPiece} table-paper`}
                            style={{padding: 20}}>
                         {role === "DRIVER" ?

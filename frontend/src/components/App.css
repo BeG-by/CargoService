@@ -80,6 +80,7 @@ main {
 
 .direction-column {
     flex-direction: column;
+}
 
 #form-title {
     font-size: 1.6rem;

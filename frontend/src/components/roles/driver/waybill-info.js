@@ -12,6 +12,7 @@ export const WaybillInfo = (props) => {
         auto: {id: 0, mark: "", type: ""},
         driver: {id: 0, name: "", surname: ""},
         shipper: {address: {}},
+        checkingUser: {},
         consignee: {address: {}},
     });
 
@@ -51,8 +52,9 @@ export const WaybillInfo = (props) => {
                     invoice: {id: 0, number: "", checkingUser: {}},
                     auto: {id: 0, mark: "", type: ""},
                     driver: {id: 0, name: "", surname: ""},
-                    shipper: "",
-                    consignee: "",
+                    shipper: {address: {}},
+                    consignee: {address: {}},
+                    checkingUser: {},
                 });
                 handleRequestError(err, alert); //TODO toast
             });
