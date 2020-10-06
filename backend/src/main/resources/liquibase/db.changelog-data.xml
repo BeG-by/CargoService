@@ -307,9 +307,11 @@
             <column name="id_client_company" value="2"/>
             <column name="id_shipper" value="1"/>
             <column name="id_consignee" value="2"/>
+            <column name="id_user_checking" value="3"/>
             <column name="id_product_owner" value="1"/>
         </insert>
 
+<!--        INVALID INVOICE todo: DELETE (not in elasticsearch)-->
         <insert tableName="invoice">
             <column name="number" value="TTN123123123"/>
             <column name="status" value="REJECTED"/>
@@ -319,6 +321,7 @@
             <column name="id_client_company" value="1"/>
             <column name="id_shipper" value="1"/>
             <column name="id_consignee" value="2"/>
+            <column name="id_user_checking" value="3"/>
             <column name="id_product_owner" value="1"/>
             <column name="comment" value="Consignee name error, check it out"/>
         </insert>
@@ -330,6 +333,7 @@
             <column name="id_driver" value="5"/>
             <column name="id_user_registration" value="2"/>
             <column name="id_client_company" value="2"/>
+            <column name="id_user_checking" value="3"/>
             <column name="id_shipper" value="1"/>
             <column name="id_consignee" value="2"/>
             <column name="id_product_owner" value="2"/>

@@ -1,7 +1,7 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerPaginationResponse;
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchProductOwner;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchProductOwnerRepository;
@@ -35,7 +35,6 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     private final ElasticsearchProductOwnerRepository elasticSearchProductOwnerRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final JwtTokenUtil jwtTokenUtil;
-    private boolean isDataInserted;
 
     @Autowired
     public ProductOwnerServiceImpl(ProductOwnerRepository productOwnerRepository,
@@ -46,29 +45,10 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         this.jwtTokenUtil = jwtTokenUtil;
         this.clientCompanyRepository = clientCompanyRepository;
         this.elasticSearchProductOwnerRepository = elasticSearchProductOwnerRepository;
-        this.isDataInserted = false;
-    }
-
-    private void insertDataForTest() {
-        ElasticsearchProductOwner first = new ElasticsearchProductOwner(1L, "Евроопт", 2L);
-        ElasticsearchProductOwner second = new ElasticsearchProductOwner(2L, "МАГАЗИН-ИП-РОГОВ", 2L);
-        ElasticsearchProductOwner third = new ElasticsearchProductOwner(4L, "Ninja", 2L);
-        ElasticsearchProductOwner fourth = new ElasticsearchProductOwner(5L, "NANI", 2L);
-        ElasticsearchProductOwner fifth = new ElasticsearchProductOwner(6L, "Ninoral", 2L);
-
-        elasticSearchProductOwnerRepository.save(first);
-        elasticSearchProductOwnerRepository.save(second);
-        elasticSearchProductOwnerRepository.save(third);
-        elasticSearchProductOwnerRepository.save(fourth);
-        elasticSearchProductOwnerRepository.save(fifth);
     }
 
     @Override
     public ProductOwnerPaginationResponse findWithPagination(int requestedPage, int productOwnersPerPage) {
-        if (!isDataInserted) {
-            insertDataForTest();
-            isDataInserted = true;
-        }
         PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
         long totalAmount = productOwnerRepository.countAllByClientCompanyAndStatus
                 (jwtTokenUtil.getJwtUser().getClientCompany(), ProductOwner.Status.ACTIVE);
@@ -148,12 +128,17 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
 
         Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
+
+        Long totalAmount = elasticSearchProductOwnerRepository.countAllByNameStartsWithAndClientCompanyIdAndStatus
+                (name, clientCompanyId, ProductOwner.Status.ACTIVE.toString());
+
         List<Long> ids = elasticSearchProductOwnerRepository
-                .findAllByNameStartsWithAndClientCompanyId(name, clientCompanyId, pageRequest).stream()
+                .findAllByNameStartsWithAndClientCompanyIdAndStatus(
+                        name, clientCompanyId, ProductOwner.Status.ACTIVE.toString(), pageRequest).stream()
                 .map(ElasticsearchProductOwner::getId)
                 .collect(Collectors.toList());
 
         List<ProductOwner> productOwners = productOwnerRepository.findByIdIsIn(ids);
-        return new ProductOwnerPaginationResponse((long) ids.size(), productOwners);
+        return new ProductOwnerPaginationResponse(totalAmount, productOwners);
     }
 }
