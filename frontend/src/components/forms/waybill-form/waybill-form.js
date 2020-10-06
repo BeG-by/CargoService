@@ -1,22 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {Formik, Form, ErrorMessage} from "formik";
+import {Form, Formik} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
-import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
-import TextField from "@material-ui/core/TextField";
+import {convertPointsToBackendApi} from "../../../map/utils";
 import {connect} from "react-redux";
+import AutoSearch from "./auto-search";
+import useToast from "../../parts/toast-notification/useToast";
 
 const EMPTY_AUTO = {
-    id: 0,
+    id: -1,
     mark: "",
     autoType: "",
 };
@@ -30,6 +28,7 @@ const mapStateToProps = (store) => {
 
 export const WaybillForm = connect(mapStateToProps)((props) => {
     const role = props.role;
+    const [ToastComponent, openToast] = useToast();
     const [invoice, setInvoice] = useState(props.invoice);
     const [selectedAuto, setSelectedAuto] = useState(EMPTY_AUTO);
     const [pointIndex, setPointIndex] = useState(0);
@@ -83,10 +82,14 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
 
     const handleSubmit = (values) => {
         if (points.length > 1) {
+            if (selectedAuto.id === -1) {
+                openToast("Select auto", "warning")
+                return;
+            }
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;
-            waybill.autoId = values.autoId;
+            waybill.autoId = selectedAuto.id;
             waybill.departureDate = values.departureDate;
             waybill.arrivalDate = values.arrivalDate;
             const saveWaybillRequest = async (waybill) => {
@@ -95,20 +98,17 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             };
             saveWaybillRequest(waybill);
         } else {
-            alert("It's necessary to put at least 200 points")
+            openToast("It's necessary to put at least 2 point", "warning")
         }
     };
 
-    const handleAutoChange = (event) => {
-        event.preventDefault();
-        setSelectedAuto({id: event.target.value, autoType: "", mark: ""});
+    const handleAutoSelect = (auto) => {
+        if (auto === null)
+            setSelectedAuto(EMPTY_AUTO)
+        else {
+            setSelectedAuto(auto);
+        }
     };
-
-    let options = [{value: "", label: ""}];
-    autos.forEach(auto => {
-        let label = auto.mark + " " + auto.autoType;
-        options.push({value: auto.id, label: label});
-    })
 
     let date = new Date();
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
@@ -130,28 +130,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 {(formProps) => (
                     <Form>
                         <FormControl className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-label">Select auto</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={selectedAuto.id}
-                                onChange={handleAutoChange}
-                                name={"autoId"}
-                            >
-                                {options.map(option => {
-                                    return (
-                                        <MenuItem
-                                            key={option.value}
-                                            name={"autoId"}
-                                            value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    )
-                                })}
-                            </Select>
-                            <label style={{color: "#f50057"}}>
-                                <ErrorMessage name={"autoId"}/>
-                            </label>
+                            <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
                         </FormControl>
 
                         <Grid container spacing={3}>
@@ -200,6 +179,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                     </Form>
                 )}
             </Formik>
+            {ToastComponent}
         </React.Fragment>
     );
 });

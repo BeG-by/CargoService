@@ -127,7 +127,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {waybill.shipper}
+                                        {`${waybill.shipper.address.country}  ${waybill.shipper.address.city}  ${waybill.shipper.address.street}`}
                                     </React.Fragment>
                                 }
                                 secondary="Shipper"
@@ -138,7 +138,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {waybill.consignee}
+                                        {`${waybill.consignee.address.country}  ${waybill.consignee.address.city}  ${waybill.consignee.address.street}`}
                                     </React.Fragment>
                                 }
                                 secondary="Consignee"
@@ -146,7 +146,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                         </ListItem>
                     </div>
                 </List>
-      
+
                 {props.role === "DRIVER" ?
                     <DriverMap
                         markers={convertPointsFromBackendApi(props.waybill.points)}

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,8 +17,17 @@ import fetchFieldFromObject from "../../parts/util/fetch-field-from-object";
 import {connect} from "react-redux";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";
-import {handleRequestError, INVOICE_URL, makeRequest, MANAGER_INVOICES_URL} from "../../parts/util/request-util";
+import {
+    DISPATCHER_INVOICES_URL,
+    DRIVER_INVOICES_URL,
+    handleRequestError,
+    INVOICE_URL,
+    makeRequest,
+    MANAGER_INVOICES_URL
+} from "../../parts/util/request-util";
 import {NotAuthorized} from "../../pages/error-page/error-401";
+import useToast from "../../parts/toast-notification/useToast";
+import TextSearch from "../../parts/search/text-search";
 
 const ALIGN = "left";
 
@@ -36,35 +45,73 @@ const mapStateToProps = (store) => {
 };
 
 export const InvoicesTable = connect(mapStateToProps)((props) => {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [invoices, setInvoices] = React.useState([]);
-    const [invoice, setInvoice] = React.useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
-    const [form, setForm] = React.useState(null);
-    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
-    const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
-    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchNumber, setSearchNumber] = useState("");
+    const [ToastComponent, openToast] = useToast();
+    const [invoices, setInvoices] = useState([]);
+    const [invoice, setInvoice] = useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
+    const [form, setForm] = useState(null);
+    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = useState(false);
+    const [waybillDialogOpen, setWaybillDialogOpen] = useState(false);
+    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = useState(false);
     const role = props.role;
 
-    async function fetchInvoices(cleanupFunction) {
+    async function fetchInvoices(cleanupFunction = false,
+                                 currentPage = page,
+                                 currentRowsPerPage = rowsPerPage,
+                                 invoiceNumber = "") {
+
         if (!cleanupFunction) {
-            let response = await makeRequest("GET", MANAGER_INVOICES_URL + "?requestedPage=0&invoicesPerPage=20");
-            setInvoices(response.data.invoices);
+            let params = `?requestedPage=${currentPage}&invoicesPerPage=${currentRowsPerPage}`;
+            if (invoiceNumber !== "") {
+                params += `&number=${invoiceNumber}`;
+            }
+
+            try {
+                switch (role) {
+                    case "MANAGER":
+                        await fetchInvoicesForManager(params);
+                        break;
+                    case "DRIVER":
+                        await fetchInvoicesForDriver(params);
+                        break;
+                    case "DISPATCHER":
+                        await fetchInvoicesForDispatcher(params);
+                        break;
+                }
+            } catch (err) {
+                setInvoices([]);
+                handleRequestError(err, openToast);
+            }
         }
     }
+
+    const fetchInvoicesForManager = async (params) => {
+        let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
+        setInvoices(response.data.invoices);
+    }
+
+    const fetchInvoicesForDriver = async (params) => {
+        let response = await makeRequest("GET", `${DRIVER_INVOICES_URL}${params}`);
+        setInvoices(response.data.invoices);
+    }
+
+    const fetchInvoicesForDispatcher = async (params) => {
+        let response = await makeRequest("GET", `${DISPATCHER_INVOICES_URL}${params}`);
+        setInvoices(response.data.invoices);
+    }
+
 
     useEffect(() => {
         let cleanupFunction = false;
         fetchInvoices(cleanupFunction)
-            .catch((err) => {
-                setInvoices([]);
-                handleRequestError(err, alert); // TODO notification
-            });
         return () => cleanupFunction = true;
     }, []);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        fetchInvoices(false, newPage)
     };
 
     // TODO again two requests.
@@ -102,6 +149,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        fetchInvoices(false, 0, +event.target.value)
     };
 
     const handleClose = () => {
@@ -110,116 +158,124 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setWaybillDialogOpen(false);
     };
 
+    const handleSearchFieldChange = (searchNumber) => {
+        fetchInvoices(false, page, rowsPerPage, searchNumber);
+    };
+
+
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
-        <main>
-            <Paper className="table-paper">
-                <TableContainer className="table-container">
-                    <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
-                            Invoices
-                        </Typography>
-                    </div>
-                    <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                                <TableCell
-                                    key={"edit-delete"}
-                                    style={{minWidth: 60}}
-                                />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {invoices
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((invoice) => {
-                                    return (
-                                        <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(invoice);
-                                            }}
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={invoice.id}
+            <main>
+                <Paper className="table-paper">
+                    <TableContainer className="table-container">
+                        <div className="table-header-wrapper">
+                            <Typography variant="h5" gutterBottom>
+                                Invoices
+                            </Typography>
+                            <TextSearch
+                                onFieldChange={handleSearchFieldChange}
+                            />
+                        </div>
+                        <Table aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    {columns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                         >
-                                            {columns.map((column) => {
-                                                const value = fetchFieldFromObject(invoice, column.id);
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {column.id === 'waybillId' && value !== null
-                                                            ? <CheckIcon/>
-                                                            : value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                            <TableCell>
-                                                <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<VisibilityIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(invoice)
-                                                        }}/>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
+                                    <TableCell
+                                        key={"edit-delete"}
+                                        style={{minWidth: 60}}
+                                    />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {invoices
+                                    .map((invoice) => {
+                                        return (
+                                            <TableRow
+                                                onClick={() => {
+                                                    handleTableRowClick(invoice);
+                                                }}
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={invoice.id}
+                                            >
+                                                {columns.map((column) => {
+                                                    const value = fetchFieldFromObject(invoice, column.id);
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {column.id === 'waybillId' && value !== null
+                                                                ? <CheckIcon/>
+                                                                : value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                                <TableCell>
+                                                    <div className="table-delete-edit-div">
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<VisibilityIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(invoice)
+                                                            }}/>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
-                <TablePagination
-                    rowsPerPageOptions={[10, 20, 50]}
-                    component="div"
-                    count={invoices.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
+                    <TablePagination
+                        rowsPerPageOptions={[10, 20, 50]}
+                        component="div"
+                        count={invoices.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
 
-                <WaybillDialog
-                    invoice={invoice}
-                    open={waybillDialogOpen}
-                    onClose={() => {
-                        setWaybillDialogOpen(false);
-                        fetchInvoices(false)
-                            .catch((err) => {
-                                setInvoices([]);
-                                handleRequestError(err);
-                            });
-                    }}
-                />
+                    <WaybillDialog
+                        invoice={invoice}
+                        open={waybillDialogOpen}
+                        onClose={() => {
+                            setWaybillDialogOpen(false);
+                            fetchInvoices(false)
+                                .catch((err) => {
+                                    setInvoices([]);
+                                    handleRequestError(err);
+                                });
+                        }}
+                    />
 
-                <DialogWindow
-                    dialogTitle="Confirmation"
-                    handleClose={handleClose}
-                    openDialog={waybillFillDialogOpen}
-                    form={form}
-                />
+                    <DialogWindow
+                        dialogTitle="Confirmation"
+                        handleClose={handleClose}
+                        openDialog={waybillFillDialogOpen}
+                        form={form}
+                    />
 
-                <DialogWindow
-                    dialogTitle={"Invoice # " + invoice.number}
-                    fullWidth={true}
-                    maxWidth="xl"
-                    handleClose={handleClose}
-                    openDialog={invoiceInfoDialogOpen}
-                    form={form}
-                />
-            </Paper>
-        </main>
+                    <DialogWindow
+                        dialogTitle={"Invoice # " + invoice.number}
+                        fullWidth={true}
+                        maxWidth="xl"
+                        handleClose={handleClose}
+                        openDialog={invoiceInfoDialogOpen}
+                        form={form}
+                    />
+                </Paper>
+                {ToastComponent}
+            </main>
     );
 });
 

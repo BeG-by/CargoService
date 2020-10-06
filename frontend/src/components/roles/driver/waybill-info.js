@@ -11,8 +11,8 @@ export const WaybillInfo = (props) => {
         invoice: {id: 0, number: ""},
         auto: {id: 0, mark: "", type: ""},
         driver: {id: 0, name: "", surname: ""},
-        shipper: "",
-        consignee: "",
+        shipper: {address: {}},
+        consignee: {address: {}},
     });
 
     //TODO question. Second request ?
