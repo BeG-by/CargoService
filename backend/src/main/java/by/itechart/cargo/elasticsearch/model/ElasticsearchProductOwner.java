@@ -19,16 +19,20 @@ public class ElasticsearchProductOwner {
     @Id
     private Long id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String name;
 
     @Field(type = FieldType.Long)
     private Long clientCompanyId;
 
+    @Field(type = FieldType.Keyword)
+    private String status;
+
     public static ElasticsearchProductOwner fromProductOwner(ProductOwner productOwner) {
         return new ElasticsearchProductOwner(
                 productOwner.getId(),
                 productOwner.getName(),
-                productOwner.getClientCompany().getId());
+                productOwner.getClientCompany().getId(),
+                productOwner.getStatus().toString());
     }
 }

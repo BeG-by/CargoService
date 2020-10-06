@@ -18,7 +18,7 @@ public class ElasticsearchInvoice {
     @Id
     Long id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     String number;
 
     @Field(type = FieldType.Long)

@@ -7,10 +7,13 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface ElasticsearchProductOwnerRepository extends ElasticsearchRepository<ElasticsearchProductOwner, Long> {
-    List<ElasticsearchProductOwner> findByNameStartsWithAndClientCompanyId(String startNameStr,
-                                                                           Long clientCompanyId);
 
-    List<ElasticsearchProductOwner> findAllByNameStartsWithAndClientCompanyId(String startNameStr,
-                                                                              Long clientCompanyId,
-                                                                              Pageable pageable);
+    Long countAllByNameStartsWithAndClientCompanyIdAndStatus(String startNameStr,
+                                                             Long clientCompanyId,
+                                                             String status);
+
+    List<ElasticsearchProductOwner> findAllByNameStartsWithAndClientCompanyIdAndStatus(String startNameStr,
+                                                                                       Long clientCompanyId,
+                                                                                       String status,
+                                                                                       Pageable pageable);
 }
