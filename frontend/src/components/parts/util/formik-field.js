@@ -21,3 +21,23 @@ export default (props) => {
 
     );
 };
+
+export const FormikTextArea = (props) => {
+    const {formikProps, formikFieldName} = props;
+    return (
+        <React.Fragment>
+            <TextField
+                {...props}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                value={formikProps.values[formikFieldName]}
+                multiline
+            />
+            <br/>
+            <label className="error-message">
+                <ErrorMessage name={formikFieldName}/>
+            </label>
+        </React.Fragment>
+
+    );
+}

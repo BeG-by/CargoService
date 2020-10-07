@@ -8,7 +8,7 @@ import {Form, Formik} from "formik";
 import FormikField from "../../parts/util/formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {PasswordScheme} from "./validation-scheme";
+import {PasswordScheme} from "../../parts/validation/profile-validation";
 
 
 export default function ChangePassword(props) {
