@@ -39,6 +39,12 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         formControl: {
             marginTop: 20,
             minWidth: "100%",
+        },
+        infoPart: {
+            flexDirection: "column",
+            alignItems: "flex-start",
+            minWidth: "35%",
+            padding: 10
         }
     }));
     const classes = useStyles();
@@ -132,31 +138,9 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                     <Form>
                         <div className="info-content">
                             <div className="info-content-column">
-                                <Paper className={`table-paper`}
-                                       style={{flexDirection: "column", alignItems: "flex-start", minWidth: "35%", padding: 10}}>
+                                <Paper className={`table-paper ${classes.infoPart}`}>
                                     <FormControl className={classes.formControl}>
-                                        <InputLabel id="demo-simple-select-label">Select auto</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={selectedAuto.id}
-                                            onChange={handleAutoChange}
-                                            name={"autoId"}
-                                        >
-                                            {options.map(option => {
-                                                return (
-                                                    <MenuItem
-                                                        key={option.value}
-                                                        name={"autoId"}
-                                                        value={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                )
-                                            })}
-                                        </Select>
-                                        <label style={{color: "#f50057"}}>
-                                            <ErrorMessage name={"autoId"}/>
-                                        </label>
+                                        <AutoSelector formikProps={formProps} options={options}/>
                                     </FormControl>
 
                                     <Grid container spacing={3}>
@@ -177,7 +161,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                             />
                                         </Grid>
                                     </Grid>
-
 
                                     <TextField name="shipper"
                                                label="Shipper"
@@ -232,3 +215,35 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         </React.Fragment>
     );
 });
+
+export function AutoSelector(props) {
+    const {formikProps, options} = props;
+    return (
+        <React.Fragment>
+            <InputLabel style={{fontSize: 13}} id={"autoId_label"}>
+                Select auto
+            </InputLabel>
+            <Select
+                labelId={"autoId_label"}
+                name={"autoId"}
+                onChange={formikProps.handleChange}
+                value={formikProps.values["autoId"]}
+                fullWidth
+            >
+                {options.map(option => {
+                    return (
+                        <MenuItem
+                            key={option.value}
+                            name={"autoId"}
+                            value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    )
+                })}
+            </Select>
+            <label style={{color: "#f50057"}}>
+                <ErrorMessage name={"autoId"}/>
+            </label>
+        </React.Fragment>
+    );
+}
