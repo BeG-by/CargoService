@@ -57,22 +57,24 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
         case 'SYSADMIN':
             components.push(<ItemClientTable key="Clients"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'ADMIN':
             components.push(<ItemUserTable key="Users"/>);
             components.push(<ItemAutosTable key="Autos"/>);
+            components.push(<ItemStorages key='Storages'/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DISPATCHER':
             components.push(<ItemOwnerTable key="Product owners"/>);
             components.push(<ItemInvoices key='Invoices'/>);
             components.push(<ItemStorages key='Storages'/>);
+            components.push(<ItemAutosTable key="Autos"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DRIVER':

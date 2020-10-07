@@ -45,9 +45,9 @@ public class JwtTokenFilter extends GenericFilterBean {
 
         } catch (IllegalArgumentException e) {
             SecurityContextHolder.clearContext();
-            resp.getWriter().write("Authorization header doesn't exist or token is invalid");
+            resp.getWriter().write("Token is invalid or expired");
             ((HttpServletResponse) resp).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            log.debug("User is not authenticated: method: {}, url: {}", ((HttpServletRequest) req).getMethod(), ((HttpServletRequest) req).getRequestURI());
+            log.debug("User is not authenticated. Token is invalid or expired. Request: [{} {}]", ((HttpServletRequest) req).getMethod(), ((HttpServletRequest) req).getRequestURI());
         }
 
     }
