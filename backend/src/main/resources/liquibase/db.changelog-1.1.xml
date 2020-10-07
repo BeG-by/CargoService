@@ -32,7 +32,6 @@
             <column name="status" type="storage_status" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-            <column name="id_product_owner" type="BIGSERIAL"/>
             <column name="id_client_company" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
@@ -40,23 +39,31 @@
         </createTable>
 
         <addForeignKeyConstraint baseTableName="storage"
-                                 baseColumnNames="id_product_owner"
-                                 constraintName="fk_product_owner_storage"
-                                 referencedTableName="product_owner"
-                                 referencedColumnNames="id_product_owner"/>
-
-        <addForeignKeyConstraint baseTableName="storage"
                                  baseColumnNames="id_client_company"
                                  constraintName="fk_client_company_storage"
                                  referencedTableName="client_company"
                                  referencedColumnNames="id_client_company"/>
 
+        <addForeignKeyConstraint baseTableName="invoice"
+                                 baseColumnNames="id_shipper"
+                                 constraintName="fk_invoice_shipper"
+                                 onDelete="CASCADE"
+                                 referencedTableName="storage"
+                                 referencedColumnNames="id_storage"/>
+
+        <addForeignKeyConstraint baseTableName="invoice"
+                                 baseColumnNames="id_consignee"
+                                 constraintName="fk_invoice_consignee"
+                                 onDelete="CASCADE"
+                                 referencedTableName="storage"
+                                 referencedColumnNames="id_storage"/>
     </changeSet>
 
     <changeSet id="1.1.1" author="vladislav.mironuk">
         <!--Product-->
         <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' ,
-            'SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH')</sql>
+            'SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH')
+        </sql>
         <sql>CREATE TYPE mass_measure AS ENUM('KG','TON')</sql>
         <sql>CREATE TYPE quantity_measure AS ENUM('PIECE','BOX', 'BARREL', 'BAG')</sql>
         <sql>CREATE TYPE currency_type AS ENUM('RUB','BYN', 'EURO', 'USD')</sql>

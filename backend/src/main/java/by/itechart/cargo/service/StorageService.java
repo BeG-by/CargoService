@@ -19,5 +19,4 @@ public interface StorageService {
     void update(StorageUpdateRequest updateRequest) throws NotFoundException, AlreadyExistException;
 
     void delete(long id) throws NotFoundException;
-
 }

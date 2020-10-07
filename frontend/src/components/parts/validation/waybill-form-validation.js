@@ -44,12 +44,6 @@ export const WaybillFormValidation = Yup.object({
                 return moment(value, "yyyy-MM-DD").isSameOrBefore(moment(arrivalDate, "yyyy-MM-DD"))
             }
         ),
-    autoId: Yup.number()
-        .required("Auto is required")
-        .min(1, "Auto is required"),
-    points: Yup.number()
-        .min(1, "Control points are required")
-        .max(100, "Enough! More than 100 points! Are you crazy?")
 });
 
 export const PointFormValidation = Yup.object({

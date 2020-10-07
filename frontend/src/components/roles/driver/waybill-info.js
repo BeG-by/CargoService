@@ -10,10 +10,10 @@ export const WaybillInfo = (props) => {
         points: [],
         invoice: {id: 0, number: "", checkingUser: {}},
         auto: {id: 0, mark: "", type: ""},
-        driver: {},
+        driver: {id: 0, name: "", surname: ""},
+        shipper: {address: {}},
         checkingUser: {},
-        shipper: "",
-        consignee: "",
+        consignee: {address: {}},
     });
 
     //TODO question. Second request ?
@@ -52,8 +52,9 @@ export const WaybillInfo = (props) => {
                     invoice: {id: 0, number: "", checkingUser: {}},
                     auto: {id: 0, mark: "", type: ""},
                     driver: {id: 0, name: "", surname: ""},
-                    shipper: "",
-                    consignee: "",
+                    shipper: {address: {}},
+                    consignee: {address: {}},
+                    checkingUser: {},
                 });
                 handleRequestError(err, alert); //TODO toast
             });

@@ -1,5 +1,6 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerPaginationResponse;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerSaveRequest;
 import by.itechart.cargo.dto.model_dto.product_owner.ProductOwnerUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/owners")
@@ -27,8 +27,9 @@ public class ProductOwnerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductOwner>> productOwners() {
-        return ResponseEntity.ok(productOwnerService.findAll());
+    public ResponseEntity<ProductOwnerPaginationResponse> productOwners(@RequestParam int requestedPage,
+                                                                        @RequestParam int productOwnersPerPage) {
+        return ResponseEntity.ok(productOwnerService.findWithPagination(requestedPage, productOwnersPerPage));
     }
 
     @GetMapping("/{id}")
@@ -36,9 +37,16 @@ public class ProductOwnerController {
         return ResponseEntity.ok(productOwnerService.findById(id));
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<ProductOwnerPaginationResponse> findByNameWithPagination(@RequestParam String name,
+                                                                                   @RequestParam int requestedPage,
+                                                                                   @RequestParam int productOwnersPerPage) {
+        return ResponseEntity.ok(productOwnerService.findByName(name, requestedPage, productOwnersPerPage));
+    }
 
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody @Valid ProductOwnerUpdateRequest productOwnerUpdateRequest) throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<String> update(@RequestBody @Valid ProductOwnerUpdateRequest productOwnerUpdateRequest) throws
+            NotFoundException, AlreadyExistException {
         productOwnerService.update(productOwnerUpdateRequest);
         return ResponseEntity.ok("Product owner has been updated");
     }
@@ -50,7 +58,8 @@ public class ProductOwnerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody @Valid ProductOwnerSaveRequest productOwner) throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<String> save(@RequestBody @Valid ProductOwnerSaveRequest productOwner) throws
+            NotFoundException, AlreadyExistException {
         productOwnerService.save(productOwner);
         return ResponseEntity.ok("Product owner has been saved");
     }

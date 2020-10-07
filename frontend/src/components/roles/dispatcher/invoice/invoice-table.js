@@ -23,8 +23,6 @@ const columns = [
         label: "Registration Date",
         minWidth: 150,
     },
-    {id: "shipper", label: "Shipper", minWidth: 300},
-    {id: "consignee", label: "Consignee", minWidth: 300},
     {id: "waybillId", label: "Waybill", minWidth: 100},
 ];
 

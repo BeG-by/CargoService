@@ -1,21 +1,34 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.invoice.DataForInvoiceCreating;
+import by.itechart.cargo.dto.model_dto.invoice.InvoicePaginationResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.Invoice;
-import java.util.List;
 
 public interface InvoiceService {
 
-    List<Invoice> findAll();
+    InvoicePaginationResponse findAll(int requestedPage, int invoicesPerPage);
 
-    List<InvoiceTableResponse> findAllTableData();
+    InvoicePaginationResponse findAllForDriver(int requestedPage, int invoicesPerPage);
+
+    InvoicePaginationResponse findAllForManager(int requestedPage, int invoicesPerPage);
+
+    InvoicePaginationResponse findAllForDispatcher(int requestedPage, int invoicesPerPage);
+
+    InvoicePaginationResponse findAllByNumberStartsWith(String numberStartStr, int requestedPage, int invoicesPerPage);
+
+    InvoicePaginationResponse findAllByNumberStartsWithForDriver(String numberStartStr, int requestedPage, int invoicesPerPage);
+
+    InvoicePaginationResponse findAllByNumberStartsWithForManager(String numberStartStr, int requestedPage, int invoicesPerPage);
+
+    InvoicePaginationResponse findAllByNumberStartsWithForDispatcher(String numberStartStr, int requestedPage, int invoicesPerPage);
 
     InvoiceResponse findById(long id) throws NotFoundException;
+
+    DataForInvoiceCreating findDataForInvoiceCreating();
 
     void save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException;
 

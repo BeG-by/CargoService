@@ -51,6 +51,8 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
     const [title, setTitle] = React.useState("");
 
+    console.log(waybill)
+
     const handleClose = () => {
         setInvoiceInfoDialogOpen(false);
         setUserInfoDialogOpen(false);
@@ -196,7 +198,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                         <ListItemText
                                             primary={
                                                 <React.Fragment>
-                                                    {waybill.shipper}
+                                                    {`${waybill.shipper.address.country}  ${waybill.shipper.address.city}  ${waybill.shipper.address.street}`}
                                                 </React.Fragment>
                                             }
                                             secondary="Shipper"
@@ -209,7 +211,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                                         <ListItemText
                                             primary={
                                                 <React.Fragment>
-                                                    {waybill.consignee}
+                                                    {`${waybill.consignee.address.country}  ${waybill.consignee.address.city}  ${waybill.consignee.address.street}`}
                                                 </React.Fragment>
                                             }
                                             secondary="Consignee"

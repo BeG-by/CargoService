@@ -8,7 +8,7 @@ main {
 }
 
 .table-container {
-    max-height: 440px;
+    max-height: 700px;
     text-align: end;
 }
 
@@ -17,6 +17,14 @@ main {
     justify-content: space-between;
     align-items: center;
 }
+
+.table-header-right-part {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 350px;
+}
+
 
 .table-header-wrapper h5 {
     margin-left: 13px !important;
@@ -72,6 +80,7 @@ main {
 
 .direction-column {
     flex-direction: column;
+}
 
 #form-title {
     font-size: 1.6rem;

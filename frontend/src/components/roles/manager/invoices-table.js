@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -16,8 +16,16 @@ import fetchFieldFromObject from "../../parts/util/function-util";
 import {connect} from "react-redux";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Button from "@material-ui/core/Button";
-import {handleRequestError, INVOICE_URL, makeRequest} from "../../parts/util/request-util";
+import {
+    DISPATCHER_INVOICES_URL,
+    DRIVER_INVOICES_URL,
+    handleRequestError,
+    makeRequest,
+    MANAGER_INVOICES_URL
+} from "../../parts/util/request-util";
 import {NotAuthorized} from "../../pages/error-page/error-401";
+import useToast from "../../parts/toast-notification/useToast";
+import TextSearch from "../../parts/search/text-search";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -33,10 +41,10 @@ const SIZE = 18;
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
     {id: "status", label: "Status", minWidth: 100, align: LEFT, fontSize: SIZE},
-    {id: "date", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "registrationDate", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "shipper", label: "Shipper", minWidth: 300, align: LEFT, fontSize: SIZE},
     {id: "consignee", label: "Consignee", minWidth: 300, align: LEFT, fontSize: SIZE},
-    {id: "waybillId", label: "Waybill", minWidth: 100, align: CENTER, fontSize: SIZE}
+    {id: "waybill", label: "Waybill", minWidth: 100, align: CENTER, fontSize: SIZE}
 ];
 
 const mapStateToProps = (store) => {
@@ -45,15 +53,35 @@ const mapStateToProps = (store) => {
     }
 };
 
+
+const convertShipperAndConsigneeToStringInInvoices = (invoices) => {
+    for (let i = 0; i < invoices.length; i++) {
+        invoices[i] = convertShipperAndConsigneeToString(invoices[i]);
+    }
+    return invoices;
+}
+
+const convertShipperAndConsigneeToString = (invoice) => {
+    let shipperAddress = invoice.shipper.address;
+    let consigneeAddress = invoice.consignee.address;
+    return {
+        ...invoice,
+        shipper: `${shipperAddress.country} ${shipperAddress.city} ${shipperAddress.street}  ${shipperAddress.house}`,
+        consignee: `${consigneeAddress.country} ${consigneeAddress.city} ${consigneeAddress.street} ${consigneeAddress.house}`
+    };
+}
+
+
 export const InvoicesTable = connect(mapStateToProps)((props) => {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [invoices, setInvoices] = React.useState([]);
-    const [selectedInvoice, setSelectedInvoice] = React.useState({});
-    const [form, setForm] = React.useState(null);
-    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = React.useState(false);
-    const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
-    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = React.useState(false);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [ToastComponent, openToast] = useToast();
+    const [invoices, setInvoices] = useState([]);
+    const [invoice, setInvoice] = useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
+    const [form, setForm] = useState(null);
+    const [waybillFillDialogOpen, setWaybillFillDialogOpen] = useState(false);
+    const [waybillDialogOpen, setWaybillDialogOpen] = useState(false);
+    const [invoiceInfoDialogOpen, setInvoiceInfoDialogOpen] = useState(false);
     const role = props.role;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('status');
@@ -64,29 +92,65 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setOrderBy(property);
     };
 
-    async function fetchInvoices(cleanupFunction) {
+    async function fetchInvoices(cleanupFunction = false,
+                                 currentPage = page,
+                                 currentRowsPerPage = rowsPerPage,
+                                 invoiceNumber = "") {
+
         if (!cleanupFunction) {
-            let response = await makeRequest("GET", INVOICE_URL);
-            setInvoices(response.data);
+            let params = `?requestedPage=${currentPage}&invoicesPerPage=${currentRowsPerPage}`;
+            if (invoiceNumber !== "") {
+                params += `&number=${invoiceNumber}`;
+            }
+            try {
+                switch (role) {
+                    case "MANAGER":
+                        await fetchInvoicesForManager(params);
+                        break;
+                    case "DRIVER":
+                        await fetchInvoicesForDriver(params);
+                        break;
+                    case "DISPATCHER":
+                        await fetchInvoicesForDispatcher(params);
+                        break;
+                }
+            } catch (err) {
+                setInvoices([]);
+                handleRequestError(err, openToast);
+            }
         }
     }
+
+    const fetchInvoicesForManager = async (params) => {
+        let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
+        setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
+        console.log(response.data.invoices);
+    }
+
+    const fetchInvoicesForDriver = async (params) => {
+        let response = await makeRequest("GET", `${DRIVER_INVOICES_URL}${params}`);
+        setInvoices(response.data.invoices);
+    }
+
+    const fetchInvoicesForDispatcher = async (params) => {
+        let response = await makeRequest("GET", `${DISPATCHER_INVOICES_URL}${params}`);
+        setInvoices(response.data.invoices);
+    }
+
 
     useEffect(() => {
         let cleanupFunction = false;
         fetchInvoices(cleanupFunction)
-            .catch((err) => {
-                setInvoices([]);
-                handleRequestError(err, alert); // TODO notification
-            });
         return () => cleanupFunction = true;
-    }, []);
+    }, [role]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        fetchInvoices(false, newPage)
     };
 
     const handleTableRowClick = (invoice) => {
-        setSelectedInvoice(invoice);
+        setInvoice(invoice);
         handleInvoiceInfoOpen(invoice.id);
     };
 
@@ -104,6 +168,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        fetchInvoices(false, 0, +event.target.value)
     };
 
     const handleClose = () => {
@@ -112,11 +177,16 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setWaybillDialogOpen(false);
     };
 
+    const handleSearchFieldChange = (searchNumber) => {
+        fetchInvoices(false, page, rowsPerPage, searchNumber);
+    };
+
     const handleWaybillFillClick = (invoice) => {
-        setSelectedInvoice(invoice);
+        setInvoice(invoice);
         setForm(FillWaybillDialog(handleWaybillFormOpen, handleClose));
         setWaybillFillDialogOpen(true);
     }
+
 
     return (
         role === "UNKNOWN" ? <NotAuthorized/> :
@@ -131,6 +201,9 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     </div>
 
                     <TableContainer className="table-container">
+                        <TextSearch
+                            onFieldChange={handleSearchFieldChange}
+                        />
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
                                 firstMenu={true}
@@ -142,7 +215,6 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                             />
                             <TableBody>
                                 {stableSort(invoices, getComparator(order, orderBy))
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((invoice) => {
                                         return (
                                             <TableRow
@@ -167,7 +239,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                 }}/>
                                                         </Tooltip>
                                                         : invoice.status === "ACCEPTED"
-                                                        && invoice.waybillId === null
+                                                        && invoice.waybill === null
                                                         && role === "MANAGER"
                                                             ? <Tooltip title="Click to fill in waybill"
                                                                        arrow
@@ -196,7 +268,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                         }}/>
                                                                 </Tooltip>
                                                                 : invoice.status === "ACCEPTED"
-                                                                && invoice.waybillId !== null
+                                                                && invoice.waybill !== null
                                                                 && role === "DRIVER"
                                                                     // && invoice.checkPassage //fixme проверить возможность закрытия
                                                                     ? <Tooltip title="Click to close invoice"
@@ -223,13 +295,14 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                        minWidth: column.minWidth,
                                                                        maxWidth: column.maxWidth
                                                                    }}>
-                                                            {column.id === 'waybillId' && value !== null
+                                                            {column.id === 'waybill' && value !== null
                                                                 ? <CheckIcon/>
                                                                 : value}
                                                         </TableCell>
                                                     );
                                                 })}
                                                 <TableCell>
+
                                                     <Tooltip title="Click to see invoice info"
                                                              arrow
                                                              className="table-delete-edit-div">
@@ -241,6 +314,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                 e.stopPropagation();
                                                                 handleTableRowClick(invoice)
                                                             }}/>
+
                                                     </Tooltip>
                                                 </TableCell>
                                             </TableRow>
@@ -261,7 +335,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     />
 
                     <WaybillDialog
-                        invoice={selectedInvoice}
+                        invoice={invoice}
                         open={waybillDialogOpen}
                         onClose={() => {
                             setWaybillDialogOpen(false);
@@ -283,7 +357,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     />
 
                     <DialogWindow
-                        dialogTitle={"Invoice # " + selectedInvoice.number}
+                        dialogTitle={"Invoice # " + invoice.number}
                         fullWidth={true}
                         maxWidth="xl"
                         handleClose={handleClose}
@@ -291,6 +365,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         form={form}
                     />
                 </Paper>
+                {ToastComponent}
             </main>
     );
 });

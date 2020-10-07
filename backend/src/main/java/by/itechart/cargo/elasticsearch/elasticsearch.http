@@ -1,0 +1,23 @@
+### All (1000) product owners in elasticsearch
+GET localhost:9200/product_owner/_search?pretty=true&q=*:*&size=1000
+
+### All (1000) storages in elasticsearch
+GET localhost:9200/storage/_search?pretty=true&q=*:*&size=1000
+
+### All (1000) invoices in elasticsearch
+GET localhost:9200/invoice/_search?pretty=true&q=*:*&size=1000
+
+###  All indexes in elasticsearch
+GET localhost:9200/_aliases?pretty=true
+
+### All indexes in the table form
+GET localhost:9200/_cat/indices?v
+
+### Delete storage index
+DELETE localhost:9200/storage
+
+### Delete invoice index
+DELETE localhost:9200/invoice
+
+### Delete product_owner index
+DELETE localhost:9200/product_ower

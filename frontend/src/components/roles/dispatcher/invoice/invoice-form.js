@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FormikField from "../formik-field"
 import {Form, Formik} from "formik";
-import ItemList from "../item-list";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
 import {InvoiceFormValidation} from "./validation-shema";
@@ -10,14 +9,47 @@ import useToast from "../../../parts/toast-notification/useToast";
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
 import LibraryAddRoundedIcon from '@material-ui/icons/LibraryAddRounded';
-import {makeRequest, DRIVER_URL, INVOICE_URL, handleRequestError} from "../../../parts/util/request-util";
+import {
+    DATA_FOR_INVOICE_CREATING_URL,
+    handleRequestError,
+    INVOICE_URL,
+    makeRequest
+} from "../../../parts/util/request-util";
 import "../styles/invoice-form.css"
+import PersonSearch from "./person-search";
+import StorageSearchDialog from "./storage-search/storage-search-dialog";
+import TextField from "@material-ui/core/TextField";
 
-const EMPTY_DRIVER = {
+
+const STORAGE_TITLE_SHIPPER = "Shipper";
+const STORAGE_TITLE_CONSIGNEE = "Consignee";
+
+export const EMPTY_MANAGER = {
+    id: -1,
     name: "",
     surname: "",
     passport: "",
 };
+
+export const EMPTY_DRIVER = {
+    id: -1,
+    name: "",
+    surname: "",
+    passport: "",
+};
+
+const EMPTY_STORAGE = {
+    id: -1,
+    address: {
+        country: "",
+        city: "",
+        street: "",
+        house: "",
+        flat: "",
+    },
+    phone: "",
+    email: "",
+}
 
 const EMPTY_PRODUCT_OWNER = {
     name: "",
@@ -38,10 +70,11 @@ const EMPTY_PRODUCT = {
 
 const INIT_INVOICE_STATE = {
     number: "",
-    shipper: "",
-    consignee: "",
+    shipper: EMPTY_STORAGE,
+    consignee: EMPTY_STORAGE,
     registrationDate: "",
     driver: EMPTY_DRIVER,
+    manager: EMPTY_MANAGER,
     productOwner: EMPTY_PRODUCT_OWNER,
     products: [],
 };
@@ -58,7 +91,13 @@ const TOTAL = {
 function InvoiceForm(props) {
     const {onClose} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
+
     const [drivers, setDrivers] = useState([]);
+    const [managers, setManagers] = useState([]);
+    const [storages, setStorages] = useState([]);
+    const [storageDialogOpen, setStorageDialogOpen] = useState(false);
+    const [storageDialogTitle, setStorageDialogTitle] = useState(STORAGE_TITLE_SHIPPER)
+
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [productIndex, setProductIndex] = useState(0);
@@ -66,7 +105,7 @@ function InvoiceForm(props) {
     const [total, setTotal] = useState(TOTAL);
 
     useEffect(() => {
-        updateDriversList();
+        updateDriversAndStoragesAndManagers();
         if (props.invoiceId !== null && props.invoiceId !== undefined) {
             fetchInitInvoiceState(props.invoiceId);
         } else {
@@ -74,16 +113,45 @@ function InvoiceForm(props) {
         }
     }, [props.invoiceId, props.productOwner]);
 
+    const validateInvoice = () => {
+        if (initInvoice.consignee.id === -1) {
+            showToastComponent("Select consignee", "error");
+            return false;
+        }
+
+        if (initInvoice.shipper.id === -1) {
+            showToastComponent("Select shipper", "error");
+            return false;
+        }
+
+        if (initInvoice.driver.id === -1) {
+            showToastComponent("Select driver", "error");
+            return false;
+        }
+
+        if (initInvoice.manager.id === -1) {
+            showToastComponent("Select manager", "error");
+            return false;
+        }
+
+        return true;
+    }
+
     const handleSubmit = (values) => {
         let invoice = {};
-        invoice.invoiceNumber = values.invoiceNumber;
-        invoice.shipper = values.shipper;
-        invoice.consignee = values.consignee;
 
+        if (!validateInvoice()) {
+            return;
+        }
+
+        invoice.invoiceNumber = values.invoiceNumber;
+        invoice.shipperId = initInvoice.shipper.id;
+        invoice.consigneeId = initInvoice.consignee.id;
         invoice.productOwnerId = initInvoice.productOwner.id;
         invoice.products = initInvoice.products;
         invoice.registrationDate = initInvoice.registrationDate;
         invoice.driverId = initInvoice.driver.id;
+        invoice.managerId = initInvoice.manager.id;
         invoice.status = "REGISTERED";
 
         if (props.invoiceId !== null && props.invoiceId !== undefined) {
@@ -102,10 +170,12 @@ function InvoiceForm(props) {
         onClose();
     };
 
-    const updateDriversList = async () => {
+    const updateDriversAndStoragesAndManagers = async () => {
         try {
-            const res = await makeRequest("GET", DRIVER_URL);
-            setDrivers(res.data);
+            const res = await makeRequest("GET", DATA_FOR_INVOICE_CREATING_URL);
+            setDrivers(res.data.drivers);
+            setStorages(res.data.storages);
+            setManagers(res.data.managers);
         } catch (error) {
             setDrivers([]);
             handleRequestError(error, showToastComponent);
@@ -236,14 +306,60 @@ function InvoiceForm(props) {
         setTotal(total);
     };
 
+    const handleDriverSelect = (driver) => {
+        if (driver === null) {
+            setInitInvoice((prevState) => {
+                return {...prevState, driver: EMPTY_DRIVER};
+            })
+        } else {
+            setInitInvoice((prevState) => {
+                return {...prevState, driver: driver};
+            })
+        }
+    }
+
+    const handleManagerSelect = (manager) => {
+        if (manager === null) {
+            setInitInvoice((prevState) => {
+                return {...prevState, manager: EMPTY_DRIVER};
+            })
+        } else {
+            setInitInvoice((prevState) => {
+                return {...prevState, manager: manager};
+            })
+        }
+    }
+
+    const handleStorageSelect = (storage) => {
+        if (storage !== null) {
+            if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
+                setInitInvoice((prevState) => {
+                    return {...prevState, consignee: storage};
+                })
+            } else {
+                setInitInvoice((prevState) => {
+                    return {...prevState, shipper: storage};
+                })
+            }
+        } else {
+            if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
+                setInitInvoice((prevState) => {
+                    return {...prevState, consignee: EMPTY_STORAGE};
+                })
+            } else {
+                setInitInvoice((prevState) => {
+                    return {...prevState, shipper: EMPTY_STORAGE};
+                })
+            }
+        }
+    }
+
     return (
         <React.Fragment>
             <Formik
                 enableReinitialize
                 initialValues={{
                     invoiceNumber: initInvoice.number,
-                    shipper: initInvoice.shipper,
-                    consignee: initInvoice.consignee,
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={InvoiceFormValidation}
@@ -278,28 +394,37 @@ function InvoiceForm(props) {
                                                     label={"Invoice number"}
                                                     formikFieldName={"invoiceNumber"}
                                                 />
-
-                                                <FormikField
-                                                    formikProps={formProps}
+                                                <TextField
                                                     id={"shipper"}
-                                                    label={"Shipper"}
-                                                    formikFieldName={"shipper"}
-                                                />
-                                                <FormikField
-                                                    formikProps={formProps}
-                                                    id={"consignee"}
-                                                    label={"Consignee"}
-                                                    formikFieldName={"consignee"}
-                                                />
-                                                <ItemList
-                                                    items={drivers}
-                                                    onRowClick={(item) => {
-                                                        setInitInvoice((prevState) => {
-                                                            return {...prevState, driver: item};
-                                                        });
+                                                    value={initInvoice.shipper.email}
+                                                    onClick={() => {
+                                                        setStorageDialogTitle(STORAGE_TITLE_SHIPPER)
+                                                        setStorageDialogOpen(true)
                                                     }}
+                                                    label={"Shipper"}
+                                                    fullWidth
+                                                />
+                                                <TextField
+                                                    id={"consignee"}
+                                                    value={initInvoice.consignee.email}
+                                                    onClick={() => {
+                                                        setStorageDialogTitle(STORAGE_TITLE_CONSIGNEE)
+                                                        setStorageDialogOpen(true)
+                                                    }}
+                                                    label={"Consignee"}
+                                                    fullWidth
                                                 />
 
+                                                <PersonSearch
+                                                    persons={drivers}
+                                                    onPersonSelect={handleDriverSelect}
+                                                    label={"Drivers"}
+                                                />
+                                                <PersonSearch
+                                                    persons={managers}
+                                                    onPersonSelect={handleManagerSelect}
+                                                    label={"Managers"}
+                                                />
                                                 <div className="registration-date">
                                                     <div>
                                                         <p>Date of registration</p>
@@ -365,20 +490,20 @@ function InvoiceForm(props) {
                                 </div>
                             </div>
                             <div className="product-table-wrapper">
-                                    <div className="product-box">
-                                        <h2>Products</h2>
-                                        <Button variant="contained"
-                                                color="primary"
-                                                onClick={handleCreateNewProductClick}>
-                                            <LibraryAddRoundedIcon/>
-                                        </Button>
-                                    </div>
-                                    <ProductsTable
-                                        products={initInvoice.products}
-                                        onRowClick={handleProductTableClick}
-                                        onAddProduct={handleTotal}
-                                        onRowDelete={handleProductDelete}
-                                    />
+                                <div className="product-box">
+                                    <h2>Products</h2>
+                                    <Button variant="contained"
+                                            color="primary"
+                                            onClick={handleCreateNewProductClick}>
+                                        <LibraryAddRoundedIcon/>
+                                    </Button>
+                                </div>
+                                <ProductsTable
+                                    products={initInvoice.products}
+                                    onRowClick={handleProductTableClick}
+                                    onAddProduct={handleTotal}
+                                    onRowDelete={handleProductDelete}
+                                />
                             </div>
                         </div>
                         <div className="reg-btn">
@@ -403,9 +528,22 @@ function InvoiceForm(props) {
                 onClose={handleProductDialogClose}
             />
 
+            <StorageSearchDialog
+                open={storageDialogOpen}
+                storages={storages}
+                onSelect={handleStorageSelect}
+                title={storageDialogTitle}
+                onClose={() => setStorageDialogOpen(false)}
+                prevStorage={storageDialogTitle === STORAGE_TITLE_CONSIGNEE ?
+                    initInvoice.consignee.id === -1 ? null : initInvoice.consignee
+                    :
+                    initInvoice.shipper.id === -1 ? null : initInvoice.shipper
+                }
+            />
+
         </React.Fragment>
     );
-};
+}
 
 const mapStateToProps = (store) => {
     return {

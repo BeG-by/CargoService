@@ -249,7 +249,6 @@
             <column name="id_client_company" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
-
         </createTable>
 
         <addForeignKeyConstraint baseTableName="product_owner"
@@ -327,11 +326,11 @@
 
             <column name="close_date" type="DATE"/>
 
-            <column name="shipper" type="VARCHAR(255)">
+            <column name="id_shipper" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="consignee" type="VARCHAR(255)">
+            <column name="id_consignee" type="BIGSERIAL">
                 <constraints nullable="false"/>
             </column>
 

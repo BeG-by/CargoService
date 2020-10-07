@@ -1,8 +1,9 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.invoice.DataForInvoiceCreating;
+import by.itechart.cargo.dto.model_dto.invoice.InvoicePaginationResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceTableResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
@@ -13,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/invoices")
@@ -28,8 +28,46 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InvoiceTableResponse>> findAll() {
-        return ResponseEntity.ok(invoiceService.findAllTableData());
+    public ResponseEntity<InvoicePaginationResponse> findAll(@RequestParam int requestedPage, @RequestParam int invoicesPerPage) {
+        return ResponseEntity.ok(invoiceService.findAll(requestedPage, invoicesPerPage));
+    }
+
+    @GetMapping("/initial/data")
+    public ResponseEntity<DataForInvoiceCreating> findDataForInvoiceCreating() {
+        return ResponseEntity.ok(invoiceService.findDataForInvoiceCreating());
+    }
+
+    @GetMapping("/driver")
+    public ResponseEntity<InvoicePaginationResponse> findInvoicesForDriver(@RequestParam(required = false) String number,
+                                                                           @RequestParam int requestedPage,
+                                                                           @RequestParam int invoicesPerPage) {
+        if (number == null) {
+            return ResponseEntity.ok(invoiceService.findAllForDriver(requestedPage, invoicesPerPage));
+        } else {
+            return ResponseEntity.ok(invoiceService.findAllByNumberStartsWithForDriver(number, requestedPage, invoicesPerPage));
+        }
+    }
+
+    @GetMapping("/manager")
+    public ResponseEntity<InvoicePaginationResponse> findInvoicesForManager(@RequestParam(required = false) String number,
+                                                                            @RequestParam int requestedPage,
+                                                                            @RequestParam int invoicesPerPage) {
+        if (number == null) {
+            return ResponseEntity.ok(invoiceService.findAllForManager(requestedPage, invoicesPerPage));
+        } else {
+            return ResponseEntity.ok(invoiceService.findAllByNumberStartsWithForManager(number, requestedPage, invoicesPerPage));
+        }
+    }
+
+    @GetMapping("/dispatcher")
+    public ResponseEntity<InvoicePaginationResponse> findInvoicesForDispatcher(@RequestParam(required = false) String number,
+                                                                               @RequestParam int requestedPage,
+                                                                               @RequestParam int invoicesPerPage) {
+        if (number == null) {
+            return ResponseEntity.ok(invoiceService.findAllForDispatcher(requestedPage, invoicesPerPage));
+        } else {
+            return ResponseEntity.ok(invoiceService.findAllByNumberStartsWithForDispatcher(number, requestedPage, invoicesPerPage));
+        }
     }
 
     @GetMapping("/{id}")
