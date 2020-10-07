@@ -135,7 +135,7 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>
         <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>
         <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>
-        <OkButton content={'Edit'} handleClick={handleCloseOpen} disabled={editDisabled}/>
+        <OkButton content={'Edit'} handleClick={handleEditOpen} disabled={editDisabled}/>
     </div>
 
     return (

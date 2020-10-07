@@ -102,9 +102,6 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         setPage(newPage);
     };
 
-
-    //TODO question. Second request ?
-
     const handleTableRowClick = async (wb) => {
         let response = await makeRequest("GET", WAYBILL_URL + "/" + wb.id);
         const data = response.data;
@@ -116,7 +113,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     };
 
     const handleWaybillInfoOpen = (id) => {
-        setForm(<WaybillInfo waybillId={id}/>);
+        setForm(<WaybillInfo waybillId={id} onSave={fetchWaybills}/>);
         setActFillDialogOpen(false);
         setWaybillInfoDialogOpen(true);
     }
@@ -237,7 +234,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                     );
                                                 })}
                                                 <TableCell>
-                                                    <Tooltip title="Click to fill in act of losses"
+                                                    <Tooltip title="Click to see waybill info"
                                                              arrow
                                                              className="table-delete-edit-div">
                                                         <Button

@@ -32,7 +32,7 @@ const SIZE = 18;
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
-    {id: "status", label: "Status", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {id: "status", label: "Status", minWidth: 100, align: CENTER, fontSize: SIZE},
     {id: "date", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "shipper", label: "Shipper", minWidth: 300, align: LEFT, fontSize: SIZE},
     {id: "consignee", label: "Consignee", minWidth: 300, align: LEFT, fontSize: SIZE},
