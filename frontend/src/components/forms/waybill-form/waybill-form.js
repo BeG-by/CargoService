@@ -15,6 +15,8 @@ import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import useToast from "../../parts/toast-notification/useToast";
+import AutoSearch from "./auto-search";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -94,16 +96,19 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 openToast("Select auto", "warning")
                 return;
             }
+
+            console.log(values);
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;
-            waybill.autoId = selectedAuto.autoId;
+            waybill.autoId = selectedAuto.id;
             waybill.departureDate = values.departureDate;
             waybill.arrivalDate = values.arrivalDate;
             const saveWaybillRequest = async (waybill) => {
                 await saveWaybill(waybill);
                 props.onSave();
                 props.onClose();
+                // notification
             };
             saveWaybillRequest(waybill);
         } else {
@@ -119,16 +124,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         }
     };
     
-    // const handleAutoChange = (event) => { Marianna
-    //     event.preventDefault();
-    //     setSelectedAuto({id: event.target.value, autoType: "", mark: ""});
-    // };
-    //
-    // let options = [{value: "", label: ""}];
-    // autos.forEach(auto => {
-    //     let label = auto.mark + " " + auto.autoType;
-    //     options.push({value: auto.id, label: label});
-    // })
 
     let date = new Date();
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
@@ -181,7 +176,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="shipper"
                                                disabled={true}
-                                               defaultValue={invoice.shipper.email}
+                                               value={invoice.shipper.email}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
@@ -190,7 +185,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="consignee"
                                                disabled={true}
-                                               defaultValue={invoice.consignee.email}
+                                               value={invoice.consignee.email}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>

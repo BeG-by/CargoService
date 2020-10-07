@@ -23,7 +23,6 @@ import {
     makeRequest,
     MANAGER_INVOICES_URL
 } from "../../parts/util/request-util";
-import {NotAuthorized} from "../../pages/error-page/error-401";
 import useToast from "../../parts/toast-notification/useToast";
 import TextSearch from "../../parts/search/text-search";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
@@ -124,18 +123,17 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const fetchInvoicesForManager = async (params) => {
         let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
-        console.log(response.data.invoices);
-    }
+    };
 
     const fetchInvoicesForDriver = async (params) => {
         let response = await makeRequest("GET", `${DRIVER_INVOICES_URL}${params}`);
-        setInvoices(response.data.invoices);
-    }
+        setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
+    };
 
     const fetchInvoicesForDispatcher = async (params) => {
         let response = await makeRequest("GET", `${DISPATCHER_INVOICES_URL}${params}`);
-        setInvoices(response.data.invoices);
-    }
+        setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
+    };
 
 
     useEffect(() => {
