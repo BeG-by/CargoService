@@ -44,7 +44,7 @@ const columns = [
     {id: "registrationDate", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "shipper", label: "Shipper", minWidth: 300, align: LEFT, fontSize: SIZE},
     {id: "consignee", label: "Consignee", minWidth: 300, align: LEFT, fontSize: SIZE},
-    {id: "waybillId", label: "Waybill", minWidth: 100, align: CENTER, fontSize: SIZE}
+    {id: "waybill", label: "Waybill", minWidth: 100, align: CENTER, fontSize: SIZE}
 ];
 
 const mapStateToProps = (store) => {
@@ -102,7 +102,6 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
             if (invoiceNumber !== "") {
                 params += `&number=${invoiceNumber}`;
             }
-
             try {
                 switch (role) {
                     case "MANAGER":
@@ -125,6 +124,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const fetchInvoicesForManager = async (params) => {
         let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
+        console.log(response.data.invoices);
     }
 
     const fetchInvoicesForDriver = async (params) => {
@@ -142,7 +142,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         let cleanupFunction = false;
         fetchInvoices(cleanupFunction)
         return () => cleanupFunction = true;
-    }, []);
+    }, [role]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -239,7 +239,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                 }}/>
                                                         </Tooltip>
                                                         : invoice.status === "ACCEPTED"
-                                                        && invoice.waybillId === null
+                                                        && invoice.waybill === null
                                                         && role === "MANAGER"
                                                             ? <Tooltip title="Click to fill in waybill"
                                                                        arrow
@@ -268,7 +268,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                         }}/>
                                                                 </Tooltip>
                                                                 : invoice.status === "ACCEPTED"
-                                                                && invoice.waybillId !== null
+                                                                && invoice.waybill !== null
                                                                 && role === "DRIVER"
                                                                     // && invoice.checkPassage //fixme проверить возможность закрытия
                                                                     ? <Tooltip title="Click to close invoice"
@@ -295,7 +295,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                        minWidth: column.minWidth,
                                                                        maxWidth: column.maxWidth
                                                                    }}>
-                                                            {column.id === 'waybillId' && value !== null
+                                                            {column.id === 'waybill' && value !== null
                                                                 ? <CheckIcon/>
                                                                 : value}
                                                         </TableCell>

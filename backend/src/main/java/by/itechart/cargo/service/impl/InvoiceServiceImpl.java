@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoices;
 import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
 
 @Service
@@ -65,7 +66,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         long amountInvoices = invoiceRepository.countAllByClientCompanyId(clientCompanyId);
         List<Invoice> invoices = invoiceRepository.findAllByClientCompanyId(clientCompanyId, pageRequest);
-        return new InvoicePaginationResponse(amountInvoices, invoices);
+        return new InvoicePaginationResponse(amountInvoices, fromInvoices(invoices));
 
     }
 
@@ -76,7 +77,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndDriverId(jwtUser.getClientCompany().getId(), jwtUser.getId());
         List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndDriverId(jwtUser.getClientCompany().getId(), jwtUser.getId(), pageRequest);
-        return new InvoicePaginationResponse(amountInvoices, invoices);
+        return new InvoicePaginationResponse(amountInvoices, fromInvoices(invoices));
 
     }
 
@@ -87,7 +88,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndCheckingUserId(jwtUser.getClientCompany().getId(), jwtUser.getId());
         List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndCheckingUserId(jwtUser.getClientCompany().getId(), jwtUser.getId(), pageRequest);
-        return new InvoicePaginationResponse(amountInvoices, invoices);
+        return new InvoicePaginationResponse(amountInvoices, fromInvoices(invoices));
     }
 
     @Override
@@ -97,7 +98,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         long amountInvoices = invoiceRepository.countAllByClientCompanyIdAndRegistrationUserId(jwtUser.getClientCompany().getId(), jwtUser.getId());
         List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndRegistrationUserId(jwtUser.getClientCompany().getId(), jwtUser.getId(), pageRequest);
-        return new InvoicePaginationResponse(amountInvoices, invoices);
+        return new InvoicePaginationResponse(amountInvoices, fromInvoices(invoices));
     }
 
 
@@ -116,7 +117,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyId(numberStartStr, clientCompanyId);
         List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
 
-        return new InvoicePaginationResponse(totalAmount, invoices);
+        return new InvoicePaginationResponse(totalAmount, fromInvoices(invoices));
     }
 
     @Override
@@ -132,7 +133,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndDriverId(numberStartStr, clientCompanyId, jwtUser.getId());
         List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
-        return new InvoicePaginationResponse(totalAmount, invoices);
+        return new InvoicePaginationResponse(totalAmount, fromInvoices(invoices));
     }
 
     @Override
@@ -148,7 +149,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndCheckingUserId(numberStartStr, clientCompanyId, jwtUser.getId());
         List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
-        return new InvoicePaginationResponse(totalAmount, invoices);
+        return new InvoicePaginationResponse(totalAmount, fromInvoices(invoices));
     }
 
     @Override
@@ -164,7 +165,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Long totalAmount = elasticsearchInvoiceRepository.countAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(numberStartStr, clientCompanyId, jwtUser.getId());
         List<Invoice> invoices = invoiceRepository.findAllByIdIsIn(ids);
-        return new InvoicePaginationResponse(totalAmount, invoices);
+        return new InvoicePaginationResponse(totalAmount, fromInvoices(invoices));
     }
 
     @Override

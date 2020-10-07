@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class InvoicePaginationResponse {
     long totalInvoicesAmount;
-    List<Invoice> invoices;
+    List<InvoiceResponse> invoices;
 }

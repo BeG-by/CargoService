@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -50,6 +51,14 @@ public class InvoiceResponse {
         response.setWaybill(invoice.getWaybill());
         response.setAct(invoice.getAct());
         return response;
+    }
+
+    public static List<InvoiceResponse> fromInvoices(List<Invoice> invoices) {
+        List<InvoiceResponse> invoiceResponses = new ArrayList<>();
+        for (Invoice invoice : invoices) {
+            invoiceResponses.add(toInvoiceResponse(invoice));
+        }
+        return invoiceResponses;
     }
 
 }
