@@ -16,7 +16,8 @@ import ConfirmDeletingDialog from "../slide-dialog";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {connect} from "react-redux";
-import {NotAuthorized} from "../../../pages/error-page/error-401";
+import InfoIcon from '@material-ui/icons/Info';
+import Tooltip from "@material-ui/core/Tooltip";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -25,7 +26,8 @@ const columns = [
     {id: "mark", label: "Mark", minWidth: MIN_WIDTH, align: ALIGN},
     {id: "number", label: "Number", minWidth: MIN_WIDTH, align: ALIGN},
     {id: "type", label: "Type", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "consumption", label: "Consumption (liter / 100 km)", minWidth: 100, align: ALIGN},
+    {id: "consumption", label: "Consumption", minWidth: 100, align: ALIGN},
+    {id: "maxLoad", label: "Max load", minWidth: 100, align: ALIGN},
     {id: "dateOfIssue", label: "Date of issue", minWidth: MIN_WIDTH, align: ALIGN},
     {id: "status", label: "Status", minWidth: 100, align: ALIGN},
     {id: "edit_delete", label: "", align: "center"}
@@ -53,7 +55,10 @@ export const AutoTable = connect(mapStateToProps)((props) => {
 
     const insertAutos = () => {
         makeRequest("GET", AUTO_URL)
-            .then(res => setAutos(res.data))
+            .then(res => {
+                    setAutos(res.data);
+                }
+            )
             .catch(error => handleRequestError(error, showToastComponent))
     };
 
@@ -101,15 +106,38 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                     <Table aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
+                                {columns.map((column) => {
+
+                                    if (column.id === "consumption" || column.id === "maxLoad") {
+
+                                        const notice = column.id === "consumption" ? "Liter / 100 km" : "KG";
+
+                                        return (
+                                            <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                                style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
+                                            >
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    {column.label}
+                                                    <Tooltip title={notice} arrow>
+                                                        <InfoIcon fontSize={"small"}/>
+                                                    </Tooltip>
+                                                </div>
+                                            </TableCell>
+                                        )
+                                    }
+
+                                    return (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
+                                        >
+                                            {column.label}
+                                        </TableCell>
+                                    )
+                                })}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -140,12 +168,15 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                                                 {auto.consumption}
                                             </TableCell>
                                             <TableCell key={columns[4].id} align={columns[4].align}>
-                                                {auto.dateOfIssue}
+                                                {auto.maxLoad}
                                             </TableCell>
                                             <TableCell key={columns[5].id} align={columns[5].align}>
-                                                {auto.status}
+                                                {auto.dateOfIssue}
                                             </TableCell>
                                             <TableCell key={columns[6].id} align={columns[6].align}>
+                                                {auto.status}
+                                            </TableCell>
+                                            <TableCell key={columns[7].id} align={columns[7].align}>
                                                 <div className="table-delete-edit-div">
                                                     <Button
                                                         className="menu-table-btn"

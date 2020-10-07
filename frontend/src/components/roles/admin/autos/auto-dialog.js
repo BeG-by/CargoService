@@ -10,6 +10,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import {AUTO_URL, handleRequestError, makeRequest} from "../../../parts/util/request-util"
 import {AutoStatusSelector, AutoTypeSelector} from "./auto-selectors";
 import CustomDatePicker from "../custom-date-picker";
+import "./auto-form.css"
+import {AutoScheme} from "./validation-scheme";
 
 
 const EMPTY_AUTO = {
@@ -18,6 +20,7 @@ const EMPTY_AUTO = {
     number: "",
     autoType: "",
     consumption: "",
+    maxLoad: "",
     dateOfIssue: "",
     status: "",
 
@@ -64,12 +67,14 @@ export const AutoDialog = (props) => {
                 <DialogContent>
                     <Formik
                         enableReinitialize
+                        validationSchema={AutoScheme}
                         initialValues={{
                             id: autoId,
                             mark: auto.mark,
                             number: auto.number,
                             autoType: auto.autoType,
                             consumption: auto.consumption,
+                            maxLoad: auto.maxLoad,
                             dateOfIssue: auto.dateOfIssue,
                             status: auto.status,
                         }}
@@ -80,6 +85,7 @@ export const AutoDialog = (props) => {
                                 number: values.number,
                                 autoType: values.autoType,
                                 consumption: values.consumption,
+                                maxLoad: values.maxLoad,
                                 dateOfIssue: values.dateOfIssue,
                                 status: values.status,
                             };
@@ -111,7 +117,7 @@ export const AutoDialog = (props) => {
                     >
                         {(formProps) => {
                             return (
-                                <Form>
+                                <Form className={"auto-form"}>
                                     <FormikField
                                         formikProps={formProps}
                                         id={"mark"}
@@ -136,6 +142,12 @@ export const AutoDialog = (props) => {
                                         label={"Consumption (liter / 100 km)"}
                                         formikFieldName={"consumption"}
                                     />
+                                    <FormikField
+                                        formikProps={formProps}
+                                        id={"maxLoad"}
+                                        label={"Max load (kg)"}
+                                        formikFieldName={"maxLoad"}
+                                    />
                                     <CustomDatePicker
                                         formikProps={formProps}
                                         id={"dateOfIssue"}
@@ -150,14 +162,16 @@ export const AutoDialog = (props) => {
                                         formikFieldName={"status"}
                                     /> : ""}
 
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        type="submit"
-                                        disabled={formProps.listener}
-                                    >
-                                        {isUpdateForm ? "Update" : "Save"}
-                                    </Button>
+                                    <div className="auto-btn-wrapper">
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+                                            disabled={formProps.listener}
+                                        >
+                                            {isUpdateForm ? "Update" : "Save"}
+                                        </Button>
+                                    </div>
                                 </Form>
                             );
                         }}

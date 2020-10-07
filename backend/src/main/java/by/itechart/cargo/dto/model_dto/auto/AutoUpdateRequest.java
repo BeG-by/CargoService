@@ -29,6 +29,8 @@ public class AutoUpdateRequest {
 
     private BigDecimal consumption;
 
+    private Integer maxLoad;
+
     private LocalDate dateOfIssue;
 
     private String status;

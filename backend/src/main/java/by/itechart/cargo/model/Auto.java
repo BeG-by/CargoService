@@ -14,15 +14,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @TypeDef(name = "auto_type", typeClass = EnumTypePostgreSql.class)
 @TypeDef(name = "auto_status", typeClass = EnumTypePostgreSql.class)
 @Table(name = "auto")
-public class Auto implements Serializable, Cloneable {
+public class Auto extends BaseEntity implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +45,9 @@ public class Auto implements Serializable, Cloneable {
 
     @Column(name = "consumption", nullable = false)
     private BigDecimal consumption;
+
+    @Column(name = "max_load")
+    private Integer maxLoad;
 
     @Column(name = "issue_date")
     private LocalDate dateOfIssue;

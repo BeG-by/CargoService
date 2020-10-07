@@ -2,6 +2,7 @@ import React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
+import {ErrorMessage} from "formik";
 
 export function AutoTypeSelector(props) {
     const {formikProps, formikFieldName, id, label} = props;
@@ -19,8 +20,10 @@ export function AutoTypeSelector(props) {
                 <MenuItem value={"EURO_TRACK"}>Euro track</MenuItem>
                 <MenuItem value={"JUMBO"}>Jumbo</MenuItem>
                 <MenuItem value={"REFRIGERATOR"}>Refrigerator</MenuItem>
-                
             </Select>
+            <label className="error-message">
+                <ErrorMessage name={formikFieldName}/>
+            </label>
         </React.Fragment>
     );
 }
@@ -42,6 +45,9 @@ export function AutoStatusSelector(props) {
                 <MenuItem value={"BROKEN"}>Broken</MenuItem>
 
             </Select>
+            <label className="error-message">
+                <ErrorMessage name={formikFieldName}/>
+            </label>
         </React.Fragment>
     );
 }

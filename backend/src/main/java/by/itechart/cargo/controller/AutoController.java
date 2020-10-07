@@ -39,21 +39,21 @@ public class AutoController {
     }
 
     @PostMapping
-    @Secured({"ROLE_ADMIN" , "ROLE_OWNER"})
+    @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DISPATCHER"})
     public ResponseEntity<?> save(@RequestBody AutoSaveRequest request) throws AlreadyExistException {
         autoService.save(request);
         return ResponseEntity.ok("Auto has been saved");
     }
 
     @PutMapping
-    @Secured({"ROLE_ADMIN" , "ROLE_OWNER"})
+    @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DISPATCHER"})
     public ResponseEntity<?> update(@RequestBody AutoUpdateRequest request) throws AlreadyExistException, NotFoundException {
         autoService.update(request);
         return ResponseEntity.ok("Auto has been updated");
     }
 
     @DeleteMapping("/{id}")
-    @Secured({"ROLE_ADMIN" , "ROLE_OWNER"})
+    @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DISPATCHER"})
     public ResponseEntity<?> delete(@PathVariable long id) throws NotFoundException {
         autoService.delete(id);
         return ResponseEntity.ok("Auto has been deleted");

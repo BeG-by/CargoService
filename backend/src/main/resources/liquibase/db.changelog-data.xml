@@ -312,7 +312,7 @@
 
         <insert tableName="invoice">
             <column name="number" value="TTN321332"/>
-            <column name="status" value="REGISTERED"/>
+            <column name="status" value="ACCEPTED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="shipper" value="OOO 'Cool company', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Cool warehouse', Smolensk, Lenina 5 "/>
@@ -325,7 +325,7 @@
 
         <insert tableName="invoice">
             <column name="number" value="TTN123123123"/>
-            <column name="status" value="REJECTED"/>
+            <column name="status" value="REGISTERED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="shipper" value="OOO 'Евроопт', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Склад-7', Smolensk, Lenina 5 "/>
@@ -338,7 +338,7 @@
 
         <insert tableName="invoice">
             <column name="number" value="TTN123123222"/>
-            <column name="status" value="REJECTED"/>
+            <column name="status" value="REGISTERED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="shipper" value="OOO 'Склад-3', Minsk, Nemiga 3 "/>
             <column name="consignee" value="OOO 'Склад-7', Smolensk, Lenina 5 "/>

@@ -56,7 +56,8 @@
     <changeSet id="1.1.1" author="vladislav.mironuk">
         <!--Product-->
         <sql>CREATE TYPE product_status AS ENUM('ACCEPTED', 'VERIFIED' , 'DELIVERED' ,
-            'SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH')</sql>
+            'SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH')
+        </sql>
         <sql>CREATE TYPE mass_measure AS ENUM('KG','TON')</sql>
         <sql>CREATE TYPE quantity_measure AS ENUM('PIECE','BOX', 'BARREL', 'BAG')</sql>
         <sql>CREATE TYPE currency_type AS ENUM('RUB','BYN', 'EURO', 'USD')</sql>
@@ -174,5 +175,26 @@
                                  referencedTableName="waybill"
                                  referencedColumnNames="id_waybill"/>
     </changeSet>
+
+
+<!--    <changeSet id="1.1.4" author="eugene.begun">-->
+<!--        <addColumn-->
+<!--                schemaName="public"-->
+<!--                tableName="auto">-->
+<!--            <column-->
+<!--                    name="create_date"-->
+<!--                    type="DATE">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--            <column-->
+<!--                    name="last_modified_date"-->
+<!--                    type="DATE">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--            <column-->
+<!--                    name="delete_date"-->
+<!--                    type="DATE"/>-->
+<!--        </addColumn>-->
+<!--    </changeSet>-->
 
 </databaseChangeLog>
