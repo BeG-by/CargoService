@@ -20,7 +20,7 @@ import {DispatcherInvoiceTable} from "./roles/dispatcher/invoice/invoice-table";
 import {AutoTable} from "./roles/admin/autos/auto-table";
 import {StorageTable} from "./roles/dispatcher/storages/storages-table";
 import {ClientsTable} from "./roles/sysadmin/clients-table";
-import {ProfileInfo} from "./forms/profile-form/profile-info";
+import {ProfileInfo} from "./pages/profile-info";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
