@@ -10,11 +10,9 @@ import {ItemInvoiceList} from "../drawer-items/item-invoice-list";
 import {ItemWaybillList} from "../drawer-items/item-waybill-list";
 import {ItemInfo} from "../drawer-items/item-info";
 import {ItemContacts} from "../drawer-items/item-contacts";
-import {ItemSendMail} from "../drawer-items/item-send-mail";
 import {ItemOwnerTable} from "../drawer-items/item-product-owner";
 import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
-import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
 import {ItemProfile} from "../drawer-items/item-profile";
@@ -57,7 +55,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
         case 'SYSADMIN':
             components.push(<ItemClientTable key="Clients"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>);
+            components.push(<ItemProfile key="Profile"/>)
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'ADMIN':
@@ -65,16 +63,16 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             components.push(<ItemAutosTable key="Autos"/>);
             components.push(<ItemStorages key='Storages'/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>);
+            components.push(<ItemProfile key="Profile"/>)
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DISPATCHER':
             components.push(<ItemOwnerTable key="Product owners"/>);
-            components.push(<ItemInvoices key='Invoices'/>);
+            components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<ItemStorages key='Storages'/>);
             components.push(<ItemAutosTable key="Autos"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>);
+            components.push(<ItemProfile key="Profile"/>)
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DRIVER':
@@ -112,7 +110,6 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             <List>
                 <ItemInfo/>
                 <ItemContacts/>
-                <ItemSendMail/>
             </List>
         </Drawer>
     );

@@ -46,7 +46,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
 
     return (
         <div>
-            <Paper>
+            <Paper className="table-paper">
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>

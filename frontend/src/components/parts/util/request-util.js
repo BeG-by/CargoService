@@ -15,13 +15,11 @@ export const POINT_URL = "/v1/api/waybills/points";
 export const ACT_URL = "/v1/api/acts";
 export const CLIENTS_URL = "/v1/api/clients/";
 
-
 export const makeRequest = (method, url, data = null) => {
     return data === null ?
         axios({method: method, url: url,}) :
         axios({method: method, url: url, data: data})
 };
-
 
 export const handleRequestError = (error, callback) => {
     if (error.response && error.response.status !== 500) {

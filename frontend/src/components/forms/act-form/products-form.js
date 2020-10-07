@@ -40,10 +40,6 @@ export default (props) => {
     };
 
     const statuses = ['SPOILED', 'STOLEN', 'CONFISCATED', 'DAMAGED_IN_CRASH'];
-    const handleStatusChange = (event) => {
-        event.preventDefault();
-        setSelectedStatus(event.target.value);
-    };
 
     return (
         <Formik
@@ -59,28 +55,7 @@ export default (props) => {
             {(formProps) => (
                 <Form>
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-label">Select losses category</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={selectedStatus}
-                            onChange={handleStatusChange}
-                            name={"productStatus"}
-                        >
-                            {statuses.map(status => {
-                                return (
-                                    <MenuItem
-                                        key={status}
-                                        name={"productStatus"}
-                                        value={status}>
-                                        {status}
-                                    </MenuItem>
-                                )
-                            })}
-                        </Select>
-                        <label style={{color: "#f50057"}}>
-                            <ErrorMessage name={"productStatus"}/>
-                        </label>
+                        <ProductStatusSelector formikProps={formProps} statuses={statuses}/>
                     </FormControl>
                     <FormikField
                         formikProps={formProps}
@@ -114,3 +89,35 @@ export default (props) => {
         </Formik>
     );
 };
+
+export function ProductStatusSelector(props) {
+    const {formikProps, statuses} = props;
+    return (
+        <React.Fragment>
+            <InputLabel style={{fontSize: 13}} id={"status_label"}>
+                Select losses category
+            </InputLabel>
+            <Select
+                labelId={"status_label"}
+                name={"productStatus"}
+                onChange={formikProps.handleChange}
+                value={formikProps.values["productStatus"]}
+                fullWidth
+            >
+                {statuses.map(status => {
+                    return (
+                        <MenuItem
+                            key={status}
+                            name={"productStatus"}
+                            value={status}>
+                            {status}
+                        </MenuItem>
+                    )
+                })}
+            </Select>
+            <label style={{color: "#f50057"}}>
+                <ErrorMessage name={"productStatus"}/>
+            </label>
+        </React.Fragment>
+    );
+}

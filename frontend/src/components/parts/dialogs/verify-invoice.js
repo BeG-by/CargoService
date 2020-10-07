@@ -4,14 +4,12 @@ import {CancelButton} from "../buttons/cancel-button";
 import {updateInvoiceStatus} from "../../roles/manager/request-utils";
 import {withRouter} from "react-router-dom";
 import {Form, Formik} from "formik";
-import FormikField from "../../roles/sysadmin/formik-field";
 import Button from "@material-ui/core/Button";
 import {RejectInvoiceValidation} from "../validation/reject-invoice-validation";
 import {FillWaybillDialog} from "./fill-waybill";
 import WaybillDialog from "../../roles/manager/waybill-dialog";
-import {handleRequestError} from "../util/request-util";
 import {DialogWindow} from "./dialog";
-import Paper from "@material-ui/core/Paper";
+import {FormikTextArea} from "../util/formik-field";
 
 export const AssignVerificationInvoice = withRouter((props) => {
     const [selectedInvoice, setSelectedInvoice] = React.useState({});
@@ -94,11 +92,13 @@ export const RejectVerificationInvoice = withRouter((props) => {
     >
         {(formProps) => (
             <Form>
-                <FormikField
+                <FormikTextArea
                     formikProps={formProps}
                     id={"comment"}
                     label={"Comment"}
                     formikFieldName={"comment"}
+                    multiline
+                    variant="outlined"
                 />
                 <div className="btn-row">
                     <Button

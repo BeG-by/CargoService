@@ -1,7 +1,6 @@
 import Paper from "@material-ui/core/Paper";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
@@ -137,7 +136,7 @@ export default function InvoiceInfoContent(props) {
         <div>
             <div className="info-content">
                 <div className="info-content-column">
-                    <Paper className={`${styles.infoPiece} table-paper`} style={{minWidth: "40%"}}>
+                    <Paper className={`${styles.infoPiece} table-paper`} style={{minWidth: 400}}>
                         <List className="info-content">
                             <div className="info-content-column">
                                 <ListItem className={styles.infoPiece}>
@@ -152,40 +151,43 @@ export default function InvoiceInfoContent(props) {
                                         }
                                         secondary="Invoice status"
                                     />
+
                                     <ListItemIcon>
                                         <CheckCircleIcon/>
                                     </ListItemIcon>
-                                    <Tooltip title="Click to see Waybill info" arrow>
-                                        <ListItemText
-                                            onClick={handleWaybillInfoOpen}
-                                            primary={
-                                                <React.Fragment>
-                                                    {invoice.waybill !== null ?
-                                                        <strong style={{color: "#3f51b5"}}>Filled</strong>
-                                                        : "Empty"}
-                                                </React.Fragment>
-                                            }
-                                            secondary="Waybill"
-                                        />
-                                    </Tooltip>
+                                    <ListItemText
+                                        onClick={handleWaybillInfoOpen}
+                                        primary={
+                                            invoice.waybill === null ?
+                                                <React.Fragment>Empty</React.Fragment>
+                                                : <Tooltip className="link-pointer"
+                                                           title="Click to see Waybill info"
+                                                           arrow>
+                                                    <strong style={{color: "#3f51b5"}}>Filled</strong>
+                                                </Tooltip>
+                                        }
+                                        secondary="Waybill"
+                                    />
+
                                     <ListItemIcon>
                                         <CheckCircleIcon/>
                                     </ListItemIcon>
-                                    <Tooltip title="Click to see Act info" arrow>
-                                        <ListItemText
-                                            onClick={handleActInfoOpen}
-                                            primary={
-                                                <React.Fragment>
-                                                    {act !== null ?
-                                                        <strong style={{color: "#3f51b5"}}>Filled</strong>
-                                                        : "Empty"}
-                                                </React.Fragment>
-                                            }
-                                            secondary="Act"
-                                        />
-                                    </Tooltip>
+                                    <ListItemText
+                                        onClick={handleActInfoOpen}
+                                        primary={
+                                            act === null ?
+                                                <React.Fragment>Empty</React.Fragment>
+                                                : <Tooltip className="link-pointer"
+                                                           title="Click to see Act info"
+                                                           arrow>
+                                                    <strong style={{color: "#3f51b5"}}>Filled</strong>
+                                                </Tooltip>
+                                        }
+                                        secondary="Act"
+                                    />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
+
                                 <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <DepartureBoardIcon/>
@@ -198,6 +200,7 @@ export default function InvoiceInfoContent(props) {
                                         }
                                         secondary="Registration Date"
                                     />
+
                                     <ListItemIcon>
                                         <DepartureBoardIcon/>
                                     </ListItemIcon>
@@ -222,11 +225,12 @@ export default function InvoiceInfoContent(props) {
                                     />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
+
                                 <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <HowToRegIcon/>
                                     </ListItemIcon>
-                                    <Tooltip title="Click to see Driver info" arrow>
+                                    <Tooltip className="link-pointer" title="Click to see Driver info" arrow>
                                         <ListItemText
                                             onClick={handleDriverInfoOpen}
                                             primary={
@@ -240,10 +244,11 @@ export default function InvoiceInfoContent(props) {
                                             secondary="Driver"
                                         />
                                     </Tooltip>
+
                                     <ListItemIcon>
                                         <HowToRegIcon/>
                                     </ListItemIcon>
-                                    <Tooltip title="Click to see Dispatcher info" arrow>
+                                    <Tooltip className="link-pointer" title="Click to see Dispatcher info" arrow>
                                         <ListItemText
                                             onClick={handleDispatcherInfoOpen}
                                             primary={
@@ -257,28 +262,29 @@ export default function InvoiceInfoContent(props) {
                                             secondary="Dispatcher"
                                         />
                                     </Tooltip>
+
                                     <ListItemIcon>
                                         <HowToRegIcon/>
                                     </ListItemIcon>
-                                    <Tooltip title="Click to see Dispatcher info" arrow>
-                                        <ListItemText
-                                            onClick={handleManagerInfoOpen}
-                                            primary={
-                                                <React.Fragment>
-                                                    {invoice.checkingUser === null
-                                                        ? null
-                                                        : <strong style={{color: "#3f51b5"}}>
-                                                            {invoice.checkingUser.name + " "
-                                                            + invoice.checkingUser.surname}
-                                                        </strong>}
-                                                </React.Fragment>
-                                            }
-                                            secondary="Manager"
-                                        />
-                                    </Tooltip>
+                                    <ListItemText
+                                        onClick={handleManagerInfoOpen}
+                                        primary={
+                                            invoice.checkingUser === null ? null
+                                                : <Tooltip className="link-pointer"
+                                                           title="Click to see Manager info"
+                                                           arrow>
+                                                    <strong style={{color: "#3f51b5"}}>
+                                                        {invoice.checkingUser.name + " "
+                                                        + invoice.checkingUser.surname}
+                                                    </strong>
+                                                </Tooltip>
+                                        }
+                                        secondary="Manager"
+                                    />
                                 </ListItem>
                             </div>
                             <Divider/>
+
                             <div className="info-content-column">
                                 <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
@@ -294,6 +300,7 @@ export default function InvoiceInfoContent(props) {
                                     />
                                 </ListItem>
                                 <Divider orientation="vertical" flexItem/>
+
                                 <ListItem className={styles.infoPiece}>
                                     <ListItemIcon>
                                         <StoreIcon/>
@@ -309,6 +316,7 @@ export default function InvoiceInfoContent(props) {
                                 </ListItem>
                             </div>
                             <Divider/>
+
                             <ListItem className={styles.infoPiece}>
                                 <ListItemIcon>
                                     <CommentIcon/>
@@ -323,47 +331,49 @@ export default function InvoiceInfoContent(props) {
                                 />
                             </ListItem>
                         </List>
+
                         <div className="btn-row">
                             {props.buttons}
                         </div>
                     </Paper>
 
-                    <Paper className={`${styles.infoPiece} table-paper`} style={{maxWidth: "60%", minWidth: "55%"}}>
+                    <Paper className={`${styles.infoPiece} table-paper`}
+                           style={{maxWidth: "60%", minWidth: "55%"}}>
                         <Typography className={styles.tableHeader}>
                             CARGO LIST
                         </Typography>
-                        <TableRow className={styles.tableHeader}>
-                            <TableCell colSpan={1}>
-                                Owner :
-                            </TableCell>
-                            <TableCell align="right"
-                                       className={styles.boldText}>
-                                {invoice.productOwnerDTO.name}
-                            </TableCell>
-                            <TableCell colSpan={1}>
-                                Quantity :
-                            </TableCell>
-                            <TableCell align="right"
-                                       className={styles.boldText}>
-                                {totalQuantity + " items"}
-                            </TableCell>
-                            <TableCell colSpan={1}>
-                                Weight :
-                            </TableCell>
-                            <TableCell align="right"
-                                       className={styles.boldText}>
-                                {totalWeight + " KG"}
-                            </TableCell>
-                            <TableCell colSpan={1}>
-                                Total Sum :
-                            </TableCell>
-                            <TableCell align="right"
-                                       className={styles.boldText}>
-                                {totalSum + " " + (invoice.currency ? invoice.currency : "")}
-                            </TableCell>
-                        </TableRow>
 
                         <TableContainer style={{maxHeight: "80%"}}>
+                            <TableRow className={styles.tableHeader}>
+                                <TableCell colSpan={1}>
+                                    Owner:
+                                </TableCell>
+                                <TableCell align="right"
+                                           className={styles.boldText}>
+                                    {invoice.productOwnerDTO.name}
+                                </TableCell>
+                                <TableCell colSpan={1}>
+                                    Quantity:
+                                </TableCell>
+                                <TableCell align="right"
+                                           className={styles.boldText}>
+                                    {totalQuantity + " items"}
+                                </TableCell>
+                                <TableCell colSpan={1}>
+                                    Weight:
+                                </TableCell>
+                                <TableCell align="right"
+                                           className={styles.boldText}>
+                                    {totalWeight + " KG"}
+                                </TableCell>
+                                <TableCell colSpan={1}>
+                                    Total Sum:
+                                </TableCell>
+                                <TableCell align="right"
+                                           className={styles.boldText}>
+                                    {totalSum + " " + (invoice.currency ? invoice.currency : "")}
+                                </TableCell>
+                            </TableRow>
                             <Table stickyHeader aria-label="sticky table">
                                 <EnhancedTableHead
                                     firstMenu={false}
@@ -388,7 +398,10 @@ export default function InvoiceInfoContent(props) {
                                                         const value = fetchFieldFromObject(product, column.id);
                                                         return (
                                                             <TableCell align={column.align}
-                                                                       style={{minWidth: column.minWidth, maxWidth: column.maxWidth}}
+                                                                       style={{
+                                                                           minWidth: column.minWidth,
+                                                                           maxWidth: column.maxWidth
+                                                                       }}
                                                                        key={column.id}>
                                                                 {value}
                                                             </TableCell>
@@ -414,7 +427,6 @@ export default function InvoiceInfoContent(props) {
                     </Paper>
                 </div>
             </div>
-
 
             <DialogWindow
                 dialogTitle={"Act to invoice # " + invoice.number}

@@ -122,7 +122,9 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             <ListItemIcon>
                                 <HowToRegIcon/>
                             </ListItemIcon>
-                            <Tooltip title="Click to see Driver info" arrow>
+                            <Tooltip className="link-pointer"
+                                     title="Click to see Driver info"
+                                     arrow>
                                 <ListItemText
                                     onClick={handleDriverInfoOpen}
                                     primary={

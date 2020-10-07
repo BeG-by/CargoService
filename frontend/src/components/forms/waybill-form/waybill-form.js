@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {Form, Formik} from "formik";
+import {Formik, Form, ErrorMessage} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
+import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
-import {convertPointsToBackendApi} from "../../../map/utils";
+import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
+import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
-import AutoSearch from "./auto-search";
-import useToast from "../../parts/toast-notification/useToast";
 import Paper from "@material-ui/core/Paper";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -38,6 +40,12 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         formControl: {
             marginTop: 20,
             minWidth: "100%",
+        },
+        infoPart: {
+            flexDirection: "column",
+            alignItems: "flex-start",
+            minWidth: "35%",
+            padding: 10
         }
     }));
     const classes = useStyles();
@@ -89,12 +97,13 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;
-            waybill.autoId = selectedAuto.id;
+            waybill.autoId = selectedAuto.autoId;
             waybill.departureDate = values.departureDate;
             waybill.arrivalDate = values.arrivalDate;
             const saveWaybillRequest = async (waybill) => {
                 await saveWaybill(waybill);
                 props.onSave();
+                props.onClose();
             };
             saveWaybillRequest(waybill);
         } else {
@@ -109,6 +118,17 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             setSelectedAuto(auto);
         }
     };
+    
+    // const handleAutoChange = (event) => { Marianna
+    //     event.preventDefault();
+    //     setSelectedAuto({id: event.target.value, autoType: "", mark: ""});
+    // };
+    //
+    // let options = [{value: "", label: ""}];
+    // autos.forEach(auto => {
+    //     let label = auto.mark + " " + auto.autoType;
+    //     options.push({value: auto.id, label: label});
+    // })
 
     let date = new Date();
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
@@ -129,52 +149,79 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             >
                 {(formProps) => (
                     <Form>
-                        <FormControl className={classes.formControl}>
-                            <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
-                        </FormControl>
+                        <div className="info-content">
+                            <div className="info-content-column">
+                                <Paper className={`table-paper`}
+                                       style={{flexDirection: "column", alignItems: "flex-start", minWidth: "35%", padding: 10}}>
+                                    <FormControl className={classes.formControl}>
+                                        <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
+                                    </FormControl>
 
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                <DatePickerField
-                                    formikProps={formProps}
-                                    id="departureDate"
-                                    formikFieldName="departureDate"
-                                    label="Departure date"
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <DatePickerField
-                                    formikProps={formProps}
-                                    id="arrivalDate"
-                                    formikFieldName="arrivalDate"
-                                    label="Arrival date"
-                                />
-                            </Grid>
-                        </Grid>
-                        <br/>
-                        <ManagerMapForPointAdding
-                            markers={points}
-                            onMarkerAdd={handlePointAdd}
-                            onMarkerDelete={handlePointDelete}
-                        />
-                        <br/>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <DatePickerField
+                                                formikProps={formProps}
+                                                id="departureDate"
+                                                formikFieldName="departureDate"
+                                                label="Departure date"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <DatePickerField
+                                                formikProps={formProps}
+                                                id="arrivalDate"
+                                                formikFieldName="arrivalDate"
+                                                label="Arrival date"
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    
+                                    <TextField name="shipper"
+                                               label="Shipper"
+                                               type="text"
+                                               id="shipper"
+                                               disabled={true}
+                                               defaultValue={invoice.shipper.email}
+                                               style={{width: "100%"}}/>
 
-                        <div className='btn-row'>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
+                                    <br/><br/>
+                                    <TextField name="consignee"
+                                               label="Consignee"
+                                               type="text"
+                                               id="consignee"
+                                               disabled={true}
+                                               defaultValue={invoice.consignee.email}
+                                               style={{width: "100%"}}/>
 
-                            >
-                                Save waybill
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={props.onClose}
-                            >
-                                Cancel
-                            </Button>
+                                    <br/><br/>
+                                    <div className='btn-row'>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+
+                                        >
+                                            Save waybill
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={props.onClose}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </Paper>
+
+                                <Paper className={`table-paper`}
+                                       style={{flexDirection: "column", alignItems: "flex-start", padding: 10}}>
+                                    <ManagerMapForPointAdding
+                                        markers={points}
+                                        onMarkerAdd={handlePointAdd}
+                                        onMarkerDelete={handlePointDelete}
+                                    />
+                                </Paper>
+                            </div>
                         </div>
                     </Form>
                 )}

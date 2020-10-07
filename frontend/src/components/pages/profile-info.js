@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
-import {handleRequestError, makeRequest, USER_URL} from "../../parts/util/request-util";
-import photo from "../../../resources/images/user_no_photo.png";
+import {handleRequestError, makeRequest, USER_URL} from "../parts/util/request-util";
+import photo from "../../resources/images/user_no_photo.png";
 import Tooltip from "@material-ui/core/Tooltip";
 import {bindActionCreators} from "redux";
-import {changeUser} from "../../store/actions";
+import {changeUser} from "../store/actions";
 import {connect} from "react-redux";
 import {Typography} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import {copyUser} from "../../parts/util/function-util";
-import "./profile-style.css";
+import {copyUser} from "../parts/util/function-util";
+import "../forms/profile-form/profile-style.css";
 import Button from "@material-ui/core/Button";
-import ChangePhoneDialog from "./phone-dialog";
-import useToast from "../../parts/toast-notification/useToast";
+import ChangePhoneDialog from "../forms/profile-form/phone-dialog";
+import useToast from "../parts/toast-notification/useToast";
 import EditIcon from "@material-ui/icons/Edit";
-import ChangePassword from "./password-dialog";
-
+import ChangePassword from "../forms/profile-form/password-dialog";
+import {NotAuthorized} from "./error-page/error-401";
 
 const mapActionsToProps = (dispatch) => {
     return {
@@ -28,7 +28,6 @@ const mapStateToProps = (store) => {
     }
 };
 
-
 export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) => {
 
     const {user, changeUser} = props;
@@ -41,7 +40,6 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
     let avatar = user.photo === "" || user.photo === null ? photo : user.photo;
     let location = user.address !== null ? user.address.country + ", " + user.address.city + ", " + user.address.street + ", " + user.address.house : "";
     let role = user.roles[0][0] + user.roles[0].slice(1).toLowerCase();
-
 
     const handleChange = (e) => {
         let file = e.target.files[0];
@@ -73,13 +71,11 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
             makeRequest("PUT", USER_URL + "/photo", {photo: user.photo})
                 .then(res => changeUser(copyUser(user)))
                 .catch(error => handleRequestError(error, alert))
-
-
         };
-
     };
 
     return (
+        user.roles[0] === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="profile-container">
                 <header>

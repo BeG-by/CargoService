@@ -9,7 +9,7 @@ import FormikField from "../../parts/util/formik-field";
 import {copyUser} from "../../parts/util/function-util";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import {PhoneScheme} from "./validation-scheme";
+import {PhoneScheme} from "../../parts/validation/profile-validation";
 
 
 export default function ChangePhoneDialog(props) {

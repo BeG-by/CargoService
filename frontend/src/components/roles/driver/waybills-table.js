@@ -27,11 +27,12 @@ const CENTER = "center";
 const SIZE = 18;
 
 const columns = [
-    {id: "invoiceNumber", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
-    {id: "status", label: "Invoice status", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "registrationDate", label: "Registration Date", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "auto", label: "Auto", minWidth: 100, align: LEFT, fontSize: SIZE},
     {id: "departureDate", label: "Departure Date", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "arrivalDate", label: "Arrival Date", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "invoiceNumber", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
+    {id: "status", label: "Invoice status", minWidth: 150, align: CENTER, fontSize: SIZE},
 ];
 
 const mapStateToProps = (store) => {
@@ -101,9 +102,6 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         setPage(newPage);
     };
 
-
-    //TODO question. Second request ?
-
     const handleTableRowClick = async (wb) => {
         let response = await makeRequest("GET", WAYBILL_URL + "/" + wb.id);
         const data = response.data;
@@ -115,7 +113,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     };
 
     const handleWaybillInfoOpen = (id) => {
-        setForm(<WaybillInfo waybillId={id}/>);
+        setForm(<WaybillInfo waybillId={id} onSave={fetchWaybills}/>);
         setActFillDialogOpen(false);
         setWaybillInfoDialogOpen(true);
     }
@@ -211,14 +209,31 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                                    }}>
                                                             {column.id === "invoiceNumber"
                                                                 ? waybill.invoice.number
-                                                                : column.id === "status"
-                                                                    ? waybill.invoice.status
-                                                                    : value}
+                                                                : column.id === "registrationDate"
+                                                                    ? waybill.invoice.checkingDate
+                                                                    : column.id === "status"
+                                                                    && value === "ACCEPTED"
+                                                                        ? <div style={{
+                                                                            color: "royalblue",
+                                                                            border: "1px solid royalblue",
+                                                                            padding: 3,
+                                                                            borderRadius: 5
+                                                                        }}>{waybill.invoice.status}</div>
+                                                                        : column.id === "status"
+                                                                        && (value === "CLOSED"
+                                                                            || value === "CLOSED_WITH_ACT")
+                                                                            ? <div style={{
+                                                                                color: "black",
+                                                                                border: "1px solid black",
+                                                                                padding: 3,
+                                                                                borderRadius: 5
+                                                                            }}>{waybill.invoice.status}</div>
+                                                                            : value}
                                                         </TableCell>
                                                     );
                                                 })}
                                                 <TableCell>
-                                                    <Tooltip title="Click to fill in act of losses"
+                                                    <Tooltip title="Click to see waybill info"
                                                              arrow
                                                              className="table-delete-edit-div">
                                                         <Button

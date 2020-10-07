@@ -6,7 +6,7 @@ import {CancelButton} from "../buttons/cancel-button";
 
 export const CloseInvoice = withRouter((props) => {
     let inv = props.invoice;
-    const invoice = inv.act === null
+    const invoice = inv.act === null || inv.act === undefined
                     ? {id: inv.id, status: "CLOSED", comment: "Clean delivery"}
                     : {id: inv.id, status: "CLOSED_WITH_ACT", comment: "Delivery with losses"};
 
