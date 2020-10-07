@@ -1,6 +1,8 @@
 package by.itechart.cargo.config;
 
 
+import by.itechart.cargo.security.CustomAccessDeniedHandler;
+import by.itechart.cargo.security.CustomAuthenticationEntryPoint;
 import by.itechart.cargo.security.JwtTokenFilter;
 import by.itechart.cargo.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -43,6 +47,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public AuthenticationEntryPoint customEntryPointBean() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler customAccessDeniedHandlerBean() {
+        return new CustomAccessDeniedHandler();
+    }
+
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -55,7 +69,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/api/auth/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(jwtTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(customEntryPointBean())
+                .and()
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandlerBean());
     }
 
 }

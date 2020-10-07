@@ -300,7 +300,7 @@
     <changeSet id="insert_invoice" author="eugene.begun">
         <insert tableName="invoice">
             <column name="number" value="TTN321332"/>
-            <column name="status" value="REGISTERED"/>
+            <column name="status" value="ACCEPTED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="id_driver" value="5"/>
             <column name="id_user_registration" value="2"/>
@@ -314,7 +314,7 @@
 <!--        INVALID INVOICE todo: DELETE (not in elasticsearch)-->
         <insert tableName="invoice">
             <column name="number" value="TTN123123123"/>
-            <column name="status" value="REJECTED"/>
+            <column name="status" value="REGISTERED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="id_driver" value="5"/>
             <column name="id_user_registration" value="2"/>
@@ -328,7 +328,7 @@
 
         <insert tableName="invoice">
             <column name="number" value="TTN123123222"/>
-            <column name="status" value="REJECTED"/>
+            <column name="status" value="REGISTERED"/>
             <column name="registration_date" value="2020-01-01"/>
             <column name="id_driver" value="5"/>
             <column name="id_user_registration" value="2"/>

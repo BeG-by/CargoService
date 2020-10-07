@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 import static by.itechart.cargo.service.constant.MessageConstant.AUTO_NOT_FOUND_MESSAGE;
@@ -92,6 +93,7 @@ public class AutoServiceImpl implements AutoService {
         auto.setNumber(number);
         auto.setAutoType(Auto.AutoType.valueOf(autoRequest.getAutoType()));
         auto.setConsumption(autoRequest.getConsumption());
+        auto.setMaxLoad(autoRequest.getMaxLoad());
         auto.setDateOfIssue(autoRequest.getDateOfIssue());
         auto.setStatus(Auto.Status.valueOf(autoRequest.getStatus()));
 
@@ -105,6 +107,7 @@ public class AutoServiceImpl implements AutoService {
         autoRepository.findByIdAndClientCompanyId(autoId, companyId)
                 .map(auto -> {
                     auto.setStatus(Auto.Status.DELETED);
+                    auto.setDeleteDate(LocalDate.now());
                     log.info("Auto has been deleted {}", auto);
                     return auto;
                 })

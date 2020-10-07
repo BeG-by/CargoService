@@ -6,6 +6,7 @@ import {UserTable} from "../roles/admin/users/user-table";
 import {WaybillsTable} from "../roles/driver/waybills-table";
 import {connect} from "react-redux";
 import {NotAuthorized} from "./error-page/error-401";
+import SimpleBackdrop from "../parts/progress/progress";
 
 const mapStateToProps = (store) => {
     return {
@@ -36,7 +37,8 @@ export const MainBody = connect(mapStateToProps)((props) => {
             content = () => {return "Owner..."};
             break;
         default:
-            content = <NotAuthorized/>;
+            content = <SimpleBackdrop/>
+
     }
     return content;
 });

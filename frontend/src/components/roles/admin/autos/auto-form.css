@@ -1,0 +1,19 @@
+/* Form styles*/
+
+.auto-form {
+    width: 400px;
+}
+
+.auto-btn-wrapper {
+    text-align: center;
+}
+
+.auto-btn-wrapper button {
+    width: 110px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#autoType_label {
+    margin-top: 15px;
+}

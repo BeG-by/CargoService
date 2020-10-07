@@ -27,6 +27,8 @@ public class AutoSaveRequest {
 
     private BigDecimal consumption;
 
+    private Integer maxLoad;
+
     private LocalDate dateOfIssue;
 
     public Auto toAuto() {
@@ -35,6 +37,7 @@ public class AutoSaveRequest {
                 .number(number)
                 .autoType(Auto.AutoType.valueOf(autoType))
                 .consumption(consumption)
+                .maxLoad(maxLoad)
                 .dateOfIssue(dateOfIssue)
                 .status(Auto.Status.ACTIVE)
                 .build();

@@ -84,7 +84,6 @@ export const StorageTable = connect(mapStateToProps)((props) => {
 
 
     return (
-        role === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="table-paper">
                 <TableContainer className="table-container">

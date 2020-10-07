@@ -44,7 +44,7 @@ public class WaybillController {
         return ResponseEntity.ok(pointService.findById(id));
     }
 
-    @PutMapping("/points") // TODO
+    @PutMapping("/points")
     public ResponseEntity<String> updatePoints(@RequestBody @Valid UpdatePointsRequest request)
             throws NotFoundException {
         pointService.updatePoint(request);

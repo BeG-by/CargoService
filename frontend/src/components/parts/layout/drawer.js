@@ -14,7 +14,6 @@ import {ItemSendMail} from "../drawer-items/item-send-mail";
 import {ItemOwnerTable} from "../drawer-items/item-product-owner";
 import {connect} from "react-redux";
 import {ItemUserTable} from "../drawer-items/item-user-list";
-import {DRAWER_WIDTH} from "../styles/styles";
 import ItemInvoices from "../drawer-items/item-dispatcher-invoice-list";
 import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
@@ -22,7 +21,7 @@ import {ItemProfile} from "../drawer-items/item-profile";
 import {ItemClientTable} from "../drawer-items/item-clients";
 
 
-const drawerWidth = DRAWER_WIDTH;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -58,22 +57,24 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
         case 'SYSADMIN':
             components.push(<ItemClientTable key="Clients"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'ADMIN':
             components.push(<ItemUserTable key="Users"/>);
             components.push(<ItemAutosTable key="Autos"/>);
+            components.push(<ItemStorages key='Storages'/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DISPATCHER':
             components.push(<ItemOwnerTable key="Product owners"/>);
             components.push(<ItemInvoices key='Invoices'/>);
             components.push(<ItemStorages key='Storages'/>);
+            components.push(<ItemAutosTable key="Autos"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DRIVER':

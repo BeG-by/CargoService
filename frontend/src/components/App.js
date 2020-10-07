@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import interceptors from "../../src/security/Interceptors";
+import interceptors from "../security/interceptors";
 import {Redirect, Route, Switch} from "react-router-dom";
 import {NotFound} from "./pages/error-page/error-404";
 import {Header} from "./parts/layout/header";
@@ -21,6 +21,15 @@ import {AutoTable} from "./roles/admin/autos/auto-table";
 import {StorageTable} from "./roles/dispatcher/storages/storages-table";
 import {ClientsTable} from "./roles/sysadmin/clients-table";
 import {ProfileInfo} from "./forms/profile-form/profile-info";
+import PrivateRoute from "../security/private-route";
+import {
+    ROLE_ADMIN,
+    ROLE_DISPATCHER,
+    ROLE_MANAGER,
+    ROLE_DRIVER,
+    ROLE_OWNER,
+    ROLE_SYSADMIN
+} from "../security/private-route";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -48,21 +57,28 @@ export default function App() {
                     <Route exact path="/info" component={InfoBody}/>
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
-                    <Route exact path="/main" component={MainBody}/>
-                    <Route exact path="/profile" component={ProfileInfo}/>
-                    <Route exact path="/waybill" component={WaybillsTable}/>
-                    <Route exact path={"/invoice"} component={InvoicesTable}/>
-                    <Route exact path={"/users"} component={UserTable}/>
-                    <Route exact path={"/autos"} component={AutoTable}/>
-                    <Route exact path={"/owners"} component={ProductOwnersTable}/>
-                    <Route exact path={"/invoices"} component={DispatcherInvoiceTable}/>
-                    <Route exact path={"/storages"} component={StorageTable}/>
-                    <Route exact path={"/success"}><Redirect to={"/main"}/></Route>
-                    <Route exact path={"/clients"} component={ClientsTable}/>
+                    <PrivateRoute exact path="/main" component={MainBody}/>
+                    <PrivateRoute exact path="/profile" component={ProfileInfo}/>
+                    <PrivateRoute exact path="/waybill" component={WaybillsTable}
+                                  hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER]}/>
+                    <PrivateRoute exact path={"/invoice"} component={InvoicesTable}
+                                  hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER, ROLE_DISPATCHER]}/>
+                    <PrivateRoute exact path={"/users"} component={UserTable}
+                                  hasAnyAuthorities={[ROLE_ADMIN, ROLE_OWNER]}/>
+                    <PrivateRoute exact path={"/autos"} component={AutoTable}
+                                  hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_ADMIN, ROLE_OWNER]}/>
+                    <PrivateRoute exact path={"/owners"} component={ProductOwnersTable}
+                                  hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_OWNER]}/>
+                    <PrivateRoute exact path={"/invoices"} component={DispatcherInvoiceTable}
+                                  hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER, ROLE_DISPATCHER]}/>
+                    <PrivateRoute exact path={"/storages"} component={StorageTable}
+                                  hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_ADMIN, ROLE_OWNER]}/>
+                    <Route exact path={"/success"}><Redirect to={"/main"}/></Route> // TODO ???
+                    <PrivateRoute exact path={"/clients"} component={ClientsTable} hasAnyAuthorities={[ROLE_SYSADMIN]}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <CssBaseline/>
-                <Footer openMenu={openMenu}/>
+                <Footer/>
             </div>
         </div>
     );
