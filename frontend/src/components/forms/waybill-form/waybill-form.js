@@ -97,7 +97,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 return;
             }
 
-            console.log(values);
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;

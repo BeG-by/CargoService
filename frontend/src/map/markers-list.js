@@ -2,10 +2,12 @@ import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {ListItem} from "material-ui/List";
 import List from "@material-ui/core/List";
+import {API_KEY} from "./abstract-map";
+import {pointsComparator} from "./utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: 400,
+        windexth: 400,
         height: 500,
         overflow: 'auto',
         backgroundColor: theme.palette.background.paper,
@@ -16,8 +18,9 @@ export default function ItemList(props) {
     const classes = useStyles();
     const [geocodedPoints, setGeocodedPoints] = useState([]);
 
-    const handleRowClick = (item) => {
-        props.onRowClick(item);
+    const handleRowClick = (geocodedPoint) => {
+        console.log(geocodedPoint);
+        props.onRowClick(geocodedPoint.index);
     };
 
 
@@ -30,21 +33,12 @@ export default function ItemList(props) {
         return false;
     }
 
-
-    const getGeocodedPointByIndex = (index) => {
-        for (let geocodedPoint of geocodedPoints) {
-            if (geocodedPoint.index === index) {
-                return geocodedPoint;
-            }
-        }
-        return null;
-    }
-
-
     const geocodeNewPoint = async (point) => {
         let geocodedPoint = await geocode(point.lat, point.lng);
         await setGeocodedPoints((prevState => {
-            return [...prevState, {index: point.index, geocodedPoint}]
+            let points = prevState.slice();
+            points.push({index: point.index, geocodedPoint});
+            return points
         }))
     }
 
@@ -56,10 +50,9 @@ export default function ItemList(props) {
         }
     }
 
-
     const deleteGeocodePointByIndex = async (index) => {
         await setGeocodedPoints(prevState => {
-            let points = prevState;
+            let points = prevState.slice();
             points.splice(index, 1);
             return points;
         })
@@ -76,6 +69,7 @@ export default function ItemList(props) {
                 }
             }
             if (isPointDeleted) {
+
                 deleteGeocodePointByIndex(i);
                 break;
             }
@@ -85,11 +79,11 @@ export default function ItemList(props) {
     const geocode = async (lat, lng) => {
         try {
 
-            let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=en&key=API`)
+            let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=en&key=${API_KEY}`)
             response = await response.json();
             return response.results[0].formatted_address;
         } catch (e) {
-            alert("Cannot geocode")
+            console.log("Cannot geocode")
             return "";
         }
     }
@@ -107,17 +101,13 @@ export default function ItemList(props) {
             <div align={"center"}>
                 <h3>{props.listName}</h3>
             </div>
-            {props.items.map((item, key) => {
+            {geocodedPoints.sort(pointsComparator).map((point, key) => {
                 return (
                     <ListItem
                         align={"center"}
-                        primaryText={
-                            isPointGeocoded(item) ?
-                                `${getGeocodedPointByIndex(item.index).geocodedPoint}`
-                                :
-                                `${geocode(item.lat, item.lng)}`}
+                        primaryText={point.geocodedPoint}
                         key={key}
-                        onClick={() => handleRowClick(item)}
+                        onClick={() => handleRowClick(point)}
                     />
                 );
             })}
