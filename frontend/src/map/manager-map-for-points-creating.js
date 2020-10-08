@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {InfoWindow} from "@react-google-maps/api";
-import {dateToString} from "./utils";
 import Button from "@material-ui/core/Button";
 import AbstractMap from "./abstract-map";
 

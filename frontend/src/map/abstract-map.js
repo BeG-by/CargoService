@@ -2,7 +2,7 @@ import React, {useCallback, useRef, useState} from "react";
 import {GoogleMap, Marker, Polyline, useLoadScript} from "@react-google-maps/api";
 import MarkersList from "./markers-list.js";
 
-export const API_KEY = "KEY";
+export const API_KEY = "";
 const MAP_CONTAINER_STYLE = {width: 750, height: 500}
 const MAP_OPTIONS = {disableDefaultUI: true};
 const START_CENTER = {lat: 43.6, lng: -79};
@@ -70,7 +70,7 @@ export default function AbstractMap(props) {
             </GoogleMap>
             <MarkersList
                 items={markers}
-                listName={"Markers"}
+                listName={"Points"}
                 onRowClick={(pointIndex) => {
                     markers
                         .filter(marker => marker.index === pointIndex)
