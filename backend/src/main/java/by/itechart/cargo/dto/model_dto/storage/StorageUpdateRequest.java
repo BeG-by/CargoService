@@ -4,46 +4,43 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class StorageUpdateRequest {
 
-    //TODO validation
+    @Positive(message = "Id must be positive")
+    private long id;
 
-    private Long id;
-
-    @NotBlank
+    @NotBlank(message = "Country is mandatory")
     @Size(max = 64, message = "Country is too long (max is 64)")
     private String country;
 
-    @NotBlank
+    @NotBlank(message = "City is mandatory")
     @Size(max = 64, message = "City is too long (max is 64)")
     private String city;
 
-    @NotBlank
+    @NotBlank(message = "Street is mandatory")
     @Size(max = 64, message = "Street is too long (max is 64)")
     private String street;
 
-    @NotBlank
+    @NotBlank(message = "House is mandatory")
     @Size(max = 64, message = "House is too long (max is 64)")
     private String house;
 
     @Size(max = 64, message = "Flat is too long (max is 64)")
     private String flat;
 
-    @Column(name = "phone", nullable = false)
+    @NotBlank(message = "Phone is mandatory")
+    @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 
-    @Column(name = "email", nullable = false)
+    @Email(message = "Email is invalid")
     private String email;
 
-    private Long productOwnerId;
-
+    @Pattern(regexp = "ACTIVE|DELETED", message = "Status is invalid")
     private String status;
 
 }

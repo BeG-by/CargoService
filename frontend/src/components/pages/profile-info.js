@@ -70,17 +70,16 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
 
             makeRequest("PUT", USER_URL + "/photo", {photo: user.photo})
                 .then(res => changeUser(copyUser(user)))
-                .catch(error => handleRequestError(error, alert))
+                .catch(error => handleRequestError(error, showToastComponent))
         };
     };
 
     return (
-        user.roles[0] === "UNKNOWN" ? <NotAuthorized/> :
         <main>
             <Paper className="profile-container">
                 <header>
                     <Typography variant="h4" gutterBottom>
-                        Account
+                        Personal information
                     </Typography>
                     <div className="header-text">
                         Some information may be visible to other users of the system

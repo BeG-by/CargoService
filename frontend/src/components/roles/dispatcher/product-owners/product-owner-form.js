@@ -2,22 +2,20 @@ import React, {useState, useEffect} from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import FormikField from "../../../parts/util/formik-field";
-import DeleteIcon from '@material-ui/icons/Delete';
 import {Formik, Form} from "formik";
-import useToast from "../../../parts/toast-notification/useToast";
 import ProductOwnerTypeSelector from "./product-owner-type-selector";
 import CustomDatePicker from "../../../parts/util/custom-date-picker";
-import {ProductFormValidationSchema} from "./validation-shema";
-import {makeRequest, OWNER_URL, handleRequestError, STORAGE_URL} from "../../../parts/util/request-util";
+import {ProductFormValidationSchema} from "../../../parts/validation/product-owner-validation";
+import {makeRequest, OWNER_URL, handleRequestError} from "../../../parts/util/request-util";
 
 const EMPTY_PRODUCT_OWNER = {
     id: -1,
     name: "",
     payerAccountNumber: "",
-    type: "SP",
+    type: "",
     phone: "",
     address: {country: "", city: "", street: "", house: "", flat: ""},
-    registrationDate: new Date(),
+    registrationDate: "2000-01-01",
 };
 
 function parseProductOwner(values) {
@@ -37,9 +35,8 @@ function parseProductOwner(values) {
 }
 
 export default function ProductOwnerForm(props) {
-    const {onClose} = props;
+    const {onClose, openToast} = props;
     const [productOwner, setProductOwner] = useState(EMPTY_PRODUCT_OWNER);
-    const [toast, openToast] = useToast();
 
     useEffect(() => {
         if (props.productOwnerId !== -1) {
@@ -60,7 +57,7 @@ export default function ProductOwnerForm(props) {
     async function saveProductOwner(client) {
         try {
             await makeRequest("POST", OWNER_URL, client);
-            openToast("Product owner has been saved", "success");
+            openToast("Client has been saved", "success");
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose();
         } catch (error) {
@@ -75,17 +72,6 @@ export default function ProductOwnerForm(props) {
             openToast("Client has been updated", "success");
             setProductOwner(EMPTY_PRODUCT_OWNER);
             handleClose();
-        } catch (error) {
-            handleRequestError(error, openToast);
-        }
-    }
-
-    async function deleteProductOwner() {
-        try {
-            await makeRequest("DELETE", OWNER_URL + "/" + props.productOwnerId);
-            openToast("Client has been deleted", "success");
-            setProductOwner(EMPTY_PRODUCT_OWNER);
-            handleClose()
         } catch (error) {
             handleRequestError(error, openToast);
         }
@@ -106,16 +92,12 @@ export default function ProductOwnerForm(props) {
         }
     };
 
-    const handleDelete = () => {
-        if (props.productOwnerId !== -1) {
-            deleteProductOwner();
-        }
-    };
 
     return (
         <React.Fragment>
             <Formik
                 enableReinitialize
+                validationSchema={ProductFormValidationSchema}
                 initialValues={{
                     name: productOwner.name,
                     companyType: productOwner.type,
@@ -128,10 +110,9 @@ export default function ProductOwnerForm(props) {
                     registrationDate: productOwner.registrationDate,
                 }}
                 onSubmit={handleSubmit}
-                // validationSchema={ProductFormValidationSchema}
             >
                 {(formProps) => (
-                    <Form>
+                    <Form style={{width: 450}}>
                         <FormikField
                             formikProps={formProps}
                             id={"name"}
@@ -196,24 +177,14 @@ export default function ProductOwnerForm(props) {
                                 color="primary"
                                 type="submit"
                                 disabled={formProps.listener}
+                                style={{width: 120}}
                             >
                                 {props.productOwnerId === -1 ? "Save" : "Update"}
                             </Button>
-                            {props.productOwnerId === -1 ? "" :
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleDelete}
-                                    startIcon={<DeleteIcon/>}
-                                >
-                                    Delete
-                                </Button>
-                            }
                         </Grid>
                     </Form>
                 )}
             </Formik>
-            {toast}
         </React.Fragment>
     );
 }

@@ -15,8 +15,10 @@ import ConfirmDeletingDialog from "../../admin/slide-dialog";
 import {StorageDialog} from "./storage-dialog";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
-import {NotAuthorized} from "../../../pages/error-page/error-401";
 import {connect} from "react-redux";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import "../styles/storage-form.css";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -88,7 +90,11 @@ export const StorageTable = connect(mapStateToProps)((props) => {
             <Paper className="table-paper">
                 <TableContainer className="table-container">
                     <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                    className="table-title"
+                        >
+                            <LibraryBooksIcon/>
                             Storages
                         </Typography>
                         <Button
@@ -150,20 +156,23 @@ export const StorageTable = connect(mapStateToProps)((props) => {
                                             </TableCell>
                                             <TableCell key={columns[6].id} align={columns[6].align}>
                                                 <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<EditIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(storage)
-                                                        }}/>
+                                                    <Tooltip title="Click to edit storage"
+                                                             arrow>
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(storage)
+                                                            }}/>
+                                                    </Tooltip>
                                                     <ConfirmDeletingDialog
                                                         id={storage.id}
                                                         onDelete={deleteStorage}
                                                         text={REMOVE_TITLE}
+                                                        toolTitle="Click to delete storage"
                                                     />
-
                                                 </div>
                                             </TableCell>
                                         </TableRow>

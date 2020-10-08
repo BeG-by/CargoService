@@ -16,14 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "product_owner")
-@TypeDef(
-        name = "client_company_type",
-        typeClass = EnumTypePostgreSql.class
-)
-@TypeDef(
-        name = "product_owner_status",
-        typeClass = EnumTypePostgreSql.class
-)
+@TypeDef(name = "client_company_type", typeClass = EnumTypePostgreSql.class)
+@TypeDef(name = "product_owner_status", typeClass = EnumTypePostgreSql.class)
 @Builder
 public class ProductOwner implements Serializable, Cloneable {
 
@@ -40,7 +34,6 @@ public class ProductOwner implements Serializable, Cloneable {
     @Type(type = "client_company_type")     //todo: rename on refactor stage;
     private CompanyType type;
 
-
     @Enumerated(EnumType.STRING)
     @Type(type = "product_owner_status")
     @Column(name = "status", nullable = false)
@@ -56,7 +49,6 @@ public class ProductOwner implements Serializable, Cloneable {
     private Address address;
 
     @Column(name = "registration_date", nullable = false)
-    //todo: date validation
     private LocalDate registrationDate;
 
     @Column(name = "phone")

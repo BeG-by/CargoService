@@ -7,36 +7,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductOwnerDTO {
+public class ProductOwnerInvoiceResponse {
+
     private Long id;
-
-    @NotBlank(message = "Name is mandatory")
-    @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
-
-    //todo: enum validation
     private ProductOwner.CompanyType type;
-
-    //todo: date validation
     private LocalDate registrationDate;
-
-    @Valid
     private Address address;
-
-    @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 
-    public static ProductOwnerDTO fromProductOwner(ProductOwner productOwner) {
-        return ProductOwnerDTO.builder()
+    public static ProductOwnerInvoiceResponse fromProductOwner(ProductOwner productOwner) {
+        return ProductOwnerInvoiceResponse.builder()
                 .id(productOwner.getId())
                 .address(productOwner.getAddress())
                 .name(productOwner.getName())

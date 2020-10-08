@@ -17,22 +17,25 @@ import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {Typography} from "@material-ui/core";
 import fetchFieldFromObject from "../../../parts/util/function-util";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import {NotAuthorized} from "../../../pages/error-page/error-401";
 import {connect} from "react-redux";
 import TextSearch from "../../../parts/search/text-search";
+import ConfirmDeletingDialog from "../../admin/slide-dialog";
+import Tooltip from "@material-ui/core/Tooltip";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
 const MAX_WIDTH = 170;
 const MIN_WIDTH = 170;
 const ALIGN = "left";
+const REMOVE_TITLE = "Do you want to delete the storage ?";
 
 const columns = [
     {id: "name", label: "Name", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
     {id: "type", label: "Company type", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
     {id: "phone", label: "Phone", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "address.country", label: "Country", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "address.city", label: "City", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "address.street", label: "Street", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "address.house", label: "House", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "address.country", label: "Country", maxWidth: 150, minWidth: 150, align: ALIGN},
+    {id: "address.city", label: "City", maxWidth: 150, minWidth: 150, align: ALIGN},
+    {id: "address.street", label: "Street", maxWidth: 150, minWidth: 150, align: ALIGN},
+    {id: "address.house", label: "House", maxWidth: 100, minWidth: 100, align: ALIGN},
     {id: "registrationDate", label: "Date of registration", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
 ];
 
@@ -83,7 +86,6 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     }, []);
 
     const handleChangePage = (event, newPage) => {
-        console.log("Change page")
         setPage(newPage);
         updateTable(true, newPage);
     };
@@ -92,6 +94,17 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
         setProductOwnerDialogOpen(true);
         setSelectedProductOwnerId(productOwner.id)
     };
+
+    async function deleteProductOwner(id) {
+        try {
+            await makeRequest("DELETE", OWNER_URL + "/" + id);
+            updateTable();
+            showToastComponent("Client has been deleted", "success");
+        } catch (error) {
+            handleRequestError(error, toastComponent);
+        }
+    }
+
 
     const handleTableRowClick = (productOwner) => {
         setSelectedProductOwner(productOwner);
@@ -125,75 +138,80 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                     handleRequestError(err, showToastComponent);
                 })
         }
-    }
+    };
 
     return (
-        role === "UNKNOWN" ? <NotAuthorized/> :
-            <main>
-                <Paper className="table-paper">
-                    <TableContainer className="table-container">
-                        <div className="table-header-wrapper">
-                            <Typography variant="h5" gutterBottom>
-                                Clients
-                            </Typography>
-                            <div className="table-header-right-part">
-                                <TextSearch onFieldChange={updateTableWithSearch}/>
-                                <Button variant="contained"
-                                        color={"primary"}
-                                        onClick={handleCreateProductOwnerClick}
-                                        className="add-table-btn"
-                                >
-                                    <LibraryAddRoundedIcon/>
-                                </Button>
-                            </div>
+        <main>
+            <Paper style={{marginLeft: 20}} className="table-paper">
+                <TableContainer className="table-container">
+                    <div className="table-header-wrapper">
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                    className="table-title"
+                        >
+                            <LibraryBooksIcon/>
+                            Clients
+                        </Typography>
+                        <div className="table-header-right-part">
+                            <TextSearch onFieldChange={updateTableWithSearch}/>
+                            <Button variant="contained"
+                                    color={"primary"}
+                                    onClick={handleCreateProductOwnerClick}
+                                    className="add-table-btn"
+                            >
+                                <LibraryAddRoundedIcon/>
+                            </Button>
                         </div>
-                        <Table aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
+                    </div>
+                    <Table aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                {columns.map((column) => (
                                     <TableCell
-                                        key={"edit_product_owner"}
-                                        align={"right"}
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                     >
+                                        {column.label}
                                     </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {productOwners
-                                    .map((client) => {
-                                        return (
-                                            <TableRow
-                                                onClick={() => {
-                                                    handleTableRowClick(client);
-                                                }}
-                                                hover
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={client.id}
-                                            >
-                                                {columns.map((column) => {
-                                                    let value = fetchFieldFromObject(client, column.id);
-                                                    if (value === "SP") {
-                                                        value = "Sole proprietorship";
-                                                    } else if (value === "JP") {
-                                                        value = "Juridical person";
-                                                    }
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {value}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                                <TableCell key={"edit_product_owner"}>
-                                                    <div className="table-delete-edit-div">
+                                ))}
+                                <TableCell
+                                    key={"edit_product_owner"}
+                                    align={"right"}
+                                >
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {productOwners
+                                .map((client) => {
+                                    return (
+                                        <TableRow
+                                            onClick={() => {
+                                                handleTableRowClick(client);
+                                            }}
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={client.id}
+                                        >
+                                            {columns.map((column) => {
+                                                let value = fetchFieldFromObject(client, column.id);
+                                                if (value === "SP") {
+                                                    value = "Sole proprietorship";
+                                                } else if (value === "JP") {
+                                                    value = "Juridical person";
+                                                }
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        {value}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                            <TableCell key={"edit_product_owner"}>
+                                                <div className="table-delete-edit-div">
+                                                    <Tooltip title="Click to create new invoice"
+                                                             arrow>
                                                         <Button
                                                             color={"primary"}
                                                             className="menu-table-btn"
@@ -202,6 +220,9 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                                                                 e.stopPropagation();
                                                                 handleTableRowClick(client)
                                                             }}/>
+                                                    </Tooltip>
+                                                    <Tooltip title="Click to edit client"
+                                                             arrow>
                                                         <Button
                                                             color={"primary"}
                                                             className="menu-table-btn"
@@ -210,45 +231,53 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                                                                 e.stopPropagation();
                                                                 handleEditProductOwnerClick(client)
                                                             }}/>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                                    </Tooltip>
+                                                    <ConfirmDeletingDialog
+                                                        id={client.id}
+                                                        onDelete={deleteProductOwner}
+                                                        text={REMOVE_TITLE}
+                                                        toolTitle="Click to delete client"
+                                                    />
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-                    <TablePagination
-                        rowsPerPageOptions={[7, 15, 30]}
-                        component="div"
-                        count={amountProductOwners}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                </Paper>
-
-                {toastComponent}
-
-                <InvoiceDialog
-                    productOwner={selectedProductOwner}
-                    open={invoiceDialogOpen}
-                    onClose={() => {
-                        setInvoiceDialogOpen(false);
-                    }}
+                <TablePagination
+                    rowsPerPageOptions={[7, 15, 30]}
+                    component="div"
+                    count={amountProductOwners}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
+            </Paper>
 
-                <ProductOwnerDialog
-                    open={productOwnerDialogOpen}
-                    productOwnerId={selectedProductOwnerId}
-                    onClose={() => {
-                        setProductOwnerDialogOpen(false);
-                        setSelectedProductOwnerId(-1);
-                        updateTable();
-                    }}
-                />
-            </main>
+            {toastComponent}
+
+            <InvoiceDialog
+                productOwner={selectedProductOwner}
+                open={invoiceDialogOpen}
+                onClose={() => {
+                    setInvoiceDialogOpen(false);
+                }}
+            />
+
+            <ProductOwnerDialog
+                open={productOwnerDialogOpen}
+                productOwnerId={selectedProductOwnerId}
+                onClose={() => {
+                    setProductOwnerDialogOpen(false);
+                    setSelectedProductOwnerId(-1);
+                    updateTable();
+                }}
+                openToast={showToastComponent}
+            />
+        </main>
     );
-})
+});

@@ -36,7 +36,6 @@ public class UserSaveRequest {
     @Size(max = 64, message = "Patronymic is too long (max is 64)")
     private String patronymic;
 
-    // TODO date validation - ?
     @NotNull(message = "Birthday is mandatory")
     private LocalDate birthday;
 
@@ -44,7 +43,7 @@ public class UserSaveRequest {
     private Address address;
 
     @NotBlank(message = "Phone is mandatory")
-    @Size(max = 20, message = "Phone is too long (max is 20)")
+    @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 
     @Email(message = "Email is not valid")
@@ -55,8 +54,7 @@ public class UserSaveRequest {
     @Size(max = 64, message = "Passport is too long (max is 64)")
     private String passport;
 
-    @NotNull
-    // TODO Enum validations - ?
+    @NotEmpty(message = "Roles in mandatory")
     private Set<String> roles;
 
     public User toUser() {

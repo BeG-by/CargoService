@@ -8,6 +8,7 @@ import FormikField from "../formik-field";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {makeRequest, STORAGE_URL, handleRequestError} from "../../../parts/util/request-util"
+import {StorageScheme} from "../../../parts/validation/storage-validation";
 
 
 const EMPTY_STORAGE = {
@@ -64,6 +65,7 @@ export const StorageDialog = (props) => {
                 <DialogContent>
                     <Formik
                         enableReinitialize
+                        validationSchema={StorageScheme}
                         initialValues={{
                             id: storageId,
                             country: storage.address.country,
@@ -110,7 +112,7 @@ export const StorageDialog = (props) => {
                     >
                         {(formProps) => {
                             return (
-                                <Form>
+                                <Form className="storage-form">
                                     <FormikField
                                         formikProps={formProps}
                                         id={"country"}
@@ -147,15 +149,16 @@ export const StorageDialog = (props) => {
                                         label={"Phone"}
                                         formikFieldName={"phone"}
                                     />
-
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        type="submit"
-                                        disabled={formProps.listener}
-                                    >
-                                        {isUpdateForm ? "Update" : "Save"}
-                                    </Button>
+                                    <div className="storage-btn-wrapper">
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+                                            disabled={formProps.listener}
+                                        >
+                                            {isUpdateForm ? "Update" : "Save"}
+                                        </Button>
+                                    </div>
                                 </Form>
                             );
                         }}

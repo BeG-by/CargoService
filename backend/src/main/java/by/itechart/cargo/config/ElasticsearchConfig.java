@@ -1,4 +1,4 @@
-package by.itechart.cargo.elasticsearch;
+package by.itechart.cargo.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;

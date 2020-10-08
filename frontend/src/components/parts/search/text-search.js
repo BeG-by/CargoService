@@ -24,5 +24,6 @@ export default function TextSearch(props) {
             }}
             value={searchStr}
             onChange={handleSearchFieldChange}
+            className="search-div"
         />);
 }

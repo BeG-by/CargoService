@@ -12,7 +12,8 @@ Content-Type: application/json
 
 GET localhost:8080/v1/api/owners
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaXNwYXRjaGVyIiwicm9sZXMiOlsiRElTUEFUQ0hFUiJdLCJpYXQiOjE2MDIwMzAzMTAsImV4cCI6MTYwMjg5NDMxMH0.p_H7VercLTjeP_rscHthUYWZlny--eCl3mbyS_DYNJw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaXNwYXRjaGVyIiwicm9sZXMiOlsiRElTUEFUQ0hFUiJdLCJpYXQiOjE2MDIxMTY0MDAsImV4cCI6MTYwMjk4MDQwMH0.gauRMxqmZ93zNES2_iUVlUWFFb-pGUcQzaAARUuWNdI
+
 
 ###
 

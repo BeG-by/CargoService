@@ -16,8 +16,8 @@ import ConfirmDeletingDialog from "../slide-dialog";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {connect} from "react-redux";
-import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from "@material-ui/core/Tooltip";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -92,7 +92,11 @@ export const AutoTable = connect(mapStateToProps)((props) => {
             <Paper className="table-paper">
                 <TableContainer className="table-container">
                     <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline" }}
+                                    className="table-title"
+                        >
+                            <LibraryBooksIcon/>
                             Autos
                         </Typography>
                         <Button variant="contained"
@@ -119,9 +123,8 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                                                 style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
                                             >
                                                 <div style={{display: "flex", alignItems: "center"}}>
-                                                    {column.label}
                                                     <Tooltip title={notice} arrow>
-                                                        <InfoIcon fontSize={"small"}/>
+                                                        <div>{column.label}</div>
                                                     </Tooltip>
                                                 </div>
                                             </TableCell>
@@ -178,20 +181,23 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                                             </TableCell>
                                             <TableCell key={columns[7].id} align={columns[7].align}>
                                                 <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<EditIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(auto)
-                                                        }}/>
+                                                    <Tooltip title="Click to edit auto"
+                                                             arrow>
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(auto)
+                                                            }}/>
+                                                    </Tooltip>
                                                     <ConfirmDeletingDialog
                                                         id={auto.id}
                                                         onDelete={deleteAuto}
                                                         text={REMOVE_TITLE}
+                                                        toolTitle="Click to delete auto"
                                                     />
-
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -225,4 +231,4 @@ export const AutoTable = connect(mapStateToProps)((props) => {
             </Paper>
         </main>
     );
-})
+});

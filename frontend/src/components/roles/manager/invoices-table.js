@@ -40,7 +40,7 @@ const SIZE = 18;
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
     {id: "status", label: "Status", minWidth: 100, align: LEFT, fontSize: SIZE},
-    {id: "registrationDate", label: "Date of registration", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "registrationDate", label: "Date of registration", minWidth: 150, align: LEFT, fontSize: SIZE},
     {id: "shipper", label: "Shipper", minWidth: 300, align: LEFT, fontSize: SIZE},
     {id: "consignee", label: "Consignee", minWidth: 300, align: LEFT, fontSize: SIZE},
     {id: "waybill", label: "Waybill", minWidth: 100, align: CENTER, fontSize: SIZE}
@@ -191,16 +191,18 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                 <Paper className="table-paper main-table-paper">
                     <div className="table-header-wrapper">
                         <Typography variant="button" display="block" gutterBottom
-                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                    className="table-title"
+                        >
                             <LibraryBooksIcon/>
                             Invoices
                         </Typography>
-                    </div>
-
-                    <TableContainer className="table-container">
                         <TextSearch
                             onFieldChange={handleSearchFieldChange}
                         />
+                    </div>
+
+                    <TableContainer className="table-container">
                         <Table aria-label="sticky table">
                             <EnhancedTableHead
                                 firstMenu={true}

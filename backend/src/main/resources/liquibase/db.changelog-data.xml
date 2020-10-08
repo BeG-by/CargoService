@@ -229,6 +229,8 @@
             <column name="house" value="3"/>
             <column name="email" value="tractor@email.com"/>
             <column name="phone" value="37532338390"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="id_client_company" value="2"/>
         </insert>
 
@@ -239,6 +241,8 @@
             <column name="house" value="5"/>
             <column name="email" value="storage@email.com"/>
             <column name="phone" value="37532038990"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="id_client_company" value="2"/>
         </insert>
 
@@ -249,6 +253,8 @@
             <column name="house" value="43"/>
             <column name="email" value="storage3@email.com"/>
             <column name="phone" value="37532333990"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="id_client_company" value="2"/>
         </insert>
     </changeSet>
@@ -260,7 +266,10 @@
             <column name="number" value="AK-32133"/>
             <column name="type" value="EURO_TRACK"/>
             <column name="consumption" value="10"/>
+            <column name="max_load" value="27350"/>
             <column name="issue_date" value="2004-03-03"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="2"/>
         </insert>
@@ -270,7 +279,10 @@
             <column name="type" value="JUMBO"/>
             <column name="number" value="YK-3232"/>
             <column name="consumption" value="10.5"/>
+            <column name="max_load" value="21100"/>
             <column name="issue_date" value="2005-03-02"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="2"/>
         </insert>
@@ -280,7 +292,10 @@
             <column name="type" value="REFRIGERATOR"/>
             <column name="number" value="HK-03321"/>
             <column name="consumption" value="16.6"/>
+            <column name="max_load" value="21000"/>
             <column name="issue_date" value="2009-10-23"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="2"/>
         </insert>
@@ -290,7 +305,10 @@
             <column name="type" value="EURO_TRACK"/>
             <column name="number" value="HK-07834"/>
             <column name="consumption" value="10"/>
+            <column name="max_load" value="35000"/>
             <column name="issue_date" value="2004-03-03"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
             <column name="status" value="ACTIVE"/>
             <column name="id_client_company" value="3"/>
         </insert>

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ public class WaybillRequest {
     @Positive(message = "Id cannot be negative or zero")
     private Long invoiceId;
 
-    @NotNull(message = "Points are mandatory")
+    @NotEmpty(message = "Points are mandatory")
     @Valid
     private List<Point> points;
 
