@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from "react";
 import {GoogleMap, Marker, useLoadScript, Polyline} from "@react-google-maps/api";
-import MarkersList from "./markers-list";
+import MarkersList from "./points-list";
 
 const MAP_CONTAINER_STYLE = {width: 750, height: 500}
 const MAP_OPTIONS = {disableDefaultUI: true};
@@ -21,7 +21,7 @@ export default function AbstractMap(props) {
     const mapRef = useRef();
 
     const {isLoaded, loadError} = useLoadScript({
-        // googleMapsApiKey: "API_KEY",
+        // googleMapsApiKey: "API",
     });
 
     const handleMapLoad = useCallback((map) => {
