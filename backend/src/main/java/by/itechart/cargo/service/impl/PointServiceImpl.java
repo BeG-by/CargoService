@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static by.itechart.cargo.service.constant.MessageConstant.POINT_NOT_FOUND_MESSAGE;
 
@@ -36,7 +37,7 @@ public class PointServiceImpl implements PointService {
         final Point point = request.toPoint();
         Point foundPoint = pointRepository.findById(point.getId()).orElseThrow(() ->
                 new NotFoundException(POINT_NOT_FOUND_MESSAGE));
-        foundPoint.setPassageDate(LocalDate.now());
+        foundPoint.setPassageDate(LocalDateTime.now());
         foundPoint.setPassed(true);
         Point pointDb = pointRepository.save(foundPoint);
         log.info("Point has been passed {}", pointDb);

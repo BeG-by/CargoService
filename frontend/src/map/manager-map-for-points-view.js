@@ -19,7 +19,7 @@ export default function ManagerMapForPointsView(props) {
                 onCloseClick={() => setSelectedMarker(null)}
             >
                 {selectedMarker.isPassed ?
-                    <h2>{`Passed ${dateToString(selectedMarker.passageDate)}`}</h2>
+                    <h2>{`${dateToString(selectedMarker.passageDate)}`}</h2>
                     :
                     <h2>Not passed</h2>}
             </InfoWindow>);

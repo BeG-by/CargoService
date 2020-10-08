@@ -9,6 +9,7 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -38,7 +39,7 @@ public class Point implements Serializable, Cloneable {
 
     @PastOrPresent(message = "Passage date must be past or present date")
     @Column(name = "passage_date")
-    private LocalDate passageDate;
+    private LocalDateTime passageDate;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_waybill", nullable = false)

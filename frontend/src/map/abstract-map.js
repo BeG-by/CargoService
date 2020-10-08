@@ -1,7 +1,9 @@
 import React, {useCallback, useRef, useState} from "react";
-import {GoogleMap, Marker, useLoadScript, Polyline} from "@react-google-maps/api";
-import MarkersList from "./markers-list";
+import {GoogleMap, Marker, Polyline, useLoadScript} from "@react-google-maps/api";
+import MarkersList from "./markers-list.js";
+import {GOOGLE_MAP_API_KEY} from "../keys.json";
 
+export const API_KEY = GOOGLE_MAP_API_KEY;
 const MAP_CONTAINER_STYLE = {width: 750, height: 500}
 const MAP_OPTIONS = {disableDefaultUI: true};
 const START_CENTER = {lat: 43.6, lng: -79};
@@ -21,7 +23,7 @@ export default function AbstractMap(props) {
     const mapRef = useRef();
 
     const {isLoaded, loadError} = useLoadScript({
-        // googleMapsApiKey: "API_KEY",
+        googleMapsApiKey: API_KEY,
     });
 
     const handleMapLoad = useCallback((map) => {
@@ -69,10 +71,12 @@ export default function AbstractMap(props) {
             </GoogleMap>
             <MarkersList
                 items={markers}
-                listName={"Markers"}
-                onRowClick={(item) => setCenter(item)}
-            />
-        </div>
-    )
+                listName={"Points"}
+                onRowClick={(pointIndex) => {
+                    markers
+                        .filter(marker => marker.index === pointIndex)
+                        .map(marker => setCenter(marker))
+                }}/>
+        </div>)
 }
 
