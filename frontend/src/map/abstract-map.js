@@ -1,8 +1,9 @@
 import React, {useCallback, useRef, useState} from "react";
 import {GoogleMap, Marker, Polyline, useLoadScript} from "@react-google-maps/api";
 import MarkersList from "./markers-list.js";
+import {GOOGLE_MAP_API_KEY} from "../keys.json";
 
-export const API_KEY = "";
+export const API_KEY = GOOGLE_MAP_API_KEY;
 const MAP_CONTAINER_STYLE = {width: 750, height: 500}
 const MAP_OPTIONS = {disableDefaultUI: true};
 const START_CENTER = {lat: 43.6, lng: -79};
