@@ -30,7 +30,7 @@ export default function CustomDatePicker(props) {
                 </MuiPickersUtilsProvider>
             </div>
             <label style={{ color: "#f50057" }}>
-                <ErrorMessage name={"date"} />
+                <ErrorMessage name={formikFieldName} />
             </label>
         </React.Fragment>
     );

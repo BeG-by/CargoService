@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static by.itechart.cargo.security.RoleConstant.*;
+
 
 @RestController
 @RequestMapping("/v1/api/users")
@@ -28,26 +30,26 @@ public class UserController {
     }
 
     @GetMapping
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER})
     public List<UserResponse> findAll() {
         return userService.findAll();
     }
 
     @PostMapping
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER})
     public ResponseEntity<String> save(@RequestBody @Valid UserSaveRequest userRequest) throws AlreadyExistException {
         userService.save(userRequest);
         return ResponseEntity.ok("User has been saved");
     }
 
     @GetMapping("/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DRIVER", "ROLE_DISPATCHER", "ROLE_MANAGER"})
+    @Secured({ADMIN, OWNER, DRIVER, DISPATCHER, MANAGER})
     public ResponseEntity<UserResponse> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(userService.findById(id));
     }
 
     @PutMapping
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER})
     public ResponseEntity<String> update(@RequestBody @Valid UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
         userService.update(userUpdateRequest);
         return ResponseEntity.ok("User has been updated");
@@ -80,7 +82,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER})
     public ResponseEntity<String> delete(@PathVariable long id) throws NotFoundException {
         userService.delete(id);
         return ResponseEntity.ok("User has been deleted");

@@ -18,18 +18,20 @@ import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {connect} from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
+const FONT_SIZE = 18;
 
 const columns = [
-    {id: "mark", label: "Mark", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "number", label: "Number", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "type", label: "Type", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "consumption", label: "Consumption", minWidth: 100, align: ALIGN},
-    {id: "maxLoad", label: "Max load", minWidth: 100, align: ALIGN},
-    {id: "dateOfIssue", label: "Date of issue", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "status", label: "Status", minWidth: 100, align: ALIGN},
+    {id: "mark", label: "Mark", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "number", label: "Number", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "type", label: "Type", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "consumption", label: "Consumption", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "maxLoad", label: "Max load", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "dateOfIssue", label: "Date of issue", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "status", label: "Status", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
     {id: "edit_delete", label: "", align: "center"}
 ];
 
@@ -46,12 +48,21 @@ export const AutoTable = connect(mapStateToProps)((props) => {
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedAutoId, setSelectedAutoId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('status');
     const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the auto ?";
 
     useEffect(() => {
         insertAutos()
     }, []);
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
 
     const insertAutos = () => {
         makeRequest("GET", AUTO_URL)
@@ -93,7 +104,7 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                 <TableContainer className="table-container">
                     <div className="table-header-wrapper">
                         <Typography variant="button" display="block" gutterBottom
-                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline" }}
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
                                     className="table-title"
                         >
                             <LibraryBooksIcon/>
@@ -108,46 +119,16 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                         </Button>
                     </div>
                     <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => {
-
-                                    if (column.id === "consumption" || column.id === "maxLoad") {
-
-                                        const notice = column.id === "consumption" ? "Liter / 100 km" : "KG";
-
-                                        return (
-                                            <TableCell
-                                                key={column.id}
-                                                align={column.align}
-                                                style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                            >
-                                                <div style={{display: "flex", alignItems: "center"}}>
-                                                    <Tooltip title={notice} arrow>
-                                                        <div>{column.label}</div>
-                                                    </Tooltip>
-                                                </div>
-                                            </TableCell>
-                                        )
-                                    }
-
-                                    return (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    )
-                                })}
-                            </TableRow>
-                        </TableHead>
+                        <EnhancedTableHead
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                        />
                         <TableBody>
-                            {autos
+                            {stableSort(autos, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((auto) => {
-
                                     return (
                                         <TableRow
                                             onClick={() => {

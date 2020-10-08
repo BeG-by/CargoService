@@ -11,17 +11,26 @@ import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import fetchFieldFromObject from "../../../parts/util/function-util";
+import {Typography} from "@material-ui/core";
+import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
+
+const MIN_WIDTH = 170;
+const ALIGN = "left";
+const FONT_SIZE = 12;
+
 
 const columns = [
-    {label: "Name", id: "name", minWidth: 100, maxWidth: 100, align: "center"},
-    {label: "Mass", id: "mass", minWidth: 80, maxWidth: 80, align: "center"},
-    {label: "Mass measure", id: "massMeasure", minWidth: 80, maxWidth: 80, align: "center"},
-    {label: "Quantity", id: "quantity", minWidth: 80, maxWidth: 80, align: "center"},
-    {label: "Quantity measure", id: "quantityMeasure", minWidth: 80, maxWidth: 80, align: "center"},
-    {label: "Price", id: "price", minWidth: 100, maxWidth: 100},
-    {label: "Currency", id: "currency", minWidth: 80, maxWidth: 80, align: "center"},
-    {label: "Sum", id: "sum", minWidth: 100, maxWidth: 100, align: "center"},
-    {id: "editDelete", label: "", minWidth: 60, maxWidth: 60, align: "center"}
+    {label: "Name", id: "name", minWidth: 100, maxWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Mass", id: "mass", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Mass measure", id: "massMeasure", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Quantity", id: "quantity", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Quantity measure", id: "quantityMeasure", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Price", id: "price", minWidth: 100, maxWidth: 100, fontSize: FONT_SIZE},
+    {label: "Currency", id: "currency", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Sum", id: "sum", minWidth: 100, maxWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "editDelete", label: "", minWidth: 60, maxWidth: 60, align: ALIGN, fontSize: FONT_SIZE}
 ];
 
 
@@ -33,6 +42,8 @@ export default (props) => {
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('status');
 
     const TOTAL = {
         BYN: 0,
@@ -41,6 +52,12 @@ export default (props) => {
         RUB: 0,
         weight: 0,
         quantity: 0
+    };
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
     };
 
     useEffect(() => {
@@ -78,21 +95,14 @@ export default (props) => {
         <Paper>
             <TableContainer>
                 <Table aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            {columns.map((column) => (
-                                <TableCell
-                                    key={column.id}
-                                    align={column.align}
-                                    style={{maxWidth: column.maxWidth}}
-                                >
-                                    {column.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
+                    <EnhancedTableHead
+                        columns={columns}
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                    />
                     <TableBody>
-                        {products
+                        {stableSort(products, getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((product) => {
 

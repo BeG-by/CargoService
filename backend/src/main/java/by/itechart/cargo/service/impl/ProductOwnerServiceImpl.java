@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,7 +80,6 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
             throw new AlreadyExistException(PRODUCT_OWNER_EXIST_MESSAGE);
         }
 
-
         productOwner.setClientCompany(clientCompanyProxy);
         productOwnerRepository.save(productOwner);
         elasticSearchProductOwnerRepository.save(ElasticsearchProductOwner.fromProductOwner(productOwner));
@@ -128,6 +129,8 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
         PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
 
         Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
+
+        name = name.replaceAll(" ", "");
 
         Long totalAmount = elasticSearchProductOwnerRepository.countAllByNameStartsWithAndClientCompanyIdAndStatus
                 (name, clientCompanyId, ProductOwner.Status.ACTIVE.toString());
