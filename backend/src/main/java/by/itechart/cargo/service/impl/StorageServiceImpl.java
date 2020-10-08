@@ -62,7 +62,6 @@ public class StorageServiceImpl implements StorageService {
     public void save(StorageSaveRequest saveRequest) throws AlreadyExistException {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         final Storage storage = saveRequest.toStorage();
-        final Long productOwnerId = saveRequest.getProductOwnerId();
         final String email = saveRequest.getEmail();
 
         if (storageRepository.findByEmailAndClientCompanyId(email, companyId)
@@ -97,13 +96,6 @@ public class StorageServiceImpl implements StorageService {
             throw new AlreadyExistException(String.format("Storage with email '%s' already exists", email));
         }
 
-        if (updateRequest.getProductOwnerId() != null) {
-            final ProductOwner productOwner = productOwnerRepository
-                    .findById(updateRequest.getProductOwnerId())
-                    .filter(p -> !p.getStatus().equals(ProductOwner.Status.DELETED))
-                    .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
-
-        }
 
         storage.setAddress(new Address(
                 updateRequest.getCountry(),

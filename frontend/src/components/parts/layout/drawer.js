@@ -63,7 +63,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             components.push(<ItemAutosTable key="Autos"/>);
             components.push(<ItemStorages key='Storages'/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DISPATCHER':
@@ -72,7 +72,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             components.push(<ItemStorages key='Storages'/>);
             components.push(<ItemAutosTable key="Autos"/>);
             components.push(<Divider key='Divider'/>);
-            components.push(<ItemProfile key="Profile"/>)
+            components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DRIVER':

@@ -19,5 +19,5 @@ export const AutoScheme = Yup.object({
     maxLoad: Yup.string()
         .required("Max load is required")
         .matches(/^[0-9]+$/, "Max load must be contain only digit"),
-
+    // TODO date of issue
 });

@@ -1,6 +1,5 @@
 package by.itechart.cargo.dto.model_dto.invoice;
 
-import by.itechart.cargo.model.Invoice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

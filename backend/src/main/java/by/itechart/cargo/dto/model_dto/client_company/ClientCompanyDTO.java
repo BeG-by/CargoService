@@ -25,7 +25,6 @@ public class ClientCompanyDTO implements Serializable, Cloneable {
     @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
 
-    //TODO enums invalid message to client
     @NotNull(message = "Client company type is mandatory")
     @EnumNamePattern(regexp = "SP|JP", message = "Type must be \"SP\" or \"JP\"")
     private ClientCompany.CompanyType type;

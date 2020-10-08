@@ -96,7 +96,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 openToast("Select auto", "warning")
                 return;
             }
-
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;

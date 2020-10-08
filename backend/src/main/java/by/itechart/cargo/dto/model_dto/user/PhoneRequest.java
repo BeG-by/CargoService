@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
@@ -12,5 +13,6 @@ import javax.validation.constraints.NotBlank;
 public class PhoneRequest {
 
     @NotBlank(message = "Phone is mandatory")
+    @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 }

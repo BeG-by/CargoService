@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class ActRequest {
     @NotNull(message = "Consignee worker is mandatory")
     private String consigneeWorker;
 
-    @NotNull(message = "Lost products are mandatory")
+    @NotEmpty(message = "Lost products are mandatory")
     @Valid
     private List<ProductLostDto> products;
 

@@ -11,7 +11,7 @@ import {AUTO_URL, handleRequestError, makeRequest} from "../../../parts/util/req
 import {AutoStatusSelector, AutoTypeSelector} from "./auto-selectors";
 import CustomDatePicker from "../custom-date-picker";
 import "./auto-form.css"
-import {AutoScheme} from "./validation-scheme";
+import {AutoScheme} from "../../../parts/validation/auto-validation";
 
 
 const EMPTY_AUTO = {
@@ -21,9 +21,8 @@ const EMPTY_AUTO = {
     autoType: "",
     consumption: "",
     maxLoad: "",
-    dateOfIssue: "",
+    dateOfIssue: "2000-01-01",
     status: "",
-
 };
 
 
@@ -117,7 +116,7 @@ export const AutoDialog = (props) => {
                     >
                         {(formProps) => {
                             return (
-                                <Form className={"auto-form"}>
+                                <Form className="auto-form">
                                     <FormikField
                                         formikProps={formProps}
                                         id={"mark"}

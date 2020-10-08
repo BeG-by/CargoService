@@ -13,7 +13,6 @@ import useToast from "../../../parts/toast-notification/useToast";
 import {handleRequestError, INVOICE_URL, makeRequest} from "../../../parts/util/request-util";
 import fetchFieldFromObject from "../../../parts/util/function-util";
 import {connect} from "react-redux";
-import {NotAuthorized} from "../../../pages/error-page/error-401";
 
 const columns = [
     {id: "number", label: "Invoice #", minWidth: 100},

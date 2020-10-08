@@ -46,13 +46,13 @@ public class Auto extends BaseEntity implements Serializable, Cloneable {
     @Column(name = "consumption", nullable = false)
     private BigDecimal consumption;
 
-    @Column(name = "max_load")
+    @Column(name = "max_load", nullable = false)
     private Integer maxLoad;
 
     @Column(name = "issue_date")
     private LocalDate dateOfIssue;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     @Type(type = "auto_status")
     private Status status;

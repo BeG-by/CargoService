@@ -8,10 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class InvoiceRequest {
     @Size(max = 64, message = "Invoice number is too long (max is 64)")
     private String invoiceNumber;
 
-    //todo: validate?
+    @NotNull(message = "Date is mandatory")
     private LocalDate registrationDate;
 
     @NotNull(message = "Product owner id is mandatory")
@@ -50,7 +47,7 @@ public class InvoiceRequest {
     @Positive(message = "Manager id number is mandatory")
     private Long managerId;
 
-    @NotNull(message = "Products is mandatory")
+    @NotEmpty(message = "Products is mandatory")
     @Valid
     private List<Product> products;
 

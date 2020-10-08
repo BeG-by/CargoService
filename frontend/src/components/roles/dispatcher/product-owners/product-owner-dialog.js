@@ -7,7 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 
 export default function ProductOwnerDialog(props) {
-    const {open, onClose, productOwnerId} = props;
+    const {open, onClose, productOwnerId, openToast} = props;
 
     const handleClose = () => {
         onClose();
@@ -28,6 +28,7 @@ export default function ProductOwnerDialog(props) {
                 <ProductOwnerForm
                     productOwnerId={productOwnerId}
                     onClose={handleClose}
+                    openToast={openToast}
                 />
             </DialogContent>
         </Dialog>

@@ -18,6 +18,7 @@ import photo from "../../../resources/images/user_no_photo.png";
 import {makeRequest, USER_URL, handleRequestError} from "../util/request-util";
 import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import useToast from "../toast-notification/useToast";
 
 const drawerWidth = 240;
 
@@ -88,6 +89,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     const headerCompany = "CARGO APP";
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [toast , showToast] = useToast();
 
     const getUserInfo = async () => {
         try {
@@ -96,7 +98,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
             const clientCompany = response.data.company;
             props.changeUserAndCompany(user, clientCompany);
         } catch (error) {
-            handleRequestError(error, alert); // TODO notification
+            handleRequestError(error, showToast);
         }
     };
 
@@ -202,6 +204,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                 </div>
                 <LoginButton/>
             </Toolbar>
+            {toast}
         </AppBar>
     );
 });

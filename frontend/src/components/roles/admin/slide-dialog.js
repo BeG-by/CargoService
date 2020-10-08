@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import DeleteIcon from "@material-ui/icons/Delete";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -12,7 +13,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function ConfirmDeletingDialog(props) {
-    const {id, onDelete, text} = props;
+    const {id, onDelete, text , toolTitle} = props;
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -25,16 +26,18 @@ export default function ConfirmDeletingDialog(props) {
 
     return (
         <div>
-            <Button
-                className="menu-table-btn"
-                color={"primary"}
-                startIcon={<DeleteIcon/>}
-                onClick={(e) => {
-                    e.stopPropagation()
-                    handleClickOpen();
-                }}
-            />
-
+            <Tooltip title={toolTitle}
+                     arrow>
+                <Button
+                    className="menu-table-btn"
+                    color={"primary"}
+                    startIcon={<DeleteIcon/>}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        handleClickOpen();
+                    }}
+                />
+            </Tooltip>
             <Dialog
                 open={open}
                 TransitionComponent={Transition}

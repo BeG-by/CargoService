@@ -44,7 +44,7 @@ main {
     border-color: #3f51b5;
     border-width: 1px;
     border-style: solid;
-    margin-bottom: 20px;
+    margin-bottom: 80px;
     padding: 5px;
 }
 
@@ -70,6 +70,13 @@ main {
     color: #3f51b5;
 }
 
+.search-div {
+    margin-right: 25px !important;
+}
+
+.table-title {
+    color: #3f51b5;
+}
 
 /* document info*/
 

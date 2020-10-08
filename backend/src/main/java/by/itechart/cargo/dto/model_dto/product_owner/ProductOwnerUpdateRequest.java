@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProductOwnerUpdateRequest implements Serializable, Cloneable {
 
-    @NotNull
     @Positive
     private Long id;
 
@@ -23,15 +22,17 @@ public class ProductOwnerUpdateRequest implements Serializable, Cloneable {
     @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
 
-    @Pattern(regexp = "SP|JP")
+    @NotNull(message = "Company type is mandatory")
+    @Pattern(regexp = "SP|JP", message = "Company type must be \"SP\" or \"JP\"")
     private String type;
 
     @Valid
     private Address address;
 
-    //todo: date validation
+    @NotNull(message = "Registration date is mandatory")
     private LocalDate registrationDate;
 
+    @NotBlank(message = "Phone is mandatory")
     @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 }

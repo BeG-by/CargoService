@@ -1,0 +1,13 @@
+.storage-form {
+    width: 400px;
+}
+
+.storage-btn-wrapper {
+    text-align: center;
+}
+
+.storage-btn-wrapper button {
+    width: 110px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
