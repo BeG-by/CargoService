@@ -2,7 +2,7 @@ export function dateToString(date) {
     if (date === null) {
         return null;
     }
-    return `${date.toISOString().slice(0, 10)}`; //${date.getHours()}:${date.getMinutes()}
+    return `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}`
 }
 
 export function convertPointsToBackendApi(points) {
