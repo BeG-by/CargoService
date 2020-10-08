@@ -91,4 +91,12 @@ public class WaybillServiceImpl implements WaybillService {
         log.info("Waybill has been saved {}", waybillDb);
     }
 
+    @Override
+    public Waybill findByStatusAndDriverId() {
+        final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
+        final Long companyId = currentUser.getClientCompany().getId();
+        final Long driverId = currentUser.getId();
+        return waybillRepository.findByStatusAndDriverIdY(driverId, companyId);
+    }
+
 }

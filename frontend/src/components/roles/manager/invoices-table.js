@@ -32,6 +32,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import {countTotalWeight} from "../../parts/util/cargo-total-info";
 
 const LEFT = "left";
 const CENTER = "center";
@@ -51,7 +52,6 @@ const mapStateToProps = (store) => {
         role: store.user.roles[0]
     }
 };
-
 
 const convertShipperAndConsigneeToStringInInvoices = (invoices) => {
     for (let i = 0; i < invoices.length; i++) {
@@ -294,9 +294,43 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                        minWidth: column.minWidth,
                                                                        maxWidth: column.maxWidth
                                                                    }}>
-                                                            {column.id === 'waybill' && value !== null
+                                                            {column.id === 'waybillId'
+                                                            && value !== null
                                                                 ? <CheckIcon/>
-                                                                : value}
+                                                                : column.id === "status"
+                                                                && value === "ACCEPTED"
+                                                                    ? <div style={{
+                                                                        color: "royalblue",
+                                                                        border: "1px solid royalblue",
+                                                                        padding: 3,
+                                                                        borderRadius: 5
+                                                                    }}>{value}</div>
+                                                                    : column.id === "status"
+                                                                    && value === "REGISTERED"
+                                                                        ? <div style={{
+                                                                            color: "green",
+                                                                            border: "1px solid green",
+                                                                            padding: 3,
+                                                                            borderRadius: 5
+                                                                        }}>{value}</div>
+                                                                        : column.id === "status"
+                                                                        && value === "REJECTED"
+                                                                            ? <div style={{
+                                                                                color: "crimson",
+                                                                                border: "1px solid crimson",
+                                                                                padding: 3,
+                                                                                borderRadius: 5
+                                                                            }}>{value}</div>
+                                                                            : column.id === "status"
+                                                                            && (value === "CLOSED"
+                                                                                || value === "CLOSED_WITH_ACT")
+                                                                                ? <div style={{
+                                                                                    color: "black",
+                                                                                    border: "1px solid black",
+                                                                                    padding: 3,
+                                                                                    borderRadius: 5
+                                                                                }}>{value}</div>
+                                                                                : value}
                                                         </TableCell>
                                                     );
                                                 })}

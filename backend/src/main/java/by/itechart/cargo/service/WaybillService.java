@@ -17,4 +17,6 @@ public interface WaybillService {
 
     void save(WaybillRequest waybillRequest) throws NotFoundException;
 
+    Waybill findByStatusAndDriverId();
+
 }

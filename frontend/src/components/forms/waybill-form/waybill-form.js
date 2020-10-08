@@ -17,6 +17,8 @@ import Paper from "@material-ui/core/Paper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import useToast from "../../parts/toast-notification/useToast";
 import AutoSearch from "./auto-search";
+import {countTotalWeight} from "../../parts/util/cargo-total-info";
+import {ErrorMsg} from "../../parts/layout/error-message";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -51,6 +53,8 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         }
     }));
     const classes = useStyles();
+    const invoiceProductsWeight = countTotalWeight(props.invoice.products);
+    alert (invoiceProductsWeight);
 
     useEffect(() => {
         setInvoice(props.invoice);
@@ -107,7 +111,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 await saveWaybill(waybill);
                 props.onSave();
                 props.onClose();
-                // notification
             };
             saveWaybillRequest(waybill);
         } else {
@@ -150,6 +153,9 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                     <FormControl className={classes.formControl}>
                                         <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
                                     </FormControl>
+                                    {selectedAuto.maxLoad < invoiceProductsWeight ?
+                                    <ErrorMsg name={"Overloaded weight"}/>
+                                    : null}
 
                                     <Grid container spacing={3}>
                                         <Grid item xs={6}>

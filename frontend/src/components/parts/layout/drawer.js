@@ -17,6 +17,7 @@ import {ItemAutosTable} from "../drawer-items/item-auto";
 import {ItemStorages} from "../drawer-items/item-storages";
 import {ItemProfile} from "../drawer-items/item-profile";
 import {ItemClientTable} from "../drawer-items/item-clients";
+import {ItemCurrentWaybill} from "../drawer-items/item-current-waybill";
 
 
 const drawerWidth = 240;
@@ -76,6 +77,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'DRIVER':
+            components.push(<ItemCurrentWaybill key='Current waybill'/>);
         case 'MANAGER':
             components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<ItemWaybillList key='Waybills'/>);

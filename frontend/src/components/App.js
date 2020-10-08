@@ -30,6 +30,7 @@ import {
     ROLE_SYSADMIN
 } from "../security/private-route";
 import {ProfileInfo} from "./pages/profile-info";
+import CurrentWaybillBody from "./pages/current-waybill-page";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -73,6 +74,8 @@ export default function App() {
                                   hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER, ROLE_DISPATCHER]}/>
                     <PrivateRoute exact path={"/storages"} component={StorageTable}
                                   hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_ADMIN, ROLE_OWNER]}/>
+                    <PrivateRoute exact path={"/current"} component={CurrentWaybillBody}
+                                  hasAnyAuthorities={[ROLE_DRIVER]}/>
                     <Route exact path={"/success"}><Redirect to={"/main"}/></Route> // TODO ???
                     <PrivateRoute exact path={"/clients"} component={ClientsTable} hasAnyAuthorities={[ROLE_SYSADMIN]}/>
                     <Route component={NotFound}/>

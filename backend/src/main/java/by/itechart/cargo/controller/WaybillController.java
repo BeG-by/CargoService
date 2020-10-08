@@ -34,6 +34,12 @@ public class WaybillController {
         return ResponseEntity.ok(waybillService.findAllTableData());
     }
 
+    @GetMapping("/current")
+    public ResponseEntity<Waybill> findCurrent() {
+        return ResponseEntity.ok(waybillService.findByStatusAndDriverId());
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Waybill> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(waybillService.findById(id));
