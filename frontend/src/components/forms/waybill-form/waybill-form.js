@@ -54,7 +54,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     }));
     const classes = useStyles();
     const invoiceProductsWeight = countTotalWeight(props.invoice.products);
-    alert (invoiceProductsWeight);
 
     useEffect(() => {
         setInvoice(props.invoice);
@@ -100,7 +99,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 openToast("Select auto", "warning")
                 return;
             }
-            
+            if (selectedAuto.maxLoad < invoiceProductsWeight) {
+                openToast("Weight is overloaded for" + (invoiceProductsWeight - selectedAuto.maxLoad), "warning");
+                return;
+            }
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;
@@ -153,9 +155,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                     <FormControl className={classes.formControl}>
                                         <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
                                     </FormControl>
-                                    {selectedAuto.maxLoad < invoiceProductsWeight ?
-                                    <ErrorMsg name={"Overloaded weight"}/>
-                                    : null}
 
                                     <Grid container spacing={3}>
                                         <Grid item xs={6}>
