@@ -21,7 +21,7 @@ export default function AutoSearch(props) {
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            getOptionLabel={(auto) => auto === "" ? "" : `${auto.mark} ${auto.autoType}`}
+            getOptionLabel={(auto) => auto === "" ? "" : `${auto.mark} ${auto.autoType} ${auto.maxLoad}`}
             options={autoArr}
             renderInput={(params) => <TextField {...params} label={"Auto"}/>}
         />

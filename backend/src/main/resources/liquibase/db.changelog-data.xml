@@ -389,6 +389,7 @@
     <changeSet id="insert_waybill" author="marianna.patrusova">
         <insert tableName="waybill">
             <column name="id_invoice" value="1"/>
+            <column name="waybill_status" value="CURRENT"/>
             <column name="id_auto" value="1"/>
             <column name="departure_date" value="2020-09-10"/>
             <column name="arrival_date" value="2020-09-11"/>

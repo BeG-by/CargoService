@@ -1,11 +1,15 @@
 package by.itechart.cargo.model;
 
+import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,6 +21,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "waybill")
+@TypeDef(
+        name = "waybill_status",
+        typeClass = EnumTypePostgreSql.class
+)
 public class Waybill implements Serializable, Cloneable {
 
     @Id
@@ -48,5 +56,13 @@ public class Waybill implements Serializable, Cloneable {
     @JsonBackReference(value = "waybill_company")
     private ClientCompany clientCompany;
 
+    @Enumerated(EnumType.STRING)
+    @Type(type = "waybill_status")
+    @Column(name = "waybill_status")
+    private Waybill.WaybillStatus status;
+
+    public enum WaybillStatus {
+        CURRENT, FUTURE, DONE
+    }
 }
 

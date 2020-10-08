@@ -17,6 +17,8 @@ import Paper from "@material-ui/core/Paper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import useToast from "../../parts/toast-notification/useToast";
 import AutoSearch from "./auto-search";
+import {countTotalWeight} from "../../parts/util/cargo-total-info";
+import {ErrorMsg} from "../../parts/layout/error-message";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -51,6 +53,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
         }
     }));
     const classes = useStyles();
+    const invoiceProductsWeight = countTotalWeight(props.invoice.products);
 
     useEffect(() => {
         setInvoice(props.invoice);
@@ -96,6 +99,12 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 openToast("Select auto", "warning")
                 return;
             }
+
+            if (selectedAuto.maxLoad < invoiceProductsWeight) {
+                openToast("Weight is overloaded for" + (invoiceProductsWeight - selectedAuto.maxLoad), "warning");
+                return;
+            }
+
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;
@@ -106,7 +115,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 await saveWaybill(waybill);
                 props.onSave();
                 props.onClose();
-                // notification
             };
             saveWaybillRequest(waybill);
         } else {

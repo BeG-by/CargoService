@@ -409,10 +409,17 @@
     <changeSet id="1.0.6" author="marianna.patrusova">
 
         <!--Waybill-->
+        <sql>CREATE TYPE waybill_status AS ENUM('CURRENT', 'FUTURE' , 'DONE')
+        </sql>
+
         <createTable tableName="waybill">
 
             <column name="id_waybill" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
+            </column>
+
+            <column name="waybill_status" type="waybill_status" defaultValue="FUTURE">
+                <constraints nullable="false"/>
             </column>
 
             <column name="id_invoice" type="BIGSERIAL">
