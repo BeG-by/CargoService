@@ -99,10 +99,12 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 openToast("Select auto", "warning")
                 return;
             }
+
             if (selectedAuto.maxLoad < invoiceProductsWeight) {
                 openToast("Weight is overloaded for" + (invoiceProductsWeight - selectedAuto.maxLoad), "warning");
                 return;
             }
+
             const waybill = {};
             waybill.points = convertPointsToBackendApi(points);
             waybill.invoiceId = values.invoiceId;

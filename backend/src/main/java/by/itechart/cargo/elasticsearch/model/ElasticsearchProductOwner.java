@@ -31,7 +31,7 @@ public class ElasticsearchProductOwner {
     public static ElasticsearchProductOwner fromProductOwner(ProductOwner productOwner) {
         return new ElasticsearchProductOwner(
                 productOwner.getId(),
-                productOwner.getName(),
+                productOwner.getName().replaceAll(" ", ""),
                 productOwner.getClientCompany().getId(),
                 productOwner.getStatus().toString());
     }

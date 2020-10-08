@@ -5,6 +5,7 @@ import ActDialog from "./act-dialog";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {FillActDialog} from "../../parts/dialogs/fill-act";
 import {CloseInvoice} from "../../parts/dialogs/close-invoice";
+import {convertPointsFromBackendApi} from "../../../map/utils";
 
 export const WaybillInfo = (props) => {
     const [waybill, setWaybill] = React.useState({
@@ -47,10 +48,13 @@ export const WaybillInfo = (props) => {
 
     //TODO question. Second request ?
     let updated = {};
+
     async function fetchWaybill(cleanupFunction) {
         let response = await makeRequest("GET", WAYBILL_URL + "/" + props.waybillId);
         let selected = updated = response.data;
-        if (!cleanupFunction)
+        if (!cleanupFunction) {
+            console.log("SELECTED POINTS");
+            console.log(selected.points);
             setWaybill({
                 id: selected.id,
                 departureDate: selected.departureDate,
@@ -63,6 +67,7 @@ export const WaybillInfo = (props) => {
                 shipper: selected.invoice.shipper,
                 consignee: selected.invoice.consignee,
             });
+        }
     }
 
     useEffect(() => {
@@ -88,6 +93,7 @@ export const WaybillInfo = (props) => {
 
 
     const handleMarkerPass = async (point) => {
+        point.id = point.index;
         await makeRequest("PUT", POINT_URL, point);
         await fetchWaybill(false);
         let checkPassage = true;

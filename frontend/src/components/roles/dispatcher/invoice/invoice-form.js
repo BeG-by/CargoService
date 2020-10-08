@@ -19,10 +19,30 @@ import "../styles/invoice-form.css"
 import PersonSearch from "./person-search";
 import StorageSearchDialog from "./storage-search/storage-search-dialog";
 import TextField from "@material-ui/core/TextField";
+import {UserInfoInvoice} from "../../admin/user-info-invoice";
+import Typography from "@material-ui/core/Typography";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 
 const STORAGE_TITLE_SHIPPER = "Shipper";
 const STORAGE_TITLE_CONSIGNEE = "Consignee";
+
+const useStyles = makeStyles((theme) => ({
+    infoPiece: {
+        flexDirection: "column",
+        alignItems: "flex-start"
+    },
+    boldText: {
+        fontWeight: "bold",
+    },
+    tableHeader: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 5,
+        fontSize: 20
+    }
+}));
 
 export const EMPTY_MANAGER = {
     id: -1,
@@ -89,6 +109,7 @@ const TOTAL = {
 };
 
 function InvoiceForm(props) {
+    const styles = useStyles();
     const {onClose} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
 
@@ -372,7 +393,7 @@ function InvoiceForm(props) {
                                     <div className="left-div-wrapper">
                                         <div className="customer-wrapper">
                                             <Paper elevation={3}>
-                                                <h2>Customer</h2>
+                                                <span>Customer</span> //TODO font
                                                 <div className="customer-paper">
                                                     <div>
                                                         <p>Company name</p>
@@ -439,59 +460,40 @@ function InvoiceForm(props) {
                                         </div>
                                     </div>
                                     <div className="right-div-wrapper">
-                                        <Paper elevation={3} className="driver-info">
-                                            <h2>Driver</h2>
-                                            <div>
-                                                <p>Name</p>
-                                                {initInvoice.driver.name}
-                                            </div>
-                                            <div>
-                                                <p>Surname</p>
-                                                {initInvoice.driver.surname}
-                                            </div>
-                                            <div>
-                                                <p>Patronymic</p>
-                                                {initInvoice.driver.patronymic}
-                                            </div>
-                                            <div>
-                                                <p>Date of birth</p>
-                                                {initInvoice.driver.birthday}
-                                            </div>
-                                            <div>
-                                                <p>Passport</p>
-                                                {initInvoice.driver.passport}
-                                            </div>
-                                        </Paper>
-                                        <Paper elevation={3} className="driver-info">
-                                            <h2>Total</h2>
-                                            <div>
-                                                <div>
-                                                    <p>Weight</p>
-                                                    {total.weight + " kg"}
-                                                </div>
-                                                <div>
-                                                    <p>Quantity</p>
-                                                    {total.quantity}
-                                                </div>
-                                                <p>Price</p>
-                                                {total.BYN === 0 ? "" :
-                                                    <div>BYN: {total.BYN}</div>}
-                                                {total.USD === 0 ? "" :
-                                                    <div>USD: {total.USD}</div>}
-                                                {total.EURO === 0 ? "" :
-                                                    <div>EURO: {total.EURO}</div>}
-                                                {total.RUB === 0 ? "" :
-                                                    <div>RUB: {total.RUB}</div>}
-                                                {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
-                                                    <div>0</div> : ""}
-                                            </div>
-                                        </Paper>
+                                        <UserInfoInvoice
+                                            user={initInvoice.driver}
+                                        />
+
+                                        <UserInfoInvoice
+                                            user={initInvoice.manager}
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <div className="product-table-wrapper">
                                 <div className="product-box">
-                                    <h2>Products</h2>
+                                    <Typography className={styles.tableHeader}>
+                                        CARGO LIST
+                                    </Typography>
+                                    <div >
+                                        Quantity: {total.quantity}
+                                    </div>
+                                    <div>
+                                        Weight: {total.weight + " KG"}
+                                    </div>
+                                    <div>
+                                        Total sum:
+                                        {total.BYN === 0 ? "" :
+                                            <span>BYN: {total.BYN}</span>}
+                                        {total.USD === 0 ? "" :
+                                            <span>USD: {total.USD}</span>}
+                                        {total.EURO === 0 ? "" :
+                                            <span>EURO: {total.EURO}</span>}
+                                        {total.RUB === 0 ? "" :
+                                            <span>RUB: {total.RUB}</span>}
+                                        {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
+                                            <span>0</span> : ""}
+                                    </div>
                                     <Button variant="contained"
                                             color="primary"
                                             onClick={handleCreateNewProductClick}>

@@ -39,6 +39,7 @@ public class AutoServiceImpl implements AutoService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
+    //TODO manager can't recieve broken auto
     @Override
     public List<Auto> findAll() {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
