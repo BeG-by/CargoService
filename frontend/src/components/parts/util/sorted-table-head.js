@@ -5,6 +5,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import PropTypes from "prop-types";
 import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const descendingComparator = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTableHead(props) {
     const classes = useStyles();
-    const {order, orderBy, onRequestSort, firstMenu, secondMenu} = props;
+    const {order, orderBy, onRequestSort, firstMenu, secondMenu, thirdMenu} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -67,39 +68,58 @@ export default function EnhancedTableHead(props) {
                         className={classes.menuColumn}
                     />
                     : null}
-                {props.columns.map((column) => (
-                    <TableCell
-                        key={column.id}
-                        style={{minWidth: column.minWidth,
-                            width: column.width,
-                            maxWidth: column.maxWidth,
-                            align: column.align,
-                            fontSize: column.fontSize,
-                            color: "#3f51b5"}}
-                        sortDirection={orderBy === column.id ? order : false}
-                    >
-                        <TableSortLabel
-                            active={orderBy === column.id}
-                            direction={orderBy === column.id ? order : 'asc'}
-                            onClick={createSortHandler(column.id)}
+                {props.columns.map((column) => {
+
+
+                    let label = column.label;
+
+                    if (column.id === "consumption" || column.id === "maxLoad") {
+
+                        const notice = column.id === "consumption" ? "Liter / 100 km" : "KG";
+                        label =
+                            <Tooltip title={notice} arrow>
+                                <div>{column.label}</div>
+                            </Tooltip>;
+
+                    }
+
+
+                    return (
+                        <TableCell
+                            key={column.id}
+                            style={{
+                                minWidth: column.minWidth,
+                                width: column.width,
+                                maxWidth: column.maxWidth,
+                                align: column.align,
+                                fontSize: column.fontSize,
+                                color: "#3f51b5"
+                            }}
+                            sortDirection={orderBy === column.id ? order : false}
                         >
-                            {column.label}
-                            {orderBy === column.id
-                                ? <span className={classes.visuallyHidden}>
+                            <TableSortLabel
+                                active={orderBy === column.id}
+                                direction={orderBy === column.id ? order : 'asc'}
+                                onClick={createSortHandler(column.id)}
+                            >
+                                {label}
+                                {orderBy === column.id
+                                    ? <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                   </span>
-                                : null}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
+                                    : null}
+                            </TableSortLabel>
+                        </TableCell>
+                    )
+                })}
                 {secondMenu ?
-                <TableCell
-                    key={"show"}
-                    className={classes.menuColumn}
-                >
-                    Info
-                </TableCell>
-                : null}
+                    <TableCell
+                        key={"show"}
+                        className={classes.menuColumn}
+                    >
+                        Info
+                    </TableCell>
+                    : null}
             </TableRow>
         </TableHead>
     );

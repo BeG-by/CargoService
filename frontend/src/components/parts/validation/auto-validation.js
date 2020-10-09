@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import moment from "moment";
 
 export const AutoScheme = Yup.object({
     mark: Yup.string()
@@ -19,5 +20,14 @@ export const AutoScheme = Yup.object({
     maxLoad: Yup.string()
         .required("Max load is required")
         .matches(/^[0-9]+$/, "Max load must be contain only digit"),
-    // TODO date of issue
+    dateOfIssue: Yup.string()
+        .test(
+            'test',
+            'Date must be equal or before than today',
+            function (value) {
+                let date = new Date();
+                let initDate = date.toISOString().substring(0, date.toISOString().indexOf("T"));
+                return moment(value, "yyyy-MM-DD").isSameOrBefore(moment(initDate, "yyyy-MM-DD"));
+            }
+        )
 });
