@@ -17,20 +17,16 @@
     flex-direction: column;
 }
 
-.invoice-dialog .invoice-form h2 {
+.left-div-wrapper .div-title {
     margin-bottom: 3px;
-    margin-top: 20px;
     padding: 5px;
+    text-align: center;
 }
 
 .container-wrapper {
     display: flex;
 }
 
-.invoice-dialog .invoice-form h2 {
-    color: #3f51b5;
-    text-align: center;
-}
 
 .invoice-data-wrapper {
     display: flex;
@@ -47,11 +43,19 @@
     text-align: end;
 }
 
-.product-table-wrapper button{
+.product-table-wrapper button {
     margin-right: 5px;
     margin-bottom: 5px;
 }
 
+.header-background {
+    background-color: #fafafa;
+    border: 1px solid rgba(224, 224, 224, 1);
+}
+
+.margin-0 {
+    margin-top: 0 !important;
+}
 
 .customer-wrapper {
     text-align: center;
@@ -65,9 +69,6 @@
     content: none;
 }
 
-.data-wrapper h2 {
-    text-align: center;
-}
 
 .left-div-wrapper {
     flex-basis: 60%;
@@ -80,7 +81,12 @@
     flex-basis: 40%;
     padding-right: 15px;
     padding-bottom: 15px;
-    padding-left: 15px
+    padding-left: 15px;
+    text-align: center;
+}
+
+.data-wrapper {
+    margin-top: 12px;
 }
 
 .data-wrapper div {
@@ -91,6 +97,18 @@
 
 .data-wrapper .error-message {
     padding-left: 5px;
+}
+
+.strong-text {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.div-title {
+    font-size: 20px;
+    color: #3f51b5;
+    margin-bottom: 3px;
+    padding: 5px;
 }
 
 .data-wrapper .MuiInputLabel-formControl {
@@ -146,10 +164,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.product-box button{
-
 }
 
 .button-form-wrapper {

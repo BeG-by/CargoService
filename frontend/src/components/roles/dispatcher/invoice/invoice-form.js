@@ -19,9 +19,9 @@ import "../styles/invoice-form.css"
 import PersonSearch from "./person-search";
 import StorageSearchDialog from "./storage-search/storage-search-dialog";
 import TextField from "@material-ui/core/TextField";
-import {UserInfoInvoice} from "../../admin/user-info-invoice";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {UserInfo} from "../../admin/user-info";
 
 
 const STORAGE_TITLE_SHIPPER = "Shipper";
@@ -156,7 +156,7 @@ function InvoiceForm(props) {
         }
 
         return true;
-    }
+    };
 
     const handleSubmit = (values) => {
         let invoice = {};
@@ -226,11 +226,13 @@ function InvoiceForm(props) {
     const fetchInitInvoiceState = async (id) => {
         try {
             const res = await makeRequest("GET", INVOICE_URL + "/" + id);
+            console.log(res.data)
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
             }
             invoiceState.productOwner.type = invoiceState.productOwner.type === "SP" ? "Sole proprietorship" : "Juridical person";
+            console.log(invoiceState)
             setInitInvoice(invoiceState);
         } catch (error) {
             setInitInvoice(INIT_INVOICE_STATE);
@@ -393,7 +395,7 @@ function InvoiceForm(props) {
                                     <div className="left-div-wrapper">
                                         <div className="customer-wrapper">
                                             <Paper elevation={3}>
-                                                <span>Customer</span> //TODO font
+                                                <p className="div-title margin-0">Customer</p>
                                                 <div className="customer-paper">
                                                     <div>
                                                         <p>Company name</p>
@@ -408,7 +410,7 @@ function InvoiceForm(props) {
                                         </div>
                                         <div className="data-wrapper">
                                             <Paper elevation={3}>
-                                                <h2>Information</h2>
+                                                <p className="div-title">Information</p>
                                                 <FormikField
                                                     formikProps={formProps}
                                                     id={"invoiceNumber"}
@@ -460,39 +462,44 @@ function InvoiceForm(props) {
                                         </div>
                                     </div>
                                     <div className="right-div-wrapper">
-                                        <UserInfoInvoice
-                                            user={initInvoice.driver}
-                                        />
+                                        <UserInfo
+                                            customUser={initInvoice.driver}
+                                            customClass={""}
+                                            title={"Driver"}
 
-                                        <UserInfoInvoice
-                                            user={initInvoice.manager}
                                         />
+                                        <UserInfo
+                                            customUser={initInvoice.manager === undefined ? initInvoice.checkingUser : initInvoice.manager}
+                                            customClass={""}
+                                            title={"Manager"}
+                                        />
+                                        {initInvoice.comment}
                                     </div>
                                 </div>
                             </div>
                             <div className="product-table-wrapper">
                                 <div className="product-box">
-                                    <Typography className={styles.tableHeader}>
-                                        CARGO LIST
+                                    <Typography className={styles.tableHeader + " margin-0"}>
+                                        <span className="div-title">CARGO LIST</span>
                                     </Typography>
-                                    <div >
-                                        Quantity: {total.quantity}
+                                    <div>
+                                        Quantity: <span className="strong-text">{total.quantity}</span>
                                     </div>
                                     <div>
-                                        Weight: {total.weight + " KG"}
+                                        Weight: <span className="strong-text">{total.weight + " KG"}</span>
                                     </div>
                                     <div>
                                         Total sum:
                                         {total.BYN === 0 ? "" :
-                                            <span>BYN: {total.BYN}</span>}
+                                            <span className="strong-text">{total.BYN} BYN</span>}
                                         {total.USD === 0 ? "" :
-                                            <span>USD: {total.USD}</span>}
+                                            <span className="strong-text">{total.USD} USD</span>}
                                         {total.EURO === 0 ? "" :
-                                            <span>EURO: {total.EURO}</span>}
+                                            <span className="strong-text">{total.EURO} EURO</span>}
                                         {total.RUB === 0 ? "" :
-                                            <span>RUB: {total.RUB}</span>}
+                                            <span className="strong-text">{total.RUB} RUB</span>}
                                         {total.BYN === 0 && total.USD === 0 && total.EURO === 0 && total.RUB === 0 ?
-                                            <span>0</span> : ""}
+                                            <span className="strong-text">0</span> : ""}
                                     </div>
                                     <Button variant="contained"
                                             color="primary"

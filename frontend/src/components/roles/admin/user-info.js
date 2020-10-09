@@ -14,6 +14,9 @@ const mapStateToProps = (store) => {
 };
 
 export const UserInfo = connect(mapStateToProps)((props) => {
+
+    const {customUser, customClass = "table-paper", title = null} = props;
+
     const [user, setUser] = React.useState({
         id: 0,
         name: "",
@@ -26,7 +29,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
 
 
     function fetchUser(cleanupFunction) {
-        let selected = props.user
+        let selected = props.user;
         if (!cleanupFunction) setUser({
             id: selected.id,
             name: selected.name + " " + selected.surname,
@@ -39,14 +42,21 @@ export const UserInfo = connect(mapStateToProps)((props) => {
     }
 
     useEffect(() => {
+
+        if (customUser !== undefined) {
+            setUser(customUser);
+            return;
+        }
+
         let cleanupFunction = false;
         fetchUser(cleanupFunction);
         return () => cleanupFunction = true;
-    }, []);
+    }, [customUser]);
 
     return (
         <div>
-            <Paper className="table-paper">
+            <Paper elevation={3} className={customClass}>
+                {title === null ? "" : <p className="div-title margin-0">{title}</p>}
                 <List style={{alignItems: "flex-start"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <ListItem style={{flexDirection: "column", alignItems: "flex-start"}}>
@@ -54,7 +64,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                                 {user.name}
                             </Typography>
                             <img
-                                src={user.photo !== undefined && user.photo !== null  && user.photo.trim()
+                                src={user.photo !== undefined && user.photo !== null && user.photo.trim()
                                     ? user.photo
                                     : photo}
                                 width={100}

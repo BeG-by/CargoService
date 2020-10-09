@@ -248,7 +248,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = invoiceRequest.getDriverId();
-        final Long managerId = invoiceRequest.getDriverId();
+        final Long managerId = invoiceRequest.getManagerId();
+
+        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
+            throw new AlreadyExistException("Invoice already exists");
+        }
 
         Invoice invoice = invoiceRepository
                 .findById(invoiceRequest.getId())
@@ -257,16 +261,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         User driver = userRepository
                 .findByIdAndClientCompanyId(driverId, companyId)
                 .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
-        invoice.setDriver(driver);
+
 
         User manager = userRepository
                 .findByIdAndClientCompanyId(managerId, companyId)
                 .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
-        invoice.setCheckingUser(manager);
 
-        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
-            throw new AlreadyExistException("Invoice already exists");
-        }
+        invoice.setDriver(driver);
+        invoice.setCheckingUser(manager);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         invoice.setClientCompany(clientCompany);
@@ -338,7 +340,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     private boolean isValidInvoiceNumberForUpdate(InvoiceRequest invoiceRequest) {
-        Optional<Invoice> invoiceByNumber = invoiceRepository.findByNumber(invoiceRequest.getInvoiceNumber());
-        return invoiceByNumber.isEmpty() || invoiceByNumber.get().getId().equals(invoiceRequest.getId());
+        return invoiceRepository
+                .findByNumber(invoiceRequest.getInvoiceNumber())
+                .filter(invoice -> !invoice.getId().equals(invoiceRequest.getId()))
+                .isPresent();
     }
 }
