@@ -7,6 +7,9 @@ GET localhost:9200/storage/_search?pretty=true&q=*:*&size=1000
 ### All (1000) invoices in elasticsearch
 GET localhost:9200/invoice/_search?pretty=true&q=*:*&size=1000
 
+### All (1000) waybills in elasticsearch
+GET localhost:9200/waybill/_search?pretty=true&q=*:*&size=1000
+
 ###  All indexes in elasticsearch
 GET localhost:9200/_aliases?pretty=true
 
@@ -21,3 +24,31 @@ DELETE localhost:9200/invoice
 
 ### Delete product_owner index
 DELETE localhost:9200/product_ower
+
+### Request by 2 fields in invoice
+POST localhost:9200/invoice/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "clientCompanyId": 2
+          }
+        },
+        {
+          "multi_match": {
+            "fields": [
+              "number",
+              "status"
+            ],
+            "query": "ACCE",
+            "type": "phrase_prefix"
+          }
+        }
+      ]
+    }
+  }
+}

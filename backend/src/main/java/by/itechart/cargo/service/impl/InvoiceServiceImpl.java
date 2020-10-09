@@ -326,7 +326,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public DataForInvoiceCreating findDataForInvoiceCreating() {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
-        List<Storage> storages = storageRepository.findAllWithoutDeleted(clientCompany.getId());
+        List<Storage> storages = storageRepository.findAllByClientCompanyIdAndStatus(clientCompany.getId(), Storage.Status.ACTIVE);
 
         Role driverRole = roleRepository.getByRole(Role.RoleType.DRIVER);
         List<User> drivers = userRepository.findAllByClientCompanyIdAndRoles(clientCompany.getId(), driverRole);

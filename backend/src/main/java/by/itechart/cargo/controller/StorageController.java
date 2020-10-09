@@ -1,5 +1,6 @@
 package by.itechart.cargo.controller;
 
+import by.itechart.cargo.dto.model_dto.storage.StoragePaginationResponse;
 import by.itechart.cargo.dto.model_dto.storage.StorageSaveRequest;
 import by.itechart.cargo.dto.model_dto.storage.StorageUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
@@ -11,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/storages")
@@ -28,8 +27,8 @@ public class StorageController {
 
     @GetMapping
     @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DISPATCHER", "ROLE_MANAGER"})
-    public ResponseEntity<List<Storage>> findAll() {
-        return ResponseEntity.ok(storageService.findAll());
+    public ResponseEntity<StoragePaginationResponse> findAll(@RequestParam int page, @RequestParam int storagesPerPage) {
+        return ResponseEntity.ok(storageService.findAll(page, storagesPerPage));
     }
 
     @GetMapping("/{id}")
@@ -39,21 +38,21 @@ public class StorageController {
     }
 
     @PostMapping
-    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER" ,"ROLE_OWNER"})
+    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER", "ROLE_OWNER"})
     public ResponseEntity<String> save(@RequestBody StorageSaveRequest request) throws AlreadyExistException {
         storageService.save(request);
         return ResponseEntity.ok("Storage has been saved");
     }
 
     @PutMapping
-    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER" ,"ROLE_OWNER"})
+    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER", "ROLE_OWNER"})
     public ResponseEntity<String> update(@RequestBody StorageUpdateRequest request) throws NotFoundException, AlreadyExistException {
         storageService.update(request);
         return ResponseEntity.ok("Storage has been updated");
     }
 
     @DeleteMapping("/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER" ,"ROLE_OWNER"})
+    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER", "ROLE_OWNER"})
     public ResponseEntity<String> delete(@PathVariable long id) throws NotFoundException {
         storageService.delete(id);
         return ResponseEntity.ok("Storage has been deleted");

@@ -32,7 +32,6 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import {countTotalWeight} from "../../parts/util/cargo-total-info";
 
 const LEFT = "left";
 const CENTER = "center";
@@ -74,6 +73,8 @@ const convertShipperAndConsigneeToString = (invoice) => {
 export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalInvoicesAmount, setTotalInvoicesAmount] = useState(0);
+
     const [ToastComponent, openToast] = useToast();
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
@@ -122,16 +123,19 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
     const fetchInvoicesForManager = async (params) => {
         let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
     const fetchInvoicesForDriver = async (params) => {
         let response = await makeRequest("GET", `${DRIVER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
     const fetchInvoicesForDispatcher = async (params) => {
         let response = await makeRequest("GET", `${DISPATCHER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
@@ -176,7 +180,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     const handleSearchFieldChange = (searchNumber) => {
-        fetchInvoices(false, page, rowsPerPage, searchNumber);
+        setPage(0);
+        fetchInvoices(false, 0, rowsPerPage, searchNumber);
     };
 
     const handleWaybillFillClick = (invoice) => {
@@ -187,219 +192,219 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
 
     return (
-            <main>
-                <Paper className="table-paper main-table-paper">
-                    <div className="table-header-wrapper">
-                        <Typography variant="button" display="block" gutterBottom
-                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
-                                    className="table-title"
-                        >
-                            <LibraryBooksIcon/>
-                            Invoices
-                        </Typography>
-                        <TextSearch
-                            onFieldChange={handleSearchFieldChange}
-                        />
-                    </div>
+        <main>
+            <Paper className="table-paper main-table-paper">
+                <div className="table-header-wrapper">
+                    <Typography variant="button" display="block" gutterBottom
+                                style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                className="table-title"
+                    >
+                        <LibraryBooksIcon/>
+                        Invoices
+                    </Typography>
+                    <TextSearch
+                        onFieldChange={handleSearchFieldChange}
+                    />
+                </div>
 
-                    <TableContainer className="table-container">
-                        <Table aria-label="sticky table">
-                            <EnhancedTableHead
-                                firstMenu={true}
-                                secondMenu={true}
-                                columns={columns}
-                                order={order}
-                                orderBy={orderBy}
-                                onRequestSort={handleRequestSort}
-                            />
-                            <TableBody>
-                                {stableSort(invoices, getComparator(order, orderBy))
-                                    .map((invoice) => {
-                                        return (
-                                            <TableRow
-                                                hover
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={invoice.id}
-                                            >
-                                                <TableCell>
-                                                    {invoice.status === "REJECTED"
-                                                    && role === "DISPATCHER"
-                                                        ? <Tooltip title="Click to edit invoice"
+                <TableContainer className="table-container">
+                    <Table aria-label="sticky table">
+                        <EnhancedTableHead
+                            firstMenu={true}
+                            secondMenu={true}
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                        />
+                        <TableBody>
+                            {stableSort(invoices, getComparator(order, orderBy))
+                                .map((invoice) => {
+                                    return (
+                                        <TableRow
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={invoice.id}
+                                        >
+                                            <TableCell>
+                                                {invoice.status === "REJECTED"
+                                                && role === "DISPATCHER"
+                                                    ? <Tooltip title="Click to edit invoice"
+                                                               arrow
+                                                               className="table-delete-edit-div">
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"secondary"}
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(invoice);
+                                                            }}/>
+                                                    </Tooltip>
+                                                    : invoice.status === "ACCEPTED"
+                                                    && invoice.waybill === null
+                                                    && role === "MANAGER"
+                                                        ? <Tooltip title="Click to fill in waybill"
                                                                    arrow
                                                                    className="table-delete-edit-div">
                                                             <Button
                                                                 className="menu-table-btn"
-                                                                color={"secondary"}
-                                                                startIcon={<EditIcon/>}
+                                                                color={"primary"}
+                                                                startIcon={<PostAddIcon/>}
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    handleTableRowClick(invoice);
+                                                                    handleWaybillFillClick(invoice);
                                                                 }}/>
                                                         </Tooltip>
-                                                        : invoice.status === "ACCEPTED"
-                                                        && invoice.waybill === null
+                                                        : invoice.status === "REGISTERED"
                                                         && role === "MANAGER"
-                                                            ? <Tooltip title="Click to fill in waybill"
+                                                            ? <Tooltip title="Click to verify invoice"
                                                                        arrow
                                                                        className="table-delete-edit-div">
                                                                 <Button
                                                                     className="menu-table-btn"
-                                                                    color={"primary"}
-                                                                    startIcon={<PostAddIcon/>}
+                                                                    color={"secondary"}
+                                                                    startIcon={<ZoomInIcon/>}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        handleWaybillFillClick(invoice);
+                                                                        handleTableRowClick(invoice);
                                                                     }}/>
                                                             </Tooltip>
-                                                            : invoice.status === "REGISTERED"
-                                                            && role === "MANAGER"
-                                                                ? <Tooltip title="Click to verify invoice"
+                                                            : invoice.status === "ACCEPTED"
+                                                            && invoice.waybill !== null
+                                                            && role === "DRIVER"
+                                                                // && invoice.checkPassage //fixme проверить возможность закрытия
+                                                                ? <Tooltip title="Click to close invoice"
                                                                            arrow
                                                                            className="table-delete-edit-div">
                                                                     <Button
                                                                         className="menu-table-btn"
                                                                         color={"secondary"}
-                                                                        startIcon={<ZoomInIcon/>}
+                                                                        startIcon={<CloseIcon/>}
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            handleTableRowClick(invoice);
+                                                                            handleTableRowClick(invoice)
                                                                         }}/>
                                                                 </Tooltip>
-                                                                : invoice.status === "ACCEPTED"
-                                                                && invoice.waybill !== null
-                                                                && role === "DRIVER"
-                                                                    // && invoice.checkPassage //fixme проверить возможность закрытия
-                                                                    ? <Tooltip title="Click to close invoice"
-                                                                               arrow
-                                                                               className="table-delete-edit-div">
-                                                                        <Button
-                                                                            className="menu-table-btn"
-                                                                            color={"secondary"}
-                                                                            startIcon={<CloseIcon/>}
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation();
-                                                                                handleTableRowClick(invoice)
-                                                                            }}/>
-                                                                    </Tooltip>
-                                                                    : null
-                                                    }
-                                                </TableCell>
-                                                {columns.map((column) => {
-                                                    const value = fetchFieldFromObject(invoice, column.id);
-                                                    return (
-                                                        <TableCell key={column.id}
-                                                                   align={column.align}
-                                                                   style={{
-                                                                       minWidth: column.minWidth,
-                                                                       maxWidth: column.maxWidth
-                                                                   }}>
-                                                            {column.id === 'waybill'
-                                                            && value !== null
-                                                                ? <CheckIcon/>
+                                                                : null
+                                                }
+                                            </TableCell>
+                                            {columns.map((column) => {
+                                                const value = fetchFieldFromObject(invoice, column.id);
+                                                return (
+                                                    <TableCell key={column.id}
+                                                               align={column.align}
+                                                               style={{
+                                                                   minWidth: column.minWidth,
+                                                                   maxWidth: column.maxWidth
+                                                               }}>
+                                                        {column.id === 'waybill'
+                                                        && value !== null
+                                                            ? <CheckIcon/>
+                                                            : column.id === "status"
+                                                            && value === "ACCEPTED"
+                                                                ? <div style={{
+                                                                    color: "royalblue",
+                                                                    border: "1px solid royalblue",
+                                                                    padding: 3,
+                                                                    borderRadius: 5
+                                                                }}>{value}</div>
                                                                 : column.id === "status"
-                                                                && value === "ACCEPTED"
+                                                                && value === "REGISTERED"
                                                                     ? <div style={{
-                                                                        color: "royalblue",
-                                                                        border: "1px solid royalblue",
+                                                                        color: "green",
+                                                                        border: "1px solid green",
                                                                         padding: 3,
                                                                         borderRadius: 5
                                                                     }}>{value}</div>
                                                                     : column.id === "status"
-                                                                    && value === "REGISTERED"
+                                                                    && value === "REJECTED"
                                                                         ? <div style={{
-                                                                            color: "green",
-                                                                            border: "1px solid green",
+                                                                            color: "crimson",
+                                                                            border: "1px solid crimson",
                                                                             padding: 3,
                                                                             borderRadius: 5
                                                                         }}>{value}</div>
                                                                         : column.id === "status"
-                                                                        && value === "REJECTED"
+                                                                        && (value === "CLOSED"
+                                                                            || value === "CLOSED_WITH_ACT")
                                                                             ? <div style={{
-                                                                                color: "crimson",
-                                                                                border: "1px solid crimson",
+                                                                                color: "black",
+                                                                                border: "1px solid black",
                                                                                 padding: 3,
                                                                                 borderRadius: 5
                                                                             }}>{value}</div>
-                                                                            : column.id === "status"
-                                                                            && (value === "CLOSED"
-                                                                                || value === "CLOSED_WITH_ACT")
-                                                                                ? <div style={{
-                                                                                    color: "black",
-                                                                                    border: "1px solid black",
-                                                                                    padding: 3,
-                                                                                    borderRadius: 5
-                                                                                }}>{value}</div>
-                                                                                : value}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                                <TableCell>
+                                                                            : value}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                            <TableCell>
 
-                                                    <Tooltip title="Click to see invoice info"
-                                                             arrow
-                                                             className="table-delete-edit-div">
-                                                        <Button
-                                                            className="menu-table-btn"
-                                                            color={"primary"}
-                                                            startIcon={<VisibilityIcon/>}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleTableRowClick(invoice)
-                                                            }}/>
+                                                <Tooltip title="Click to see invoice info"
+                                                         arrow
+                                                         className="table-delete-edit-div">
+                                                    <Button
+                                                        className="menu-table-btn"
+                                                        color={"primary"}
+                                                        startIcon={<VisibilityIcon/>}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleTableRowClick(invoice)
+                                                        }}/>
 
-                                                    </Tooltip>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                                </Tooltip>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-                    <TablePagination
-                        rowsPerPageOptions={[10, 20, 50]}
-                        component="div"
-                        count={invoices.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
+                <TablePagination
+                    rowsPerPageOptions={[10, 20, 50]}
+                    component="div"
+                    count={totalInvoicesAmount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
 
-                    <WaybillDialog
-                        invoice={invoice}
-                        open={waybillDialogOpen}
-                        onClose={() => {
-                            setWaybillDialogOpen(false);
-                        }}
-                        onSave={() => {
-                            fetchInvoices(false)
-                                .catch((err) => {
-                                    setInvoices([]);
-                                    handleRequestError(err);
-                                });
-                        }}
-                    />
+                <WaybillDialog
+                    invoice={invoice}
+                    open={waybillDialogOpen}
+                    onClose={() => {
+                        setWaybillDialogOpen(false);
+                    }}
+                    onSave={() => {
+                        fetchInvoices(false)
+                            .catch((err) => {
+                                setInvoices([]);
+                                handleRequestError(err);
+                            });
+                    }}
+                />
 
-                    <DialogWindow
-                        dialogTitle="Confirmation"
-                        handleClose={handleClose}
-                        openDialog={waybillFillDialogOpen}
-                        form={form}
-                    />
+                <DialogWindow
+                    dialogTitle="Confirmation"
+                    handleClose={handleClose}
+                    openDialog={waybillFillDialogOpen}
+                    form={form}
+                />
 
-                    <DialogWindow
-                        dialogTitle={"Invoice # " + invoice.number}
-                        fullWidth={true}
-                        maxWidth="xl"
-                        handleClose={handleClose}
-                        openDialog={invoiceInfoDialogOpen}
-                        form={form}
-                    />
-                </Paper>
-                {ToastComponent}
-            </main>
+                <DialogWindow
+                    dialogTitle={"Invoice # " + invoice.number}
+                    fullWidth={true}
+                    maxWidth="xl"
+                    handleClose={handleClose}
+                    openDialog={invoiceInfoDialogOpen}
+                    form={form}
+                />
+            </Paper>
+            {ToastComponent}
+        </main>
     );
 });
 
