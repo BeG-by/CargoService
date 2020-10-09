@@ -16,14 +16,14 @@ GET localhost:9200/_aliases?pretty=true
 ### All indexes in the table form
 GET localhost:9200/_cat/indices?v
 
-### Delete storage index
-DELETE localhost:9200/storage
-
 ### Delete invoice index
 DELETE localhost:9200/invoice
 
 ### Delete product_owner index
 DELETE localhost:9200/product_ower
+
+### Delete product_owner index
+DELETE localhost:9200/waybill
 
 ### Request by 2 fields in invoice
 POST localhost:9200/invoice/_search

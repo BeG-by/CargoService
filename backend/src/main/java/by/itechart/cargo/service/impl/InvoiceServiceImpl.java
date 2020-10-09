@@ -104,6 +104,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWith(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -122,6 +123,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWithForDriver(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -138,6 +140,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWithForManager(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -154,6 +157,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWithForDispatcher(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -248,7 +252,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = invoiceRequest.getDriverId();
-        final Long managerId = invoiceRequest.getDriverId();
+        final Long managerId = invoiceRequest.getManagerId();
+
+
+        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
+            throw new AlreadyExistException("Invoice already exists");
+        }
 
         Invoice invoice = invoiceRepository
                 .findById(invoiceRequest.getId())
@@ -263,10 +272,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .findByIdAndClientCompanyId(managerId, companyId)
                 .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
         invoice.setCheckingUser(manager);
-
-        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
-            throw new AlreadyExistException("Invoice already exists");
-        }
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         invoice.setClientCompany(clientCompany);

@@ -19,6 +19,7 @@ import by.itechart.cargo.security.JwtUserDetails;
 import by.itechart.cargo.service.WaybillService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +85,7 @@ public class WaybillServiceImpl implements WaybillService {
 
         final Waybill waybillDb = waybillRepository.save(waybill);
 
+        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(waybillDb));
         log.info("Waybill has been saved {}", waybillDb);
     }
 
@@ -101,9 +103,9 @@ public class WaybillServiceImpl implements WaybillService {
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(page, waybillsPerPage);
 
-        List<Waybill> waybills = waybillRepository.findAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId(), pageRequest);
-        Long totalAmount = waybillRepository.countAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId());
-        return new WaybillPaginationResponse(totalAmount, WaybillResponse.toWaybillResponses(waybills));
+        Page<Waybill> waybillsPage = waybillRepository.findAllByClientCompanyIdAndRegistrationUserId(clientCompanyId, jwtUser.getId(), pageRequest);
+        List<WaybillResponse> waybills = waybillsPage.get().map(WaybillResponse::toWaybillResponse).collect(Collectors.toList());
+        return new WaybillPaginationResponse(waybillsPage.getTotalElements(), waybills);
     }
 
     @Override
@@ -112,19 +114,16 @@ public class WaybillServiceImpl implements WaybillService {
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(page, waybillsPerPage);
 
-        List<Long> ids = elasticsearchWaybillRepository.findAllByInvoiceNumberAndClientCompanyIdAndCheckingUserId(
+        Page<ElasticsearchWaybill> waybillPage = elasticsearchWaybillRepository.findAllByInvoiceNumberStartsWithAndClientCompanyIdAndCheckingUserId(
                 invoiceNumber,
                 clientCompanyId,
                 jwtUser.getId(),
-                pageRequest)
-                .stream()
+                pageRequest);
+
+        long totalAmount = waybillPage.getTotalElements();
+        List<Long> ids = waybillPage.stream()
                 .map(ElasticsearchWaybill::getId)
                 .collect(Collectors.toList());
-
-        Long totalAmount = elasticsearchWaybillRepository.countAllByInvoiceNumberAndClientCompanyIdAndCheckingUserId(
-                invoiceNumber,
-                clientCompanyId,
-                jwtUser.getId());
 
         List<WaybillResponse> waybills = waybillRepository.findALlByIdIsIn(ids).stream()
                 .map(WaybillResponse::toWaybillResponse)
@@ -139,33 +138,31 @@ public class WaybillServiceImpl implements WaybillService {
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(page, waybillsPerPage);
 
-        List<WaybillResponse> waybills = waybillRepository.findAllByClientCompanyIdAndDriverId(clientCompanyId, jwtUser.getId(), pageRequest).stream()
+        Page<Waybill> waybillsPage = waybillRepository.findAllByClientCompanyIdAndDriverId(clientCompanyId, jwtUser.getId(), pageRequest);
+        List<WaybillResponse> waybills = waybillsPage.stream()
                 .map(WaybillResponse::toWaybillResponse)
                 .collect(Collectors.toList());
 
-        Long totalAmount = waybillRepository.countAllByClientCompanyIdAndDriverId(clientCompanyId, jwtUser.getId());
-        return new WaybillPaginationResponse(totalAmount, waybills);
+        return new WaybillPaginationResponse(waybillsPage.getTotalElements(), waybills);
     }
 
     @Override
     public WaybillPaginationResponse findAllByDriverAndInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage) {
+        invoiceNumber = invoiceNumber.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(page, waybillsPerPage);
 
-        List<Long> ids = elasticsearchWaybillRepository.findAllByInvoiceNumberAndClientCompanyIdAndDriverId(
+        Page<ElasticsearchWaybill> waybillPage = elasticsearchWaybillRepository.findAllByInvoiceNumberStartsWithAndClientCompanyIdAndDriverId(
                 invoiceNumber,
                 clientCompanyId,
                 jwtUser.getId(),
-                pageRequest)
-                .stream()
+                pageRequest);
+
+        long totalAmount = waybillPage.getTotalElements();
+        List<Long> ids = waybillPage.stream()
                 .map(ElasticsearchWaybill::getId)
                 .collect(Collectors.toList());
-
-        Long totalAmount = elasticsearchWaybillRepository.countAllByInvoiceNumberAndClientCompanyIdAndDriverId(
-                invoiceNumber,
-                clientCompanyId,
-                jwtUser.getId());
 
         List<WaybillResponse> waybills = waybillRepository.findALlByIdIsIn(ids).stream()
                 .map(WaybillResponse::toWaybillResponse)
