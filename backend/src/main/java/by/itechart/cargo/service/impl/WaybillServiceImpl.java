@@ -3,10 +3,7 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.ClientCompany;
-import by.itechart.cargo.model.Auto;
-import by.itechart.cargo.model.Invoice;
-import by.itechart.cargo.model.Waybill;
+import by.itechart.cargo.model.*;
 import by.itechart.cargo.repository.AutoRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.InvoiceRepository;
@@ -18,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.sql.Driver;
 import java.util.List;
 import java.util.stream.Collectors;
 import static by.itechart.cargo.service.constant.MessageConstant.*;
@@ -80,6 +78,13 @@ public class WaybillServiceImpl implements WaybillService {
                 .findById(invoiceId).orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
         waybill.setInvoice(invoice);
 
+        final Long driverId = invoice.getDriver().getId();
+        if (findByStatusAndDriverId(driverId) == null) {
+            waybill.setStatus(Waybill.WaybillStatus.CURRENT);
+        } else {
+            waybill.setStatus(Waybill.WaybillStatus.FUTURE);
+        }
+
         final Auto auto = autoRepository
                 .findById(autoId).orElseThrow(() -> new NotFoundException(AUTO_NOT_FOUND_MESSAGE));
         waybill.setAuto(auto);
@@ -87,8 +92,14 @@ public class WaybillServiceImpl implements WaybillService {
         waybill.getPoints().forEach(p -> p.setWaybill(waybill));
 
         final Waybill waybillDb = waybillRepository.save(waybill);
-
         log.info("Waybill has been saved {}", waybillDb);
+    }
+
+    @Override
+    public Waybill findByStatusAndDriverId(Long driverId) {
+        final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
+        final Long companyId = currentUser.getClientCompany().getId();
+        return waybillRepository.findByStatusAndDriverIdY(driverId, companyId);
     }
 
     @Override

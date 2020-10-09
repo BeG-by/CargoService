@@ -19,4 +19,6 @@ public interface WaybillService {
 
     Waybill findByStatusAndDriverId();
 
+    Waybill findByStatusAndDriverId(Long id);
+
 }

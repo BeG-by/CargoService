@@ -32,6 +32,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final UserRepository userRepository;
+    private final WaybillRepository waybillRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final ProductOwnerRepository productOwnerRepository;
     private final RoleRepository roleRepository;
@@ -40,6 +41,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
+                              WaybillRepository waybillRepository,
                               ProductOwnerRepository productOwnerRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               UserRepository userRepository,
@@ -49,6 +51,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                               ElasticsearchInvoiceRepository elasticsearchInvoiceRepository) {
 
         this.invoiceRepository = invoiceRepository;
+        this.waybillRepository = waybillRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -317,6 +320,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         } else if (invoice.getStatus().equals(Invoice.Status.CLOSED)
                 || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
+            Waybill waybill = foundInvoice.getWaybill();
+            waybill.setStatus(Waybill.WaybillStatus.DONE);
+            Long driverId = foundInvoice.getDriver().getId();
+            final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
+            final Long companyId = currentUser.getClientCompany().getId();
+            List<Waybill> waybills = waybillRepository.findAllByStatusAndDriverIdY(driverId, companyId);
+            if (waybills.size() > 0) {
+                Waybill current = waybills.get(0);
+                LocalDate date = LocalDate.now().plusDays(30);
+                for (Waybill w : waybills) {
+                    if (w.getDepartureDate().isBefore(date)) {
+                        date = w.getDepartureDate();
+                        current = w;
+                    }
+                }
+                current.setStatus(Waybill.WaybillStatus.CURRENT);
+            }
         }
         foundInvoice.setStatus(invoice.getStatus());
         foundInvoice.setComment(invoice.getComment());

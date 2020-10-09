@@ -25,7 +25,7 @@ public class WaybillTableResponse {
     public WaybillTableResponse toWaybillTableResponse(Waybill waybill) {
         WaybillTableResponse response = new WaybillTableResponse();
         response.setId(waybill.getId());
-        response.setStatus(waybill.getInvoice().getStatus().name());
+        response.setStatus(waybill.getStatus().name());
         response.setInvoice(waybill.getInvoice());
         response.setPoints(waybill.getPoints());
         response.setAuto(waybill.getAuto().getMark() + " " + waybill.getAuto().getAutoType());
