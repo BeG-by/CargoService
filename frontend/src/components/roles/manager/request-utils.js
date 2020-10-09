@@ -1,4 +1,5 @@
 import axios from "axios";
+import {AUTO_URL} from "../../parts/util/request-util";
 
 /* TODO: add error handling, refactor */
 export async function getInvoiceById(id) {

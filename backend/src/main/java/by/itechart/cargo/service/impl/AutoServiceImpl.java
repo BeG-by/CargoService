@@ -41,6 +41,14 @@ public class AutoServiceImpl implements AutoService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
+    @Override
+    public AutoPaginationResponse findAll() {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
+        Long totalAmount = autoRepository.countAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
+        return new AutoPaginationResponse(totalAmount, autoList);
+    }
+
     //TODO manager can't recieve broken auto
     @Override
     public AutoPaginationResponse findAll(int page, int autoPerPage) {

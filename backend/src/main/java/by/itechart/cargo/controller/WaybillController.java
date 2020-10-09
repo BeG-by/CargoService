@@ -1,8 +1,8 @@
 package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
-import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Point;
 import by.itechart.cargo.model.Waybill;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/waybills")
@@ -29,9 +29,28 @@ public class WaybillController {
         this.pointService = pointService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<WaybillTableResponse>> findAll() {
-        return ResponseEntity.ok(waybillService.findAllTableData());
+    @GetMapping("/manager")
+    public ResponseEntity<WaybillPaginationResponse> findWaybillsForManager(
+            @RequestParam(required = false) String invoiceNumber,
+            @RequestParam Integer page,
+            @RequestParam Integer waybillsPerPage) {
+        if (invoiceNumber == null) {
+            return ResponseEntity.ok(waybillService.findAllByRegistrationUser(page, waybillsPerPage));
+        } else {
+            return ResponseEntity.ok(waybillService.findAllByRegistrationUserAndInvoiceNumber(invoiceNumber, page, waybillsPerPage));
+        }
+    }
+
+    @GetMapping("/driver")
+    public ResponseEntity<WaybillPaginationResponse> findWaybillsForDriver(
+            @RequestParam(required = false) String invoiceNumber,
+            @RequestParam Integer page,
+            @RequestParam Integer waybillsPerPage) {
+        if (invoiceNumber == null) {
+            return ResponseEntity.ok(waybillService.findAllByDriver(page, waybillsPerPage));
+        } else {
+            return ResponseEntity.ok(waybillService.findAllByDriverAndInvoiceNumber(invoiceNumber, page, waybillsPerPage));
+        }
     }
 
     @GetMapping("/current")

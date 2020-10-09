@@ -29,8 +29,13 @@ public class AutoController {
 
     @GetMapping
     @Secured({ADMIN, OWNER, DRIVER, DISPATCHER, MANAGER})
-    public ResponseEntity<AutoPaginationResponse> findAll(@RequestParam int page, int autoPerPage) {
-        return ResponseEntity.ok(autoService.findAll(page, autoPerPage));
+    public ResponseEntity<AutoPaginationResponse> findAll(@RequestParam(required = false) Integer page,
+                                                          @RequestParam(required = false) Integer autoPerPage) {
+        if (page == null || autoPerPage == null) {
+            return ResponseEntity.ok(autoService.findAll());
+        } else {
+            return ResponseEntity.ok(autoService.findAll(page, autoPerPage));
+        }
     }
 
     @GetMapping("/{id}")

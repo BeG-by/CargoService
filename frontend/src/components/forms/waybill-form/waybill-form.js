@@ -1,16 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Formik, Form, ErrorMessage} from "formik";
+import {Form, Formik} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
-import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
+import {convertPointsToBackendApi} from "../../../map/utils";
 import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
@@ -18,7 +15,6 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import useToast from "../../parts/toast-notification/useToast";
 import AutoSearch from "./auto-search";
 import {countTotalWeight} from "../../parts/util/cargo-total-info";
-import {ErrorMsg} from "../../parts/layout/error-message";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -60,7 +56,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     }, [props.invoice]);
 
     async function fetchAutos(cleanupFunction) {
-        if (!cleanupFunction) setAutos(await getAllAutos());
+        if (!cleanupFunction) {
+            let autoPaginationResponse = await getAllAutos()
+            setAutos(autoPaginationResponse.autoList);
+        }
     }
 
     useEffect(() => {
@@ -129,7 +128,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             setSelectedAuto(auto);
         }
     };
-    
+
 
     let date = new Date();
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
@@ -153,7 +152,12 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                         <div className="info-content">
                             <div className="info-content-column">
                                 <Paper className={`table-paper`}
-                                       style={{flexDirection: "column", alignItems: "flex-start", minWidth: "35%", padding: 10}}>
+                                       style={{
+                                           flexDirection: "column",
+                                           alignItems: "flex-start",
+                                           minWidth: "35%",
+                                           padding: 10
+                                       }}>
                                     <FormControl className={classes.formControl}>
                                         <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
                                     </FormControl>
@@ -176,7 +180,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                             />
                                         </Grid>
                                     </Grid>
-                                    
+
                                     <TextField name="shipper"
                                                label="Shipper"
                                                type="text"

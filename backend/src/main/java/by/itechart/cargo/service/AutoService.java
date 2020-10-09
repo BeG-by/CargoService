@@ -7,7 +7,11 @@ import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Auto;
 
+import java.util.List;
+
 public interface AutoService {
+
+    AutoPaginationResponse findAll();
 
     AutoPaginationResponse findAll(int page, int autoPerPage);
 

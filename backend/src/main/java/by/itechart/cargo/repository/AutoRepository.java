@@ -15,6 +15,8 @@ public interface AutoRepository extends JpaRepository<Auto, Long> {
 
     List<Auto> findAllByClientCompanyIdAndStatus(Long clientCompanyId, Auto.Status status, Pageable pageable);
 
+    List<Auto> findAllByClientCompanyIdAndStatus(Long clientCompanyId, Auto.Status status);
+
     Optional<Auto> findByNumberAndClientCompanyId(String number, Long clientCompanyId);
 
 }

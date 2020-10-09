@@ -8,11 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WaybillTableResponse {
+public class WaybillResponse {
 
     private long id;
     private Invoice invoice;
@@ -22,8 +23,8 @@ public class WaybillTableResponse {
     private String arrivalDate;
     private List<Point> points;
 
-    public WaybillTableResponse toWaybillTableResponse(Waybill waybill) {
-        WaybillTableResponse response = new WaybillTableResponse();
+    public static WaybillResponse toWaybillResponse(Waybill waybill) {
+        WaybillResponse response = new WaybillResponse();
         response.setId(waybill.getId());
         response.setStatus(waybill.getInvoice().getStatus().name());
         response.setInvoice(waybill.getInvoice());
@@ -32,5 +33,11 @@ public class WaybillTableResponse {
         response.setDepartureDate(waybill.getDepartureDate() == null ? null : waybill.getDepartureDate().toString());
         response.setArrivalDate(waybill.getArrivalDate() == null ? null : waybill.getArrivalDate().toString());
         return response;
+    }
+
+    public static List<WaybillResponse> toWaybillResponses(List<Waybill> waybills) {
+        return waybills.stream()
+                .map(WaybillResponse::toWaybillResponse)
+                .collect(Collectors.toList());
     }
 }
