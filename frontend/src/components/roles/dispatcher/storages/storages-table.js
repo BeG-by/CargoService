@@ -4,7 +4,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import useToast from "../../../parts/toast-notification/useToast";
@@ -19,17 +18,19 @@ import {connect} from "react-redux";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import "../styles/storage-form.css";
 import Tooltip from "@material-ui/core/Tooltip";
+import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
+const FONT_SIZE = 18;
 
 const columns = [
-    {id: "country", label: "Country", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "city", label: "City", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "street", label: "Street", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "house", label: "House", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "email", label: "Email", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "phone", label: "Phone", minWidth: 140, align: ALIGN},
+    {id: "country", label: "Country", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "city", label: "City", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "street", label: "Street", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "house", label: "House", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "email", label: "Email", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "phone", label: "Phone", minWidth: 140, align: ALIGN, fontSize: FONT_SIZE},
     {id: "edit_delete", align: "right"}
 ];
 
@@ -42,21 +43,37 @@ const mapStateToProps = (store) => {
 export const StorageTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalStoragesAmount, setTotalStoragesAmount] = useState(0);
+
     const [storages, setStorages] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedStorageId, setSelectedStorageId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
-    const role = props.role;
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('status');
+
     const REMOVE_TITLE = "Do you want to remove the storage ?";
 
     useEffect(() => {
         insertStorages()
     }, []);
 
-    const insertStorages = () => {
-        makeRequest("GET", STORAGE_URL)
-            .then(res => setStorages(res.data))
-            .catch(error => handleRequestError(error, showToastComponent))
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const insertStorages = async (curPage = page, curRowsPerPage = rowsPerPage) => {
+        try {
+            let url = `${STORAGE_URL}?page=${curPage}&storagesPerPage=${curRowsPerPage}`
+            let result = await makeRequest("GET", url)
+            setStorages(result.data.storages);
+            setTotalStoragesAmount(result.data.totalAmount)
+        } catch (err) {
+            handleRequestError(err, showToastComponent)
+        }
     };
 
 
@@ -72,6 +89,7 @@ export const StorageTable = connect(mapStateToProps)((props) => {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        insertStorages(newPage);
     };
 
     const handleTableRowClick = (auto) => {
@@ -82,6 +100,7 @@ export const StorageTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        insertStorages(page, +event.target.value);
     };
 
 
@@ -108,22 +127,14 @@ export const StorageTable = connect(mapStateToProps)((props) => {
                     </div>
 
                     <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
+                        <EnhancedTableHead
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                        />
                         <TableBody>
-                            {storages
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            {stableSort(storages, getComparator(order, orderBy))
                                 .map((storage) => {
 
                                     return (
@@ -185,7 +196,7 @@ export const StorageTable = connect(mapStateToProps)((props) => {
                 <TablePagination
                     rowsPerPageOptions={[10, 15, 20]}
                     component="div"
-                    count={storages.length}
+                    count={totalStoragesAmount}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

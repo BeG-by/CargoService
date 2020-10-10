@@ -1,17 +1,19 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.dto.model_dto.auto.AutoPaginationResponse;
 import by.itechart.cargo.dto.model_dto.auto.AutoSaveRequest;
 import by.itechart.cargo.dto.model_dto.auto.AutoUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Auto;
+import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.repository.AutoRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,11 +41,24 @@ public class AutoServiceImpl implements AutoService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
+    @Override
+    public AutoPaginationResponse findAll() {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
+        Long totalAmount = autoRepository.countAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
+        return new AutoPaginationResponse(totalAmount, autoList);
+    }
+
     //TODO manager can't recieve broken auto
     @Override
-    public List<Auto> findAll() {
+    public AutoPaginationResponse findAll(int page, int autoPerPage) {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
-        return autoRepository.findAllWithoutDeleted(companyId);
+
+        PageRequest pageRequest = PageRequest.of(page, autoPerPage);
+        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE, pageRequest);
+        long totalAmount = autoRepository.countAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
+
+        return new AutoPaginationResponse(totalAmount, autoList);
     }
 
     @Override

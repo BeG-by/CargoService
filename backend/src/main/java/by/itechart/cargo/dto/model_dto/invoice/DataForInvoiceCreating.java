@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class DataForInvoiceCreating {
-    List<User> drivers;
-    List<Storage> storages;
-    List<User> managers;
+    private List<User> drivers;
+    private List<Storage> storages;
+    private List<User> managers;
 }

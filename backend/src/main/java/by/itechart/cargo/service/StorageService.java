@@ -1,16 +1,15 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.storage.StoragePaginationResponse;
 import by.itechart.cargo.dto.model_dto.storage.StorageSaveRequest;
 import by.itechart.cargo.dto.model_dto.storage.StorageUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Storage;
 
-import java.util.List;
-
 public interface StorageService {
 
-    List<Storage> findAll();
+    StoragePaginationResponse findAll(int page, int storagesPerPage);
 
     Storage findById(long id) throws NotFoundException;
 

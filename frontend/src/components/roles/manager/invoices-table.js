@@ -70,9 +70,12 @@ const convertShipperAndConsigneeToString = (invoice) => {
     };
 }
 
+
 export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalInvoicesAmount, setTotalInvoicesAmount] = useState(0);
+
     const [ToastComponent, openToast] = useToast();
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
@@ -123,16 +126,19 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
     const fetchInvoicesForManager = async (params) => {
         let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
     const fetchInvoicesForDriver = async (params) => {
         let response = await makeRequest("GET", `${DRIVER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
     const fetchInvoicesForDispatcher = async (params) => {
         let response = await makeRequest("GET", `${DISPATCHER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
@@ -182,7 +188,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     const handleSearchFieldChange = (searchNumber) => {
-        fetchInvoices(false, page, rowsPerPage, searchNumber);
+        setPage(0);
+        fetchInvoices(false, 0, rowsPerPage, searchNumber);
     };
 
     const handleWaybillFillClick = (invoice) => {
@@ -363,15 +370,15 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         </Table>
                     </TableContainer>
 
-                    <TablePagination
-                        rowsPerPageOptions={[10, 20, 50]}
-                        component="div"
-                        count={invoices.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
+                <TablePagination
+                    rowsPerPageOptions={[10, 20, 50]}
+                    component="div"
+                    count={totalInvoicesAmount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
 
                     <WaybillDialog
                         invoice={invoice}

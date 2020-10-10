@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class InvoicePaginationResponse {
-    long totalInvoicesAmount;
-    List<InvoiceResponse> invoices;
+    private long totalAmount;
+    private List<InvoiceResponse> invoices;
 }
