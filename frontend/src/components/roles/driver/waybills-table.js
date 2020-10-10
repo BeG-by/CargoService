@@ -16,7 +16,7 @@ import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
 import Button from "@material-ui/core/Button";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import {NotAuthorized} from "../../pages/error-page/error-401";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -32,7 +32,7 @@ const columns = [
     {id: "departureDate", label: "Departure Date", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "arrivalDate", label: "Arrival Date", minWidth: 150, align: CENTER, fontSize: SIZE},
     {id: "invoiceNumber", label: "Invoice #", minWidth: 100, align: LEFT, fontSize: SIZE},
-    {id: "status", label: "Invoice status", minWidth: 150, align: CENTER, fontSize: SIZE},
+    {id: "status", label: "Waybill Status", minWidth: 150, align: CENTER, fontSize: SIZE},
 ];
 
 const mapStateToProps = (store) => {
@@ -118,6 +118,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         setWaybillInfoDialogOpen(true);
     }
 
+    console.log(waybills);
     const handleActFormOpen = () => {
         setActFillDialogOpen(false);
         setActDialogOpen(true);
@@ -195,7 +196,21 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                                 handleActFill(waybill);
                                                             }}/>
                                                     </Tooltip>
-                                                    : null
+                                                    : waybill.status === "CURRENT"
+                                                    && role === "DRIVER"
+                                                        ? <Tooltip title="Current waybill"
+                                                                   arrow
+                                                                   className="table-delete-edit-div">
+                                                            <Button
+                                                                className="menu-table-btn"
+                                                                color={"secondary"}
+                                                                startIcon={<ArrowForwardIcon/>}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleTableRowClick(waybill);
+                                                                }}/>
+                                                        </Tooltip>
+                                                        : null
                                                 }
                                             </TableCell>
                                             {columns.map((column) => {
@@ -212,25 +227,29 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                                                             : column.id === "registrationDate"
                                                                 ? waybill.invoice.checkingDate
                                                                 : column.id === "status"
-                                                                && value === "ACCEPTED"
+                                                                && value === "FUTURE"
                                                                     ? <div style={{
                                                                         color: "royalblue",
                                                                         border: "1px solid royalblue",
                                                                         padding: 3,
                                                                         borderRadius: 5
-                                                                    }}>{waybill.invoice.status}</div>
+                                                                    }}>{waybill.status}</div>
                                                                     : column.id === "status"
-                                                                    && (value === "CLOSED"
-                                                                        || value === "CLOSED_WITH_ACT")
+                                                                    && (value === "DONE")
                                                                         ? <div style={{
                                                                             color: "black",
                                                                             border: "1px solid black",
                                                                             padding: 3,
                                                                             borderRadius: 5
-                                                                        }}>{waybill.invoice.status}</div>
-                                                                        : role === "DRIVER"
-                                                                        && waybill.status === "CURRENT"
-                                                                            ? <div color={"red"}>value</div>
+                                                                        }}>{waybill.status}</div>
+                                                                        : column.id === "status"
+                                                                        && (value === "CURRENT")
+                                                                            ? <div style={{
+                                                                                color: "crimson",
+                                                                                border: "1px solid crimson",
+                                                                                padding: 3,
+                                                                                borderRadius: 5
+                                                                            }}>{waybill.status}</div>
                                                                             : value}
                                                     </TableCell>
                                                 );

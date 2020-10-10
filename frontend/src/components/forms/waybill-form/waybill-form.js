@@ -1,16 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Formik, Form, ErrorMessage} from "formik";
+import {Form, Formik} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
-import {convertPointsFromBackendApi, convertPointsToBackendApi} from "../../../map/utils";
+import {convertPointsToBackendApi} from "../../../map/utils";
 import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
@@ -18,7 +15,6 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import useToast from "../../parts/toast-notification/useToast";
 import AutoSearch from "./auto-search";
 import {countTotalWeight} from "../../parts/util/cargo-total-info";
-import {ErrorMsg} from "../../parts/layout/error-message";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -56,7 +52,8 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const invoiceProductsWeight = countTotalWeight(props.invoice.products);
 
     useEffect(() => {
-        setInvoice(props.invoice);
+        let i = convertShipperAndConsigneeToStringInInvoices(props.invoice);
+        setInvoice(i);
     }, [props.invoice]);
 
     async function fetchAutos(cleanupFunction) {
@@ -101,7 +98,8 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             }
 
             if (selectedAuto.maxLoad < invoiceProductsWeight) {
-                openToast("Weight is overloaded for" + (invoiceProductsWeight - selectedAuto.maxLoad), "warning");
+                openToast("Weight is overloaded for " + (invoiceProductsWeight - selectedAuto.maxLoad)
+                    + " kg.\nSelect another car.", "warning");
                 return;
             }
 
@@ -129,7 +127,24 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             setSelectedAuto(auto);
         }
     };
-    
+
+    const convertShipperAndConsigneeToStringInInvoices = (invoice) => {
+        if (invoice.shipper.id === null || invoice.shipper.id === undefined) {
+            return invoice;
+        }
+        invoice = convertShipperAndConsigneeToString(invoice);
+        return invoice;
+    }
+
+    const convertShipperAndConsigneeToString = (invoice) => {
+        let shipperAddress = invoice.shipper.address;
+        let consigneeAddress = invoice.consignee.address;
+        return {
+            ...invoice,
+            shipper: `${shipperAddress.country} ${shipperAddress.city} ${shipperAddress.street}  ${shipperAddress.house}`,
+            consignee: `${consigneeAddress.country} ${consigneeAddress.city} ${consigneeAddress.street} ${consigneeAddress.house}`
+        };
+    }
 
     let date = new Date();
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
@@ -182,7 +197,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="shipper"
                                                disabled={true}
-                                               value={invoice.shipper.email}
+                                               value={invoice.shipper}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
@@ -191,7 +206,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="consignee"
                                                disabled={true}
-                                               value={invoice.consignee.email}
+                                               value={invoice.consignee}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
