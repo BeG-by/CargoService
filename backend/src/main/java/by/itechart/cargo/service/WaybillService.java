@@ -1,11 +1,10 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
-import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Waybill;
 
-import java.util.List;
 
 public interface WaybillService {
 
@@ -14,6 +13,8 @@ public interface WaybillService {
     void save(WaybillRequest waybillRequest) throws NotFoundException;
 
     Waybill findByStatusAndDriverId(Long id);
+
+    Waybill findByStatusAndDriverId();
 
     WaybillPaginationResponse findAllByRegistrationUser(Integer page, Integer waybillsPerPage);
 

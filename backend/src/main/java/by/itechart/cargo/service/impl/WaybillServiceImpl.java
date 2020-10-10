@@ -1,10 +1,13 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
-import by.itechart.cargo.dto.model_dto.waybill.WaybillTableResponse;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillResponse;
+import by.itechart.cargo.elasticsearch.model.ElasticsearchWaybill;
+import by.itechart.cargo.elasticsearch.repository.ElasticsearchWaybillRepository;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Auto;
+import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Invoice;
 import by.itechart.cargo.model.Waybill;
 import by.itechart.cargo.repository.AutoRepository;
@@ -21,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Driver;
 import java.util.List;
 import java.util.stream.Collectors;
 

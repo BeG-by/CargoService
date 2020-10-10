@@ -6,7 +6,13 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {handleRequestError, makeRequest, WAYBILL_URL} from "../../parts/util/request-util";
+import {
+    DRIVER_WAYBILL_URL,
+    handleRequestError,
+    makeRequest,
+    MANAGER_WAYBILL_URL,
+    WAYBILL_URL
+} from "../../parts/util/request-util";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
@@ -16,7 +22,7 @@ import ActDialog from "./act-dialog";
 import {connect} from "react-redux";
 import Button from "@material-ui/core/Button";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import {NotAuthorized} from "../../pages/error-page/error-401";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Tooltip from "@material-ui/core/Tooltip";

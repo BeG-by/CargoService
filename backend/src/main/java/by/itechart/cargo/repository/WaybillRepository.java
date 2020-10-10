@@ -1,9 +1,11 @@
 package by.itechart.cargo.repository;
 
-import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Waybill;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
 
 public interface WaybillRepository extends JpaRepository<Waybill, Long> {
