@@ -4,28 +4,26 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 
 export default function StorageSearch(props) {
-    const storages = props.storages;
-    const onStorageSelect = props.onStorageSelect;
-    const prevStorage = props.prevStorage;
+    const {title = "Storages", prevStorage, onStorageSelect, storages} = props;
 
     const [inputValue, setInputValue] = useState("");
     const [selectedStorage, setSelectedStorage] = useState(prevStorage);
 
     return (
         <Autocomplete
-            id={"storage_autocomplete_field"}
+            id={"storage_autocomplete_field" + {title}}
             value={selectedStorage}
             onChange={(event, newValue) => {
                 setSelectedStorage(newValue);
-                onStorageSelect(newValue);
+                onStorageSelect(newValue, title);
             }}
             inputValue={inputValue}
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            getOptionLabel={(storage) => storage === "" ? "" : `${storage.address.country}  ${storage.address.city}  ${storage.address.street}   ${storage.email}  ${storage.phone}`}
+            getOptionLabel={(storage) => storage === "" ? "" : `${storage.address.city}  ${storage.address.street}   ${storage.address.house}`}
             options={storages}
-            renderInput={(params) => <TextField {...params} label="Storages" fullWidth/>}
+            renderInput={(params) => <TextField {...params} label={title} fullWidth/>}
         />
     )
 }

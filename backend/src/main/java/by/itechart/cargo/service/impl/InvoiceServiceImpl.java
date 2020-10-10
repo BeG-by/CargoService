@@ -18,11 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoices;
-import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.constant.MessageConstant.*;
 
 @Service
 @Transactional
@@ -191,30 +190,29 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Storage shipper = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Shipper doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(SHIPPER_NOT_FOUND_MESSAGE));
         invoice.setShipper(shipper);
 
         Storage consignee = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Consignee doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(CONSIGNEE_NOT_FOUND_MESSAGE));
         invoice.setConsignee(consignee);
 
         ProductOwner productOwner = productOwnerRepository
                 .findByIdAndClientCompanyIdAndStatus(productOwnerId, companyId, ProductOwner.Status.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Product owner doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
         invoice.setProductOwner(productOwner);
 
-        //todo: check on role
+
         User driver = userRepository
                 .findByIdAndClientCompanyId(driverId, companyId)
-                .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(DRIVER_NOT_FOUND_MESSAGE));
         invoice.setDriver(driver);
 
 
-        //todo: check on role
         User manager = userRepository
                 .findByIdAndClientCompanyId(managerId, companyId)
-                .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(MANAGER_NOT_FOUND_MESSAGE));
         invoice.setCheckingUser(manager);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
@@ -229,7 +227,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         });
 
 
-        //todo: fix it in frontend
         if (invoiceRequest.getStatus() == null) {
             invoice.setStatus(Invoice.Status.REGISTERED);
         } else {

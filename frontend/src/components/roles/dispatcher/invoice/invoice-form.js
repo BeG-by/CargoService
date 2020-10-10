@@ -3,7 +3,7 @@ import FormikField from "../formik-field"
 import {Form, Formik} from "formik";
 import ProductsTable from "../products/products-table";
 import ProductDialog from "../products/product-dialog";
-import {InvoiceFormValidation} from "./validation-shema";
+import {InvoiceFormValidation} from "../../../parts/validation/invoice-form-validation";
 import {Button} from "@material-ui/core";
 import useToast from "../../../parts/toast-notification/useToast";
 import Paper from '@material-ui/core/Paper';
@@ -16,12 +16,11 @@ import {
     makeRequest
 } from "../../../parts/util/request-util";
 import "../styles/invoice-form.css"
-import PersonSearch from "./person-search";
-import StorageSearchDialog from "./storage-search/storage-search-dialog";
-import TextField from "@material-ui/core/TextField";
+import PersonSearch from "./search-selectors/person-search";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {UserInfo} from "../../admin/user-info";
+import StorageSearch from "./search-selectors/storage-search";
 
 
 const STORAGE_TITLE_SHIPPER = "Shipper";
@@ -110,14 +109,12 @@ const TOTAL = {
 
 function InvoiceForm(props) {
     const styles = useStyles();
-    const {onClose} = props;
+    const {onClose , invoiceId , openToast} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
 
     const [drivers, setDrivers] = useState([]);
     const [managers, setManagers] = useState([]);
     const [storages, setStorages] = useState([]);
-    const [storageDialogOpen, setStorageDialogOpen] = useState(false);
-    const [storageDialogTitle, setStorageDialogTitle] = useState(STORAGE_TITLE_SHIPPER)
 
     const [selectedProduct, setSelectedProduct] = useState(EMPTY_PRODUCT);
     const [productDialogOpen, setProductDialogOpen] = useState(false);
@@ -127,14 +124,15 @@ function InvoiceForm(props) {
 
     useEffect(() => {
         updateDriversAndStoragesAndManagers();
-        if (props.invoiceId !== null && props.invoiceId !== undefined) {
-            fetchInitInvoiceState(props.invoiceId);
+        if (invoiceId !== null && invoiceId !== undefined) {
+            fetchInitInvoiceState(invoiceId);
         } else {
             setEmptyInitInvoiceState();
         }
-    }, [props.invoiceId, props.productOwner]);
+    }, [invoiceId, props.productOwner]);
 
     const validateInvoice = () => {
+
         if (initInvoice.consignee.id === -1) {
             showToastComponent("Select consignee", "error");
             return false;
@@ -145,12 +143,18 @@ function InvoiceForm(props) {
             return false;
         }
 
+        if (initInvoice.shipper.id === initInvoice.consignee.id) {
+            showToastComponent("Consignee and shipper have the similar address", "error");
+            return false;
+        }
+
         if (initInvoice.driver.id === -1) {
             showToastComponent("Select driver", "error");
             return false;
         }
 
-        if (initInvoice.manager.id === -1) {
+
+        if (initInvoice.manager.id === -1) { // manager.id  or checkingUser?
             showToastComponent("Select manager", "error");
             return false;
         }
@@ -162,6 +166,8 @@ function InvoiceForm(props) {
         let invoice = {};
 
         if (!validateInvoice()) {
+            console.log("NOT VALID");
+            console.log(initInvoice);
             return;
         }
 
@@ -172,7 +178,7 @@ function InvoiceForm(props) {
         invoice.products = initInvoice.products;
         invoice.registrationDate = initInvoice.registrationDate;
         invoice.driverId = initInvoice.driver.id;
-        invoice.managerId = initInvoice.manager.id;
+        invoice.managerId = initInvoice.manager.id; // manager.id  or checkingUser?
         invoice.status = "REGISTERED";
 
         if (props.invoiceId !== null && props.invoiceId !== undefined) {
@@ -206,7 +212,7 @@ function InvoiceForm(props) {
     const sendInvoiceForSave = async (invoice) => {
         try {
             await makeRequest("POST", INVOICE_URL, invoice);
-            showToastComponent("Invoice has been saved");
+            openToast("Invoice has been saved");
             handleClose();
         } catch (error) {
             handleRequestError(error, showToastComponent);
@@ -216,7 +222,7 @@ function InvoiceForm(props) {
     const sendInvoiceForUpdate = async (invoice) => {
         try {
             await makeRequest("PUT", INVOICE_URL, invoice);
-            showToastComponent("Invoice has been updated");
+            openToast("Invoice has been updated");
             handleClose();
         } catch (error) {
             handleRequestError(error, showToastComponent);
@@ -226,13 +232,14 @@ function InvoiceForm(props) {
     const fetchInitInvoiceState = async (id) => {
         try {
             const res = await makeRequest("GET", INVOICE_URL + "/" + id);
-            console.log(res.data)
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
             }
+
+            console.log(invoiceState);
+
             invoiceState.productOwner.type = invoiceState.productOwner.type === "SP" ? "Sole proprietorship" : "Juridical person";
-            console.log(invoiceState)
             setInitInvoice(invoiceState);
         } catch (error) {
             setInitInvoice(INIT_INVOICE_STATE);
@@ -353,29 +360,21 @@ function InvoiceForm(props) {
         }
     }
 
-    const handleStorageSelect = (storage) => {
+    const handleConsigneeSelect = (storage, key) => {
+
+        key = key.toLowerCase();
+
         if (storage !== null) {
-            if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
-                setInitInvoice((prevState) => {
-                    return {...prevState, consignee: storage};
-                })
-            } else {
-                setInitInvoice((prevState) => {
-                    return {...prevState, shipper: storage};
-                })
-            }
+            setInitInvoice((prevState) => {
+                return {...prevState, [key]: storage};
+            })
         } else {
-            if (storageDialogTitle === STORAGE_TITLE_CONSIGNEE) {
-                setInitInvoice((prevState) => {
-                    return {...prevState, consignee: EMPTY_STORAGE};
-                })
-            } else {
-                setInitInvoice((prevState) => {
-                    return {...prevState, shipper: EMPTY_STORAGE};
-                })
-            }
+            setInitInvoice((prevState) => {
+                return {...prevState, [key]: EMPTY_STORAGE};
+            })
         }
-    }
+    };
+
 
     return (
         <React.Fragment>
@@ -411,31 +410,28 @@ function InvoiceForm(props) {
                                         <div className="data-wrapper">
                                             <Paper elevation={3}>
                                                 <p className="div-title">Information</p>
+                                                <span className="invoice-input">
                                                 <FormikField
                                                     formikProps={formProps}
                                                     id={"invoiceNumber"}
                                                     label={"Invoice number"}
                                                     formikFieldName={"invoiceNumber"}
+
                                                 />
-                                                <TextField
-                                                    id={"shipper"}
-                                                    value={initInvoice.shipper.email}
-                                                    onClick={() => {
-                                                        setStorageDialogTitle(STORAGE_TITLE_SHIPPER)
-                                                        setStorageDialogOpen(true)
-                                                    }}
-                                                    label={"Shipper"}
-                                                    fullWidth
+                                                </span>
+
+                                                <StorageSearch
+                                                    storages={storages}
+                                                    onStorageSelect={handleConsigneeSelect}
+                                                    prevStorage={initInvoice.consignee.id === -1 ? null : initInvoice.shipper}
+                                                    title={STORAGE_TITLE_SHIPPER}
                                                 />
-                                                <TextField
-                                                    id={"consignee"}
-                                                    value={initInvoice.consignee.email}
-                                                    onClick={() => {
-                                                        setStorageDialogTitle(STORAGE_TITLE_CONSIGNEE)
-                                                        setStorageDialogOpen(true)
-                                                    }}
-                                                    label={"Consignee"}
-                                                    fullWidth
+
+                                                <StorageSearch
+                                                    storages={storages}
+                                                    onStorageSelect={handleConsigneeSelect}
+                                                    prevStorage={initInvoice.consignee.id === -1 ? null : initInvoice.consignee}
+                                                    title={STORAGE_TITLE_CONSIGNEE}
                                                 />
 
                                                 <PersonSearch
@@ -535,19 +531,6 @@ function InvoiceForm(props) {
                 initProductState={selectedProduct}
                 onSubmit={handleProductDialogSubmit}
                 onClose={handleProductDialogClose}
-            />
-
-            <StorageSearchDialog
-                open={storageDialogOpen}
-                storages={storages}
-                onSelect={handleStorageSelect}
-                title={storageDialogTitle}
-                onClose={() => setStorageDialogOpen(false)}
-                prevStorage={storageDialogTitle === STORAGE_TITLE_CONSIGNEE ?
-                    initInvoice.consignee.id === -1 ? null : initInvoice.consignee
-                    :
-                    initInvoice.shipper.id === -1 ? null : initInvoice.shipper
-                }
             />
 
         </React.Fragment>

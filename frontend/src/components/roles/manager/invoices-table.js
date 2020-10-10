@@ -412,6 +412,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         onClose={() => {
                             setInvoiceDialogEditOpen(false);
                         }}
+                        openToast={openToast}
                     />
                 </Paper>
                 {ToastComponent}
