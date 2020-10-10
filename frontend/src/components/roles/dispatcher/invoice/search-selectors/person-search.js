@@ -4,9 +4,8 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 
 export default function PersonSearch(props) {
-    const persons = props.persons;
-    const onPersonSelect = props.onPersonSelect;
-    const label = props.label;
+
+    const {persons, onPersonSelect, label} = props;
 
     const [inputValue, setInputValue] = useState("");
     const [selectedPerson, setSelectedPerson] = useState("");

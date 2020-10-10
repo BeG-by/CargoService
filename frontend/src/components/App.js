@@ -16,7 +16,6 @@ import ContactsBody from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import {UserTable} from "./roles/admin/users/user-table";
 import {ProductOwnersTable} from "./roles/dispatcher/product-owners/product-owners-table";
-import {DispatcherInvoiceTable} from "./roles/dispatcher/invoice/invoice-table";
 import {AutoTable} from "./roles/admin/autos/auto-table";
 import {StorageTable} from "./roles/dispatcher/storages/storages-table";
 import {ClientsTable} from "./roles/sysadmin/clients-table";
@@ -70,8 +69,6 @@ export default function App() {
                                   hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_ADMIN, ROLE_OWNER]}/>
                     <PrivateRoute exact path={"/owners"} component={ProductOwnersTable}
                                   hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_OWNER]}/>
-                    <PrivateRoute exact path={"/invoices"} component={DispatcherInvoiceTable}
-                                  hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER, ROLE_DISPATCHER]}/>
                     <PrivateRoute exact path={"/storages"} component={StorageTable}
                                   hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_ADMIN, ROLE_OWNER]}/>
                     <PrivateRoute exact path={"/current"} component={CurrentWaybillBody}

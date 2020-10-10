@@ -2,7 +2,7 @@ import React from "react";
 import {Form, Formik} from "formik";
 import FormikField from "../formik-field";
 import Button from "@material-ui/core/Button";
-import {ProductFormValidationSchema} from "./validation-shema";
+import {ProductFormValidationSchema} from "../../../parts/validation/products-validation";
 import {ProductCurrencySelector, ProductMassMeasureSelector, ProductQuantityMeasureSelector} from "./product-selectors";
 
 export default function ProductForm(props) {
@@ -30,7 +30,7 @@ export default function ProductForm(props) {
             validationSchema={ProductFormValidationSchema}
         >
             {(formProps) => (
-                <Form>
+                <Form style={{width: 400}}>
                     <FormikField
                         formikProps={formProps}
                         id={"name"}

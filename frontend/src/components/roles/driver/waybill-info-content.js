@@ -51,8 +51,6 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
     const [userInfoDialogOpen, setUserInfoDialogOpen] = React.useState(false);
     const [title, setTitle] = React.useState("");
 
-    console.log(waybill)
-
     const handleClose = () => {
         setInvoiceInfoDialogOpen(false);
         setUserInfoDialogOpen(false);

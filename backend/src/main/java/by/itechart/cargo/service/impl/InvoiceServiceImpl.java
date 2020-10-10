@@ -18,11 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoices;
-import static by.itechart.cargo.service.constant.MessageConstant.INVOICE_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.constant.MessageConstant.*;
 
 @Service
 @Transactional
@@ -32,6 +31,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final UserRepository userRepository;
+    private final WaybillRepository waybillRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final ProductOwnerRepository productOwnerRepository;
     private final RoleRepository roleRepository;
@@ -40,6 +40,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
+                              WaybillRepository waybillRepository,
                               ProductOwnerRepository productOwnerRepository,
                               ClientCompanyRepository clientCompanyRepository,
                               UserRepository userRepository,
@@ -49,6 +50,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                               ElasticsearchInvoiceRepository elasticsearchInvoiceRepository) {
 
         this.invoiceRepository = invoiceRepository;
+        this.waybillRepository = waybillRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -191,30 +193,29 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Storage shipper = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Shipper doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(SHIPPER_NOT_FOUND_MESSAGE));
         invoice.setShipper(shipper);
 
         Storage consignee = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Consignee doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(CONSIGNEE_NOT_FOUND_MESSAGE));
         invoice.setConsignee(consignee);
 
         ProductOwner productOwner = productOwnerRepository
                 .findByIdAndClientCompanyIdAndStatus(productOwnerId, companyId, ProductOwner.Status.ACTIVE)
-                .orElseThrow(() -> new NotFoundException("Product owner doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(PRODUCT_OWNER_NOT_FOUND_MESSAGE));
         invoice.setProductOwner(productOwner);
 
-        //todo: check on role
+
         User driver = userRepository
                 .findByIdAndClientCompanyId(driverId, companyId)
-                .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(DRIVER_NOT_FOUND_MESSAGE));
         invoice.setDriver(driver);
 
 
-        //todo: check on role
         User manager = userRepository
                 .findByIdAndClientCompanyId(managerId, companyId)
-                .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(MANAGER_NOT_FOUND_MESSAGE));
         invoice.setCheckingUser(manager);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
@@ -229,7 +230,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         });
 
 
-        //todo: fix it in frontend
         if (invoiceRequest.getStatus() == null) {
             invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
@@ -248,7 +248,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = invoiceRequest.getDriverId();
-        final Long managerId = invoiceRequest.getDriverId();
+        final Long managerId = invoiceRequest.getManagerId();
+
+        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
+            throw new AlreadyExistException(String.format("Invoice with number \"%s\" exists", invoiceRequest.getInvoiceNumber()));
+        }
 
         Invoice invoice = invoiceRepository
                 .findById(invoiceRequest.getId())
@@ -256,17 +260,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         User driver = userRepository
                 .findByIdAndClientCompanyId(driverId, companyId)
-                .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
-        invoice.setDriver(driver);
+                .orElseThrow(() -> new NotFoundException(DRIVER_NOT_FOUND_MESSAGE));
+
 
         User manager = userRepository
                 .findByIdAndClientCompanyId(managerId, companyId)
-                .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
-        invoice.setCheckingUser(manager);
+                .orElseThrow(() -> new NotFoundException(MANAGER_NOT_FOUND_MESSAGE));
 
-        if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
-            throw new AlreadyExistException("Invoice already exists");
-        }
+        invoice.setDriver(driver);
+        invoice.setCheckingUser(manager);
 
         final ClientCompany clientCompany = clientCompanyRepository.getOne(companyId);
         invoice.setClientCompany(clientCompany);
@@ -276,12 +278,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Storage shipper = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Shipper doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(SHIPPER_NOT_FOUND_MESSAGE));
         invoice.setShipper(shipper);
 
         Storage consignee = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Consignee doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(CONSIGNEE_NOT_FOUND_MESSAGE));
         invoice.setConsignee(consignee);
 
         invoice.setNumber(invoiceRequest.getInvoiceNumber());
@@ -317,6 +319,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         } else if (invoice.getStatus().equals(Invoice.Status.CLOSED)
                 || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
             foundInvoice.setCloseDate(LocalDate.now());
+            Waybill waybill = foundInvoice.getWaybill();
+            waybill.setStatus(Waybill.WaybillStatus.DONE);
+            Long driverId = foundInvoice.getDriver().getId();
+            final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
+            final Long companyId = currentUser.getClientCompany().getId();
+            List<Waybill> waybills = waybillRepository.findAllByStatusAndDriverIdY(driverId, companyId);
+            if (waybills.size() > 0) {
+                Waybill current = waybills.get(0);
+                LocalDate date = LocalDate.now().plusDays(30);
+                for (Waybill w : waybills) {
+                    if (w.getDepartureDate().isBefore(date)) {
+                        date = w.getDepartureDate();
+                        current = w;
+                    }
+                }
+                current.setStatus(Waybill.WaybillStatus.CURRENT);
+            }
         }
         foundInvoice.setStatus(invoice.getStatus());
         foundInvoice.setComment(invoice.getComment());
@@ -338,7 +357,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     private boolean isValidInvoiceNumberForUpdate(InvoiceRequest invoiceRequest) {
-        Optional<Invoice> invoiceByNumber = invoiceRepository.findByNumber(invoiceRequest.getInvoiceNumber());
-        return invoiceByNumber.isEmpty() || invoiceByNumber.get().getId().equals(invoiceRequest.getId());
+        return invoiceRepository
+                .findByNumber(invoiceRequest.getInvoiceNumber())
+                .filter(invoice -> !invoice.getId().equals(invoiceRequest.getId()))
+                .isPresent();
     }
 }

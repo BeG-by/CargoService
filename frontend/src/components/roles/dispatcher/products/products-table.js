@@ -4,16 +4,14 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import fetchFieldFromObject from "../../../parts/util/function-util";
-import {Typography} from "@material-ui/core";
 import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 const MIN_WIDTH = 170;
@@ -24,12 +22,12 @@ const FONT_SIZE = 12;
 const columns = [
     {label: "Name", id: "name", minWidth: 100, maxWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
     {label: "Mass", id: "mass", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
-    {label: "Mass measure", id: "massMeasure", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Measure", id: "massMeasure", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
     {label: "Quantity", id: "quantity", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
-    {label: "Quantity measure", id: "quantityMeasure", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
-    {label: "Price", id: "price", minWidth: 100, maxWidth: 100, fontSize: FONT_SIZE},
+    {label: "Measure", id: "quantityMeasure", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Price", id: "price", minWidth: 80, maxWidth: 80, fontSize: FONT_SIZE},
     {label: "Currency", id: "currency", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
-    {label: "Sum", id: "sum", minWidth: 100, maxWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {label: "Sum", id: "sum", minWidth: 80, maxWidth: 80, align: ALIGN, fontSize: FONT_SIZE},
     {id: "editDelete", label: "", minWidth: 60, maxWidth: 60, align: ALIGN, fontSize: FONT_SIZE}
 ];
 
@@ -100,6 +98,7 @@ export default (props) => {
                         order={order}
                         orderBy={orderBy}
                         onRequestSort={handleRequestSort}
+                        customClass={"header-background"}
                     />
                     <TableBody>
                         {stableSort(products, getComparator(order, orderBy))
@@ -125,23 +124,27 @@ export default (props) => {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}
                                                                className="edit-delete-block">
-                                                        <Button
-                                                            className="menu-table-btn"
-                                                            color={"primary"}
-                                                            startIcon={<EditIcon/>}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleTableRowClick(product)
-                                                            }}/>
+                                                        <Tooltip title="Click to edit product" arrow>
+                                                            <Button
+                                                                className="menu-table-btn"
+                                                                color={"primary"}
+                                                                startIcon={<EditIcon/>}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleTableRowClick(product)
+                                                                }}/>
+                                                        </Tooltip>
 
-                                                        <Button
-                                                            className="menu-table-btn"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                onRowDelete(product.id);
-                                                            }} color="primary"
-                                                            startIcon={<DeleteIcon/>}
-                                                        />
+                                                        <Tooltip title="Click to edit product" arrow>
+                                                            <Button
+                                                                className="menu-table-btn"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    onRowDelete(product.id);
+                                                                }} color="primary"
+                                                                startIcon={<DeleteIcon/>}
+                                                            />
+                                                        </Tooltip>
 
 
                                                     </TableCell>
@@ -149,7 +152,7 @@ export default (props) => {
                                             }
 
                                             let innerContent = column.id === "sum" ?
-                                                sumRow + " " + product.currency :
+                                                sumRow :
                                                 fetchFieldFromObject(product, column.id);
 
                                             return (

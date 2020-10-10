@@ -22,6 +22,7 @@ export const StorageScheme = Yup.object({
         .matches(/^[A-Яа-яA-Za-z0-9]+$/, "House must contain symbols A-Z, a-z, А-Я, а-я, 0-9"),
     email: Yup.string()
         .required("Email is required")
+        .max(24, "Max length must be lesser than 24 symbols")
         .email("Email is invalid"),
     phone: Yup.string()
         .required("Phone is required")
