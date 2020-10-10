@@ -32,7 +32,6 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import {countTotalWeight} from "../../parts/util/cargo-total-info";
 import InvoiceDialog from "../dispatcher/invoice/invoice-dialog";
 
 const LEFT = "left";
@@ -411,6 +410,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         open={invoiceDialogEditOpen}
                         onClose={() => {
                             setInvoiceDialogEditOpen(false);
+                            fetchInvoices();
                         }}
                         openToast={openToast}
                     />

@@ -94,6 +94,7 @@
 }
 
 .left-div-wrapper {
+    min-width: 400px;
     flex-basis: 60%;
     padding-right: 15px;
     padding-bottom: 15px;

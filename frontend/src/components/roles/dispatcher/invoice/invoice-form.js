@@ -109,7 +109,7 @@ const TOTAL = {
 
 function InvoiceForm(props) {
     const styles = useStyles();
-    const {onClose , invoiceId , openToast} = props;
+    const {onClose, invoiceId, openToast} = props;
     const [initInvoice, setInitInvoice] = useState(INIT_INVOICE_STATE);
 
     const [drivers, setDrivers] = useState([]);
@@ -166,8 +166,6 @@ function InvoiceForm(props) {
         let invoice = {};
 
         if (!validateInvoice()) {
-            console.log("NOT VALID");
-            console.log(initInvoice);
             return;
         }
 
@@ -235,7 +233,8 @@ function InvoiceForm(props) {
             let invoiceState = {
                 ...res.data,
                 productOwner: res.data.productOwnerDTO,
-            }
+                manager: res.data.checkingUser
+            };
 
             console.log(invoiceState);
 
@@ -455,6 +454,16 @@ function InvoiceForm(props) {
                                                     </div>
                                                 </div>
                                             </Paper>
+
+                                            {initInvoice.id > 0 ?
+                                                <Paper elevation={3}>
+                                                    <p className="div-title">Comment</p>
+                                                    <div style={{marginBottom: 20}}>
+                                                        {initInvoice.comment}
+                                                    </div>
+                                                </Paper>
+                                                : ""}
+
                                         </div>
                                     </div>
                                     <div className="right-div-wrapper">
@@ -469,7 +478,6 @@ function InvoiceForm(props) {
                                             customClass={""}
                                             title={"Manager"}
                                         />
-                                        {initInvoice.comment}
                                     </div>
                                 </div>
                             </div>

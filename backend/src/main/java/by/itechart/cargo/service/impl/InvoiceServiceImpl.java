@@ -248,7 +248,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         final Long managerId = invoiceRequest.getManagerId();
 
         if (isValidInvoiceNumberForUpdate(invoiceRequest)) {
-            throw new AlreadyExistException("Invoice already exists");
+            throw new AlreadyExistException(String.format("Invoice with number \"%s\" exists", invoiceRequest.getInvoiceNumber()));
         }
 
         Invoice invoice = invoiceRepository
@@ -257,12 +257,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         User driver = userRepository
                 .findByIdAndClientCompanyId(driverId, companyId)
-                .orElseThrow(() -> new NotFoundException("Driver doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(DRIVER_NOT_FOUND_MESSAGE));
 
 
         User manager = userRepository
                 .findByIdAndClientCompanyId(managerId, companyId)
-                .orElseThrow(() -> new NotFoundException("Manager doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(MANAGER_NOT_FOUND_MESSAGE));
 
         invoice.setDriver(driver);
         invoice.setCheckingUser(manager);
@@ -275,12 +275,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Storage shipper = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getShipperId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Shipper doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(SHIPPER_NOT_FOUND_MESSAGE));
         invoice.setShipper(shipper);
 
         Storage consignee = storageRepository
                 .findByIdAndStatusAndClientCompanyId(invoiceRequest.getConsigneeId(), Storage.Status.ACTIVE, companyId)
-                .orElseThrow(() -> new NotFoundException("Consignee doesn't exists"));
+                .orElseThrow(() -> new NotFoundException(CONSIGNEE_NOT_FOUND_MESSAGE));
         invoice.setConsignee(consignee);
 
         invoice.setNumber(invoiceRequest.getInvoiceNumber());
