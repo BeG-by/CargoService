@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,5 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByClientCompanyIdAndRoles(Long clientCompanyId, Role role);
 
     Optional<User> findByIdAndRolesAndClientCompanyId(Long userId, Role role, Long clientCompanyId);
+
+    @Query("FROM User u WHERE u.status <> 'DELETED'")
+    List<User> findAllPresent();
 
 }
