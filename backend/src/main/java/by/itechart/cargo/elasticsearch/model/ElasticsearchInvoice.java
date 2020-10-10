@@ -16,22 +16,22 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class ElasticsearchInvoice {
 
     @Id
-    Long id;
+    private Long id;
 
     @Field(type = FieldType.Keyword)
-    String number;
+    private String number;
 
     @Field(type = FieldType.Long)
-    Long clientCompanyId;
+    private Long clientCompanyId;
 
     @Field(type = FieldType.Long)
-    Long registrationUserId;
+    private Long registrationUserId;
 
     @Field(type = FieldType.Long)
-    Long checkingUserId;
+    private Long checkingUserId;
 
     @Field(type = FieldType.Long)
-    Long driverId;
+    private Long driverId;
 
     public static ElasticsearchInvoice fromInvoice(Invoice invoice) {
         return new ElasticsearchInvoice(invoice.getId(),

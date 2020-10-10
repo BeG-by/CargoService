@@ -42,21 +42,27 @@ const mapStateToProps = (store) => {
 export const StorageTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalStoragesAmount, setTotalStoragesAmount] = useState(0);
+
     const [storages, setStorages] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedStorageId, setSelectedStorageId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
-    const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the storage ?";
 
     useEffect(() => {
         insertStorages()
     }, []);
 
-    const insertStorages = () => {
-        makeRequest("GET", STORAGE_URL)
-            .then(res => setStorages(res.data))
-            .catch(error => handleRequestError(error, showToastComponent))
+    const insertStorages = async (curPage = page, curRowsPerPage = rowsPerPage) => {
+        try {
+            let url = `${STORAGE_URL}?page=${curPage}&storagesPerPage=${curRowsPerPage}`
+            let result = await makeRequest("GET", url)
+            setStorages(result.data.storages)
+            setTotalStoragesAmount(result.data.totalAmount)
+        } catch (err) {
+            handleRequestError(err, showToastComponent)
+        }
     };
 
 
@@ -72,6 +78,7 @@ export const StorageTable = connect(mapStateToProps)((props) => {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        insertStorages(newPage);
     };
 
     const handleTableRowClick = (auto) => {
@@ -82,6 +89,7 @@ export const StorageTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        insertStorages(page, +event.target.value);
     };
 
 
@@ -123,7 +131,6 @@ export const StorageTable = connect(mapStateToProps)((props) => {
                         </TableHead>
                         <TableBody>
                             {storages
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((storage) => {
 
                                     return (
@@ -185,7 +192,7 @@ export const StorageTable = connect(mapStateToProps)((props) => {
                 <TablePagination
                     rowsPerPageOptions={[10, 15, 20]}
                     component="div"
-                    count={storages.length}
+                    count={totalStoragesAmount}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

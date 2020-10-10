@@ -9,16 +9,19 @@ import java.util.List;
 
 public interface WaybillService {
 
-    List<Waybill> findAll();
-
-    List<WaybillTableResponse> findAllTableData();
-
     Waybill findById(long id) throws NotFoundException;
 
     void save(WaybillRequest waybillRequest) throws NotFoundException;
 
-    Waybill findByStatusAndDriverId();
-
     Waybill findByStatusAndDriverId(Long id);
+
+    WaybillPaginationResponse findAllByRegistrationUser(Integer page, Integer waybillsPerPage);
+
+    WaybillPaginationResponse findAllByRegistrationUserAndInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage);
+
+    WaybillPaginationResponse findAllByDriver(Integer page, Integer waybillsPerPage);
+
+    WaybillPaginationResponse findAllByDriverAndInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage);
+
 
 }

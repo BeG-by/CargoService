@@ -438,6 +438,7 @@
                 <constraints nullable="false"/>
             </column>
 
+            <!--Unnecessary field (we connect waybill with invoice and invoice has client company id) //comment_author: vladislav -->
             <column name="id_client_company" type="BIGSERIAL"/>
 
         </createTable>

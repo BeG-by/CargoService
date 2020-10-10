@@ -8,7 +8,18 @@ import java.util.List;
 
 public interface WaybillRepository extends JpaRepository<Waybill, Long> {
 
-    List<Waybill> findByClientCompany(ClientCompany clientCompany);
+    List<Waybill> findALlByIdIsIn(List<Long> ids);
+
+
+    @Query("SELECT w FROM Waybill w JOIN w.invoice i ON w.invoice.id = i.id " +
+            "WHERE i.clientCompany.id = :clientCompanyId " +
+            "AND i.driver.id = :driverId")
+    Page<Waybill> findAllByClientCompanyIdAndDriverId(Long clientCompanyId, Long driverId, Pageable pageable);
+
+    @Query("SELECT w FROM Waybill w JOIN w.invoice i ON w.invoice.id = i.id " +
+            "WHERE i.clientCompany.id = :clientCompanyId " +
+            "AND i.checkingUser.id = :registrationUserId")
+    Page<Waybill> findAllByClientCompanyIdAndRegistrationUserId(Long clientCompanyId, Long registrationUserId, Pageable pageable);
 
     @Query("SELECT w FROM Waybill w JOIN w.invoice i ON w.invoice.id = i.id " +
             "WHERE i.clientCompany.id = :clientCompanyId " +

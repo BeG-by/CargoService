@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoices;
@@ -106,6 +107,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWith(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -124,6 +126,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWithForDriver(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -140,6 +143,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWithForManager(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -156,6 +160,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoicePaginationResponse findAllByNumberStartsWithForDispatcher(String numberStartStr, int requestedPage, int invoicesPerPage) {
+        numberStartStr = numberStartStr.replace(" ", "");
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
         PageRequest pageRequest = PageRequest.of(requestedPage, invoicesPerPage);
@@ -262,7 +267,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .findByIdAndClientCompanyId(driverId, companyId)
                 .orElseThrow(() -> new NotFoundException(DRIVER_NOT_FOUND_MESSAGE));
 
-
         User manager = userRepository
                 .findByIdAndClientCompanyId(managerId, companyId)
                 .orElseThrow(() -> new NotFoundException(MANAGER_NOT_FOUND_MESSAGE));
@@ -288,7 +292,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoice.setNumber(invoiceRequest.getInvoiceNumber());
 
-        //todo: fix it
         if (invoiceRequest.getStatus() == null) {
             invoice.setStatus(Invoice.Status.REGISTERED);
         } else {
@@ -308,7 +311,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    //todo: refactor method
     public void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
         Invoice foundInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow(() ->
@@ -345,7 +347,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public DataForInvoiceCreating findDataForInvoiceCreating() {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
-        List<Storage> storages = storageRepository.findAllWithoutDeleted(clientCompany.getId());
+        List<Storage> storages = storageRepository.findAllByClientCompanyIdAndStatus(clientCompany.getId(), Storage.Status.ACTIVE);
 
         Role driverRole = roleRepository.getByRole(Role.RoleType.DRIVER);
         List<User> drivers = userRepository.findAllByClientCompanyIdAndRoles(clientCompany.getId(), driverRole);

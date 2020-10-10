@@ -3,7 +3,10 @@ import {Form, Formik} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
+import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import DatePickerField from "../../parts/layout/date-picker";
 import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
@@ -57,7 +60,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     }, [props.invoice]);
 
     async function fetchAutos(cleanupFunction) {
-        if (!cleanupFunction) setAutos(await getAllAutos());
+        if (!cleanupFunction) {
+            let autoPaginationResponse = await getAllAutos()
+            setAutos(autoPaginationResponse.autoList);
+        }
     }
 
     useEffect(() => {
@@ -197,7 +203,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="shipper"
                                                disabled={true}
-                                               value={invoice.shipper}
+                                               value={invoice.shipper.email}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
@@ -206,7 +212,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="consignee"
                                                disabled={true}
-                                               value={invoice.consignee}
+                                               value={invoice.consignee.email}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
