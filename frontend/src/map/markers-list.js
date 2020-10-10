@@ -83,8 +83,8 @@ export default function ItemList(props) {
             response = await response.json();
             return response.results[0].formatted_address;
         } catch (e) {
-            console.log("Cannot geocode")
-            return "";
+            console.error("Cannot geocode")
+            return "Unrecognized place";
         }
     }
 

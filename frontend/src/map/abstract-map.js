@@ -2,16 +2,20 @@ import React, {useCallback, useRef, useState} from "react";
 import {GoogleMap, Marker, Polyline, useLoadScript} from "@react-google-maps/api";
 import MarkersList from "./markers-list.js";
 import {GOOGLE_MAP_API_KEY} from "../keys.json";
+import Search from "./search";
+import Locate from "./locate";
 
 export const API_KEY = GOOGLE_MAP_API_KEY;
 const MAP_CONTAINER_STYLE = {width: 750, height: 500}
-const MAP_OPTIONS = {disableDefaultUI: true};
+const MAP_OPTIONS = {disableDefaultUI: true,};
 const START_CENTER = {lat: 43.6, lng: -79};
 const START_ZOOM = 8;
+const ZOOM_FOR_PLACE = 15;
 const PASSED_MARKER_ICON = "http://maps.google.com/mapfiles/ms/icons/green-dot.png";
 const NOT_PASSED_MARKER_ICON = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
 const POLYLINE_COLOR = "#00ffff";
 const POLYLINE_OPACITY = 5;
+const LIBRARIES = ["places"];
 
 export default function AbstractMap(props) {
     const markers = props.markers;
@@ -20,26 +24,39 @@ export default function AbstractMap(props) {
     const onMarkerClick = props.onMarkerClick;
 
     const [center, setCenter] = useState(START_CENTER)
+
     const mapRef = useRef();
-
-    const {isLoaded, loadError} = useLoadScript({
-        googleMapsApiKey: API_KEY,
-    });
-
     const handleMapLoad = useCallback((map) => {
         mapRef.current = map;
     }, []);
+
+
+    const {isLoaded, loadError} = useLoadScript({
+        googleMapsApiKey: API_KEY,
+        libraries: LIBRARIES,
+    });
 
     const handleMapClick = (event) => {
         onMapClick(event);
     };
 
+    const handlePlaceSelect = (lat, lng) => {
+        mapRef.current.panTo({lat, lng})
+        mapRef.current.setZoom(ZOOM_FOR_PLACE)
+    }
+
+    const handleLocateClick = (lat, lng) => {
+        mapRef.current.panTo({lat, lng})
+        mapRef.current.setZoom(ZOOM_FOR_PLACE)
+    }
 
     if (loadError) return "Error loading maps";
     if (!isLoaded) return "Loading maps...";
 
     return (
         <div style={{display: "flex", justifyContent: "space-evenly"}}>
+            <Search center={center} onSelect={handlePlaceSelect}/>
+            <Locate onClick={handleLocateClick}/>
             <GoogleMap
                 mapContainerStyle={MAP_CONTAINER_STYLE}
                 zoom={START_ZOOM}
