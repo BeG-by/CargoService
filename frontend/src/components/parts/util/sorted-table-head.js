@@ -54,13 +54,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTableHead(props) {
     const classes = useStyles();
-    const {order, orderBy, onRequestSort, firstMenu, secondMenu, thirdMenu} = props;
+    const {order, orderBy, onRequestSort, firstMenu, secondMenu, customClass = ""} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
 
     return (
-        <TableHead>
+        <TableHead className={customClass}>
             <TableRow>
                 {firstMenu ?
                     <TableCell

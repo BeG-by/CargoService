@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 export default function InvoiceDialog(props) {
-    const {open, onClose, productOwner, invoiceId} = props;
+    const {open, onClose, productOwner, invoiceId , openToast} = props;
 
     const handleClose = () => {
         onClose();
@@ -27,6 +27,7 @@ export default function InvoiceDialog(props) {
                 productOwner={productOwner}
                 invoiceId={invoiceId}
                 onClose={handleClose}
+                openToast={openToast}
             />
         </Dialog>
     );

@@ -32,7 +32,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import {countTotalWeight} from "../../parts/util/cargo-total-info";
+import InvoiceDialog from "../dispatcher/invoice/invoice-dialog";
 
 const LEFT = "left";
 const CENTER = "center";
@@ -84,6 +84,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const role = props.role;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('status');
+    const [invoiceDialogEditOpen, setInvoiceDialogEditOpen] = useState(false);
+    const [selectedId, setSelectedId] = useState(false);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -150,6 +152,11 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const handleTableRowClick = (invoice) => {
         setInvoice(invoice);
         handleInvoiceInfoOpen(invoice.id);
+    };
+
+    const handleInvoiceEdit = (id) => {
+        setSelectedId(id);
+        setInvoiceDialogEditOpen(true);
     };
 
     const handleInvoiceInfoOpen = (id) => {
@@ -234,7 +241,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                 startIcon={<EditIcon/>}
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    handleTableRowClick(invoice);
+                                                                    handleInvoiceEdit(invoice.id);
                                                                 }}/>
                                                         </Tooltip>
                                                         : invoice.status === "ACCEPTED"
@@ -396,6 +403,16 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         handleClose={handleClose}
                         openDialog={invoiceInfoDialogOpen}
                         form={form}
+                    />
+
+                    <InvoiceDialog
+                        invoiceId={selectedId}
+                        open={invoiceDialogEditOpen}
+                        onClose={() => {
+                            setInvoiceDialogEditOpen(false);
+                            fetchInvoices();
+                        }}
+                        openToast={openToast}
                     />
                 </Paper>
                 {ToastComponent}

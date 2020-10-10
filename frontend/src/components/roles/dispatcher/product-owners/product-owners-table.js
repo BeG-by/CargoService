@@ -266,6 +266,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                 onClose={() => {
                     setInvoiceDialogOpen(false);
                 }}
+                openToast={showToastComponent}
             />
 
             <ProductOwnerDialog

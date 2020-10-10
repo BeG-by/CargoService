@@ -11,6 +11,7 @@ public interface MessageConstant {
     String INVOICE_NOT_FOUND_MESSAGE = "Invoice not found";
 
     String DRIVER_NOT_FOUND_MESSAGE = "Driver not found";
+    String MANAGER_NOT_FOUND_MESSAGE = "Manager not found";
 
     String AUTO_NOT_FOUND_MESSAGE = "Auto not found";
 
@@ -26,4 +27,7 @@ public interface MessageConstant {
     String PRODUCT_NOT_FOUND_MESSAGE = "Product not found";
 
     String STORAGE_NOT_FOUND_MESSAGE = "Storage not found";
+
+    String CONSIGNEE_NOT_FOUND_MESSAGE = "Consignee not found";
+    String SHIPPER_NOT_FOUND_MESSAGE = "Shipper not found";
 }
