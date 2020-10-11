@@ -59,6 +59,7 @@ const columns = [
     {label: "Quantity", id: "quantity", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
     {label: "Measure", id: "quantityMeasure", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
     {label: "Lost", id: "lostQuantity", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
+    {label: "Status", id: "productStatus", minWidth: 50, maxWidth: 60, align: LEFT, fontSize: SIZE},
     {label: "Comment", id: "comment", minWidth: 50, align: LEFT, fontSize: SIZE},
 ];
 
@@ -158,7 +159,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {invoice.shipper}
+                                        {`${invoice.shipper.address.country} ${invoice.shipper.address.city} ${invoice.shipper.address.street} ${invoice.shipper.email}`}
                                     </React.Fragment>
                                 }
                                 secondary="Shipper"
@@ -169,7 +170,7 @@ export const ActInfo = connect(mapStateToProps)((props) => {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        {invoice.consignee}
+                                        {`${invoice.consignee.address.country} ${invoice.consignee.address.city} ${invoice.consignee.address.street} ${invoice.consignee.email}`}
                                     </React.Fragment>
                                 }
                                 secondary="Consignee"
