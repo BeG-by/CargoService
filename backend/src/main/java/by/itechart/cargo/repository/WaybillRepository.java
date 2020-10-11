@@ -12,6 +12,9 @@ public interface WaybillRepository extends JpaRepository<Waybill, Long> {
 
     List<Waybill> findALlByIdIsIn(List<Long> ids);
 
+    @Query("SELECT w FROM Waybill w JOIN w.invoice i ON w.invoice.id = i.id " +
+            "WHERE i.clientCompany.id = :clientCompanyId ")
+    Page<Waybill> findAllByClientCompanyId(Long clientCompanyId, Pageable pageable);
 
     @Query("SELECT w FROM Waybill w JOIN w.invoice i ON w.invoice.id = i.id " +
             "WHERE i.clientCompany.id = :clientCompanyId " +

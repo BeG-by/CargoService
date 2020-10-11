@@ -69,7 +69,6 @@ export const AutoTable = connect(mapStateToProps)((props) => {
         let url = `${AUTO_URL}?page=${curPage}&autoPerPage=${curRowsPerPage}`
         makeRequest("GET", url)
             .then(res => {
-                    console.log(res)
                     setTotalAutoAmount(res.data.totalAmount);
                     setAutos(res.data.autoList);
                 }

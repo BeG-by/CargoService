@@ -235,9 +235,6 @@ function InvoiceForm(props) {
                 productOwner: res.data.productOwnerDTO,
                 manager: res.data.checkingUser
             };
-
-            console.log(invoiceState);
-
             invoiceState.productOwner.type = invoiceState.productOwner.type === "SP" ? "Sole proprietorship" : "Juridical person";
             setInitInvoice(invoiceState);
         } catch (error) {
@@ -436,11 +433,13 @@ function InvoiceForm(props) {
                                                 <PersonSearch
                                                     persons={drivers}
                                                     onPersonSelect={handleDriverSelect}
+                                                    prevPerson={initInvoice.driver.id === -1 ? null : initInvoice.driver}
                                                     label={"Drivers"}
                                                 />
                                                 <PersonSearch
                                                     persons={managers}
                                                     onPersonSelect={handleManagerSelect}
+                                                    prevPerson={initInvoice.manager.id === -1 ? null : initInvoice.manager}
                                                     label={"Managers"}
                                                 />
                                                 <div className="registration-date">
