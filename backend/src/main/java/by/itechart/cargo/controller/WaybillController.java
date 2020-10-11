@@ -29,6 +29,19 @@ public class WaybillController {
         this.pointService = pointService;
     }
 
+    @GetMapping
+    public ResponseEntity<WaybillPaginationResponse> findAll(
+            @RequestParam(required = false) String invoiceNumber,
+            @RequestParam Integer page,
+            @RequestParam Integer waybillsPerPage) {
+        if (invoiceNumber == null) {
+            return ResponseEntity.ok(waybillService.findAll(page, waybillsPerPage));
+        } else {
+            return ResponseEntity.ok(waybillService.findAllByInvoiceNumber(invoiceNumber, page, waybillsPerPage));
+        }
+    }
+
+
     @GetMapping("/manager")
     public ResponseEntity<WaybillPaginationResponse> findWaybillsForManager(
             @RequestParam(required = false) String invoiceNumber,

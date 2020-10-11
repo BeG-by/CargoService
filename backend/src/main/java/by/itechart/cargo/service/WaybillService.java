@@ -24,5 +24,7 @@ public interface WaybillService {
 
     WaybillPaginationResponse findAllByDriverAndInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage);
 
+    WaybillPaginationResponse findAllByInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage);
 
+    WaybillPaginationResponse findAll(Integer page, Integer waybillsPerPage);
 }

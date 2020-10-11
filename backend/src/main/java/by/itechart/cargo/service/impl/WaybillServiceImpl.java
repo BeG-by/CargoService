@@ -186,4 +186,31 @@ public class WaybillServiceImpl implements WaybillService {
         return new WaybillPaginationResponse(totalAmount, waybills);
     }
 
+    @Override
+    public WaybillPaginationResponse findAllByInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage) {
+        long companyId = jwtTokenUtil.getCurrentCompanyId();
+        PageRequest pageRequest = PageRequest.of(page, waybillsPerPage);
+
+        Page<ElasticsearchWaybill> waybillPage = elasticsearchWaybillRepository.findAllByInvoiceNumberStartsWithAndClientCompanyId(invoiceNumber, companyId, pageRequest);
+        List<Long> ids = waybillPage.stream()
+                .map(ElasticsearchWaybill::getId)
+                .collect(Collectors.toList());
+
+        List<WaybillResponse> waybills = waybillRepository.findALlByIdIsIn(ids).stream()
+                .map(WaybillResponse::toWaybillResponse)
+                .collect(Collectors.toList());
+
+        return new WaybillPaginationResponse(waybillPage.getTotalElements(), waybills);
+    }
+
+    @Override
+    public WaybillPaginationResponse findAll(Integer page, Integer waybillsPerPage) {
+        PageRequest pageRequest = PageRequest.of(page, waybillsPerPage);
+        Page<Waybill> waybillsPage = waybillRepository.findAllByClientCompanyId(jwtTokenUtil.getCurrentCompanyId(), pageRequest);
+        List<WaybillResponse> waybills = waybillsPage.stream()
+                .map(WaybillResponse::toWaybillResponse)
+                .collect(Collectors.toList());
+        return new WaybillPaginationResponse(waybillsPage.getTotalElements(), waybills);
+    }
+
 }

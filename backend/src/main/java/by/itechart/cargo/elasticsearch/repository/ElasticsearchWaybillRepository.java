@@ -7,6 +7,8 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 public interface ElasticsearchWaybillRepository extends ElasticsearchRepository<ElasticsearchWaybill, Long> {
 
+    Page<ElasticsearchWaybill> findAllByInvoiceNumberStartsWithAndClientCompanyId(String invoiceNumber, Long companyId, Pageable pageable);
+
     Page<ElasticsearchWaybill> findAllByInvoiceNumberStartsWithAndClientCompanyIdAndCheckingUserId(String invoiceNumber, Long companyId, Long checkingUserId, Pageable pageable);
 
     Page<ElasticsearchWaybill> findAllByInvoiceNumberStartsWithAndClientCompanyIdAndDriverId(String invoiceNumber, Long companyId, Long driverId, Pageable pageable);
