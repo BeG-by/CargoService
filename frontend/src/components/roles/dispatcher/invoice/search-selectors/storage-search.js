@@ -9,17 +9,13 @@ export default function StorageSearch(props) {
     const [inputValue, setInputValue] = useState("");
     const [selectedStorage, setSelectedStorage] = useState(prevStorage);
 
-    //TODO add initial values
 
     useEffect(() => {
-
-        // if (prevStorage === null) {
-        //     setInputValue("");
-        // } else {
-        //     setInputValue(prevStorage.address.city + " " + prevStorage.address.street + " " + prevStorage.address.house);
-        // }
-
-
+        if (prevStorage === null) {
+            setInputValue("");
+        } else {
+            setInputValue(prevStorage.address.city + " " + prevStorage.address.street + " " + prevStorage.address.house);
+        }
     }, [prevStorage]);
 
     return (
