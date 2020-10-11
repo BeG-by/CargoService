@@ -2,6 +2,9 @@ import React from "react";
 import usePlacesAutocomplete, {getGeocode, getLatLng} from "use-places-autocomplete";
 import {Combobox, ComboboxInput, ComboboxList, ComboboxOption, ComboboxPopover,} from "@reach/combobox";
 
+import "@reach/combobox/styles.css";
+import "./map-styles.css"
+
 const SEARCH_RADIUS = 300 * 1000;   //in meters
 
 export default function Search(props) {
@@ -32,21 +35,23 @@ export default function Search(props) {
     }
 
     return (
-        <Combobox onSelect={handleLocationSelect}>
-            <ComboboxInput
-                value={value}
-                onChange={handleInputChange}
-                disabled={!ready}
-                placeholder={"Enter address"}
-            />
-            <ComboboxPopover>
-                <ComboboxList>
-                    {status === "OK" && data.map(({id, description}) => (
-                        <ComboboxOption key={id} value={description}/>
-                    ))}
-                </ComboboxList>
-            </ComboboxPopover>
-        </Combobox>
+        <div className="search">
+            <Combobox onSelect={handleLocationSelect}>
+                <ComboboxInput
+                    value={value}
+                    onChange={handleInputChange}
+                    disabled={!ready}
+                    placeholder={"Enter address"}
+                />
+                <ComboboxPopover style={{zIndex: 9999}}>
+                    <ComboboxList >
+                        {status === "OK" && data.map(({id, description}) => {
+                            return <ComboboxOption key={id} value={description}/>
+                        })}
+                    </ComboboxList>
+                </ComboboxPopover>
+            </Combobox>
+        </div>
     )
 
 }

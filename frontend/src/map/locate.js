@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import ExploreIcon from '@material-ui/icons/Explore';
 
 export default function Locate(props) {
     const {onClick} = props;
@@ -19,7 +20,7 @@ export default function Locate(props) {
 
     return (
         <Button onClick={handleLocateClick}>
-            Locate
+            <ExploreIcon/>
         </Button>
     )
 }
