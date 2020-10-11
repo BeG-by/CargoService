@@ -3,12 +3,8 @@ import {Form, Formik} from "formik";
 import {Button} from "@material-ui/core";
 import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import DatePickerField from "../../parts/layout/date-picker";
-import Grid from "@material-ui/core/Grid";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
 import {convertPointsToBackendApi} from "../../../map/utils";
 import TextField from "@material-ui/core/TextField";
@@ -18,6 +14,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import useToast from "../../parts/toast-notification/useToast";
 import AutoSearch from "./auto-search";
 import {countTotalWeight} from "../../parts/util/cargo-total-info";
+import Grid from "@material-ui/core/Grid";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -55,8 +52,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const invoiceProductsWeight = countTotalWeight(props.invoice.products);
 
     useEffect(() => {
-        let i = convertShipperAndConsigneeToStringInInvoices(props.invoice);
-        setInvoice(i);
+        setInvoice(props.invoice);
     }, [props.invoice]);
 
     async function fetchAutos(cleanupFunction) {
@@ -135,9 +131,12 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     };
 
     const convertShipperAndConsigneeToStringInInvoices = (invoice) => {
+        console.log(invoice)
         if (invoice.shipper.id === null || invoice.shipper.id === undefined) {
+            console.log("NOT")
             return invoice;
         }
+        console.log("YES")
         invoice = convertShipperAndConsigneeToString(invoice);
         return invoice;
     }
@@ -174,36 +173,35 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                         <div className="info-content">
                             <div className="info-content-column">
                                 <Paper className={`table-paper`}
-                                       style={{flexDirection: "column", alignItems: "flex-start", minWidth: "35%", padding: 10}}>
+                                       style={{
+                                           flexDirection: "column",
+                                           alignItems: "flex-start",
+                                           minWidth: "35%",
+                                           padding: 10
+                                       }}>
                                     <FormControl className={classes.formControl}>
                                         <AutoSearch autoArr={autos} onAutoSelect={handleAutoSelect}/>
                                     </FormControl>
 
-                                    <Grid container spacing={3}>
-                                        <Grid item xs={6}>
-                                            <DatePickerField
-                                                formikProps={formProps}
-                                                id="departureDate"
-                                                formikFieldName="departureDate"
-                                                label="Departure date"
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <DatePickerField
-                                                formikProps={formProps}
-                                                id="arrivalDate"
-                                                formikFieldName="arrivalDate"
-                                                label="Arrival date"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    
+                                    <DatePickerField
+                                        formikProps={formProps}
+                                        id="departureDate"
+                                        formikFieldName="departureDate"
+                                        label="Departure date"
+                                    />
+                                    <DatePickerField
+                                        formikProps={formProps}
+                                        id="arrivalDate"
+                                        formikFieldName="arrivalDate"
+                                        label="Arrival date"
+                                    />
+
                                     <TextField name="shipper"
                                                label="Shipper"
                                                type="text"
                                                id="shipper"
                                                disabled={true}
-                                               value={invoice.shipper.email}
+                                               value={invoice.shipper}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
@@ -212,27 +210,22 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="consignee"
                                                disabled={true}
-                                               value={invoice.consignee.email}
+                                               value={invoice.consignee}
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
-                                    <div className='btn-row'>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            type="submit"
+                                    <Grid container justify={"center"}>
+                                        <Grid item>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
 
-                                        >
-                                            Save waybill
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={props.onClose}
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </div>
+                                            >
+                                                Save waybill
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
                                 </Paper>
 
                                 <Paper className={`table-paper`}
