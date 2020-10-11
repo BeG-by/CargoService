@@ -13,6 +13,10 @@ public interface AutoService {
 
     AutoPaginationResponse findAll();
 
+    AutoPaginationResponse findAllByStatus(int page, int autoPerPage, List<Auto.Status> autoStatusList);
+
+    AutoPaginationResponse findAllByStatus(List<Auto.Status> autoStatusList);
+
     AutoPaginationResponse findAll(int page, int autoPerPage);
 
     Auto findById(long id) throws NotFoundException;

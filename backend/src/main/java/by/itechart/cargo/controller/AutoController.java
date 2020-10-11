@@ -13,6 +13,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static by.itechart.cargo.security.RoleConstant.*;
 
 @RestController
@@ -30,12 +32,22 @@ public class AutoController {
     @GetMapping
     @Secured({ADMIN, OWNER, DRIVER, DISPATCHER, MANAGER})
     public ResponseEntity<AutoPaginationResponse> findAll(@RequestParam(required = false) Integer page,
-                                                          @RequestParam(required = false) Integer autoPerPage) {
+                                                          @RequestParam(required = false) Integer autoPerPage,
+                                                          @RequestParam(required = false) List<Auto.Status> statuses) {
         if (page == null || autoPerPage == null) {
-            return ResponseEntity.ok(autoService.findAll());
+            if (statuses != null) {
+                return ResponseEntity.ok(autoService.findAllByStatus(statuses));
+            } else {
+                return ResponseEntity.ok(autoService.findAll());
+            }
         } else {
-            return ResponseEntity.ok(autoService.findAll(page, autoPerPage));
+            if (statuses != null) {
+                return ResponseEntity.ok(autoService.findAllByStatus(page, autoPerPage, statuses));
+            } else {
+                return ResponseEntity.ok(autoService.findAll(page, autoPerPage));
+            }
         }
+
     }
 
     @GetMapping("/{id}")

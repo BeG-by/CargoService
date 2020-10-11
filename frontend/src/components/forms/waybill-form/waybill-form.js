@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Form, Formik} from "formik";
 import {Button} from "@material-ui/core";
-import {getAllAutos, saveWaybill} from "../../roles/manager/request-utils";
+import {saveWaybill} from "../../roles/manager/request-utils";
 import {WaybillFormValidation} from "../../parts/validation/waybill-form-validation";
 import FormControl from "@material-ui/core/FormControl";
 import DatePickerField from "../../parts/layout/date-picker";
@@ -15,6 +15,7 @@ import useToast from "../../parts/toast-notification/useToast";
 import AutoSearch from "./auto-search";
 import {countTotalWeight} from "../../parts/util/cargo-total-info";
 import Grid from "@material-ui/core/Grid";
+import {AUTO_URL, handleRequestError, makeRequest} from "../../parts/util/request-util";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -29,7 +30,6 @@ const mapStateToProps = (store) => {
 };
 
 export const WaybillForm = connect(mapStateToProps)((props) => {
-    const role = props.role;
     const [ToastComponent, openToast] = useToast();
     const [invoice, setInvoice] = useState(props.invoice);
     const [selectedAuto, setSelectedAuto] = useState(EMPTY_AUTO);
@@ -57,8 +57,13 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
 
     async function fetchAutos(cleanupFunction) {
         if (!cleanupFunction) {
-            let autoPaginationResponse = await getAllAutos()
-            setAutos(autoPaginationResponse.autoList);
+            try {
+                let url = `${AUTO_URL}?statuses=ACTIVE`;
+                let res = await makeRequest("GET", url);
+                setAutos(res.data.autoList);
+            }catch (err) {
+                handleRequestError(err, openToast);
+            }
         }
     }
 

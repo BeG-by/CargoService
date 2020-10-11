@@ -13,6 +13,7 @@ import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -44,21 +45,35 @@ public class AutoServiceImpl implements AutoService {
     @Override
     public AutoPaginationResponse findAll() {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
-        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
-        Long totalAmount = autoRepository.countAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
-        return new AutoPaginationResponse(totalAmount, autoList);
+        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndNotDeleted(companyId);
+        return new AutoPaginationResponse(autoList.size(), autoList);
     }
 
-    //TODO manager can't recieve broken auto
+    @Override
+    public AutoPaginationResponse findAllByStatus(int page, int autoPerPage, List<Auto.Status> autoStatusList) {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        PageRequest pageRequest = PageRequest.of(page, autoPerPage);
+
+        Page<Auto> autoPage = autoRepository.findAllByClientCompanyIdAndStatusIsIn(companyId, autoStatusList, pageRequest);
+        return new AutoPaginationResponse(autoPage.getTotalElements(), autoPage.toList());
+    }
+
+    @Override
+    public AutoPaginationResponse findAllByStatus(List<Auto.Status> autoStatusList) {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+
+        List<Auto> autos = autoRepository.findAllByClientCompanyIdAndStatusIsIn(companyId, autoStatusList);
+        return new AutoPaginationResponse(autos.size(), autos);
+    }
+
+
     @Override
     public AutoPaginationResponse findAll(int page, int autoPerPage) {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
-
         PageRequest pageRequest = PageRequest.of(page, autoPerPage);
-        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE, pageRequest);
-        long totalAmount = autoRepository.countAllByClientCompanyIdAndStatus(companyId, Auto.Status.ACTIVE);
 
-        return new AutoPaginationResponse(totalAmount, autoList);
+        Page<Auto> autoPage = autoRepository.findAllByClientCompanyIdAndNotDeleted(companyId, pageRequest);
+        return new AutoPaginationResponse(autoPage.getTotalElements(), autoPage.toList());
     }
 
     @Override
