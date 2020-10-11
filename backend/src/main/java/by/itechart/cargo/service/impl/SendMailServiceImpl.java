@@ -30,7 +30,7 @@ public class SendMailServiceImpl implements SendMailService {
     private String fromEmail;
 
     private final static String TEMPLATE_PATH
-            = "C:\\Users\\Администратор.000\\IdeaProjects\\CargoApp\\backend\\src\\main\\resources\\templates";
+            = "src/main/resources/templates"; //fixme (срабатывает абсолютный путь, относительный не хочет)
 
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
