@@ -10,7 +10,7 @@ import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 
 @Configuration
 public class QuartzSubmitJobsConfig {
-    private static final String CRON_EVERY_DAY_AT_NINE = "0 55 8 * * ?";
+    private static final String CRON_EVERY_DAY_AT_NINE = "0 53 8 * * ?";
 
     @Bean(name = "birthdayMail")
     public JobDetailFactoryBean jobBirthdayMail() {
