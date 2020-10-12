@@ -11,6 +11,7 @@ import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
+import by.itechart.cargo.service.AWSS3Service;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +36,22 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
+    private final AWSS3Service awss3Service;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            ClientCompanyRepository clientCompanyRepository,
                            RoleRepository roleRepository,
                            JwtTokenUtil jwtTokenUtil,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           AWSS3Service awss3Service) {
 
         this.userRepository = userRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.roleRepository = roleRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.passwordEncoder = passwordEncoder;
+        this.awss3Service = awss3Service;
     }
 
     @Override
@@ -77,7 +81,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-
     public void save(UserSaveRequest userRequest) throws AlreadyExistException {
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         final String login = userRequest.getLogin();
@@ -185,7 +188,8 @@ public class UserServiceImpl implements UserService {
                 .filter(user -> !user.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
-        currentUser.setPhoto(photoRequest.getPhoto());
+        awss3Service.uploadFile(photoRequest.getPhoto(), String.valueOf(userId));
+        currentUser.setPhoto(awss3Service.getFile(currentUser.getId().toString()));
         log.info("User photo has been save {}", currentUser);
     }
 
