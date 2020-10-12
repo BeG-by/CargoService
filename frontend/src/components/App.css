@@ -155,3 +155,24 @@ main {
     color: inherit;
     text-decoration: none;
 }
+
+/* Status styles */
+
+.green-status,
+.red-status {
+    padding: 3px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.green-status {
+    color: green;
+    border: 1px solid green;
+
+}
+
+.red-status {
+    color: crimson;
+    border: 1px solid crimson;
+
+}

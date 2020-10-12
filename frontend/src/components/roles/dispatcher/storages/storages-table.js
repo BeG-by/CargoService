@@ -19,6 +19,7 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import "../styles/storage-form.css";
 import Tooltip from "@material-ui/core/Tooltip";
 import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
+import {getSimplePropertiesFromObject} from "../../../parts/util/function-util";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -68,8 +69,8 @@ export const StorageTable = connect(mapStateToProps)((props) => {
     const insertStorages = async (curPage = page, curRowsPerPage = rowsPerPage) => {
         try {
             let url = `${STORAGE_URL}?page=${curPage}&storagesPerPage=${curRowsPerPage}`
-            let result = await makeRequest("GET", url)
-            setStorages(result.data.storages);
+            let result = await makeRequest("GET", url);
+            setStorages(result.data.storages.map(s => getSimplePropertiesFromObject(s)));
             setTotalStoragesAmount(result.data.totalAmount)
         } catch (err) {
             handleRequestError(err, showToastComponent)
@@ -148,16 +149,16 @@ export const StorageTable = connect(mapStateToProps)((props) => {
                                             key={storage.id}
                                         >
                                             <TableCell key={columns[0].id} align={columns[0].align}>
-                                                {storage.address.country}
+                                                {storage.country}
                                             </TableCell>
                                             <TableCell key={columns[1].id} align={columns[1].align}>
-                                                {storage.address.city}
+                                                {storage.city}
                                             </TableCell>
                                             <TableCell key={columns[2].id} align={columns[2].align}>
-                                                {storage.address.street}
+                                                {storage.street}
                                             </TableCell>
                                             <TableCell key={columns[3].id} align={columns[3].align}>
-                                                {storage.address.house}
+                                                {storage.house}
                                             </TableCell>
                                             <TableCell key={columns[4].id} align={columns[4].align}>
                                                 {storage.email}

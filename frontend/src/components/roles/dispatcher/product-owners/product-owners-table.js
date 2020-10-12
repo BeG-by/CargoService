@@ -15,28 +15,37 @@ import ProductOwnerDialog from "./product-owner-dialog";
 import EditIcon from '@material-ui/icons/Edit';
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import {Typography} from "@material-ui/core";
-import fetchFieldFromObject from "../../../parts/util/function-util";
+import fetchFieldFromObject, {getSimplePropertiesFromObject} from "../../../parts/util/function-util";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import {connect} from "react-redux";
 import TextSearch from "../../../parts/search/text-search";
 import ConfirmDeletingDialog from "../../admin/slide-dialog";
 import Tooltip from "@material-ui/core/Tooltip";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
 
 const MAX_WIDTH = 170;
 const MIN_WIDTH = 170;
+const FONT_SIZE = 18;
 const ALIGN = "left";
 const REMOVE_TITLE = "Do you want to delete the storage ?";
 
 const columns = [
-    {id: "name", label: "Name", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "type", label: "Company type", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "phone", label: "Phone", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "address.country", label: "Country", maxWidth: 150, minWidth: 150, align: ALIGN},
-    {id: "address.city", label: "City", maxWidth: 150, minWidth: 150, align: ALIGN},
-    {id: "address.street", label: "Street", maxWidth: 150, minWidth: 150, align: ALIGN},
-    {id: "address.house", label: "House", maxWidth: 100, minWidth: 100, align: ALIGN},
-    {id: "registrationDate", label: "Date of registration", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "name", label: "Name", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "type", label: "Company type", maxWidth: 180, minWidth: 180, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "phone", label: "Phone", maxWidth: MAX_WIDTH, minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "country", label: "Country", maxWidth: 150, minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "city", label: "City", maxWidth: 150, minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "street", label: "Street", maxWidth: 150, minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "house", label: "House", maxWidth: 100, minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {
+        id: "registrationDate",
+        label: "Date of registration",
+        maxWidth: 150,
+        minWidth: 150,
+        align: ALIGN,
+        fontSize: FONT_SIZE
+    }
 ];
 
 const EMPTY_PRODUCT_OWNER = {
@@ -62,19 +71,27 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const [selectedProductOwner, setSelectedProductOwner] = useState(EMPTY_PRODUCT_OWNER);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
     const [ToastComponent, showToastComponent] = useToast();
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('status');
 
     const updateTable = (isComponentMounted = true, newPage = page, newRowsPerPage = rowsPerPage) => {
         makeRequest("GET", OWNER_URL + `?requestedPage=${newPage}&productOwnersPerPage=${newRowsPerPage}`)
             .then((response) => {
                 if (isComponentMounted) {
                     setAmountProductOwners(response.data.totalAmountProductOwners);
-                    setProductOwners(response.data.productOwners);
+                    setProductOwners(response.data.productOwners.map(pr => getSimplePropertiesFromObject(pr)));
                 }
             })
             .catch((err) => {
                 setProductOwners([]);
                 handleRequestError(err, showToastComponent);
             })
+    };
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
     };
 
 
@@ -132,7 +149,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
             makeRequest("GET", uri)
                 .then((response) => {
                     setAmountProductOwners(response.data.totalAmountProductOwners);
-                    setProductOwners(response.data.productOwners);
+                    setProductOwners(response.data.productOwners.map(pr => getSimplePropertiesFromObject(pr)));
                 })
                 .catch((err) => {
                     setProductOwners([]);
@@ -165,26 +182,30 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                         </div>
                     </div>
                     <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                                <TableCell
-                                    key={"edit_product_owner"}
-                                    align={"right"}
-                                >
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
+                        <EnhancedTableHead
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                            thirdMenu={true}
+                        />
+                        {/*<TableHead>*/}
+                        {/*    <TableRow>*/}
+                        {/*        {columns.map((column) => (*/}
+                        {/*            <TableCell*/}
+                        {/*                key={column.id}*/}
+                        {/*                align={column.align}*/}
+                        {/*                style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}*/}
+                        {/*            >*/}
+                        {/*                {column.label}*/}
+                        {/*            </TableCell>*/}
+                        {/*        ))}*/}
+
+                        {/*        </TableCell>*/}
+                        {/*    </TableRow>*/}
+                        {/*</TableHead>*/}
                         <TableBody>
-                            {productOwners
+                            {stableSort(productOwners, getComparator(order, orderBy))
                                 .map((client) => {
                                     return (
                                         <TableRow

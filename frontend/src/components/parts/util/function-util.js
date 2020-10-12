@@ -14,6 +14,26 @@ export default function fetchFieldFromObject(obj, prop) {
     return obj[prop];
 }
 
+export function getSimplePropertiesFromObject(obj, resultObject = {}) {
+
+    if (obj === undefined) {
+        return null;
+    }
+
+    for (let prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            if (typeof obj[prop] == "object") {
+                getSimplePropertiesFromObject(obj[prop], resultObject);
+            } else {
+                resultObject[prop] = String(obj[prop]).match(/^\d+$/) === null ? obj[prop] : Number(obj[prop]);
+            }
+        }
+
+    }
+
+    return resultObject;
+}
+
 
 export const copyUser = (user) => {
     return {

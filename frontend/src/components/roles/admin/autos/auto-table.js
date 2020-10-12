@@ -30,9 +30,24 @@ const columns = [
     {id: "consumption", label: "Consumption", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
     {id: "maxLoad", label: "Max load", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
     {id: "dateOfIssue", label: "Date of issue", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
-    {id: "status", label: "Status", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "status", label: "Status", minWidth: 100, align: "center", fontSize: FONT_SIZE},
     {id: "edit_delete", label: "", align: "center"}
 ];
+
+
+const getColorStatus = (status) => {
+
+    switch (status) {
+        case "ACTIVE":
+            return <div className="green-status">{status}</div>;
+        case "BROKEN":
+            return <div className="red-status">{status}</div>;
+        default:
+            return <div>{status}</div>
+    }
+
+};
+
 
 const mapStateToProps = (store) => {
     return {
@@ -162,7 +177,7 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                                                 {auto.dateOfIssue}
                                             </TableCell>
                                             <TableCell key={columns[6].id} align={columns[6].align}>
-                                                {auto.status}
+                                                {getColorStatus(auto.status)}
                                             </TableCell>
                                             <TableCell key={columns[7].id} align={columns[7].align}>
                                                 <div className="table-delete-edit-div">
