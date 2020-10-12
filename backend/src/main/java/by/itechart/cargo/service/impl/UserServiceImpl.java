@@ -166,8 +166,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePhoto(PhotoRequest photoRequest) throws NotFoundException {
-        final long userId = jwtTokenUtil.getJwtUser().getId();
+    public void updatePhoto(PhotoRequest photoRequest, long userId) throws NotFoundException {
+
+        if (userId < 0) {
+            userId = jwtTokenUtil.getJwtUser().getId();
+        }
+
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
                 .filter(user -> !user.getStatus().equals(User.Status.DELETED))
@@ -175,7 +179,7 @@ public class UserServiceImpl implements UserService {
 
         awss3Service.uploadFile(photoRequest.getPhoto(), String.valueOf(userId));
         currentUser.setPhoto(awss3Service.getFile(currentUser.getId().toString()));
-        log.info("User photo has been save {}", currentUser);
+        log.info("User's photo has been save {}", currentUser);
     }
 
     @Override
@@ -187,7 +191,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
         currentUser.setPhone(phoneRequest.getPhone());
-        log.info("User photo has been save {}", currentUser);
+        log.info("User's phone has been save {}", currentUser);
     }
 
     @Override

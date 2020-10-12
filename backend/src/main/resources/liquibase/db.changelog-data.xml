@@ -56,6 +56,7 @@
             <column name="country" value="Belarus"/>
             <column name="city" value="Grodno"/>
             <column name="street" value="st. Stella"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Stark"/>
             <column name="passport" value="MP1111111"/>
             <column name="id_client_company" value="1"/>
@@ -74,6 +75,7 @@
             <column name="country" value="Belarus"/>
             <column name="city" value="Grodno"/>
             <column name="street" value="st. Stella"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Parker"/>
             <column name="passport" value="MP2222222"/>
             <column name="id_client_company" value="2"/>
@@ -92,6 +94,7 @@
             <column name="country" value="Belarus"/>
             <column name="city" value="Gomel"/>
             <column name="street" value="st. Lenina"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Romanovna"/>
             <column name="passport" value="MP3333333"/>
             <column name="id_client_company" value="2"/>
@@ -110,6 +113,7 @@
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
             <column name="street" value="st. Nemiga"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Admin"/>
             <column name="passport" value="MP4444444"/>
             <column name="id_client_company" value="2"/>
@@ -129,6 +133,7 @@
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
             <column name="street" value="pr. Dershinskogo"/>
+            <column name="house" value="221b"/>
             <column name="passport" value="MP5555555"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1999-03-01"/>

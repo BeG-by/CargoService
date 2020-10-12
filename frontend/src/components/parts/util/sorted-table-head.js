@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Tooltip from "@material-ui/core/Tooltip";
-import Table from "@material-ui/core/Table";
 
 const descendingComparator = (a, b, orderBy) => {
 
@@ -83,6 +82,20 @@ export default function EnhancedTableHead(props) {
                                 <div>{column.label}</div>
                             </Tooltip>;
 
+                    }
+
+                    if (column.id === "photo") {
+                        return <TableCell
+                            key={column.id}
+                            style={{
+                                minWidth: column.minWidth,
+                                width: column.width,
+                                maxWidth: column.maxWidth,
+                                align: column.align,
+                                fontSize: column.fontSize,
+                                color: "#3f51b5"
+                            }}
+                        />
                     }
 
 

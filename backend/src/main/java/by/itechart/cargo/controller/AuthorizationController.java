@@ -8,10 +8,7 @@ import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/api/auth")
@@ -30,6 +27,13 @@ public class AuthorizationController {
     public ResponseEntity<AuthorizationResponse> login(@RequestBody AuthorizationRequest authorizationRequest) throws NotFoundException {
         testDataInserter.insertTestData();
         return ResponseEntity.ok(authorizationService.login(authorizationRequest));
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout() {
+        testDataInserter.insertTestData();
+        authorizationService.logout();
+        return ResponseEntity.ok("User has been logouted");
     }
 
 

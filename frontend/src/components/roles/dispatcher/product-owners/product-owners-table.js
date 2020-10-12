@@ -4,7 +4,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import {handleRequestError, makeRequest, OWNER_URL} from "../../../parts/util/request-util";
@@ -189,21 +188,6 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                             onRequestSort={handleRequestSort}
                             thirdMenu={true}
                         />
-                        {/*<TableHead>*/}
-                        {/*    <TableRow>*/}
-                        {/*        {columns.map((column) => (*/}
-                        {/*            <TableCell*/}
-                        {/*                key={column.id}*/}
-                        {/*                align={column.align}*/}
-                        {/*                style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}*/}
-                        {/*            >*/}
-                        {/*                {column.label}*/}
-                        {/*            </TableCell>*/}
-                        {/*        ))}*/}
-
-                        {/*        </TableCell>*/}
-                        {/*    </TableRow>*/}
-                        {/*</TableHead>*/}
                         <TableBody>
                             {stableSort(productOwners, getComparator(order, orderBy))
                                 .map((client) => {
