@@ -16,6 +16,7 @@ export const AutoScheme = Yup.object({
         .required("Auto type is required"),
     consumption: Yup.string()
         .required("Consumption is required")
+        .max(9, "Max length must be lesser than 9 symbols")
         .matches(/^[0-9]+(\.[0-9]+)?$/, "Consumption must be number"),
     maxLoad: Yup.string()
         .required("Max load is required")

@@ -4,7 +4,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import useToast from "../../../parts/toast-notification/useToast";
@@ -44,13 +43,15 @@ const mapStateToProps = (store) => {
 export const AutoTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalAutoAmount, setTotalAutoAmount] = useState(0);
+
     const [autos, setAutos] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedAutoId, setSelectedAutoId] = useState(-1);
-    const [toastComponent, showToastComponent] = useToast();
+    const [ToastComponent, showToastComponent] = useToast();
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('status');
-    const role = props.role;
+
     const REMOVE_TITLE = "Do you want to remove the auto ?";
 
     useEffect(() => {
@@ -64,10 +65,12 @@ export const AutoTable = connect(mapStateToProps)((props) => {
     };
 
 
-    const insertAutos = () => {
-        makeRequest("GET", AUTO_URL)
+    const insertAutos = (curPage = page, curRowsPerPage = rowsPerPage) => {
+        let url = `${AUTO_URL}?page=${curPage}&autoPerPage=${curRowsPerPage}`
+        makeRequest("GET", url)
             .then(res => {
-                    setAutos(res.data);
+                    setTotalAutoAmount(res.data.totalAmount);
+                    setAutos(res.data.autoList);
                 }
             )
             .catch(error => handleRequestError(error, showToastComponent))
@@ -86,6 +89,7 @@ export const AutoTable = connect(mapStateToProps)((props) => {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        insertAutos(newPage);
     };
 
     const handleTableRowClick = (auto) => {
@@ -96,6 +100,7 @@ export const AutoTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        insertAutos(0, +event.target.value);
     };
 
     return (
@@ -127,7 +132,6 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                         />
                         <TableBody>
                             {stableSort(autos, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((auto) => {
                                     return (
                                         <TableRow
@@ -191,7 +195,7 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                 <TablePagination
                     rowsPerPageOptions={[10, 15, 20]}
                     component="div"
-                    count={autos.length}
+                    count={totalAutoAmount}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}
@@ -208,7 +212,7 @@ export const AutoTable = connect(mapStateToProps)((props) => {
                     refreshTable={insertAutos}
                     showToast={showToastComponent}
                 />
-                {toastComponent}
+                {ToastComponent}
             </Paper>
         </main>
     );

@@ -1,17 +1,20 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.dto.model_dto.auto.AutoPaginationResponse;
 import by.itechart.cargo.dto.model_dto.auto.AutoSaveRequest;
 import by.itechart.cargo.dto.model_dto.auto.AutoUpdateRequest;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Auto;
+import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.repository.AutoRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,11 +42,38 @@ public class AutoServiceImpl implements AutoService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    //TODO manager can't recieve broken auto
     @Override
-    public List<Auto> findAll() {
+    public AutoPaginationResponse findAll() {
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
-        return autoRepository.findAllWithoutDeleted(companyId);
+        List<Auto> autoList = autoRepository.findAllByClientCompanyIdAndNotDeleted(companyId);
+        return new AutoPaginationResponse(autoList.size(), autoList);
+    }
+
+    @Override
+    public AutoPaginationResponse findAllByStatus(int page, int autoPerPage, List<Auto.Status> autoStatusList) {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        PageRequest pageRequest = PageRequest.of(page, autoPerPage);
+
+        Page<Auto> autoPage = autoRepository.findAllByClientCompanyIdAndStatusIsIn(companyId, autoStatusList, pageRequest);
+        return new AutoPaginationResponse(autoPage.getTotalElements(), autoPage.toList());
+    }
+
+    @Override
+    public AutoPaginationResponse findAllByStatus(List<Auto.Status> autoStatusList) {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+
+        List<Auto> autos = autoRepository.findAllByClientCompanyIdAndStatusIsIn(companyId, autoStatusList);
+        return new AutoPaginationResponse(autos.size(), autos);
+    }
+
+
+    @Override
+    public AutoPaginationResponse findAll(int page, int autoPerPage) {
+        final long companyId = jwtTokenUtil.getCurrentCompanyId();
+        PageRequest pageRequest = PageRequest.of(page, autoPerPage);
+
+        Page<Auto> autoPage = autoRepository.findAllByClientCompanyIdAndNotDeleted(companyId, pageRequest);
+        return new AutoPaginationResponse(autoPage.getTotalElements(), autoPage.toList());
     }
 
     @Override

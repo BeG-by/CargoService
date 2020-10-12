@@ -7,7 +7,7 @@ import {pointsComparator} from "./utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        windexth: 400,
+        width: 400,
         height: 500,
         overflow: 'auto',
         backgroundColor: theme.palette.background.paper,
@@ -19,7 +19,6 @@ export default function ItemList(props) {
     const [geocodedPoints, setGeocodedPoints] = useState([]);
 
     const handleRowClick = (geocodedPoint) => {
-        console.log(geocodedPoint);
         props.onRowClick(geocodedPoint.index);
     };
 
@@ -69,7 +68,6 @@ export default function ItemList(props) {
                 }
             }
             if (isPointDeleted) {
-
                 deleteGeocodePointByIndex(i);
                 break;
             }
@@ -78,13 +76,12 @@ export default function ItemList(props) {
 
     const geocode = async (lat, lng) => {
         try {
-
             let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=en&key=${API_KEY}`)
             response = await response.json();
             return response.results[0].formatted_address;
         } catch (e) {
-            console.log("Cannot geocode")
-            return "";
+            console.error("Cannot geocode")
+            return "Unrecognized place";
         }
     }
 

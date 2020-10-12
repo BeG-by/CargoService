@@ -15,6 +15,7 @@ import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.ProductOwnerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -126,18 +127,16 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
 
     @Override
     public ProductOwnerPaginationResponse findByName(String name, int requestedPage, int productOwnersPerPage) {
+        name = name.replace(" ", "");
         PageRequest pageRequest = PageRequest.of(requestedPage, productOwnersPerPage);
 
         Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
 
-        name = name.replaceAll(" ", "");
+        Page<ElasticsearchProductOwner> productOwnerPage = elasticSearchProductOwnerRepository.findAllByNameStartsWithAndClientCompanyIdAndStatus
+                (name, clientCompanyId, ProductOwner.Status.ACTIVE.toString(), pageRequest);
 
-        Long totalAmount = elasticSearchProductOwnerRepository.countAllByNameStartsWithAndClientCompanyIdAndStatus
-                (name, clientCompanyId, ProductOwner.Status.ACTIVE.toString());
-
-        List<Long> ids = elasticSearchProductOwnerRepository
-                .findAllByNameStartsWithAndClientCompanyIdAndStatus(
-                        name, clientCompanyId, ProductOwner.Status.ACTIVE.toString(), pageRequest).stream()
+        long totalAmount = productOwnerPage.getTotalElements();
+        List<Long> ids = productOwnerPage.stream()
                 .map(ElasticsearchProductOwner::getId)
                 .collect(Collectors.toList());
 

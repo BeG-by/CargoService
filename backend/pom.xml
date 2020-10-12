@@ -18,6 +18,8 @@
         <java.version>11</java.version>
         <postgre.sql.version>42.2.15</postgre.sql.version>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+        <aws.version>1.11.750</aws.version>
+        <apache.io.version>2.6</apache.io.version>
     </properties>
 
     <dependencies>
@@ -75,7 +77,6 @@
 
 
         <!--Lombok-->
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -83,7 +84,6 @@
         </dependency>
 
         <!-- Liquibase -->
-
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -95,6 +95,7 @@
             <artifactId>jjwt</artifactId>
             <version>${jsonwebtoken.version}</version>
         </dependency>
+
 
         <!-- Quartz-->
         <dependency>
@@ -116,6 +117,20 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.30</version>
+        </dependency>
+
+        <!-- AWS -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+
+        <!-- Apache IO -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.io.version}</version>
         </dependency>
 
     </dependencies>

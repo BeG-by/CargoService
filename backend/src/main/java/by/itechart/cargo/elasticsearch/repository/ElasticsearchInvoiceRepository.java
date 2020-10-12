@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 import java.util.List;
 
+//todo: refactor with Page<>
 public interface ElasticsearchInvoiceRepository extends ElasticsearchRepository<ElasticsearchInvoice, Long> {
 
     List<ElasticsearchInvoice> findAllByNumberStartsWithAndClientCompanyIdAndRegistrationUserId(String number, Long clientCompanyId, Long registrationUserId, Pageable pageable);

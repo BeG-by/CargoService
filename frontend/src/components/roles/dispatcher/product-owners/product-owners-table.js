@@ -53,7 +53,7 @@ const mapStateToProps = (store) => {
 
 export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(7);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [amountProductOwners, setAmountProductOwners] = useState(0);
 
     const [productOwnerDialogOpen, setProductOwnerDialogOpen] = useState(false);
@@ -61,8 +61,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const [productOwners, setProductOwners] = useState([]);
     const [selectedProductOwner, setSelectedProductOwner] = useState(EMPTY_PRODUCT_OWNER);
     const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
-    const [toastComponent, showToastComponent] = useToast();
-    const role = props.role;
+    const [ToastComponent, showToastComponent] = useToast();
 
     const updateTable = (isComponentMounted = true, newPage = page, newRowsPerPage = rowsPerPage) => {
         makeRequest("GET", OWNER_URL + `?requestedPage=${newPage}&productOwnersPerPage=${newRowsPerPage}`)
@@ -101,7 +100,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
             updateTable();
             showToastComponent("Client has been deleted", "success");
         } catch (error) {
-            handleRequestError(error, toastComponent);
+            handleRequestError(error, showToastComponent);
         }
     }
 
@@ -119,15 +118,17 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
-        updateTable(true, page, +event.target.value)
+        updateTable(true, 0, +event.target.value)
     };
 
-    const updateTableWithSearch = (searchStr) => {
+    const updateTableWithSearch = async (searchStr) => {
+        setPage(0);
+
         searchStr = searchStr.trim();
         if (searchStr === "") {
-            updateTable();
+            updateTable(true, 0);
         } else {
-            const uri = `${OWNER_URL}/filter?name=${searchStr}&requestedPage=${page}&productOwnersPerPage=${rowsPerPage}`;
+            const uri = `${OWNER_URL}/filter?name=${searchStr}&requestedPage=${0}&productOwnersPerPage=${rowsPerPage}`;
             makeRequest("GET", uri)
                 .then((response) => {
                     setAmountProductOwners(response.data.totalAmountProductOwners);
@@ -248,7 +249,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[7, 15, 30]}
+                    rowsPerPageOptions={[10, 50, 100]}
                     component="div"
                     count={amountProductOwners}
                     rowsPerPage={rowsPerPage}
@@ -258,7 +259,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                 />
             </Paper>
 
-            {toastComponent}
+            {ToastComponent}
 
             <InvoiceDialog
                 productOwner={selectedProductOwner}
@@ -266,6 +267,7 @@ export const ProductOwnersTable = connect(mapStateToProps)((props) => {
                 onClose={() => {
                     setInvoiceDialogOpen(false);
                 }}
+                openToast={showToastComponent}
             />
 
             <ProductOwnerDialog

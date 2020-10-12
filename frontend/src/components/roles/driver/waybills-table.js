@@ -6,7 +6,13 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import {handleRequestError, makeRequest, WAYBILL_URL} from "../../parts/util/request-util";
+import {
+    DRIVER_WAYBILL_URL,
+    handleRequestError,
+    makeRequest,
+    MANAGER_WAYBILL_URL,
+    WAYBILL_URL
+} from "../../parts/util/request-util";
 import {DialogWindow} from "../../parts/dialogs/dialog";
 import {Typography} from "@material-ui/core";
 import {WaybillInfo} from "./waybill-info";
@@ -21,6 +27,7 @@ import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sor
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import Tooltip from "@material-ui/core/Tooltip";
 import PostAddIcon from "@material-ui/icons/PostAdd";
+import TextSearch from "../../parts/search/text-search";
 
 const LEFT = "left";
 const CENTER = "center";
@@ -44,6 +51,8 @@ const mapStateToProps = (store) => {
 export const WaybillsTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [totalWaybillsAmount, setTotalWaybillsAmount] = React.useState(0);
+
     const [waybills, setWaybills] = React.useState([]);
     const [waybill, setWaybill] = React.useState({id: 0, invoice: {}});
     const [actFillDialogOpen, setActFillDialogOpen] = React.useState(false);
@@ -60,10 +69,25 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         setOrderBy(property);
     };
 
-    async function fetchWaybills(cleanupFunction) {
+    async function fetchWaybills(cleanupFunction, curPage = page, curRowsPerPage = rowsPerPage, searchStr = null) {
         if (!cleanupFunction) {
-            let response = await makeRequest("GET", WAYBILL_URL);
-            let data = response.data;
+            let url = "";
+            if (role === "DRIVER") {
+                url = `${DRIVER_WAYBILL_URL}?page=${curPage}&waybillsPerPage=${curRowsPerPage}`
+            } else if (role === "MANAGER") {
+                url = `${MANAGER_WAYBILL_URL}?page=${curPage}&waybillsPerPage=${curRowsPerPage}`
+            } else {
+                alert("Unrecognized role, waybills can watch only manager and driver")
+                return;
+            }
+
+            if (searchStr !== null) {
+                url += `&invoiceNumber=${searchStr}`
+            }
+
+            let response = await makeRequest("GET", url);
+            setTotalWaybillsAmount(response.data.totalAmount);
+            let data = response.data.waybills;
             data.forEach(waybill => {
                 let checkPassage = true;
                 let checkLosses = true;
@@ -100,6 +124,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        fetchWaybills(false, newPage);
     };
 
     const handleTableRowClick = async (wb) => {
@@ -112,13 +137,19 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
         handleWaybillInfoOpen(data.id);
     };
 
+    const handleTextSearchChange = (searchStr) => {
+        if (searchStr !== "")
+            fetchWaybills(false, page, rowsPerPage, searchStr);
+        else
+            fetchWaybills(false);
+    }
+
     const handleWaybillInfoOpen = (id) => {
         setForm(<WaybillInfo waybillId={id} onSave={fetchWaybills}/>);
         setActFillDialogOpen(false);
         setWaybillInfoDialogOpen(true);
     }
 
-    console.log(waybills);
     const handleActFormOpen = () => {
         setActFillDialogOpen(false);
         setActDialogOpen(true);
@@ -127,6 +158,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+        fetchWaybills(false, 0, +event.target.value)
     };
 
     const handleClose = () => {
@@ -155,6 +187,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                         <LibraryBooksIcon/>
                         Waybills
                     </Typography>
+                    <TextSearch onFieldChange={handleTextSearchChange}/>
                 </div>
 
                 <TableContainer className="table-container">
@@ -169,7 +202,6 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                         />
                         <TableBody>
                             {stableSort(waybills, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((waybill) => {
                                     return (
                                         <TableRow
@@ -278,7 +310,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
                 <TablePagination
                     rowsPerPageOptions={[10, 20, 30]}
                     component="div"
-                    count={waybills.length}
+                    count={totalWaybillsAmount}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

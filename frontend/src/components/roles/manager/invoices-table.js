@@ -32,7 +32,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import {countTotalWeight} from "../../parts/util/cargo-total-info";
+import InvoiceDialog from "../dispatcher/invoice/invoice-dialog";
 
 const LEFT = "left";
 const CENTER = "center";
@@ -70,9 +70,12 @@ const convertShipperAndConsigneeToString = (invoice) => {
     };
 }
 
+
 export const InvoicesTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalInvoicesAmount, setTotalInvoicesAmount] = useState(0);
+
     const [ToastComponent, openToast] = useToast();
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState({id: 0, waybill: null, invoiceStatus: "", number: ""});
@@ -83,6 +86,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const role = props.role;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('status');
+    const [invoiceDialogEditOpen, setInvoiceDialogEditOpen] = useState(false);
+    const [selectedId, setSelectedId] = useState(false);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -121,16 +126,19 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
 
     const fetchInvoicesForManager = async (params) => {
         let response = await makeRequest("GET", `${MANAGER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
     const fetchInvoicesForDriver = async (params) => {
         let response = await makeRequest("GET", `${DRIVER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
     const fetchInvoicesForDispatcher = async (params) => {
         let response = await makeRequest("GET", `${DISPATCHER_INVOICES_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
 
@@ -149,6 +157,11 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     const handleTableRowClick = (invoice) => {
         setInvoice(invoice);
         handleInvoiceInfoOpen(invoice.id);
+    };
+
+    const handleInvoiceEdit = (id) => {
+        setSelectedId(id);
+        setInvoiceDialogEditOpen(true);
     };
 
     const handleInvoiceInfoOpen = (id) => {
@@ -175,7 +188,8 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
     };
 
     const handleSearchFieldChange = (searchNumber) => {
-        fetchInvoices(false, page, rowsPerPage, searchNumber);
+        setPage(0);
+        fetchInvoices(false, 0, rowsPerPage, searchNumber);
     };
 
     const handleWaybillFillClick = (invoice) => {
@@ -233,7 +247,7 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                                                                 startIcon={<EditIcon/>}
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    handleTableRowClick(invoice);
+                                                                    handleInvoiceEdit(invoice.id);
                                                                 }}/>
                                                         </Tooltip>
                                                         : invoice.status === "ACCEPTED"
@@ -356,15 +370,15 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         </Table>
                     </TableContainer>
 
-                    <TablePagination
-                        rowsPerPageOptions={[10, 20, 50]}
-                        component="div"
-                        count={invoices.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
+                <TablePagination
+                    rowsPerPageOptions={[10, 20, 50]}
+                    component="div"
+                    count={totalInvoicesAmount}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
 
                     <WaybillDialog
                         invoice={invoice}
@@ -395,6 +409,16 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                         handleClose={handleClose}
                         openDialog={invoiceInfoDialogOpen}
                         form={form}
+                    />
+
+                    <InvoiceDialog
+                        invoiceId={selectedId}
+                        open={invoiceDialogEditOpen}
+                        onClose={() => {
+                            setInvoiceDialogEditOpen(false);
+                            fetchInvoices();
+                        }}
+                        openToast={openToast}
                     />
                 </Paper>
                 {ToastComponent}

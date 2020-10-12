@@ -11,6 +11,8 @@ export const DISPATCHER_INVOICES_URL = "/v1/api/invoices/dispatcher";
 
 export const DATA_FOR_INVOICE_CREATING_URL = "/v1/api/invoices/initial/data";
 export const WAYBILL_URL = "/v1/api/waybills";
+export const DRIVER_WAYBILL_URL = "/v1/api/waybills/driver";
+export const MANAGER_WAYBILL_URL = "/v1/api/waybills/manager";
 export const POINT_URL = "/v1/api/waybills/points";
 export const ACT_URL = "/v1/api/acts";
 export const CLIENTS_URL = "/v1/api/clients/";
