@@ -4,7 +4,7 @@ import {NOT_AUTH} from "../../security/private-route";
 const initState = {
     user: {
         id: 0,
-        login: "",
+        email: "",
         name: "",
         surname: "",
         patronymic: "",
@@ -18,7 +18,6 @@ const initState = {
                 flat: ""
             },
         birthday: "",
-        email: "",
         status: "",
         roles: [NOT_AUTH],
         photo: "",

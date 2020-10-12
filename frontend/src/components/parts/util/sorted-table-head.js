@@ -8,6 +8,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Tooltip from "@material-ui/core/Tooltip";
 
 const descendingComparator = (a, b, orderBy) => {
+
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTableHead(props) {
     const classes = useStyles();
-    const {order, orderBy, onRequestSort, firstMenu, secondMenu, customClass = ""} = props;
+    const {order, orderBy, onRequestSort, firstMenu, secondMenu, thirdMenu, customClass = ""} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -81,6 +82,20 @@ export default function EnhancedTableHead(props) {
                                 <div>{column.label}</div>
                             </Tooltip>;
 
+                    }
+
+                    if (column.id === "photo") {
+                        return <TableCell
+                            key={column.id}
+                            style={{
+                                minWidth: column.minWidth,
+                                width: column.width,
+                                maxWidth: column.maxWidth,
+                                align: column.align,
+                                fontSize: column.fontSize,
+                                color: "#3f51b5"
+                            }}
+                        />
                     }
 
 
@@ -119,6 +134,12 @@ export default function EnhancedTableHead(props) {
                     >
                         Info
                     </TableCell>
+                    : null}
+                {thirdMenu ?
+                    <TableCell
+                        key={"edit_product_owner"}
+                        align={"right"}
+                    />
                     : null}
             </TableRow>
         </TableHead>

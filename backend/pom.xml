@@ -18,6 +18,8 @@
         <java.version>11</java.version>
         <postgre.sql.version>42.2.15</postgre.sql.version>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+        <aws.version>1.11.750</aws.version>
+        <apache.io.version>2.6</apache.io.version>
     </properties>
 
     <dependencies>
@@ -83,7 +85,6 @@
 
 
         <!--Lombok-->
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -91,7 +92,6 @@
         </dependency>
 
         <!-- Liquibase -->
-
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -102,6 +102,43 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jsonwebtoken.version}</version>
+        </dependency>
+
+
+        <!-- Quartz-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
+        <!-- Mail-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.30</version>
+        </dependency>
+
+        <!-- AWS -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${aws.version}</version>
+        </dependency>
+
+        <!-- Apache IO -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.io.version}</version>
         </dependency>
 
     </dependencies>

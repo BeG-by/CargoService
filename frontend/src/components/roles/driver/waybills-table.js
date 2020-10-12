@@ -183,7 +183,8 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
             <Paper className="table-paper main-table-paper">
                 <div className="table-header-wrapper">
                     <Typography variant="button" display="block" gutterBottom
-                                style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}>
+                                style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                className="table-title">
                         <LibraryBooksIcon/>
                         Waybills
                     </Typography>

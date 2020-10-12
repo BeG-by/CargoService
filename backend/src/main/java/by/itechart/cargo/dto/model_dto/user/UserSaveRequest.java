@@ -16,9 +16,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserSaveRequest {
 
-    @NotBlank(message = "Login is mandatory")
-    @Size(max = 64, message = "Login is too long (max is 64)")
-    private String login;
+
+    @Email(message = "Email is not valid")
+    @Size(max = 64, message = "Patronymic is too long (max is 64)")
+    @NotBlank(message = "Email is mandatory")
+    private String email;
 
     @NotBlank(message = "Password is mandatory")
     @Size(max = 64, message = "Password is too long (max is 64)")
@@ -46,10 +48,6 @@ public class UserSaveRequest {
     @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 
-    @Email(message = "Email is not valid")
-    @Size(max = 64, message = "Patronymic is too long (max is 64)")
-    @NotNull(message = "Email is mandatory")
-    private String email;
 
     @Size(max = 64, message = "Passport is too long (max is 64)")
     private String passport;
@@ -59,14 +57,13 @@ public class UserSaveRequest {
 
     public User toUser() {
         return User.builder()
-                .login(login)
+                .email(email)
                 .password(password)
                 .name(name)
                 .surname(surname)
                 .patronymic(patronymic)
                 .birthday(birthday)
                 .address(address)
-                .email(email)
                 .phone(phone)
                 .passport(passport)
                 .build();

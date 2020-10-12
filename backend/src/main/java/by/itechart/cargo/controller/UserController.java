@@ -6,6 +6,7 @@ import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -58,9 +60,18 @@ public class UserController {
     @PutMapping("/photo")
     public ResponseEntity<String> updatePhoto(@RequestBody @Valid PhotoRequest photoRequest)
             throws NotFoundException {
-        userService.updatePhoto(photoRequest);
+        userService.updatePhoto(photoRequest, -1);
         return ResponseEntity.ok("Photo has been updated");
     }
+
+    @PutMapping("/photo/{id}")
+    @Secured({ADMIN, OWNER})
+    public ResponseEntity<String> updatePhoto(@RequestBody @Valid PhotoRequest photoRequest, @PathVariable long id)
+            throws NotFoundException {
+        userService.updatePhoto(photoRequest, id);
+        return ResponseEntity.ok("User's photo with has been updated");
+    }
+
 
     @PutMapping("/phone")
     public ResponseEntity<String> updatePhone(@RequestBody @Valid PhoneRequest phoneRequest)

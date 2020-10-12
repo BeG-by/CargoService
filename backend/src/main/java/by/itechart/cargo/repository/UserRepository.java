@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByLogin(String login);
 
     Optional<User> findByEmail(String email);
 
@@ -23,5 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByClientCompanyIdAndRoles(Long clientCompanyId, Role role);
 
     Optional<User> findByIdAndRolesAndClientCompanyId(Long userId, Role role, Long clientCompanyId);
+
+    @Query("FROM User u WHERE u.status <> 'DELETED'")
+    List<User> findAllPresent();
 
 }

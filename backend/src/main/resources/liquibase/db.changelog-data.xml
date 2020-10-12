@@ -49,71 +49,83 @@
     <changeSet id="insert_users" author="eugene.begun">
 
         <insert tableName="user">
-            <column name="login" value="root"/>
+            <column name="email" value="sysadmin@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Robert"/>
             <column name="patronymic" value="patronymic"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Grodno"/>
             <column name="street" value="st. Stella"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Stark"/>
             <column name="passport" value="MP1111111"/>
             <column name="id_client_company" value="1"/>
             <column name="birthday" value="1990-03-11"/>
-            <column name="email" value="sysadmin@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="dispatcher"/>
+            <column name="email" value="dispatcher@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Jessika"/>
             <column name="patronymic" value="Ivanovna"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Grodno"/>
             <column name="street" value="st. Stella"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Parker"/>
             <column name="passport" value="MP2222222"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1991-04-12"/>
-            <column name="email" value="dispatcher@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="manager"/>
+            <column name="email" value="manager@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Natasha"/>
             <column name="patronymic" value="Viktorovna"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Gomel"/>
             <column name="street" value="st. Lenina"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Romanovna"/>
             <column name="passport" value="MP3333333"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-12-23"/>
-            <column name="email" value="manager@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="admin"/>
+            <column name="email" value="admin@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Eugene"/>
             <column name="patronymic" value="Bib"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
             <column name="street" value="st. Nemiga"/>
+            <column name="house" value="221b"/>
             <column name="surname" value="Admin"/>
             <column name="passport" value="MP4444444"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-01-01"/>
-            <column name="email" value="admin@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="driver"/>
+            <column name="email" value="driver@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Petr"/>
             <column name="patronymic" value="Petrovich"/>
@@ -121,15 +133,18 @@
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
             <column name="street" value="pr. Dershinskogo"/>
+            <column name="house" value="221b"/>
             <column name="passport" value="MP5555555"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1999-03-01"/>
-            <column name="email" value="driver@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="owner"/>
+            <column name="email" value="owner@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Mark"/>
             <column name="patronymic" value="Markovich"/>
@@ -141,12 +156,14 @@
             <column name="passport" value="MP6666666"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1981-08-03"/>
-            <column name="email" value="owner@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="yandex_admin"/>
+            <column name="email" value="admin@yandex.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Vika"/>
             <column name="patronymic" value="Ivanova"/>
@@ -155,8 +172,10 @@
             <column name="passport" value="MP7777777"/>
             <column name="id_client_company" value="3"/>
             <column name="birthday" value="1983-01-01"/>
-            <column name="email" value="admin@yandex.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
 
@@ -314,88 +333,6 @@
         </insert>
     </changeSet>
 
-
-    <changeSet id="insert_invoice" author="eugene.begun">
-        <insert tableName="invoice">
-            <column name="number" value="TTN321332"/>
-            <column name="status" value="ACCEPTED"/>
-            <column name="registration_date" value="2020-01-01"/>
-            <column name="id_driver" value="5"/>
-            <column name="id_user_registration" value="2"/>
-            <column name="id_client_company" value="2"/>
-            <column name="id_shipper" value="1"/>
-            <column name="id_consignee" value="2"/>
-            <column name="id_user_checking" value="3"/>
-            <column name="id_product_owner" value="1"/>
-        </insert>
-
-        <!--        INVALID INVOICE todo: DELETE (this invoice doesn't added to elasticsearch)-->
-        <insert tableName="invoice">
-            <column name="number" value="TTN123123123"/>
-            <column name="status" value="REGISTERED"/>
-            <column name="registration_date" value="2020-01-01"/>
-            <column name="id_driver" value="5"/>
-            <column name="id_user_registration" value="2"/>
-            <column name="id_client_company" value="1"/>
-            <column name="id_shipper" value="1"/>
-            <column name="id_consignee" value="2"/>
-            <column name="id_user_checking" value="3"/>
-            <column name="id_product_owner" value="1"/>
-            <column name="comment" value="Consignee name error, check it out"/>
-        </insert>
-
-        <insert tableName="invoice">
-            <column name="number" value="TTN123123222"/>
-            <column name="status" value="REGISTERED"/>
-            <column name="registration_date" value="2020-01-01"/>
-            <column name="id_driver" value="5"/>
-            <column name="id_user_registration" value="2"/>
-            <column name="id_client_company" value="2"/>
-            <column name="id_user_checking" value="3"/>
-            <column name="id_shipper" value="1"/>
-            <column name="id_consignee" value="2"/>
-            <column name="id_product_owner" value="2"/>
-        </insert>
-
-    </changeSet>
-
-
-    <changeSet id="insert_product" author="vladislav.mironuk">
-        <insert tableName="product">
-            <column name="name" value="Beer"/>
-            <column name="quantity_measure" value="BARREL"/>
-            <column name="quantity" value="5"/>
-            <column name="mass_measure" value="TON"/>
-            <column name="mass" value="100"/>
-            <column name="price" value="100"/>
-            <column name="currency" value="RUB"/>
-            <column name="status" value="ACCEPTED"/>
-            <column name="id_invoice" value="3"/>
-        </insert>
-
-        <insert tableName="product">
-            <column name="name" value="Chips"/>
-            <column name="quantity_measure" value="BAG"/>
-            <column name="quantity" value="5"/>
-            <column name="mass_measure" value="KG"/>
-            <column name="mass" value="100"/>
-            <column name="price" value="100"/>
-            <column name="currency" value="EURO"/>
-            <column name="status" value="ACCEPTED"/>
-            <column name="id_invoice" value="3"/>
-        </insert>
-    </changeSet>
-
-    <changeSet id="insert_waybill" author="marianna.patrusova">
-        <insert tableName="waybill">
-            <column name="id_invoice" value="1"/>
-            <column name="waybill_status" value="CURRENT"/>
-            <column name="id_auto" value="1"/>
-            <column name="departure_date" value="2020-09-10"/>
-            <column name="arrival_date" value="2020-09-11"/>
-            <column name="id_client_company" value="2"/>
-        </insert>
-    </changeSet>
 
     <changeSet id="insert_many_product_owners" author="vladislav.mironuk">
         <insert tableName="product_owner">

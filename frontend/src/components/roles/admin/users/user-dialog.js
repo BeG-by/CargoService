@@ -14,7 +14,7 @@ import {USER_URL, handleRequestError, makeRequest} from "../../../parts/util/req
 
 const EMPTY_USER = {
     id: -1,
-    login: "",
+    email: "",
     password: "",
     name: "",
     surname: "",
@@ -29,7 +29,6 @@ const EMPTY_USER = {
         house: "",
         flat: ""
     },
-    email: "",
     phone: "",
     status: ""
 };
@@ -92,14 +91,13 @@ export const UserDialog = (props) => {
                         enableReinitialize
                         initialValues={{
                             id: userId,
-                            login: user.login,
+                            email: user.email,
                             password: user.password,
                             name: user.name,
                             surname: user.surname,
                             patronymic: user.patronymic,
                             role: user.roles,
                             birthday: user.birthday,
-                            email: user.email,
                             phone: user.phone,
                             passport: user.passport,
                             status: user.status,
@@ -112,14 +110,13 @@ export const UserDialog = (props) => {
                         onSubmit={(values) => {
 
                             const user = {
-                                login: values.login,
+                                email: values.email,
                                 password: values.password,
                                 name: values.name,
                                 surname: values.surname,
                                 patronymic: values.patronymic,
                                 roles: [values.role],
                                 birthday: values.birthday,
-                                email: values.email,
                                 phone: values.phone,
                                 passport: values.passport,
                                 address: {
@@ -161,9 +158,9 @@ export const UserDialog = (props) => {
                                 <Form>
                                     <FormikField
                                         formikProps={formProps}
-                                        id={"login"}
-                                        label={"Login"}
-                                        formikFieldName={"login"}
+                                        id={"email"}
+                                        label={"Email"}
+                                        formikFieldName={"email"}
                                     />
                                     <FormikField
                                         formikProps={formProps}
@@ -216,12 +213,6 @@ export const UserDialog = (props) => {
                                         id={"birthday"}
                                         label={"Date of birth"}
                                         formikFieldName={"birthday"}/>
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"email"}
-                                        label={"Email"}
-                                        formikFieldName={"email"}
-                                    />
                                     <FormikField
                                         formikProps={formProps}
                                         id={"phone"}

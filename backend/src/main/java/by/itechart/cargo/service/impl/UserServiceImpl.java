@@ -11,6 +11,7 @@ import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
+import by.itechart.cargo.service.AWSS3Service;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +36,22 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
+    private final AWSS3Service awss3Service;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            ClientCompanyRepository clientCompanyRepository,
                            RoleRepository roleRepository,
                            JwtTokenUtil jwtTokenUtil,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           AWSS3Service awss3Service) {
 
         this.userRepository = userRepository;
         this.clientCompanyRepository = clientCompanyRepository;
         this.roleRepository = roleRepository;
         this.jwtTokenUtil = jwtTokenUtil;
         this.passwordEncoder = passwordEncoder;
+        this.awss3Service = awss3Service;
     }
 
     @Override
@@ -77,15 +81,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-
     public void save(UserSaveRequest userRequest) throws AlreadyExistException {
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
-        final String login = userRequest.getLogin();
         final String email = userRequest.getEmail();
-
-        if (userRepository.findByLogin(login).isPresent()) {
-            throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
-        }
 
         if (userRepository.findByEmail(email).isPresent()) {
             throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
@@ -113,7 +111,6 @@ public class UserServiceImpl implements UserService {
 
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         final Long id = request.getId();
-        final String login = request.getLogin();
         final String email = request.getEmail();
         final String password = request.getPassword();
 
@@ -121,14 +118,6 @@ public class UserServiceImpl implements UserService {
                 .findByIdAndClientCompanyId(id, companyId)
                 .filter(u -> !u.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
-
-        final boolean isLoginExist = userRepository.findByLogin(login)
-                .filter(u -> !u.getId().equals(id))
-                .isPresent();
-
-        if (isLoginExist) {
-            throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
-        }
 
         final boolean isEmailExist = userRepository.findByEmail(email)
                 .filter(u -> !u.getId().equals(id))
@@ -138,7 +127,6 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
         }
 
-        user.setLogin(request.getLogin());
 
         if (password != null && !password.trim().isEmpty()) {
             user.setPassword(passwordEncoder.encode(password));
@@ -178,15 +166,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePhoto(PhotoRequest photoRequest) throws NotFoundException {
-        final long userId = jwtTokenUtil.getJwtUser().getId();
+    public void updatePhoto(PhotoRequest photoRequest, long userId) throws NotFoundException {
+
+        if (userId < 0) {
+            userId = jwtTokenUtil.getJwtUser().getId();
+        }
+
         final long companyId = jwtTokenUtil.getCurrentCompanyId();
         User currentUser = userRepository.findByIdAndClientCompanyId(userId, companyId)
                 .filter(user -> !user.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
-        currentUser.setPhoto(photoRequest.getPhoto());
-        log.info("User photo has been save {}", currentUser);
+        awss3Service.uploadFile(photoRequest.getPhoto(), String.valueOf(userId));
+        currentUser.setPhoto(awss3Service.getFile(currentUser.getId().toString()));
+        log.info("User's photo has been save {}", currentUser);
     }
 
     @Override
@@ -198,7 +191,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
         currentUser.setPhone(phoneRequest.getPhone());
-        log.info("User photo has been save {}", currentUser);
+        log.info("User's phone has been save {}", currentUser);
     }
 
     @Override

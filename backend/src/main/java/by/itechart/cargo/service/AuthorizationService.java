@@ -8,4 +8,6 @@ public interface AuthorizationService {
 
     AuthorizationResponse login(AuthorizationRequest request) throws NotFoundException;
 
+    void logout();
+
 }
