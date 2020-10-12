@@ -14,7 +14,6 @@ import ChangePhoneDialog from "../forms/profile-form/phone-dialog";
 import useToast from "../parts/toast-notification/useToast";
 import EditIcon from "@material-ui/icons/Edit";
 import ChangePassword from "../forms/profile-form/password-dialog";
-import {NotAuthorized} from "./error-page/error-401";
 
 const mapActionsToProps = (dispatch) => {
     return {

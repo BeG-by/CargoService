@@ -27,7 +27,7 @@ class LoginForm extends Component {
         const login = this.state.user.login;
         const password = this.state.user.password;
         const user_object = {
-            login: login,
+            email: login,
             password: password
         };
 
@@ -40,7 +40,7 @@ class LoginForm extends Component {
                 },
                 error => {
                     this.setState({
-                        errorText: "Something goes wrong...",
+                        errorText: error.response.data,
                         error
                     });
                 });

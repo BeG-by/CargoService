@@ -21,14 +21,13 @@ import java.util.Set;
 public class JwtUserDetails implements UserDetails {
 
     private long id;
-    private String login;
+    private String email;
     private String password;
     private String name;
     private String surname;
     private String patronymic;
     private LocalDate birthday;
     private Address address;
-    private String email;
     private String passport;
     private User.Status status;
     private ClientCompany clientCompany;
@@ -41,14 +40,13 @@ public class JwtUserDetails implements UserDetails {
     public User toUser() {
         return User.builder()
                 .id(id)
-                .login(login)
+                .email(email)
                 .password(password)
                 .name(name)
                 .surname(surname)
                 .patronymic(patronymic)
                 .birthday(birthday)
                 .address(address)
-                .email(email)
                 .passport(passport)
                 .status(status)
                 .clientCompany(clientCompany)
@@ -71,7 +69,7 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @JsonIgnore

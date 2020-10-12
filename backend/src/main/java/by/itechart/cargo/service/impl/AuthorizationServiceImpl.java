@@ -41,12 +41,14 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public AuthorizationResponse login(AuthorizationRequest request) throws NotFoundException {
 
-        final String login = request.getLogin();
+        System.out.println(request);
+
+        final String email = request.getEmail();
         final String password = request.getPassword();
 
-        final User user = userRepository.findByLogin(login).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-        final String token = jwtTokenUtil.createToken(login, user.getRoles());
+        final User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        final String token = jwtTokenUtil.createToken(email, user.getRoles());
 
         final UserResponse userResponse = UserResponse.toUserResponse(user);
 

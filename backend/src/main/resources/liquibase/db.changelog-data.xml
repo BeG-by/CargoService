@@ -49,7 +49,7 @@
     <changeSet id="insert_users" author="eugene.begun">
 
         <insert tableName="user">
-            <column name="login" value="root"/>
+            <column name="email" value="sysadmin@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Robert"/>
             <column name="patronymic" value="patronymic"/>
@@ -60,12 +60,14 @@
             <column name="passport" value="MP1111111"/>
             <column name="id_client_company" value="1"/>
             <column name="birthday" value="1990-03-11"/>
-            <column name="email" value="sysadmin@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="dispatcher"/>
+            <column name="email" value="dispatcher@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Jessika"/>
             <column name="patronymic" value="Ivanovna"/>
@@ -76,12 +78,14 @@
             <column name="passport" value="MP2222222"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1991-04-12"/>
-            <column name="email" value="dispatcher@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="manager"/>
+            <column name="email" value="manager@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Natasha"/>
             <column name="patronymic" value="Viktorovna"/>
@@ -92,12 +96,14 @@
             <column name="passport" value="MP3333333"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-12-23"/>
-            <column name="email" value="manager@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="admin"/>
+            <column name="email" value="admin@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Eugene"/>
             <column name="patronymic" value="Bib"/>
@@ -108,12 +114,14 @@
             <column name="passport" value="MP4444444"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-01-01"/>
-            <column name="email" value="admin@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="driver"/>
+            <column name="email" value="driver@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Petr"/>
             <column name="patronymic" value="Petrovich"/>
@@ -124,12 +132,14 @@
             <column name="passport" value="MP5555555"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1999-03-01"/>
-            <column name="email" value="driver@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="owner"/>
+            <column name="email" value="owner@gmail.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Mark"/>
             <column name="patronymic" value="Markovich"/>
@@ -141,12 +151,14 @@
             <column name="passport" value="MP6666666"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1981-08-03"/>
-            <column name="email" value="owner@gmail.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
         <insert tableName="user">
-            <column name="login" value="yandex_admin"/>
+            <column name="email" value="admin@yandex.com"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Vika"/>
             <column name="patronymic" value="Ivanova"/>
@@ -155,8 +167,10 @@
             <column name="passport" value="MP7777777"/>
             <column name="id_client_company" value="3"/>
             <column name="birthday" value="1983-01-01"/>
-            <column name="email" value="admin@yandex.com"/>
             <column name="phone" value="8(029)161-33-32"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
 

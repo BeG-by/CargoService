@@ -525,7 +525,7 @@ function InvoiceForm(props) {
                                 type="submit"
                                 disabled={formProps.listener}
                             >
-                                Register invoice
+                                {initInvoice.id > 0 ? "Register invoice" : "Update invoice"}
                             </Button>
                         </div>
 

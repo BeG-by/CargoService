@@ -83,12 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(UserSaveRequest userRequest) throws AlreadyExistException {
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
-        final String login = userRequest.getLogin();
         final String email = userRequest.getEmail();
-
-        if (userRepository.findByLogin(login).isPresent()) {
-            throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
-        }
 
         if (userRepository.findByEmail(email).isPresent()) {
             throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
@@ -116,7 +111,6 @@ public class UserServiceImpl implements UserService {
 
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         final Long id = request.getId();
-        final String login = request.getLogin();
         final String email = request.getEmail();
         final String password = request.getPassword();
 
@@ -124,14 +118,6 @@ public class UserServiceImpl implements UserService {
                 .findByIdAndClientCompanyId(id, companyId)
                 .filter(u -> !u.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
-
-        final boolean isLoginExist = userRepository.findByLogin(login)
-                .filter(u -> !u.getId().equals(id))
-                .isPresent();
-
-        if (isLoginExist) {
-            throw new AlreadyExistException(LOGIN_ALREADY_EXISTS);
-        }
 
         final boolean isEmailExist = userRepository.findByEmail(email)
                 .filter(u -> !u.getId().equals(id))
@@ -141,7 +127,6 @@ public class UserServiceImpl implements UserService {
             throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
         }
 
-        user.setLogin(request.getLogin());
 
         if (password != null && !password.trim().isEmpty()) {
             user.setPassword(passwordEncoder.encode(password));

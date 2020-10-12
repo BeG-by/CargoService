@@ -148,22 +148,6 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
             : headerCompany
     };
 
-    // const handleRefresh = () => {
-    //     window.location.reload();
-    // };
-
-    // const renderUserNotifications = () => {
-    //     return isAuthenticate
-    //         ? <IconButton onClick={handleRefresh}
-    //                       aria-label="documents for work"
-    //                       color="inherit">
-    //             <Badge badgeContent={17}
-    //                    color="secondary">
-    //                 <NotificationsIcon/>
-    //             </Badge>
-    //         </IconButton>
-    //         : null;
-    // }
 
     const LoginButton = () => {
         return isAuthenticate
@@ -196,9 +180,6 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                     {renderUserName()}
                 </Typography>
                 <div className={classes.grow}/>
-                {/*<div className={classes.spaceAround}>*/}
-                {/*    {renderUserNotifications()}*/}
-                {/*</div>*/}
                 <div className={classes.spaceAround}>
                     {renderUserPhoto()}
                 </div>

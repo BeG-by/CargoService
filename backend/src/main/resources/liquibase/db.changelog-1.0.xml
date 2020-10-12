@@ -13,7 +13,8 @@
             <column name="id_user" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="login" type="VARCHAR(64)">
+
+            <column name="email" type="VARCHAR(64)">
                 <constraints nullable="false" unique="true"/>
             </column>
 
@@ -33,7 +34,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="photo" type="VARCHAR()"/>
+            <column name="photo" type="VARCHAR(255)"/>
 
             <column name="birthday" type="DATE">
                 <constraints nullable="false"/>
@@ -49,11 +50,16 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="email" type="VARCHAR(64)">
-                <constraints nullable="false" unique="true"/>
+            <column name="passport" type="VARCHAR(64)"/>
+            <column name="online" type="boolean"/>
+
+            <column name="last_modified_date" type="DATE">
+                <constraints nullable="false"/>
             </column>
 
-            <column name="passport" type="VARCHAR(64)"/>
+            <column name="create_date" type="DATE"/>
+
+            <column name="delete_date" type="DATE"/>
 
             <column name="status" type="user_status" defaultValue="ACTIVE"/>
 
