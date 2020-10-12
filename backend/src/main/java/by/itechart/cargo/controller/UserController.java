@@ -60,9 +60,18 @@ public class UserController {
     @PutMapping("/photo")
     public ResponseEntity<String> updatePhoto(@RequestBody @Valid PhotoRequest photoRequest)
             throws NotFoundException {
-        userService.updatePhoto(photoRequest);
+        userService.updatePhoto(photoRequest, -1);
         return ResponseEntity.ok("Photo has been updated");
     }
+
+    @PutMapping("/photo/{id}")
+    @Secured({ADMIN, OWNER})
+    public ResponseEntity<String> updatePhoto(@RequestBody @Valid PhotoRequest photoRequest, @PathVariable long id)
+            throws NotFoundException {
+        userService.updatePhoto(photoRequest, id);
+        return ResponseEntity.ok("User's photo with has been updated");
+    }
+
 
     @PutMapping("/phone")
     public ResponseEntity<String> updatePhone(@RequestBody @Valid PhoneRequest phoneRequest)

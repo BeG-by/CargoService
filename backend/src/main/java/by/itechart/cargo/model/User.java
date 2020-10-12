@@ -14,25 +14,27 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @Table(name = "user", schema = "public")
 @TypeDef(
         name = "user_status",
         typeClass = EnumTypePostgreSql.class
 )
-public class User implements Serializable, Cloneable {
+public class User extends BaseEntity implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "login", unique = true, nullable = false)
-    private String login;
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
     @Column(name = "password", nullable = false)
     @JsonIgnore
@@ -59,9 +61,6 @@ public class User implements Serializable, Cloneable {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "email", nullable = false)
-    private String email;
-
     @Column(name = "passport")
     private String passport;
 
@@ -69,6 +68,9 @@ public class User implements Serializable, Cloneable {
     @Enumerated(EnumType.STRING)
     @Type(type = "user_status")
     private Status status;
+
+    @Column(name = "online")
+    private boolean isOnline;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)

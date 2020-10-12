@@ -48,9 +48,9 @@ public class JwtTokenUtil {
     }
 
 
-    public String createToken(String login, Set<Role> roles) {
+    public String createToken(String email, Set<Role> roles) {
 
-        final Claims claims = Jwts.claims().setSubject(login);
+        final Claims claims = Jwts.claims().setSubject(email);
 
         final Set<String> rolesName = roles.stream().map(r -> r.getRole().toString()).collect(Collectors.toSet());
         claims.put("roles", rolesName);
@@ -67,8 +67,8 @@ public class JwtTokenUtil {
     }
 
     public Authentication getAuthentication(String token) {
-        String login = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

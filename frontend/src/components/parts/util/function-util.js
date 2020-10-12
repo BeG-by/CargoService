@@ -38,7 +38,7 @@ export function getSimplePropertiesFromObject(obj, resultObject = {}) {
 export const copyUser = (user) => {
     return {
         id: user.id,
-        login: user.login,
+        email: user.email,
         name: user.name,
         surname: user.surname,
         patronymic: user.patronymic,
@@ -52,7 +52,6 @@ export const copyUser = (user) => {
                 flat: user.address != null ? user.address.flat : "",
             },
         birthday: user.birthday,
-        email: user.email,
         status: user.status,
         roles: user.roles,
         photo: user.photo,

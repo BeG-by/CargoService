@@ -26,22 +26,21 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with login %s doesn't exist", login)));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email %s doesn't exist", email)));
 
 
         return JwtUserDetails.builder()
                 .id(user.getId())
-                .login(user.getLogin())
+                .email(user.getEmail())
                 .password(user.getPassword())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .patronymic(user.getPatronymic())
                 .birthday(user.getBirthday())
                 .address(user.getAddress())
-                .email(user.getEmail())
                 .passport(user.getPassport())
                 .status(user.getStatus())
                 .clientCompany(user.getClientCompany())

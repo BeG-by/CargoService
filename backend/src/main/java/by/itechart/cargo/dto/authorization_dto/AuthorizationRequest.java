@@ -12,9 +12,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class AuthorizationRequest {
 
-    @NotBlank(message = "Login is mandatory")
-    @Size(max = 16, message = "Login is too long (max is 16)")
-    private String login;
+    @NotBlank(message = "Email is mandatory")
+    @Size(max = 64, message = "Email is too long (max is 64)")
+    private String email;
 
     @NotBlank(message = "Password is mandatory")
     @Size(max = 16, message = "Password is too long (max is 16)")

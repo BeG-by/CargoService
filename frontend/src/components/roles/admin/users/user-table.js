@@ -4,7 +4,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import {UserDialog} from "./user-dialog";
@@ -15,24 +14,64 @@ import ConfirmDeletingDialog from "../slide-dialog";
 import {handleRequestError, makeRequest, USER_URL} from "../../../parts/util/request-util"
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
-import {NotAuthorized} from "../../../pages/error-page/error-401";
 import {connect} from "react-redux";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import photo from "../../../../resources/images/user_no_photo.png";
+import Avatar from "@material-ui/core/Avatar";
+import Tooltip from "@material-ui/core/Tooltip";
+import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
 
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
+const FONT_SIZE = 18;
 
 const columns = [
-    {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "surname", label: "Surname", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "patronymic", label: "Patronymic", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "role", label: "Role", minWidth: 150, align: "center"},
-    {id: "birthday", label: "Date of birth", minWidth: MIN_WIDTH, align: ALIGN, format: (value) => value.toFixed(2)},
-    {id: "status", label: "Status", minWidth: 150, align:ALIGN},
-    {id: "email", label: "Email", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "photo", label: "", minWidth: 50, align: "center", fontSize: FONT_SIZE},
+    {id: "email", label: "Email", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "surname", label: "Surname", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "role", label: "Role", minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {
+        id: "birthday",
+        label: "Date of birth",
+        minWidth: 140,
+        align: ALIGN,
+        fontSize: FONT_SIZE,
+        format: (value) => value.toFixed(2)
+    },
+    {id: "status", label: "Status", minWidth: 100, align: ALIGN, fontSize: FONT_SIZE},
     {id: "edit_delete", label: "", align: "right"}
-
 ];
+
+
+const isOnlineDiv = (isOnline) => {
+    return isOnline ?
+        <div>
+            <FiberManualRecordSharpIcon style={{fontSize: 12, color: "green", marginTop: 3}}/>
+            <span style={{marginLeft: 3}}>Online</span>
+        </div>
+        :
+        <div>
+            <FiberManualRecordSharpIcon style={{fontSize: 12, color: "crimson", marginTop: 3}}/>
+            <span style={{marginLeft: 3}}>Offline</span>
+        </div>
+};
+
+const getColorStatus = (status) => {
+
+    switch (status) {
+        case "ACTIVE":
+            return <div className="green-status">{status}</div>;
+        case "BLOCKED":
+            return <div className="red-status">{status}</div>;
+        default:
+            return <div>{status}</div>
+    }
+
+};
+
 
 const mapStateToProps = (store) => {
     return {
@@ -46,9 +85,52 @@ export const UserTable = connect(mapStateToProps)((props) => {
     const [users, setUsers] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(-1);
+    const [selectedPhotoId, setSelectedPhotoId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('status');
+
     const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the user ?";
+    const maxSizeOfImg = 12000000;
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const handleChange = (e) => {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+
+        if (file !== undefined) {
+            if (file.type.match("image.*")) {
+
+                if (file.size > maxSizeOfImg) {
+                    showToastComponent("File is to large. Max size is :" + maxSizeOfImg / 1000000 + "MB", "error");
+                    return;
+                }
+
+                if (file.name.length > 100) {
+                    showToastComponent("File name is too long (maximum is 100 characters)", "error");
+                    return;
+                }
+
+                reader.readAsDataURL(file);
+
+            } else {
+                showToastComponent("Incorrect file type", "error")
+            }
+        }
+
+        reader.onload = () => {
+            let photoInBase64 = reader.result;
+            makeRequest("PUT", USER_URL + "/photo/" + selectedPhotoId, {photo: photoInBase64})
+                .then(res => showToastComponent("User's photo has been updated"))
+                .catch(error => handleRequestError(error, showToastComponent))
+        };
+    };
 
     useEffect(() => {
         insertUsers()
@@ -56,7 +138,9 @@ export const UserTable = connect(mapStateToProps)((props) => {
 
     const insertUsers = () => {
         makeRequest("GET", USER_URL)
-            .then(res => setUsers(res.data))
+            .then(res => {
+                setUsers(res.data)
+            })
             .catch(error => handleRequestError(error, showToastComponent))
     };
 
@@ -90,7 +174,11 @@ export const UserTable = connect(mapStateToProps)((props) => {
             <Paper className="table-paper">
                 <TableContainer className="table-container">
                     <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                    className="table-title"
+                        >
+                            <LibraryBooksIcon/>
                             Users
                         </Typography>
                         <Button variant="contained"
@@ -102,71 +190,88 @@ export const UserTable = connect(mapStateToProps)((props) => {
                         </Button>
                     </div>
                     <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
+                        <EnhancedTableHead
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                        />
                         <TableBody>
-                            {users
+                            {stableSort(users, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((user) => {
 
                                     let roles = user.roles.map(role => role.charAt(0) + role.substring(1).toLowerCase());
+                                    let inPutId = "hidden-input-user" + user.id;
 
                                     return (
                                         <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(user);
-                                            }}
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
                                             key={user.id}
                                         >
-                                            <TableCell key={columns[0].id} align={columns[0].align}>
-                                                {user.name}
+                                            <TableCell key={columns[0].id} align={columns[0].align}
+                                                       className="avatar-td">
+                                                <Tooltip title="Click to edit photo"
+                                                         arrow>
+                                                    <Avatar alt="avatar"
+                                                            src={user.photo === null ? photo : user.photo}
+                                                            onClick={(e) => {
+                                                                setSelectedPhotoId(user.id);
+                                                                document.getElementById(inPutId).click();
+                                                            }}
+                                                    />
+                                                </Tooltip>
+                                                <input
+                                                    type="file"
+                                                    onChange={handleChange}
+                                                    multiple={false}
+                                                    size="1000"
+                                                    accept="image/*"
+                                                    hidden={true}
+                                                    id={inPutId}
+                                                />
                                             </TableCell>
                                             <TableCell key={columns[1].id} align={columns[1].align}>
-                                                {user.surname}
+                                                <div style={{display: "flex", flexDirection: "column"}}>
+                                                    <span style={{fontWeight: "bold"}}>{user.email}</span>
+                                                    {isOnlineDiv(user.online)}
+                                                </div>
                                             </TableCell>
                                             <TableCell key={columns[2].id} align={columns[2].align}>
-                                                {user.patronymic}
+                                                {user.name}
                                             </TableCell>
                                             <TableCell key={columns[3].id} align={columns[3].align}>
-                                                {roles}
+                                                {user.surname}
                                             </TableCell>
                                             <TableCell key={columns[4].id} align={columns[4].align}>
-                                                {user.birthday}
+                                                {roles}
                                             </TableCell>
                                             <TableCell key={columns[5].id} align={columns[5].align}>
-                                                {user.status}
+                                                {user.birthday}
                                             </TableCell>
                                             <TableCell key={columns[6].id} align={columns[6].align}>
-                                                {user.email}
+                                                {getColorStatus(user.status)}
                                             </TableCell>
                                             <TableCell key={columns[7].id} align={columns[7].align}>
                                                 <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<EditIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(user)
-                                                        }}/>
+                                                    <Tooltip title="Click to edit user"
+                                                             arrow>
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(user)
+                                                            }}/>
+                                                    </Tooltip>
                                                     <ConfirmDeletingDialog
                                                         id={user.id}
                                                         onDelete={deleteSelectedUser}
                                                         text={REMOVE_TITLE}
+                                                        toolTitle="Click to delete user"
                                                     />
                                                 </div>
                                             </TableCell>

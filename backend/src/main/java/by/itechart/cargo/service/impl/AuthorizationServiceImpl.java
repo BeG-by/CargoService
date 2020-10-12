@@ -9,6 +9,7 @@ import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AuthorizationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_
 
 
 @Service
+@Slf4j
 @Transactional
 public class AuthorizationServiceImpl implements AuthorizationService {
 
@@ -41,16 +43,25 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public AuthorizationResponse login(AuthorizationRequest request) throws NotFoundException {
 
-        final String login = request.getLogin();
+        final String email = request.getEmail();
         final String password = request.getPassword();
 
-        final User user = userRepository.findByLogin(login).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-        final String token = jwtTokenUtil.createToken(login, user.getRoles());
+        final User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        final String token = jwtTokenUtil.createToken(email, user.getRoles());
+        user.setOnline(true);
 
         final UserResponse userResponse = UserResponse.toUserResponse(user);
 
         return new AuthorizationResponse(token, userResponse, ClientCompanyDTO.fromClientCompany(user.getClientCompany()));
+
+    }
+
+    @Override
+    public void logout() {
+        final long userId = jwtTokenUtil.getJwtUser().getId();
+        userRepository.findById(userId).ifPresent(u -> u.setOnline(false));
+        log.info("User with id = {} logouted" , userId);
 
     }
 

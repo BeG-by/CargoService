@@ -21,7 +21,7 @@ public interface UserService {
 
     void delete(long id) throws NotFoundException;
 
-    void updatePhoto(PhotoRequest photoRequest) throws NotFoundException;
+    void updatePhoto(PhotoRequest photoRequest , long userId) throws NotFoundException;
 
     void updatePhone(PhoneRequest photoRequest) throws NotFoundException;
 
