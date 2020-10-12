@@ -47,7 +47,8 @@ export default (props) => {
             initialValues={{
                 productStatus: selectedStatus,
                 lostQuantity: "",
-                comment: ""
+                comment: "",
+                quantity: initProductState.quantity
             }}
             onSubmit={handleSubmit}
             validationSchema={ProductFormValidation}

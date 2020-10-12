@@ -70,7 +70,7 @@ public class User implements Serializable, Cloneable {
     @Type(type = "user_status")
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_client_company", nullable = false)
     @JsonIgnore
     private ClientCompany clientCompany;

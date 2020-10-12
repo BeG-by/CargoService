@@ -82,7 +82,7 @@ export default function InvoiceInfoContent(props) {
     };
 
     const handleActInfoOpen = () => {
-        if (act) {
+        if (act !== null && act !== undefined) {
             setForm(<ActInfo act={act} invoice={invoice}/>);
             setActInfoDialogOpen(true);
         }

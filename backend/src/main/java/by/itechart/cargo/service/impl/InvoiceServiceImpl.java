@@ -1,5 +1,6 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.dto.model_dto.act.ProductLostDto;
 import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchInvoiceRepository;
@@ -38,6 +39,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final RoleRepository roleRepository;
     private final StorageRepository storageRepository;
     private final ElasticsearchInvoiceRepository elasticsearchInvoiceRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository,
@@ -48,7 +50,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                               JwtTokenUtil jwtTokenUtil,
                               StorageRepository storageRepository,
                               RoleRepository roleRepository,
-                              ElasticsearchInvoiceRepository elasticsearchInvoiceRepository) {
+                              ElasticsearchInvoiceRepository elasticsearchInvoiceRepository,
+                              ProductRepository productRepository) {
 
         this.invoiceRepository = invoiceRepository;
         this.waybillRepository = waybillRepository;
@@ -59,6 +62,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.storageRepository = storageRepository;
         this.roleRepository = roleRepository;
         this.elasticsearchInvoiceRepository = elasticsearchInvoiceRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -315,11 +319,28 @@ public class InvoiceServiceImpl implements InvoiceService {
         final Invoice invoice = invoiceRequest.toInvoice();
         Invoice foundInvoice = invoiceRepository.findById(invoice.getId()).orElseThrow(() ->
                 new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+
         if (invoice.getStatus().equals(Invoice.Status.ACCEPTED)
                 || invoice.getStatus().equals(Invoice.Status.REJECTED)) {
             foundInvoice.setCheckingDate(LocalDate.now());
+
         } else if (invoice.getStatus().equals(Invoice.Status.CLOSED)
                 || invoice.getStatus().equals(Invoice.Status.CLOSED_WITH_ACT)) {
+
+            if (invoice.getStatus().equals(Invoice.Status.CLOSED)) {
+                List<Product> products = foundInvoice.getProducts();
+                products.forEach(p -> {
+                    try {
+                        Product product = productRepository
+                                .findById(p.getId()).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
+                        product.setProductStatus(Product.Status.DELIVERED);
+                        product.setComment("Clean delivery");
+                    } catch (NotFoundException e) {
+                        log.error("Product not found {}", p);
+                    }
+                });
+            }
+
             foundInvoice.setCloseDate(LocalDate.now());
             Waybill waybill = foundInvoice.getWaybill();
             waybill.setStatus(Waybill.WaybillStatus.DONE);
@@ -327,6 +348,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
             final Long companyId = currentUser.getClientCompany().getId();
             List<Waybill> waybills = waybillRepository.findAllByStatusAndDriverIdY(driverId, companyId);
+
             if (waybills.size() > 0) {
                 Waybill current = waybills.get(0);
                 LocalDate date = LocalDate.now().plusDays(30);

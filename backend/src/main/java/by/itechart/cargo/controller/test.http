@@ -81,7 +81,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 
 // --- Invoices ---
 
-GET localhost:8080/v1/api/invoices/4
+GET localhost:8080/v1/api/invoices/3
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaXNwYXRjaGVyIiwicm9sZXMiOlsiRElTUEFUQ0hFUiJdLCJpYXQiOjE2MDE4NTkxODIsImV4cCI6MTYwMjcyMzE4Mn0.RESk4vbtagVlsH3q6Iwu57teAyrw29nttDnSLrVAjto
 
