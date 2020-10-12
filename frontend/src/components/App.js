@@ -30,6 +30,7 @@ import {
 } from "../security/private-route";
 import {ProfileInfo} from "./pages/profile-info";
 import CurrentWaybillBody from "./pages/current-waybill-page";
+import {WebSocket} from "../web_socket/web-socket";
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -77,6 +78,7 @@ export default function App() {
                     <PrivateRoute exact path={"/clients"} component={ClientsTable} hasAnyAuthorities={[ROLE_SYSADMIN]}/>
                     <Route component={NotFound}/>
                 </Switch>
+                <WebSocket/>
                 <CssBaseline/>
                 <Footer/>
             </div>

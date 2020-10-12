@@ -1,15 +1,13 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.dto.model_dto.invoice.DataForInvoiceCreating;
-import by.itechart.cargo.dto.model_dto.invoice.InvoicePaginationResponse;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
-import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
+import by.itechart.cargo.controller.web_socket.NotificationController;
+import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +17,15 @@ import javax.validation.Valid;
 @RequestMapping("/v1/api/invoices")
 @Validated
 public class InvoiceController {
-
+    private final SimpMessagingTemplate messagingTemplate;
     private final InvoiceService invoiceService;
+    private final NotificationController notificationController;
 
     @Autowired
-    public InvoiceController(InvoiceService invoiceService) {
+    public InvoiceController(SimpMessagingTemplate messagingTemplate, InvoiceService invoiceService, NotificationController notificationController) {
+        this.messagingTemplate = messagingTemplate;
         this.invoiceService = invoiceService;
+        this.notificationController = notificationController;
     }
 
     @GetMapping
@@ -79,6 +80,7 @@ public class InvoiceController {
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         invoiceService.save(invoiceRequest);
+        notificationController.notifyAboutNewInvoice(invoiceRequest);
         return ResponseEntity.ok("Invoice has been saved");
     }
 
