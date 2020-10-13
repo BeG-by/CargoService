@@ -92,6 +92,7 @@ public class WaybillController {
     @PutMapping("/points")
     public ResponseEntity<String> updatePoints(@RequestBody @Valid UpdatePointsRequest request) throws NotFoundException {
         pointService.updatePoint(request);
+        notificationController.notifyAboutPointPass(request.getId());
         return ResponseEntity.ok("Point has been passed");
     }
 

@@ -5,10 +5,8 @@ import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.InvoiceService;
-import by.itechart.cargo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,17 +16,13 @@ import javax.validation.Valid;
 @RequestMapping("/v1/api/invoices")
 @Validated
 public class InvoiceController {
-    private final SimpMessagingTemplate messagingTemplate;
     private final InvoiceService invoiceService;
     private final NotificationController notificationController;
-    private final UserService userService;
 
     @Autowired
-    public InvoiceController(SimpMessagingTemplate messagingTemplate, InvoiceService invoiceService, NotificationController notificationController, UserService userService) {
-        this.messagingTemplate = messagingTemplate;
+    public InvoiceController(InvoiceService invoiceService, NotificationController notificationController) {
         this.invoiceService = invoiceService;
         this.notificationController = notificationController;
-        this.userService = userService;
     }
 
     @GetMapping

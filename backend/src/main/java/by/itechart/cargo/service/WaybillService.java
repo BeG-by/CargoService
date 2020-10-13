@@ -16,6 +16,8 @@ public interface WaybillService {
 
     Waybill findByStatusAndDriverId();
 
+    Waybill findByPointId(Long pointId) throws NotFoundException;
+
     WaybillPaginationResponse findAllByRegistrationUser(Integer page, Integer waybillsPerPage);
 
     WaybillPaginationResponse findAllByRegistrationUserAndInvoiceNumber(String invoiceNumber, Integer page, Integer waybillsPerPage);

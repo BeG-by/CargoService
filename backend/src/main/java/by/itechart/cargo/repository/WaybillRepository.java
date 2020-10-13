@@ -27,6 +27,13 @@ public interface WaybillRepository extends JpaRepository<Waybill, Long> {
             "AND i.checkingUser.id = :registrationUserId")
     Page<Waybill> findAllByClientCompanyIdAndRegistrationUserId(Long clientCompanyId, Long registrationUserId, Pageable pageable);
 
+    @Query("SELECT w FROM Waybill w " +
+            "JOIN w.points p ON p.waybill.id = w.id " +
+            "JOIN w.invoice i ON w.invoice.id = i.id " +
+            "WHERE p.id = :pointId " +
+            "AND i.clientCompany.id = :clientCompanyId")
+    Optional<Waybill> findByClientCompanyIdAndPointId(Long clientCompanyId, Long pointId);
+
     @Query("SELECT w FROM Waybill w JOIN w.invoice i ON w.invoice.id = i.id " +
             "WHERE i.clientCompany.id = :clientCompanyId " +
             "AND i.driver.id = :driverId " +
@@ -38,4 +45,5 @@ public interface WaybillRepository extends JpaRepository<Waybill, Long> {
             "AND i.driver.id = :driverId " +
             "AND w.status = 'FUTURE'")
     List<Waybill> findAllByStatusAndDriverIdY(Long driverId, Long clientCompanyId);
+
 }

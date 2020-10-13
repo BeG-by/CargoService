@@ -85,6 +85,13 @@ export const WebSocket = connect(mapStateToProps)((props) => {
             () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
     }
 
+    const handlePointPass = (messageData) => {
+        openActionToast(
+            `Point pass`,
+            [""],
+            () => openWaybillDialog(messageData.waybillId))
+    }
+
     const onMessageReceive = (msg) => {
         const messageData = JSON.parse(msg.body);
         switch (messageData.notificationType) {
@@ -99,6 +106,9 @@ export const WebSocket = connect(mapStateToProps)((props) => {
                 break;
             case "INVOICE_UPDATE":
                 handleInvoiceUpdateMessage(messageData);
+                break;
+            case "POINT_PASS":
+                handlePointPass(messageData);
                 break;
             default:
                 showToast("Some notification has come");

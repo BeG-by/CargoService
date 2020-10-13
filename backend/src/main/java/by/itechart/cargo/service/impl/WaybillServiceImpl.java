@@ -114,6 +114,13 @@ public class WaybillServiceImpl implements WaybillService {
     }
 
     @Override
+    public Waybill findByPointId(Long pointId) throws NotFoundException {
+        long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return waybillRepository.findByClientCompanyIdAndPointId(companyId, pointId)
+                .orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
     public WaybillPaginationResponse findAllByRegistrationUser(Integer page, Integer waybillsPerPage) {
         JwtUserDetails jwtUser = jwtTokenUtil.getJwtUser();
         Long clientCompanyId = jwtUser.getClientCompany().getId();
