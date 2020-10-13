@@ -109,29 +109,28 @@ export const UserDialog = (props) => {
                         }}
                         onSubmit={(values) => {
 
-                            const user = {
-                                email: values.email,
-                                password: values.password,
-                                name: values.name,
-                                surname: values.surname,
-                                patronymic: values.patronymic,
-                                roles: [values.role],
-                                birthday: values.birthday,
-                                phone: values.phone,
-                                passport: values.passport,
-                                address: {
-                                    country: values.country,
-                                    city: values.city,
-                                    street: values.street,
-                                    house: values.house,
-                                    flat: values.flat
-                                }
-                            };
-
                             if (isUpdateForm) {
 
-                                user.id = values.id;
-                                user.status = values.status;
+                                const user = {
+                                    id: values.id,
+                                    email: values.email,
+                                    password: values.password,
+                                    name: values.name,
+                                    surname: values.surname,
+                                    patronymic: values.patronymic,
+                                    roles: [values.role],
+                                    birthday: values.birthday,
+                                    phone: values.phone,
+                                    passport: values.passport,
+                                    status: values.status,
+                                    address: {
+                                        country: values.country,
+                                        city: values.city,
+                                        street: values.street,
+                                        house: values.house,
+                                        flat: values.flat
+                                    }
+                                };
 
                                 makeRequest("PUT", USER_URL, user)
                                     .then(res => {
@@ -140,13 +139,19 @@ export const UserDialog = (props) => {
                                         showToast("User has been updated", "success")
                                     })
                                     .catch(error => handleRequestError(error, showToast))
+
                             } else {
 
-                                makeRequest("POST", USER_URL, user)
+                                const data = {
+                                    email: values.email,
+                                    role: values.role
+                                };
+
+
+                                makeRequest("POST", USER_URL, data)
                                     .then(res => {
                                         handleClose();
-                                        refreshTable();
-                                        showToast("User has been created", "success")
+                                        showToast("Link has been send", "success")
                                     })
                                     .catch(error => handleRequestError(error, showToast))
                             }
@@ -162,38 +167,44 @@ export const UserDialog = (props) => {
                                         label={"Email"}
                                         formikFieldName={"email"}
                                     />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"password"}
-                                        label={"Password"}
-                                        formikFieldName={"password"}
-                                        type={"password"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"name"}
-                                        label={"Name"}
-                                        formikFieldName={"name"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"surname"}
-                                        label={"Surname"}
-                                        formikFieldName={"surname"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"patronymic"}
-                                        label={"Patronymic"}
-                                        formikFieldName={"patronymic"}
-                                    />
 
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"passport"}
-                                        label={"Passport"}
-                                        formikFieldName={"passport"}
-                                    />
+                                    {isUpdateForm ?
+                                        <span>
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"password"}
+                                            label={"Password"}
+                                            formikFieldName={"password"}
+                                            type={"password"}
+                                        />
+                                        < FormikField
+                                            formikProps={formProps}
+                                            id={"name"}
+                                            label={"Name"}
+                                            formikFieldName={"name"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"surname"}
+                                            label={"Surname"}
+                                            formikFieldName={"surname"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"patronymic"}
+                                            label={"Patronymic"}
+                                            formikFieldName={"patronymic"}
+                                        />
+
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"passport"}
+                                            label={"Passport"}
+                                            formikFieldName={"passport"}
+                                        />
+                                        </span>
+                                        : ""}
+
                                     <UserTypeSelector
                                         formikProps={formProps}
                                         id={"role"}
@@ -201,54 +212,60 @@ export const UserDialog = (props) => {
                                         formikFieldName={"role"}
                                     />
 
-                                    {isUpdateForm ? <UserStatusSelector
-                                        formikProps={formProps}
-                                        id={"status"}
-                                        label={"Status"}
-                                        formikFieldName={"status"}
-                                    /> : ""}
+                                    {isUpdateForm ?
+                                        <span>
+                                            <UserStatusSelector
+                                                formikProps={formProps}
+                                                id={"status"}
+                                                label={"Status"}
+                                                formikFieldName={"status"}
+                                            />
 
-                                    <CustomDatePicker
-                                        formikProps={formProps}
-                                        id={"birthday"}
-                                        label={"Date of birth"}
-                                        formikFieldName={"birthday"}/>
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"phone"}
-                                        label={"Phone"}
-                                        formikFieldName={"phone"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"country"}
-                                        label={"Country"}
-                                        formikFieldName={"country"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"city"}
-                                        label={"City"}
-                                        formikFieldName={"city"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"street"}
-                                        label={"Street"}
-                                        formikFieldName={"street"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"house"}
-                                        label={"House"}
-                                        formikFieldName={"house"}
-                                    />
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"flat"}
-                                        label={"Flat"}
-                                        formikFieldName={"flat"}
-                                    />
+                                            <CustomDatePicker
+                                                formikProps={formProps}
+                                                id={"birthday"}
+                                                label={"Date of birth"}
+                                                formikFieldName={"birthday"}/>
+
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"phone"}
+                                                label={"Phone"}
+                                                formikFieldName={"phone"}
+                                            />
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"country"}
+                                                label={"Country"}
+                                                formikFieldName={"country"}
+                                            />
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"city"}
+                                                label={"City"}
+                                                formikFieldName={"city"}
+                                            />
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"street"}
+                                                label={"Street"}
+                                                formikFieldName={"street"}
+                                            />
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"house"}
+                                                label={"House"}
+                                                formikFieldName={"house"}
+                                            />
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"flat"}
+                                                label={"Flat"}
+                                                formikFieldName={"flat"}
+                                            />
+                                        </span>
+                                        : ""}
+
                                     <div style={{textAlign: "center", marginTop: 7, marginBottom: 5}}>
                                         <Button
                                             variant="contained"
@@ -256,7 +273,7 @@ export const UserDialog = (props) => {
                                             type="submit"
                                             disabled={formProps.listener}
                                         >
-                                            {isUpdateForm ? "Update" : "Save"}
+                                            {isUpdateForm ? "Update" : "Send activation link"}
                                         </Button>
                                     </div>
                                 </Form>

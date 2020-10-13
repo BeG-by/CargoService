@@ -17,14 +17,13 @@ import java.util.Set;
 public class UserSaveRequest {
 
 
-    @Email(message = "Email is not valid")
-    @Size(max = 64, message = "Patronymic is too long (max is 64)")
-    @NotBlank(message = "Email is mandatory")
-    private String email;
-
     @NotBlank(message = "Password is mandatory")
     @Size(max = 64, message = "Password is too long (max is 64)")
     private String password;
+
+    @NotBlank(message = "Confirm password is mandatory")
+    @Size(max = 64, message = "Confirm password is too long (max is 64)")
+    private String confirmPassword;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 64, message = "Name is too long (max is 64)")
@@ -48,16 +47,14 @@ public class UserSaveRequest {
     @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
 
-
     @Size(max = 64, message = "Passport is too long (max is 64)")
     private String passport;
 
-    @NotEmpty(message = "Roles in mandatory")
-    private Set<String> roles;
+    @NotBlank(message = "Access denied. Activation code is required")
+    private String activationCode;
 
     public User toUser() {
         return User.builder()
-                .email(email)
                 .password(password)
                 .name(name)
                 .surname(surname)

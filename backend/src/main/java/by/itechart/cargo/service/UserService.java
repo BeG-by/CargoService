@@ -16,7 +16,7 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
-    void save(UserAddRequest userRequest) throws AlreadyExistException, ServiceException;
+    void sendActivationLink(ActivationDetailsRequest userRequest) throws AlreadyExistException, ServiceException;
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
 

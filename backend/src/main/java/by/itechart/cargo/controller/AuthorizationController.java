@@ -5,18 +5,16 @@ import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
 import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
 import by.itechart.cargo.elasticsearch.ElasticsearchTestDataInserter;
+import by.itechart.cargo.exception.AlreadyExistException;
+import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import static by.itechart.cargo.security.RoleConstant.ADMIN;
-import static by.itechart.cargo.security.RoleConstant.OWNER;
 
 @RestController
 @RequestMapping("/v1/api/auth")
@@ -45,10 +43,11 @@ public class AuthorizationController {
     }
 
 
-    @PostMapping("/registration/{code}")
-    public ResponseEntity<String> registration(@PathVariable String code, @RequestBody @Valid UserSaveRequest request) {
-
-        return ResponseEntity.ok("User has been registered");
+    @PostMapping("/registration")
+    public ResponseEntity<String> registration(@RequestBody @Valid UserSaveRequest request)
+            throws AlreadyExistException, IncorrectPasswordException, NotFoundException {
+        authorizationService.registration(request);
+        return ResponseEntity.ok("Registration completed successfully");
     }
 
 }

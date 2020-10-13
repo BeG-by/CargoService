@@ -196,7 +196,7 @@
 
     <changeSet id="1.1.4" author="eugene.begun">
 
-        <createTable tableName="user_to_active">
+        <createTable tableName="activation">
 
             <column name="id" type="BIGSERIAL" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -228,7 +228,17 @@
 
             <column name="delete_date" type="DATE"/>
 
+            <column name="id_client_company" type="BIGSERIAL">
+                <constraints nullable="false"/>
+            </column>
+
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="activation"
+                                 baseColumnNames="id_client_company"
+                                 constraintName="fk_client_company_activation"
+                                 referencedTableName="client_company"
+                                 referencedColumnNames="id_client_company"/>
 
     </changeSet>
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserAddRequest {
+public class ActivationDetailsRequest {
 
     @Email(message = "Email is invalid")
     @NotBlank(message = "Email is mandatory")

@@ -1,11 +1,13 @@
 package by.itechart.cargo.model;
 
 import by.itechart.cargo.model.enumeration.EnumTypePostgreSql;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Data
@@ -14,12 +16,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Builder
-@Table(name = "user_to_active")
+@Table(name = "activation")
 @TypeDef(
         name = "role_enum",
         typeClass = EnumTypePostgreSql.class
 )
-public class UserToActivate extends BaseEntity {
+public class ActivationDetails extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +38,12 @@ public class UserToActivate extends BaseEntity {
 
     @Column(name = "role", nullable = false)
     @Type(type = "role_enum")
+    @Enumerated(EnumType.STRING)
     private Role.RoleType role;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_client_company", nullable = false)
+    @JsonIgnore
+    private ClientCompany clientCompany;
 
 }

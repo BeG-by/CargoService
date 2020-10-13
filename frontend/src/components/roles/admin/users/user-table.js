@@ -136,6 +136,8 @@ export const UserTable = connect(mapStateToProps)((props) => {
                             }
                         );
 
+                        setUsers(users);
+
                     }
                 )
                 .catch(error => handleRequestError(error, showToastComponent))
@@ -149,7 +151,12 @@ export const UserTable = connect(mapStateToProps)((props) => {
     const insertUsers = () => {
         makeRequest("GET", USER_URL)
             .then(res => {
-                setUsers(res.data)
+                setUsers(res.data.map(u => {
+                    if (u.photo !== null) {
+                        u.photo = u.photo + "?time=" + new Date().getTime();
+                    }
+                    return u;
+                }))
             })
             .catch(error => handleRequestError(error, showToastComponent))
     };

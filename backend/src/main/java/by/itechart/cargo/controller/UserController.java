@@ -40,9 +40,9 @@ public class UserController {
 
     @PostMapping
     @Secured({ADMIN, OWNER})
-    public ResponseEntity<String> save(@RequestBody @Valid UserAddRequest userRequest) throws AlreadyExistException, ServiceException {
-        userService.save(userRequest);
-        return ResponseEntity.ok("User has been added");
+    public ResponseEntity<String> sendLink(@RequestBody @Valid ActivationDetailsRequest request) throws AlreadyExistException, ServiceException {
+        userService.sendActivationLink(request);
+        return ResponseEntity.ok("Link has been sent");
     }
 
     @GetMapping("/{id}")

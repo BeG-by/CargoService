@@ -1,6 +1,6 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.service.SendMailService;
+import by.itechart.cargo.service.MailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1/api/email")
 public class EmailController {
 
-    private SendMailService sendMailService;
+    private MailSenderService mailSenderService;
 
     @Autowired
-    public EmailController(SendMailService sendMailService) {
-        this.sendMailService = sendMailService;
+    public EmailController(MailSenderService mailSenderService) {
+        this.mailSenderService = mailSenderService;
     }
 
 
