@@ -15,9 +15,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     @Query("FROM User u WHERE u.clientCompany.id = :clientCompanyId AND u.status <> 'DELETED'")
-    List<User> findAllWithoutDeleted(Long clientCompanyId , Sort sort);
+    List<User> findAllWithoutDeleted(Long clientCompanyId, Sort sort);
 
     Optional<User> findByIdAndClientCompanyId(Long userId, Long clientCompanyId);
+
+    Optional<User> findByClientCompanyIdAndDriverId(Long clientCompanyId, Long invoiceId);  //todo: refactor (rename on invoice id)
 
     List<User> findAllByClientCompanyIdAndRoles(Long clientCompanyId, Role role);
 

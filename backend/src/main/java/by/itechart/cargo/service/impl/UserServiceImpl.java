@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.*;
+import static by.itechart.cargo.service.constant.MessageConstant.EMAIL_EXIST_MESSAGE;
+import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -78,6 +79,15 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(UserResponse::toUserResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponse findDriverByInvoiceId(Long invoiceId) throws NotFoundException {
+        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return userRepository.findByClientCompanyIdAndDriverId(companyId, invoiceId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
     @Override

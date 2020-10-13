@@ -1,10 +1,15 @@
 package by.itechart.cargo.dto.notification;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class NewWaybillNotification extends Notification {
+    private Long waybillId;
 
+    public NewWaybillNotification(Long notificationRecipientId, Long waybillId) {
+        super(notificationRecipientId);
+        this.waybillId = waybillId;
+        this.notificationType = Type.NEW_WAYBILL;
+    }
 
-
-public class NewWaybillNotification {
+    public Long getWaybillId() {
+        return waybillId;
+    }
 }

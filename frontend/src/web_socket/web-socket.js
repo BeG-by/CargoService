@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import * as Stomp from "stompjs"
 import useInvoiceConfirmationForm from "./hooks/useInvoiceConfirmationForm";
 import useActionToast from "./hooks/toast/use-action-toast";
+import useWaybillInfoForm from "./hooks/useWaybillInfoForm";
 
 
 const mapStateToProps = (store) => {
@@ -19,6 +20,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     const [ToastComponent, showToast] = useToast();
     const [InvoiceDialogComponent, openInvoiceDialog] = useInvoiceConfirmationForm();
     const [ActionToastComponent, openActionToast] = useActionToast()
+    const [WaybillDialogComponent, openWaybillDialog] = useWaybillInfoForm();
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -46,6 +48,10 @@ export const WebSocket = connect(mapStateToProps)((props) => {
         openActionToast(`New invoice!`, () => openInvoiceDialog(messageData.invoiceId));
     }
 
+    const handleNewWaybillMessage = (messageData) => {
+        openActionToast(`New waybill`, () => openWaybillDialog(messageData.waybillId))
+    }
+
     const onMessageReceive = (msg) => {
         const messageData = JSON.parse(msg.body);
         switch (messageData.notificationType) {
@@ -53,7 +59,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
                 handleNewInvoiceMessage(messageData);
                 break;
             case "NEW_WAYBILL":
-                showToast("New waybill");
+                handleNewWaybillMessage(messageData);
                 break;
             default:
                 showToast("Some notification has come");
@@ -72,6 +78,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
 
     return (
         <div style={{zIndex: 999}}>
+            {WaybillDialogComponent}
             {InvoiceDialogComponent}
             {ActionToastComponent}
             {ToastComponent}

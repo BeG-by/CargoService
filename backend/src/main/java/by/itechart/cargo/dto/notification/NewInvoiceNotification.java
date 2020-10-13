@@ -1,7 +1,5 @@
 package by.itechart.cargo.dto.notification;
 
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
-
 public class NewInvoiceNotification extends Notification {
     private Long invoiceId;
 
@@ -15,11 +13,4 @@ public class NewInvoiceNotification extends Notification {
         return invoiceId;
     }
 
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    public static NewInvoiceNotification fromInvoiceRequest(InvoiceRequest invoiceRequest) {
-        return new NewInvoiceNotification(invoiceRequest.getId(), invoiceRequest.getManagerId());
-    }
 }

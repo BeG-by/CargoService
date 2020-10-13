@@ -15,13 +15,15 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
+    UserResponse findDriverByInvoiceId(Long invoiceId) throws NotFoundException;
+
     void save(UserSaveRequest userRequest) throws AlreadyExistException;
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
 
     void delete(long id) throws NotFoundException;
 
-    void updatePhoto(PhotoRequest photoRequest , long userId) throws NotFoundException;
+    void updatePhoto(PhotoRequest photoRequest, long userId) throws NotFoundException;
 
     void updatePhone(PhoneRequest photoRequest) throws NotFoundException;
 

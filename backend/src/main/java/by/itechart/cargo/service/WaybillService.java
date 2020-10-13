@@ -10,7 +10,7 @@ public interface WaybillService {
 
     Waybill findById(long id) throws NotFoundException;
 
-    void save(WaybillRequest waybillRequest) throws NotFoundException;
+    Long save(WaybillRequest waybillRequest) throws NotFoundException;
 
     Waybill findByStatusAndDriverId(Long id);
 

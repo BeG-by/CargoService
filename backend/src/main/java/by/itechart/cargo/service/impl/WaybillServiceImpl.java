@@ -62,7 +62,7 @@ public class WaybillServiceImpl implements WaybillService {
     }
 
     @Override
-    public void save(WaybillRequest waybillRequest) throws NotFoundException {
+    public Long save(WaybillRequest waybillRequest) throws NotFoundException {
         final Waybill waybill = waybillRequest.toWaybill();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
@@ -91,10 +91,11 @@ public class WaybillServiceImpl implements WaybillService {
 
         waybill.getPoints().forEach(p -> p.setWaybill(waybill));
 
-        final Waybill waybillDb = waybillRepository.save(waybill);
+        final Waybill savedWaybill = waybillRepository.save(waybill);
 
-        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(waybillDb));
-        log.info("Waybill has been saved {}", waybillDb);
+        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(savedWaybill));
+        log.info("Waybill has been saved {}", savedWaybill);
+        return savedWaybill.getId();
     }
 
     @Override

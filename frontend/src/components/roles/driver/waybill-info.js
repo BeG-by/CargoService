@@ -56,8 +56,6 @@ export const WaybillInfo = (props) => {
         let response = await makeRequest("GET", WAYBILL_URL + "/" + props.waybillId);
         let selected = updated = response.data;
         if (!cleanupFunction) {
-            console.log("SELECTED POINTS");
-            console.log(selected.points);
             setWaybill({
                 id: selected.id,
                 departureDate: selected.departureDate,

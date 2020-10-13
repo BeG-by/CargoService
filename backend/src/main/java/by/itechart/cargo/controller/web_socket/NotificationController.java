@@ -2,8 +2,8 @@ package by.itechart.cargo.controller.web_socket;
 
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
-import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.notification.NewInvoiceNotification;
+import by.itechart.cargo.dto.notification.NewWaybillNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,9 @@ public class NotificationController {
     public void notifyAboutInvoiceStatusChange(UpdateInvoiceStatusRequest updateInvoiceStatusRequest) {
     }
 
-    public void notifyAboutNewWaybill(WaybillRequest waybillRequest) {
+    public void notifyAboutNewWaybill(Long waybillId, Long notificationRecipientId) {
+        NewWaybillNotification notification = new NewWaybillNotification(notificationRecipientId, waybillId);
+        messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipientId), PRIVATE_ENDPOINT, notification);
     }
 
     public void notifyAboutPointPass(UpdatePointsRequest updatePointsRequest) {
