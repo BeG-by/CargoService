@@ -88,6 +88,15 @@ public class SendMailServiceImpl implements SendMailService {
         }
     }
 
+    @Override
+    public void sendActivateLink(String email, String code) throws ServiceException {
+
+        final String content = "Click to registration: http://localhost:3000/main?code=" + code;
+        sendMail(email, "Activate link", content);
+
+    }
+
+
     public void sendMail(String to, String subject, String text) throws ServiceException {
 
         try {

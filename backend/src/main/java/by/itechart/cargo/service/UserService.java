@@ -4,6 +4,7 @@ import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.exception.ServiceException;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
-    void save(UserSaveRequest userRequest) throws AlreadyExistException;
+    void save(UserAddRequest userRequest) throws AlreadyExistException, ServiceException;
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
 

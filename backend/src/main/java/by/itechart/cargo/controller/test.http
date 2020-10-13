@@ -264,3 +264,14 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpYXQiOjE2MDI1MzkxNTcsImV4cCI6MTYwMzQwMzE1N30.Knt-OX-QAOYvW_QgB_441xgflJ_oM-hmz9DgMk1l8RM
 
 ###
+
+POST localhost:8080/v1/api/users
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpYXQiOjE2MDI1MzkxNTcsImV4cCI6MTYwMzQwMzE1N30.Knt-OX-QAOYvW_QgB_441xgflJ_oM-hmz9DgMk1l8RM
+
+{
+  "email": "istok08@mail.ru",
+  "role": "ADMIN"
+}
+
+###

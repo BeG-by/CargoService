@@ -4,14 +4,18 @@ import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
+import by.itechart.cargo.model.UserToActivate;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
+import by.itechart.cargo.repository.UserToActiveRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AWSS3Service;
+import by.itechart.cargo.service.SendMailService;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +26,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.*;
+import static by.itechart.cargo.service.constant.MessageConstant.EMAIL_EXIST_MESSAGE;
+import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -37,6 +43,9 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
     private final AWSS3Service awss3Service;
+    private final SendMailService sendMailService;
+    private final UserToActiveRepository userToActiveRepository;
+
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -44,7 +53,9 @@ public class UserServiceImpl implements UserService {
                            RoleRepository roleRepository,
                            JwtTokenUtil jwtTokenUtil,
                            PasswordEncoder passwordEncoder,
-                           AWSS3Service awss3Service) {
+                           AWSS3Service awss3Service,
+                           SendMailService sendMailService,
+                           UserToActiveRepository userToActiveRepository) {
 
         this.userRepository = userRepository;
         this.clientCompanyRepository = clientCompanyRepository;
@@ -52,6 +63,8 @@ public class UserServiceImpl implements UserService {
         this.jwtTokenUtil = jwtTokenUtil;
         this.passwordEncoder = passwordEncoder;
         this.awss3Service = awss3Service;
+        this.sendMailService = sendMailService;
+        this.userToActiveRepository = userToActiveRepository;
     }
 
     @Override
@@ -80,32 +93,50 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+
+    //TODO check on email exist
     @Override
-    public void save(UserSaveRequest userRequest) throws AlreadyExistException {
-        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+    public void save(UserAddRequest userRequest) throws AlreadyExistException, ServiceException {
+
         final String email = userRequest.getEmail();
+        final String role = userRequest.getRole();
+        final String code = UUID.randomUUID().toString();
 
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
-        }
+        sendMailService.sendActivateLink(email, code);
 
-        Set<Role> rolesDb = userRequest.getRoles()
-                .stream()
-                .map(r -> roleRepository.getByRole(Role.RoleType.valueOf(r)))
-                .collect(Collectors.toSet());
+        final UserToActivate userToActivate = UserToActivate.builder()
+                .email(email)
+                .role(Role.RoleType.valueOf(role))
+                .activationCode(code)
+                .isActive(false)
+                .build();
 
-        final User user = userRequest.toUser();
-        user.setRoles(rolesDb);
-        user.setClientCompany(clientCompanyRepository.getOne(companyId));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(User.Status.ACTIVE);
+        userToActiveRepository.save(userToActivate);
 
-        User userDb = userRepository.save(user);
-        log.info("User has been saved {}", userDb);
+
+//        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+//        final String email = userRequest.getEmail();
+//
+//        if (userRepository.findByEmail(email).isPresent()) {
+//            throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
+//        }
+//
+//        Set<Role> rolesDb = userRequest.getRoles()
+//                .stream()
+//                .map(r -> roleRepository.getByRole(Role.RoleType.valueOf(r)))
+//                .collect(Collectors.toSet());
+//
+//        final User user = userRequest.toUser();
+//        user.setRoles(rolesDb);
+//        user.setClientCompany(clientCompanyRepository.getOne(companyId));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setStatus(User.Status.ACTIVE);
+//
+//        User userDb = userRepository.save(user);
+//        log.info("User has been saved {}", userDb);
     }
 
     //TODO photo, phone
-
     @Override
     public void update(UserUpdateRequest request) throws NotFoundException, AlreadyExistException {
 
