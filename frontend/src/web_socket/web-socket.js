@@ -3,6 +3,7 @@ import useToast from "../components/parts/toast-notification/useToast";
 import {connect} from "react-redux";
 import * as Stomp from "stompjs"
 import useInvoiceConfirmationForm from "./hooks/useInvoiceConfirmationForm";
+import useActionToast from "./hooks/toast/use-action-toast";
 
 
 const mapStateToProps = (store) => {
@@ -17,6 +18,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     const [currentStompClient, setCurrentStompClient] = useState(null);
     const [ToastComponent, showToast] = useToast();
     const [InvoiceDialogComponent, openInvoiceDialog] = useInvoiceConfirmationForm();
+    const [ActionToastComponent, openActionToast] = useActionToast()
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -41,8 +43,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     }
 
     const handleNewInvoiceMessage = (messageData) => {
-        showToast(`New invoice!`);
-        openInvoiceDialog(messageData.invoiceId);
+        openActionToast(`New invoice!`, () => openInvoiceDialog(messageData.invoiceId));
     }
 
     const onMessageReceive = (msg) => {
@@ -72,6 +73,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     return (
         <div style={{zIndex: 999}}>
             {InvoiceDialogComponent}
+            {ActionToastComponent}
             {ToastComponent}
         </div>
     )

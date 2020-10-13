@@ -27,10 +27,8 @@ public class NotificationController {
     }
 
     public void notifyAboutNewWaybill(WaybillRequest waybillRequest) {
-
     }
 
     public void notifyAboutPointPass(UpdatePointsRequest updatePointsRequest) {
-
     }
 }

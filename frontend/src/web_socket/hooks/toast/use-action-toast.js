@@ -1,24 +1,34 @@
 import React, {useState} from "react"
-import {ToastNotification} from "../../../components/parts/toast-notification/toast-notification";
+import ActionToast from "./action-toast";
 
-export default () => {
+export default function useActionToast() {
     const [open, setOpen] = useState(false);
-    const [severity, setSeverity] = useState("success");
+    const [onView, setOnView] = useState(null);
+    const [text, setText] = useState("");
 
-    const openNotificationToast = (text) => {
+    const openActionToast = (text, onViewCLick) => {
         setOpen(true);
         setText(text);
-        setSeverity(severity);
+        setOnView(() => () => onViewCLick())
     };
 
-    const component = (
-        <ToastNotification
-            text={text}
-            severity={severity}
-            open={open}
-            onClose={() => setOpen(false)}
-        />
-    );
+    const handleCLose = () => {
+        setOpen(false);
+        setOnView(null);
+    }
 
-    return [component, openNotificationToast];
+    const handleViewClick = () => {
+        if (onView !== null && onView !== undefined)
+            onView();
+    }
+
+    const ActionToastComponent = (
+        <ActionToast
+            open={open}
+            text={text}
+            onClose={handleCLose}
+            onViewClick={handleViewClick}
+        />);
+
+    return [ActionToastComponent, openActionToast];
 }

@@ -1,31 +1,36 @@
 import React from "react"
 import Snackbar from "@material-ui/core/Snackbar";
-import Button from "@material-ui/core/Button";
 import Alert from "@material-ui/lab/Alert";
+import Button from "@material-ui/core/Button";
+
+const DEFAULT_DURATION = 6000;
 
 export default function ActionToast(props) {
-    const [onViewClick, open, message, onClose] = props;
+    const {onViewClick, open, text, onClose} = props;
 
     const handleClose = () => {
         onClose();
     }
 
-    const ViewButtonComponent = (
-        <Button color="primary" size="small" onClick={onViewClick}>
-            View
-        </Button>)
+    const handleViewClick = () => {
+        onViewClick();
+    }
 
-    const ToastComponent = (
+    return (
         <Snackbar open={open}
                   autoHideDuration={DEFAULT_DURATION}
-                  anchorOrigin={{vertical, horizontal}}
-                  key={vertical + horizontal}
-                  onClose={handleClose}
-                  action={ViewButtonComponent}>
-            <Alert onClose={handleClose} severity={severity}>
+                  anchorOrigin={{vertical: "top", horizontal: "right"}}
+                  key={"action_toast_id"}
+                  onClose={handleClose}>
+             <Alert
+                onClose={handleClose}
+                severity={"info"}
+                action={
+                    <Button color="primary" size="small" onClick={handleViewClick}>
+                        View
+                    </Button>
+                }>
                 {text}
             </Alert>
-        </Snackbar>)
-
-    return (ToastComponent)
+        </Snackbar>);
 }
