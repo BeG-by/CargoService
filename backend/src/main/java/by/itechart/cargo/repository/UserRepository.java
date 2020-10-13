@@ -19,9 +19,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByIdAndClientCompanyId(Long userId, Long clientCompanyId);
 
-    Optional<User> findByClientCompanyIdAndDriverId(Long clientCompanyId, Long invoiceId);  //todo: refactor (rename on invoice id)
-
     List<User> findAllByClientCompanyIdAndRoles(Long clientCompanyId, Role role);
+
+    Optional<User> findByClientCompanyIdAndDriverId(Long clientCompanyId, Long invoiceId);
+
+    Optional<User> findByClientCompanyIdAndRegistrationInvoiceId(Long clientCompanyId, Long invoiceId);
+
+    Optional<User> findByClientCompanyIdAndCheckingInvoiceId(Long clientCompanyId, Long invoiceId);
 
     Optional<User> findByIdAndRolesAndClientCompanyId(Long userId, Role role, Long clientCompanyId);
 

@@ -4,9 +4,8 @@ public class NewInvoiceNotification extends Notification {
     private Long invoiceId;
 
     public NewInvoiceNotification(Long invoiceId, Long notificationRecipientId) {
-        super(notificationRecipientId);
+        super(notificationRecipientId, Type.NEW_INVOICE);
         this.invoiceId = invoiceId;
-        this.notificationType = Type.NEW_INVOICE;
     }
 
     public Long getInvoiceId() {

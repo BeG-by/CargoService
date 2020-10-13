@@ -2,13 +2,12 @@ import React, {useEffect, useState} from "react";
 import useToast from "../components/parts/toast-notification/useToast";
 import {connect} from "react-redux";
 import * as Stomp from "stompjs"
-import useInvoiceConfirmationForm from "./hooks/useInvoiceConfirmationForm";
+import useInvoiceConfirmationForm from "./hooks/use-invoice-confirmation-form";
 import useActionToast from "./hooks/toast/use-action-toast";
-import useWaybillInfoForm from "./hooks/useWaybillInfoForm";
-
+import useWaybillInfoForm from "./hooks/use-waybill-info-form";
+import useInvoiceEditForm from "./hooks/use-invoice-edit-form";
 
 const mapStateToProps = (store) => {
-    console.log("Store: ", store);
     return {
         userId: store.user.id,
         role: store.user.roles[0]
@@ -18,9 +17,10 @@ const mapStateToProps = (store) => {
 export const WebSocket = connect(mapStateToProps)((props) => {
     const [currentStompClient, setCurrentStompClient] = useState(null);
     const [ToastComponent, showToast] = useToast();
-    const [InvoiceDialogComponent, openInvoiceDialog] = useInvoiceConfirmationForm();
     const [ActionToastComponent, openActionToast] = useActionToast()
+    const [InvoiceConfirmationDialogComponent, openInvoiceConfirmationDialogComponent] = useInvoiceConfirmationForm();
     const [WaybillDialogComponent, openWaybillDialog] = useWaybillInfoForm();
+    const [InvoiceEditDialogComponent, openEditInvoiceDialog] = useInvoiceEditForm();
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -45,11 +45,44 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     }
 
     const handleNewInvoiceMessage = (messageData) => {
-        openActionToast(`New invoice!`, () => openInvoiceDialog(messageData.invoiceId));
+        openActionToast(
+            `New invoice!`,
+            [""],
+            () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
     }
 
     const handleNewWaybillMessage = (messageData) => {
-        openActionToast(`New waybill`, () => openWaybillDialog(messageData.waybillId))
+        openActionToast(
+            `New waybill`,
+            [""],
+            () => openWaybillDialog(messageData.waybillId))
+    }
+
+    const handleInvoiceStatusUpdateMessage = (messageData) => {
+        switch (messageData.newStatus) {
+            case "REJECTED":
+                openActionToast(
+                    `Invoice was rejected`, [``],
+                    () => openEditInvoiceDialog(messageData.invoiceId, showToast)
+                )
+                break;
+            case "ACCEPTED":
+                openActionToast(
+                    `Invoice was accepted`, [``],
+                    () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
+                break;
+            default:
+                openActionToast(
+                    `Invoice status updated`, [``],
+                    () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
+                break;
+        }
+    }
+
+    const handleInvoiceUpdateMessage = (messageData) => {
+        openActionToast(
+            `Invoice was updated`, [``],
+            () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
     }
 
     const onMessageReceive = (msg) => {
@@ -60,6 +93,12 @@ export const WebSocket = connect(mapStateToProps)((props) => {
                 break;
             case "NEW_WAYBILL":
                 handleNewWaybillMessage(messageData);
+                break;
+            case "INVOICE_STATUS_UPDATE":
+                handleInvoiceStatusUpdateMessage(messageData);
+                break;
+            case "INVOICE_UPDATE":
+                handleInvoiceUpdateMessage(messageData);
                 break;
             default:
                 showToast("Some notification has come");
@@ -79,7 +118,8 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     return (
         <div style={{zIndex: 999}}>
             {WaybillDialogComponent}
-            {InvoiceDialogComponent}
+            {InvoiceConfirmationDialogComponent}
+            {InvoiceEditDialogComponent}
             {ActionToastComponent}
             {ToastComponent}
         </div>

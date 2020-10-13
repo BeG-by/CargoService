@@ -10,8 +10,6 @@ export default function Locate(props) {
     }
 
     const handleLocationNotFount = (err) => {
-        alert("Cannot get your location");
-        console.err(err);
     }
 
     const handleLocateClick = () => {

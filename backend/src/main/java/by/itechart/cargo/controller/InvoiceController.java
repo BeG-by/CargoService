@@ -5,6 +5,7 @@ import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.InvoiceService;
+import by.itechart.cargo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,12 +21,14 @@ public class InvoiceController {
     private final SimpMessagingTemplate messagingTemplate;
     private final InvoiceService invoiceService;
     private final NotificationController notificationController;
+    private final UserService userService;
 
     @Autowired
-    public InvoiceController(SimpMessagingTemplate messagingTemplate, InvoiceService invoiceService, NotificationController notificationController) {
+    public InvoiceController(SimpMessagingTemplate messagingTemplate, InvoiceService invoiceService, NotificationController notificationController, UserService userService) {
         this.messagingTemplate = messagingTemplate;
         this.invoiceService = invoiceService;
         this.notificationController = notificationController;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -87,12 +90,14 @@ public class InvoiceController {
     @PostMapping("/status")
     public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         invoiceService.updateStatus(invoiceRequest);
+        notificationController.notifyAboutInvoiceStatusChange(invoiceRequest.getId(), invoiceRequest.getStatus());
         return ResponseEntity.ok("Invoice status has been updated");
     }
 
     @PutMapping
     public ResponseEntity<String> update(@RequestBody @Valid InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException {
         invoiceService.updateInvoice(invoiceRequest);
+        notificationController.notifyAboutInvoiceUpdate(invoiceRequest.getId());
         return ResponseEntity.ok("Invoice status has been updated");
     }
 }

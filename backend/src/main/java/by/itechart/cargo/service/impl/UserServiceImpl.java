@@ -91,6 +91,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse findDispatcherByInvoiceId(Long invoiceId) throws NotFoundException {
+        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return userRepository.findByClientCompanyIdAndRegistrationInvoiceId(companyId, invoiceId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public UserResponse findManagerByInvoiceId(Long invoiceId) throws NotFoundException {
+        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return userRepository.findByClientCompanyIdAndCheckingInvoiceId(companyId, invoiceId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+
+    @Override
     public void save(UserSaveRequest userRequest) throws AlreadyExistException {
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         final String email = userRequest.getEmail();

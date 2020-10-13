@@ -4,9 +4,8 @@ public class NewWaybillNotification extends Notification {
     private Long waybillId;
 
     public NewWaybillNotification(Long notificationRecipientId, Long waybillId) {
-        super(notificationRecipientId);
+        super(notificationRecipientId, Type.NEW_WAYBILL);
         this.waybillId = waybillId;
-        this.notificationType = Type.NEW_WAYBILL;
     }
 
     public Long getWaybillId() {

@@ -5,10 +5,12 @@ export default function useActionToast() {
     const [open, setOpen] = useState(false);
     const [onView, setOnView] = useState(null);
     const [text, setText] = useState("");
+    const [title, setTitle] = useState("");
 
-    const openActionToast = (text, onViewCLick) => {
+    const openActionToast = (toastTitle, toastText, onViewCLick) => {
         setOpen(true);
-        setText(text);
+        setText(toastText);
+        setTitle(toastTitle);
         setOnView(() => () => onViewCLick())
     };
 
@@ -25,6 +27,7 @@ export default function useActionToast() {
     const ActionToastComponent = (
         <ActionToast
             open={open}
+            title={title}
             text={text}
             onClose={handleCLose}
             onViewClick={handleViewClick}

@@ -1,12 +1,13 @@
 import React from "react"
 import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
+import MuiAlert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 import Button from "@material-ui/core/Button";
 
-const DEFAULT_DURATION = 6000;
+const DEFAULT_DURATION = 15 * 1000;
 
 export default function ActionToast(props) {
-    const {onViewClick, open, text, onClose} = props;
+    const {onViewClick, open, title, text, onClose} = props;
 
     const handleClose = () => {
         onClose();
@@ -22,15 +23,17 @@ export default function ActionToast(props) {
                   anchorOrigin={{vertical: "top", horizontal: "right"}}
                   key={"action_toast_id"}
                   onClose={handleClose}>
-             <Alert
+            <MuiAlert
+                elevation={6} variant="filled"
                 onClose={handleClose}
                 severity={"info"}
                 action={
-                    <Button color="primary" size="small" onClick={handleViewClick}>
-                        View
+                    <Button color="primary" style={{color: "white"}} size="small" onClick={handleViewClick}>
+                    View
                     </Button>
                 }>
+                <AlertTitle>{title}</AlertTitle>
                 {text}
-            </Alert>
+            </MuiAlert>
         </Snackbar>);
 }

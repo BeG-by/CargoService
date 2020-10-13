@@ -4,20 +4,13 @@ public abstract class Notification {
     Type notificationType;
     Long notificationRecipientId;
 
-    public Notification(Long notificationRecipientId) {
+    public Notification(Long notificationRecipientId, Type notificationType) {
         this.notificationRecipientId = notificationRecipientId;
+        this.notificationType = notificationType;
     }
 
     public Long getNotificationRecipientId() {
         return notificationRecipientId;
-    }
-
-    public void setNotificationRecipientId(Long notificationRecipientId) {
-        this.notificationRecipientId = notificationRecipientId;
-    }
-
-    public void setNotificationType(Type notificationType) {
-        this.notificationType = notificationType;
     }
 
     public Type getNotificationType() {
@@ -25,7 +18,6 @@ public abstract class Notification {
     }
 
     enum Type {
-        NEW_INVOICE, NEW_WAYBILL, INVOICE_STATUS_UPDATED, POINT_PASSED,
+        NEW_INVOICE, NEW_WAYBILL, INVOICE_STATUS_UPDATE, POINT_PASS, INVOICE_UPDATE
     }
-
 }

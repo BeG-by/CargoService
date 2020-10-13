@@ -17,6 +17,10 @@ public interface UserService {
 
     UserResponse findDriverByInvoiceId(Long invoiceId) throws NotFoundException;
 
+    UserResponse findDispatcherByInvoiceId(Long invoiceId) throws NotFoundException;
+
+    UserResponse findManagerByInvoiceId(Long invoiceId) throws NotFoundException;
+
     void save(UserSaveRequest userRequest) throws AlreadyExistException;
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
@@ -28,5 +32,4 @@ public interface UserService {
     void updatePhone(PhoneRequest photoRequest) throws NotFoundException;
 
     void updatePassword(PasswordRequest passwordRequest) throws IncorrectPasswordException;
-
 }

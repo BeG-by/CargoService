@@ -16,7 +16,6 @@ import AutoSearch from "./auto-search";
 import {countTotalWeight} from "../../parts/util/cargo-total-info";
 import Grid from "@material-ui/core/Grid";
 import {AUTO_URL, handleRequestError, makeRequest} from "../../parts/util/request-util";
-import useActionToast from "../../../web_socket/hooks/toast/use-action-toast";
 
 const EMPTY_AUTO = {
     id: -1,
@@ -37,7 +36,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const [pointIndex, setPointIndex] = useState(0);
     const [points, setPoints] = useState([]);
     const [autos, setAutos] = useState([]);
-    const [ActionToastComponent, openActionToastComponent] = useActionToast();
+
     const useStyles = makeStyles(() => ({
         formControl: {
             marginTop: 20,
@@ -63,7 +62,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                 let url = `${AUTO_URL}?statuses=ACTIVE`;
                 let res = await makeRequest("GET", url);
                 setAutos(res.data.autoList);
-            }catch (err) {
+            } catch (err) {
                 handleRequestError(err, openToast);
             }
         }
@@ -140,10 +139,8 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const convertShipperAndConsigneeToStringInInvoices = (invoice) => {
         console.log(invoice)
         if (invoice.shipper.id === null || invoice.shipper.id === undefined) {
-            console.log("NOT")
             return invoice;
         }
-        console.log("YES")
         invoice = convertShipperAndConsigneeToString(invoice);
         return invoice;
     }
@@ -234,7 +231,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                         </Grid>
                                     </Grid>
                                 </Paper>
-                                <Button onClick={() => openActionToastComponent("TEXT", () => alert("test"))}/>
                                 <Paper className={`table-paper`}
                                        style={{flexDirection: "column", alignItems: "flex-start", padding: 10}}>
                                     <ManagerMapForPointAdding
@@ -248,7 +244,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                     </Form>
                 )}
             </Formik>
-            {ActionToastComponent}
             {ToastComponent}
         </React.Fragment>
     );
