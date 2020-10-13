@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import useToast from "../components/parts/toast-notification/useToast";
 import {connect} from "react-redux";
-import Button from "@material-ui/core/Button";
 import * as Stomp from "stompjs"
+import useInvoiceConfirmationForm from "./hooks/useInvoiceConfirmationForm";
 
 
 const mapStateToProps = (store) => {
@@ -16,6 +16,7 @@ const mapStateToProps = (store) => {
 export const WebSocket = connect(mapStateToProps)((props) => {
     const [currentStompClient, setCurrentStompClient] = useState(null);
     const [ToastComponent, showToast] = useToast();
+    const [InvoiceDialogComponent, openInvoiceDialog] = useInvoiceConfirmationForm();
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -39,9 +40,23 @@ export const WebSocket = connect(mapStateToProps)((props) => {
         return Stomp.over(SockJs);
     }
 
+    const handleNewInvoiceMessage = (messageData) => {
+        showToast(`New invoice!`);
+        openInvoiceDialog(messageData.invoiceId);
+    }
+
     const onMessageReceive = (msg) => {
-        const data = JSON.parse(msg.body);
-        showToast(`New invoice!`)
+        const messageData = JSON.parse(msg.body);
+        switch (messageData.notificationType) {
+            case "NEW_INVOICE":
+                handleNewInvoiceMessage(messageData);
+                break;
+            case "NEW_WAYBILL":
+                showToast("New waybill");
+                break;
+            default:
+                showToast("Some notification has come");
+        }
     }
 
     useEffect(() => {
@@ -53,17 +68,10 @@ export const WebSocket = connect(mapStateToProps)((props) => {
         }
     }, [props.role])
 
-    const handleClick = () => {
-        const message = {
-            senderId: props.userId,
-            recipientId: 3,
-            message: "I'am in!"
-        }
-        currentStompClient.send("/app/chat", {}, JSON.stringify(message));
-    }
 
     return (
-        <div style={{zIndex: 999, margin: 200}}>
+        <div style={{zIndex: 999}}>
+            {InvoiceDialogComponent}
             {ToastComponent}
         </div>
     )
