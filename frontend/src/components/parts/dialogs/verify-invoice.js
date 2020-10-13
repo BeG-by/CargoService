@@ -18,12 +18,16 @@ export const AssignVerificationInvoice = withRouter((props) => {
     const [waybillDialogOpen, setWaybillDialogOpen] = React.useState(false);
 
     const handleClose = () => {
-        props.history.push("/success");
+        props.onClose();
+    }
+
+    const handleAssign = () => {
+        props.onAssign();
     }
 
     const handleWaybillFill = () => {
         setSelectedInvoice(props.invoice);
-        setForm(FillWaybillDialog(handleWaybillFormOpen, handleClose));
+        setForm(FillWaybillDialog(handleWaybillFormOpen, handleAssign));
         setWaybillFillDialogOpen(true);
     }
 
@@ -48,20 +52,20 @@ export const AssignVerificationInvoice = withRouter((props) => {
                 <i style={{fontSize: 16}}>Assign the invoice status as "verified"?</i>
                 <div className='btn-row'>
                     <OkButton content='OK' handleClick={handleVerify}/>
-                    <CancelButton content='Cancel' handleClick={props.handleClose}/>
+                    <CancelButton content='Cancel' handleClick={handleClose}/>
                 </div>
             </div>
 
             <WaybillDialog
                 invoice={selectedInvoice}
                 open={waybillDialogOpen}
-                onClose={handleClose}
-                onSave={handleClose}
+                onClose={handleAssign}
+                onSave={handleAssign}
             />
 
             <DialogWindow
                 dialogTitle="Confirmation"
-                handleClose={handleClose}
+                handleClose={handleAssign}
                 openDialog={waybillFillDialogOpen}
                 form={form}
             />
@@ -77,7 +81,11 @@ export const RejectVerificationInvoice = withRouter((props) => {
             comment: values.comment
         };
         await updateInvoiceStatus(invoice);
-        props.history.push("/success");
+        props.onReject()
+    }
+
+    const handleClose = () => {
+        props.onClose();
     }
 
     const comment = <Formik
@@ -111,7 +119,7 @@ export const RejectVerificationInvoice = withRouter((props) => {
                     <Button
                         variant="contained"
                         color='secondary'
-                        onClick={props.handleClose}>
+                        onClick={handleClose}>
                         Cancel
                     </Button>
                 </div>

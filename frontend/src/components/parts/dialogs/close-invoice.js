@@ -10,9 +10,13 @@ export const CloseInvoice = withRouter((props) => {
                     ? {id: inv.id, status: "CLOSED", comment: "Clean delivery"}
                     : {id: inv.id, status: "CLOSED_WITH_ACT", comment: "Delivery with losses"};
 
-    const handleClose = async () => {
+    const handleOK = async () => {
         await updateInvoiceStatus(invoice);
-        props.history.push("/success");
+        props.onCloseInvoice();
+    }
+
+    const handleClose = () => {
+        props.onClose();
     }
 
     return (
@@ -23,8 +27,8 @@ export const CloseInvoice = withRouter((props) => {
                     <br/>
                     Do you want to close the invoice?</i>
                 <div className='btn-row'>
-                    <OkButton content='OK' handleClick={handleClose}/>
-                    <CancelButton content='Cancel' handleClick={props.handleClose}/>
+                    <OkButton content='OK' handleClick={handleOK}/>
+                    <CancelButton content='Cancel' handleClick={handleClose}/>
                 </div>
             </div>
         </div>);

@@ -164,8 +164,15 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setInvoiceDialogEditOpen(true);
     };
 
+    const handleClose = () => {
+        setWaybillFillDialogOpen(false);
+        setInvoiceInfoDialogOpen(false);
+        setWaybillDialogOpen(false);
+        fetchInvoices(false);
+    };
+
     const handleInvoiceInfoOpen = (id) => {
-        setForm(<InvoiceInfo invoiceId={id}/>);
+        setForm(<InvoiceInfo invoiceId={id} onClose={handleClose}/>);
         setWaybillFillDialogOpen(false);
         setInvoiceInfoDialogOpen(true);
     };
@@ -179,12 +186,6 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
         fetchInvoices(false, 0, +event.target.value)
-    };
-
-    const handleClose = () => {
-        setWaybillFillDialogOpen(false);
-        setInvoiceInfoDialogOpen(false);
-        setWaybillDialogOpen(false);
     };
 
     const handleSearchFieldChange = (searchNumber) => {
