@@ -127,7 +127,17 @@ export const UserTable = connect(mapStateToProps)((props) => {
         reader.onload = () => {
             let photoInBase64 = reader.result;
             makeRequest("PUT", USER_URL + "/photo/" + selectedPhotoId, {photo: photoInBase64})
-                .then(res => showToastComponent("User's photo has been updated"))
+                .then(res => {
+                        users.forEach(u => {
+                                if (u.id === selectedPhotoId) {
+                                    u.photo = u.photo + "?time=" + new Date().getTime();
+                                    showToastComponent("User's photo has been updated");
+                                }
+                            }
+                        );
+
+                    }
+                )
                 .catch(error => handleRequestError(error, showToastComponent))
         };
     };

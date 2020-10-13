@@ -13,8 +13,12 @@ import org.springframework.stereotype.Component;
 @DisallowConcurrentExecution
 public class SendMailJob implements Job {
 
-    @Autowired
     private SendMailService mailService;
+
+    @Autowired
+    public SendMailJob(SendMailService mailService) {
+        this.mailService = mailService;
+    }
 
     @Override
     public void execute(JobExecutionContext context) {

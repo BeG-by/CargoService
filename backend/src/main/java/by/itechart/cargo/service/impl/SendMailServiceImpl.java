@@ -1,5 +1,6 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.service.SendMailService;
@@ -9,11 +10,12 @@ import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -47,6 +49,7 @@ public class SendMailServiceImpl implements SendMailService {
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
         List<User> users = userRepository.findAllPresent();
+
         for (User user : users) {
             if (user.getBirthday().getMonthValue() == month
                     && user.getBirthday().getDayOfMonth() == day) {
@@ -55,42 +58,52 @@ public class SendMailServiceImpl implements SendMailService {
                 templateVars.put("name", user.getName());
                 templateVars.put("company", user.getClientCompany().getName());
                 String age = String.valueOf(ChronoUnit.YEARS.between(user.getBirthday(), today));
-                templateVars.put("age",age);
+                templateVars.put("age", age);
 
                 Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-                StringBuffer content = new StringBuffer();
+                StringBuilder content = new StringBuilder();
                 try {
                     configuration.setDirectoryForTemplateLoading(new File(TEMPLATE_PATH));
                     String templateName = "birthday.ftl";
                     Template temp = configuration.getTemplate(templateName);
                     content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                             temp, templateVars));
+
+
+                    String to = user.getEmail();
+                    String subject = "Greeting";
+                    String text = content.toString();
+                    sendMail(to, subject, text);
+
+
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    log.info("Template getting failed");
+                    log.error("Template getting failed", e);
                 } catch (TemplateException e) {
-                    log.info("Template exception occurred");
+                    log.error("Template exception occurred", e);
+                } catch (ServiceException e) {
+                    log.error(e.getMessage());
                 }
 
-                String to = user.getEmail();
-                String subject = "Greeting";
-                String text = content.toString();
-                sendMail(to, subject, text);
             }
         }
     }
 
-    public void sendMail(String to, String subject, String text) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(to);
-        simpleMailMessage.setFrom(fromEmail);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(text);
+    public void sendMail(String to, String subject, String text) throws ServiceException {
+
         try {
-            javaMailSender.send(simpleMailMessage);
+            final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setTo(to);
+            helper.setFrom(fromEmail);
+            helper.setSubject(subject);
+            helper.setText(text, true);
+
+            javaMailSender.send(mimeMessage);
+            log.info("Message has been send to {} , subject is {}", to, subject);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Mail sending failed");
+            log.error("Mail sending failed", e);
+            throw new ServiceException("Service for sending emails is temporary unavailable");
         }
     }
 

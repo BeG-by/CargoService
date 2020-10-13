@@ -249,14 +249,16 @@ export const UserDialog = (props) => {
                                         label={"Flat"}
                                         formikFieldName={"flat"}
                                     />
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        type="submit"
-                                        disabled={formProps.listener}
-                                    >
-                                        {isUpdateForm ? "Update" : "Save"}
-                                    </Button>
+                                    <div style={{textAlign: "center", marginTop: 7, marginBottom: 5}}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+                                            disabled={formProps.listener}
+                                        >
+                                            {isUpdateForm ? "Update" : "Save"}
+                                        </Button>
+                                    </div>
                                 </Form>
                             );
                         }}

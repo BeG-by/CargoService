@@ -2,7 +2,7 @@ POST localhost:8080/v1/api/auth/login
 Content-Type: application/json
 
 {
-  "login": "dispatcher",
+  "email": "admin@gmail.com",
   "password": "root"
 }
 
@@ -256,5 +256,11 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiwicm9sZXMiOlsiU1lTQURNSU4i
 {
   "photo": ""
 }
+
+###
+
+POST localhost:8080/v1/api/email
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpYXQiOjE2MDI1MzkxNTcsImV4cCI6MTYwMzQwMzE1N30.Knt-OX-QAOYvW_QgB_441xgflJ_oM-hmz9DgMk1l8RM
 
 ###

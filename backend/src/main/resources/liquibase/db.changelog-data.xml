@@ -80,7 +80,7 @@
             <column name="passport" value="MP2222222"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1991-04-12"/>
-            <column name="phone" value="8(029)161-33-32"/>
+            <column name="phone" value="80291613332"/>
             <column name="online" value="false"/>
             <column name="create_date" value="2010-01-01"/>
             <column name="last_modified_date" value="2010-01-01"/>
@@ -99,7 +99,7 @@
             <column name="passport" value="MP3333333"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-12-23"/>
-            <column name="phone" value="8(029)161-33-32"/>
+            <column name="phone" value="80291613332"/>
             <column name="online" value="false"/>
             <column name="create_date" value="2010-01-01"/>
             <column name="last_modified_date" value="2010-01-01"/>
@@ -118,7 +118,7 @@
             <column name="passport" value="MP4444444"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1983-01-01"/>
-            <column name="phone" value="8(029)161-33-32"/>
+            <column name="phone" value="80291613332"/>
             <column name="online" value="false"/>
             <column name="create_date" value="2010-01-01"/>
             <column name="last_modified_date" value="2010-01-01"/>
@@ -137,7 +137,7 @@
             <column name="passport" value="MP5555555"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1999-03-01"/>
-            <column name="phone" value="8(029)161-33-32"/>
+            <column name="phone" value="80291613332"/>
             <column name="online" value="false"/>
             <column name="create_date" value="2010-01-01"/>
             <column name="last_modified_date" value="2010-01-01"/>
@@ -156,7 +156,7 @@
             <column name="passport" value="MP6666666"/>
             <column name="id_client_company" value="2"/>
             <column name="birthday" value="1981-08-03"/>
-            <column name="phone" value="8(029)161-33-32"/>
+            <column name="phone" value="80291613332"/>
             <column name="online" value="false"/>
             <column name="create_date" value="2010-01-01"/>
             <column name="last_modified_date" value="2010-01-01"/>
@@ -172,7 +172,7 @@
             <column name="passport" value="MP7777777"/>
             <column name="id_client_company" value="3"/>
             <column name="birthday" value="1983-01-01"/>
-            <column name="phone" value="8(029)161-33-32"/>
+            <column name="phone" value="80291613332"/>
             <column name="online" value="false"/>
             <column name="create_date" value="2010-01-01"/>
             <column name="last_modified_date" value="2010-01-01"/>
