@@ -30,7 +30,7 @@ public interface InvoiceService {
 
     DataForInvoiceCreating findDataForInvoiceCreating();
 
-    void save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException;
+    Long save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException;
 
     void updateInvoice(InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException;
 

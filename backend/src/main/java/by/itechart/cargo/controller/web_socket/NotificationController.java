@@ -1,6 +1,5 @@
 package by.itechart.cargo.controller.web_socket;
 
-import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
 import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
@@ -19,9 +18,9 @@ public class NotificationController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void notifyAboutNewInvoice(InvoiceRequest invoiceRequest) {
-        NewInvoiceNotification notification = NewInvoiceNotification.fromInvoiceRequest(invoiceRequest);
-        messagingTemplate.convertAndSendToUser(String.valueOf(invoiceRequest.getManagerId()), PRIVATE_ENDPOINT, notification);
+    public void notifyAboutNewInvoice(Long invoiceId, Long notificationRecipient) {
+        NewInvoiceNotification notification = new NewInvoiceNotification(invoiceId, notificationRecipient);
+        messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipient), PRIVATE_ENDPOINT, notification);
     }
 
     public void notifyAboutInvoiceStatusChange(UpdateInvoiceStatusRequest updateInvoiceStatusRequest) {

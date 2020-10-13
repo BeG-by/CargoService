@@ -4,11 +4,10 @@ import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 
 public class NewInvoiceNotification extends Notification {
     private Long invoiceId;
-    private Long checkingUserId;
 
-    public NewInvoiceNotification(Long invoiceId, Long checkingUserId) {
+    public NewInvoiceNotification(Long invoiceId, Long notificationRecipientId) {
+        super(notificationRecipientId);
         this.invoiceId = invoiceId;
-        this.checkingUserId = checkingUserId;
         this.notificationType = Type.NEW_INVOICE;
     }
 
@@ -18,14 +17,6 @@ public class NewInvoiceNotification extends Notification {
 
     public void setInvoiceId(Long invoiceId) {
         this.invoiceId = invoiceId;
-    }
-
-    public Long getCheckingUserId() {
-        return checkingUserId;
-    }
-
-    public void setCheckingUserId(Long checkingUserId) {
-        this.checkingUserId = checkingUserId;
     }
 
     public static NewInvoiceNotification fromInvoiceRequest(InvoiceRequest invoiceRequest) {

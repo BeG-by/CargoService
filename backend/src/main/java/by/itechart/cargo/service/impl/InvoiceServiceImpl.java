@@ -1,6 +1,5 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.act.ProductLostDto;
 import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchInvoiceRepository;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoices;
@@ -187,7 +185,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
-    public void save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
+    public Long save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
@@ -245,11 +243,11 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.setStatus(invoiceRequest.getStatus());
         }
 
-        final Invoice invoiceDb = invoiceRepository.save(invoice);
-        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(invoiceDb));
+        final Invoice savedInvoice = invoiceRepository.save(invoice);
+        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(savedInvoice));
 
-        log.info("Invoice has been saved {}", invoiceDb);
-
+        log.info("Invoice has been saved {}", savedInvoice);
+        return savedInvoice.getId();
     }
 
     @Override

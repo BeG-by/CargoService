@@ -79,8 +79,8 @@ public class InvoiceController {
 
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
-        invoiceService.save(invoiceRequest);
-        notificationController.notifyAboutNewInvoice(invoiceRequest);
+        Long id = invoiceService.save(invoiceRequest);
+        notificationController.notifyAboutNewInvoice(id, invoiceRequest.getManagerId());
         return ResponseEntity.ok("Invoice has been saved");
     }
 
