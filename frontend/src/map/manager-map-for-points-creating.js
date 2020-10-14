@@ -3,12 +3,15 @@ import {InfoWindow} from "@react-google-maps/api";
 import Button from "@material-ui/core/Button";
 import AbstractMap from "./abstract-map";
 
+const NO_MATTER_NUMBER = -1;
+
 export default function ManagerMapForPointAdding(props) {
     const markers = props.markers;
     const onMarkerAdd = props.onMarkerAdd;
     const onMarkerDelete = props.onMarkerDelete;
 
     const [selectedMarker, setSelectedMarker] = useState(null);
+    const [selectedMarkerIndex, setSelectedMarkerIndex] = useState(NO_MATTER_NUMBER);
 
     const handleMarkerDelete = (marker) => {
         setSelectedMarker(null);
@@ -20,8 +23,9 @@ export default function ManagerMapForPointAdding(props) {
         onMarkerAdd(markerInfo);
     }
 
-    const handleMarkerClick = (marker) => {
+    const handleMarkerClick = (marker, markerIndex) => {
         setSelectedMarker(marker);
+        setSelectedMarkerIndex(markerIndex + 1);
     }
 
     const InfoWindowComponent = (
@@ -31,7 +35,7 @@ export default function ManagerMapForPointAdding(props) {
                 onCloseClick={() => setSelectedMarker(null)}
             >
                 <div>
-                    <h2>{`Point`}</h2>
+                    <h2>{`[${selectedMarkerIndex}] Point`}</h2>
                     <Button onClick={() => handleMarkerDelete(selectedMarker)}>
                         Delete point
                     </Button>

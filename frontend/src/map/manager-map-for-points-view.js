@@ -3,13 +3,17 @@ import {InfoWindow} from "@react-google-maps/api";
 import AbstractMap from "./abstract-map";
 import {dateToString} from "./utils";
 
+const NOT_MATTER_NUMBER = -1;
+
 export default function ManagerMapForPointsView(props) {
     const markers = props.markers;
 
     const [selectedMarker, setSelectedMarker] = useState(null);
+    const [selectedMarkerIndex, setSelectedMarkerIndex] = useState(NOT_MATTER_NUMBER);
 
-    const handleMarkerClick = (marker) => {
+    const handleMarkerClick = (marker, markerIndex) => {
         setSelectedMarker(marker);
+        setSelectedMarkerIndex(markerIndex + 1);
     }
 
     const InfoWindowComponent = (
@@ -19,9 +23,16 @@ export default function ManagerMapForPointsView(props) {
                 onCloseClick={() => setSelectedMarker(null)}
             >
                 {selectedMarker.isPassed ?
-                    <h2>{`${dateToString(selectedMarker.passageDate)}`}</h2>
+                    <div>
+                        <h2>{`[${selectedMarkerIndex}] Point`}</h2>
+                        <h3>{dateToString(selectedMarker.passageDate)}</h3>
+                    </div>
                     :
-                    <h2>Not passed</h2>}
+                    <div>
+                        <h2>{`[${selectedMarkerIndex}] Point`}</h2>
+                        <h3>{"Not passed"}</h3>
+                    </div>
+                }
             </InfoWindow>);
 
 

@@ -101,8 +101,8 @@ export default function ItemList(props) {
             {geocodedPoints.sort(pointsComparator).map((point, key) => {
                 return (
                     <ListItem
-                        align={"center"}
-                        primaryText={point.geocodedPoint}
+                        align={"left"}
+                        primaryText={`[${key + 1}] ${point.geocodedPoint}`}
                         key={key}
                         onClick={() => handleRowClick(point)}
                     />
