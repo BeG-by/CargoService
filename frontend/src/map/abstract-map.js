@@ -68,11 +68,11 @@ export default function AbstractMap(props) {
                         <Locate onClick={handleLocateClick}/>
                     </div>
 
-                    {markers.map(marker => {
+                    {markers.map((marker, i) => {
                         return <Marker
                             key={`${marker.lng}_${marker.lat}`}
                             position={{lat: marker.lat, lng: marker.lng}}
-                            onClick={() => onMarkerClick(marker)}
+                            onClick={() => onMarkerClick(marker, i)}
                             icon={marker.isPassed ? PASSED_MARKER_ICON : NOT_PASSED_MARKER_ICON}
                         />
                     })}
