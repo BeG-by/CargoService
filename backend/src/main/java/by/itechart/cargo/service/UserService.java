@@ -18,7 +18,7 @@ public interface UserService {
 
     void sendActivationLink(ActivationDetailsRequest userRequest) throws AlreadyExistException, ServiceException;
 
-    void update(UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException;
+    void update(UserUpdateRequest userUpdateRequest) throws NotFoundException;
 
     void delete(long id) throws NotFoundException;
 

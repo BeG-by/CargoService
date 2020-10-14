@@ -19,14 +19,6 @@ public class UserUpdateRequest {
     @Positive(message = "Id cannot be negative or zero")
     private Long id;
 
-    @NotBlank(message = "Email is mandatory")
-    @Email(message = "Email is not valid")
-    @Size(max = 64, message = "Patronymic is too long (max is 64)")
-    private String email;
-
-    @Size(max = 64, message = "Password is too long (max is 64)")
-    private String password;
-
     @NotBlank(message = "Name is mandatory")
     @Size(max = 64, message = "Name is too long (max is 64)")
     private String name;
@@ -45,7 +37,6 @@ public class UserUpdateRequest {
     @Valid
     private Address address;
 
-
     @NotBlank(message = "Phone is mandatory")
     @Size(max = 64, message = "Phone is too long (max is 64)")
     private String phone;
@@ -58,5 +49,8 @@ public class UserUpdateRequest {
 
     @NotEmpty(message = "Roles in mandatory")
     private Set<String> roles;
+
+    @Size(max = 64, message = "Password is too long (max is 64)")
+    private String password;
 
 }

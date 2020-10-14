@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static by.itechart.cargo.service.constant.MessageConstant.STORAGE_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.STORAGE_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional

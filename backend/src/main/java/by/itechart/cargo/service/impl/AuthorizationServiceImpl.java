@@ -26,8 +26,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 
-import static by.itechart.cargo.service.constant.MessageConstant.EMAIL_EXIST_MESSAGE;
-import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.EMAIL_EXIST_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 
 @Service

@@ -27,7 +27,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.*;
+import static by.itechart.cargo.service.util.MessageConstant.*;
 
 @Service
 @Transactional

@@ -14,6 +14,7 @@ import ConfirmDeletingDialog from "../slide-dialog";
 import {handleRequestError, makeRequest, USER_URL} from "../../../parts/util/request-util"
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
+import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import {connect} from "react-redux";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
@@ -21,6 +22,8 @@ import photo from "../../../../resources/images/user_no_photo.png";
 import Avatar from "@material-ui/core/Avatar";
 import Tooltip from "@material-ui/core/Tooltip";
 import EnhancedTableHead, {getComparator, stableSort} from "../../../parts/util/sorted-table-head";
+import Checkbox from '@material-ui/core/Checkbox';
+import {MailDialog} from "./mail-dialog";
 
 
 const MIN_WIDTH = 170;
@@ -89,6 +92,8 @@ export const UserTable = connect(mapStateToProps)((props) => {
     const [toastComponent, showToastComponent] = useToast();
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('status');
+    const [checkboxes, setCheckboxes] = useState(new Set([]));
+    const [mailDialog, setMailDialog] = useState(false);
 
     const role = props.role;
     const REMOVE_TITLE = "Do you want to remove the user ?";
@@ -186,6 +191,16 @@ export const UserTable = connect(mapStateToProps)((props) => {
         setPage(0);
     };
 
+    const handleCheckBoxClick = (e, email) => {
+        if (e.target.checked) {
+            setCheckboxes((prevState) => new Set([...prevState, email]));
+        } else {
+            checkboxes.delete(email);
+            setCheckboxes(checkboxes);
+        }
+
+    };
+
     return (
         <main>
             <Paper className="table-paper">
@@ -198,13 +213,29 @@ export const UserTable = connect(mapStateToProps)((props) => {
                             <LibraryBooksIcon/>
                             Users
                         </Typography>
-                        <Button variant="contained"
+                        <div>
+                            <Button
+                                variant="contained"
                                 color={"primary"}
-                                onClick={() => setFormDialogOpen(true)}
+                                onClick={() => {
+                                    if (checkboxes.size === 0) {
+                                        showToastComponent("You should choose at least one user", "warning")
+                                    } else {
+                                        setMailDialog(true)
+                                    }
+                                }}
                                 className="add-table-btn"
-                        >
-                            <LibraryAddRoundedIcon/>
-                        </Button>
+                            >
+                                <EmailRoundedIcon/>
+                            </Button>
+                            <Button variant="contained"
+                                    color={"primary"}
+                                    onClick={() => setFormDialogOpen(true)}
+                                    className="add-table-btn"
+                            >
+                                <LibraryAddRoundedIcon/>
+                            </Button>
+                        </div>
                     </div>
                     <Table aria-label="sticky table">
                         <EnhancedTableHead
@@ -212,6 +243,7 @@ export const UserTable = connect(mapStateToProps)((props) => {
                             order={order}
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
+                            checkBoxes={true}
                         />
                         <TableBody>
                             {stableSort(users, getComparator(order, orderBy))
@@ -228,6 +260,14 @@ export const UserTable = connect(mapStateToProps)((props) => {
                                             tabIndex={-1}
                                             key={user.id}
                                         >
+                                            <TableCell key={user.email} align="center">
+                                                <Checkbox
+                                                    onChange={(e) => handleCheckBoxClick(e, user.email)}
+                                                    size="small"
+                                                    inputProps={{'aria-label': 'checkbox with small size'}}
+                                                    color="primary"
+                                                />
+                                            </TableCell>
                                             <TableCell key={columns[0].id} align={columns[0].align}
                                                        className="avatar-td">
                                                 <Tooltip title="Click to edit photo"
@@ -319,6 +359,15 @@ export const UserTable = connect(mapStateToProps)((props) => {
                     refreshTable={insertUsers}
                     showToast={showToastComponent}
                 />
+                <MailDialog
+                    open={mailDialog}
+                    emails={checkboxes}
+                    onClose={() => {
+                        setMailDialog(false);
+                    }}
+                    showToast={showToastComponent}
+                />
+
                 {toastComponent}
             </Paper>
         </main>

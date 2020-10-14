@@ -29,8 +29,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.EMAIL_EXIST_MESSAGE;
-import static by.itechart.cargo.service.constant.MessageConstant.USER_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.EMAIL_EXIST_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.USER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
         if (userToActivateDb.isPresent()) {
             throw new AlreadyExistException(String.format(
-                    "Operation failed. Message was send to email %s in %s",
+                    "Message was send to email %s on %s",
                     email,
                     userToActivateDb.get().getCreateDate()
             ));
@@ -133,11 +133,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void update(UserUpdateRequest request) throws NotFoundException, AlreadyExistException {
+    public void update(UserUpdateRequest request) throws NotFoundException {
 
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
         final Long id = request.getId();
-        final String email = request.getEmail();
         final String password = request.getPassword();
 
         User user = userRepository
@@ -145,20 +144,9 @@ public class UserServiceImpl implements UserService {
                 .filter(u -> !u.getStatus().equals(User.Status.DELETED))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
 
-        final boolean isEmailExist = userRepository.findByEmail(email)
-                .filter(u -> !u.getId().equals(id))
-                .isPresent();
-
-        if (isEmailExist) {
-            throw new AlreadyExistException(EMAIL_EXIST_MESSAGE);
-        }
-
-
         if (password != null && !password.trim().isEmpty()) {
             user.setPassword(passwordEncoder.encode(password));
         }
-
-        user.setEmail(request.getEmail());
 
         user.setName(request.getName());
         user.setSurname(request.getSurname());

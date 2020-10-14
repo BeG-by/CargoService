@@ -18,6 +18,8 @@ export const ACT_URL = "/v1/api/acts";
 export const CLIENTS_URL = "/v1/api/clients/";
 export const LOGOUT_URL = "/v1/api/auth/logout";
 export const REGISTRATION_URL = "/v1/api/auth/registration";
+export const TEMPLATES_URL = "/v1/api/emails/templates";
+export const EMAIL_URL = "/v1/api/emails";
 
 export const makeRequest = (method, url, data = null) => {
     return data === null ?

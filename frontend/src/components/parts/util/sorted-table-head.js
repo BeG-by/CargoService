@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTableHead(props) {
     const classes = useStyles();
-    const {order, orderBy, onRequestSort, firstMenu, secondMenu, thirdMenu, customClass = ""} = props;
+    const {order, orderBy, onRequestSort, firstMenu, secondMenu, thirdMenu, customClass = "", checkBoxes} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -63,6 +63,12 @@ export default function EnhancedTableHead(props) {
     return (
         <TableHead className={customClass}>
             <TableRow>
+                {checkBoxes ?
+                    <TableCell
+                        key={"checkboxes"}
+                        align={"center"}
+                    />
+                    : null}
                 {firstMenu ?
                     <TableCell
                         key={"edit-delete"}

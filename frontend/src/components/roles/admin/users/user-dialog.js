@@ -10,6 +10,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import CustomDatePicker from "../custom-date-picker";
 import {UserTypeSelector, UserStatusSelector} from "./user-selectors";
 import {USER_URL, handleRequestError, makeRequest} from "../../../parts/util/request-util"
+import {PasswordNotRequiredScheme, UpdateUserScheme} from "../../../parts/validation/user-validation";
+import {LinkScheme} from "../../../parts/validation/activation-link-form-validation";
 
 
 const EMPTY_USER = {
@@ -20,8 +22,8 @@ const EMPTY_USER = {
     surname: "",
     patronymic: "",
     passport: "",
-    roles: [],
-    birthday: "",
+    roles: "",
+    birthday: "2000-01-01",
     address: {
         country: "",
         city: "",
@@ -89,6 +91,7 @@ export const UserDialog = (props) => {
                 <DialogContent>
                     <Formik
                         enableReinitialize
+                        validationSchema={isUpdateForm ? UpdateUserScheme.concat(PasswordNotRequiredScheme) : LinkScheme}
                         initialValues={{
                             id: userId,
                             email: user.email,
@@ -160,23 +163,17 @@ export const UserDialog = (props) => {
                     >
                         {(formProps) => {
                             return (
-                                <Form>
-                                    <FormikField
-                                        formikProps={formProps}
-                                        id={"email"}
-                                        label={"Email"}
-                                        formikFieldName={"email"}
-                                    />
+                                <Form style={{width: 400}}>
+                                    {isUpdateForm ? "" :
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"email"}
+                                            label={"Email"}
+                                            formikFieldName={"email"}
+                                        />}
 
                                     {isUpdateForm ?
                                         <span>
-                                        <FormikField
-                                            formikProps={formProps}
-                                            id={"password"}
-                                            label={"Password"}
-                                            formikFieldName={"password"}
-                                            type={"password"}
-                                        />
                                         < FormikField
                                             formikProps={formProps}
                                             id={"name"}
@@ -263,10 +260,17 @@ export const UserDialog = (props) => {
                                                 label={"Flat"}
                                                 formikFieldName={"flat"}
                                             />
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"password"}
+                                                label={"Password"}
+                                                formikFieldName={"password"}
+                                                type={"password"}
+                                            />
                                         </span>
                                         : ""}
 
-                                    <div style={{textAlign: "center", marginTop: 7, marginBottom: 5}}>
+                                    <div style={{textAlign: "center", marginTop: 10, marginBottom: 5}}>
                                         <Button
                                             variant="contained"
                                             color="primary"

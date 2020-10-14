@@ -1,28 +1,26 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.dto.model_dto.mail.MessageRequest;
+import by.itechart.cargo.dto.model_dto.mail.MessageTemplateRequest;
+import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.service.MailSenderService;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import by.itechart.cargo.service.util.TemplateUtil;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,15 +33,15 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Value("${link.registration}")
     private String registrationLink;
 
-    private final static String TEMPLATE_PATH = "src/main/resources/templates";
-
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
+    private final TemplateUtil templateUtil;
 
     @Autowired
-    public MailSenderServiceImpl(JavaMailSender javaMailSender, UserRepository userRepository) {
+    public MailSenderServiceImpl(JavaMailSender javaMailSender, UserRepository userRepository, TemplateUtil templateUtil) {
         this.javaMailSender = javaMailSender;
         this.userRepository = userRepository;
+        this.templateUtil = templateUtil;
     }
 
     @Override
@@ -51,38 +49,18 @@ public class MailSenderServiceImpl implements MailSenderService {
         LocalDate today = LocalDate.now();
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
+
         List<User> users = userRepository.findAllPresent();
 
         for (User user : users) {
             if (user.getBirthday().getMonthValue() == month
                     && user.getBirthday().getDayOfMonth() == day) {
 
-                Map<String, String> templateVars = new HashMap<>();
-                templateVars.put("name", user.getName());
-                templateVars.put("company", user.getClientCompany().getName());
-                String age = String.valueOf(ChronoUnit.YEARS.between(user.getBirthday(), today));
-                templateVars.put("age", age);
-
-                Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-                StringBuilder content = new StringBuilder();
                 try {
-                    configuration.setDirectoryForTemplateLoading(new File(TEMPLATE_PATH));
-                    String templateName = TemplateName.BIRTHDAY.toString();
-                    Template temp = configuration.getTemplate(templateName);
-                    content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                            temp, templateVars));
-
-
+                    final String content = templateUtil.getBirthdayTemplate(user);
                     String to = user.getEmail();
                     String subject = "Greeting";
-                    String text = content.toString();
-                    sendMail(to, subject, text);
-
-
-                } catch (IOException e) {
-                    log.error("Template getting failed", e);
-                } catch (TemplateException e) {
-                    log.error("Template exception occurred", e);
+                    sendMail(to, subject, content);
                 } catch (ServiceException e) {
                     log.error(e.getMessage());
                 }
@@ -113,33 +91,72 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     @Override
+    public void sendMail(MessageRequest request) throws ServiceException, NotFoundException {
+
+        List<String> errors = new ArrayList<>();
+
+        for (String email : request.getEmails()) {
+            if (userRepository.findByEmail(email).isPresent()) {
+                sendMail(email, request.getSubject(), request.getText());
+            } else {
+                errors.add(String.format("Email %s doesn't exist", email));
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            throw new NotFoundException(String.join(",", errors));
+        }
+
+    }
+
+    @Override
+    public void sendMail(MessageTemplateRequest request) throws ServiceException, NotFoundException {
+
+        List<String> errors = new ArrayList<>();
+
+        for (String email : request.getEmails()) {
+            final Optional<User> userDb = userRepository.findByEmail(email);
+
+            if (userDb.isPresent()) {
+
+                String content = "";
+                switch (request.getType()) {
+                    case "BIRTHDAY":
+                        content = templateUtil.getBirthdayTemplate(userDb.get());
+                        break;
+                    case "BLOCKED":
+                        content = templateUtil.getBlockedTemplate(userDb.get());
+                        break;
+                    default:
+                        throw new NotFoundException("Template doesn't exist");
+                }
+
+                sendMail(email, request.getSubject(), content);
+
+            } else {
+                errors.add(String.format("Email %s doesn't exist", email));
+            }
+
+        }
+
+        if (!errors.isEmpty()) {
+            throw new NotFoundException(String.join(",", errors));
+        }
+
+    }
+
+    @Override
     public String sendActivationMail(String to, String role) throws ServiceException {
         final String code = UUID.randomUUID().toString();
         final String link = registrationLink + "?code=" + code + "&role=" + role;
         final String subject = "Registration in the cargo system";
 
-        Map<String, String> templateVars = new HashMap<>();
-        templateVars.put("link", link);
+        final String content = templateUtil.getActivationTemplate(link);
 
-        Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-        StringBuilder content = new StringBuilder();
-
-        try {
-            configuration.setDirectoryForTemplateLoading(new File(TEMPLATE_PATH));
-            String templateName = TemplateName.ACTIVATION.toString();
-            final Template template = configuration.getTemplate(templateName);
-
-            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    template, templateVars));
-
-            sendMail(to, subject, content.toString());
-            return code;
-
-        } catch (IOException | TemplateException e) {
-            log.error("Mail sending failed", e);
-            throw new ServiceException("Service for sending emails is temporary unavailable");
-        }
+        sendMail(to, subject, content);
+        return code;
 
     }
+
 
 }

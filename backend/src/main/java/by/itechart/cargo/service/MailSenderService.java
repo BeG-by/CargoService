@@ -1,6 +1,10 @@
 package by.itechart.cargo.service;
 
+import by.itechart.cargo.dto.model_dto.mail.MessageRequest;
+import by.itechart.cargo.dto.model_dto.mail.MessageTemplateRequest;
+import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.exception.ServiceException;
+
 
 public interface MailSenderService {
 
@@ -8,24 +12,11 @@ public interface MailSenderService {
 
     void sendMail(String to, String subject, String text) throws ServiceException;
 
-    String sendActivationMail(String to , String role) throws ServiceException;
+    void sendMail(MessageRequest request) throws ServiceException, NotFoundException;
 
-    enum TemplateName {
-        BIRTHDAY("birthday.ftl"),
-        BLOCKED("blocked.ftl"),
-        ACTIVATION("activation.ftl");
+    void sendMail(MessageTemplateRequest request) throws ServiceException, NotFoundException;
 
-        private String string;
+    String sendActivationMail(String to, String role) throws ServiceException;
 
-        TemplateName(String string) {
-            this.string = string;
-        }
-
-        @Override
-        public String toString() {
-            return string;
-        }
-
-    }
 
 }

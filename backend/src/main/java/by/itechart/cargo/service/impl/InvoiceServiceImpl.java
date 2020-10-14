@@ -1,6 +1,5 @@
 package by.itechart.cargo.service.impl;
 
-import by.itechart.cargo.dto.model_dto.act.ProductLostDto;
 import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchInvoiceRepository;
@@ -19,11 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoices;
-import static by.itechart.cargo.service.constant.MessageConstant.*;
+import static by.itechart.cargo.service.util.MessageConstant.*;
 
 @Service
 @Transactional

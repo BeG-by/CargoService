@@ -13,6 +13,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static by.itechart.cargo.security.RoleConstant.*;
+
 @RestController
 @RequestMapping("/v1/api/storages")
 @Validated
@@ -26,33 +28,33 @@ public class StorageController {
     }
 
     @GetMapping
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DISPATCHER", "ROLE_MANAGER"})
+    @Secured({ADMIN, OWNER, DISPATCHER, MANAGER})
     public ResponseEntity<StoragePaginationResponse> findAll(@RequestParam int page, @RequestParam int storagesPerPage) {
         return ResponseEntity.ok(storageService.findAll(page, storagesPerPage));
     }
 
     @GetMapping("/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_OWNER", "ROLE_DISPATCHER", "ROLE_MANAGER"})
+    @Secured({ADMIN, OWNER, DISPATCHER, MANAGER})
     public ResponseEntity<Storage> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(storageService.findById(id));
     }
 
     @PostMapping
-    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER, DISPATCHER})
     public ResponseEntity<String> save(@RequestBody StorageSaveRequest request) throws AlreadyExistException {
         storageService.save(request);
         return ResponseEntity.ok("Storage has been saved");
     }
 
     @PutMapping
-    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER, DISPATCHER})
     public ResponseEntity<String> update(@RequestBody StorageUpdateRequest request) throws NotFoundException, AlreadyExistException {
         storageService.update(request);
         return ResponseEntity.ok("Storage has been updated");
     }
 
     @DeleteMapping("/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_DISPATCHER", "ROLE_OWNER"})
+    @Secured({ADMIN, OWNER, DISPATCHER})
     public ResponseEntity<String> delete(@PathVariable long id) throws NotFoundException {
         storageService.delete(id);
         return ResponseEntity.ok("Storage has been deleted");
