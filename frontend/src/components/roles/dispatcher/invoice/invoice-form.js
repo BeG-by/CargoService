@@ -70,7 +70,7 @@ const EMPTY_STORAGE = {
     email: "",
 }
 
-const EMPTY_PRODUCT_OWNER = {
+export const EMPTY_PRODUCT_OWNER = {
     name: "",
     type: "Sole proprietorship",
     phone: "",

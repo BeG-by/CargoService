@@ -1,6 +1,7 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.invoice.*;
+import by.itechart.cargo.dto.notification.notification_data.InvoiceNotificationData;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchInvoiceRepository;
 import by.itechart.cargo.exception.AlreadyExistException;
@@ -180,12 +181,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceResponse findById(long id) throws NotFoundException {
         Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
-        return InvoiceResponse.toInvoiceResponse(invoiceRepository.findByIdAndClientCompanyId(id, clientCompanyId));
+        Invoice invoice = invoiceRepository.findByIdAndClientCompanyId(id, clientCompanyId)
+                .orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        return InvoiceResponse.toInvoiceResponse(invoice);
     }
 
 
     @Override
-    public void save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
+    public Long save(InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         final Invoice invoice = invoiceRequest.toInvoice();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
@@ -243,11 +246,11 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.setStatus(invoiceRequest.getStatus());
         }
 
-        final Invoice invoiceDb = invoiceRepository.save(invoice);
-        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(invoiceDb));
+        final Invoice savedInvoice = invoiceRepository.save(invoice);
+        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(savedInvoice));
 
-        log.info("Invoice has been saved {}", invoiceDb);
-
+        log.info("Invoice has been saved {}", savedInvoice);
+        return savedInvoice.getId();
     }
 
     @Override
@@ -362,6 +365,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         foundInvoice.setStatus(invoice.getStatus());
         foundInvoice.setComment(invoice.getComment());
         log.info("Invoice status has been updated {}", foundInvoice);
+    }
+
+    @Override
+    public InvoiceNotificationData findInvoiceNotificationData(Long id) throws NotFoundException {
+        Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
+        Invoice invoice = invoiceRepository.findByIdAndClientCompanyId(id, clientCompanyId)
+                .orElseThrow(() -> new NotFoundException(INVOICE_NOT_FOUND_MESSAGE));
+        return InvoiceNotificationData.fromInvoice((invoice));
     }
 
     @Override

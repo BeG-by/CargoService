@@ -29,8 +29,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.util.MessageConstant.EMAIL_EXIST_MESSAGE;
-import static by.itechart.cargo.service.util.MessageConstant.USER_NOT_FOUND_MESSAGE;
+
+import static by.itechart.cargo.service.constant.MessageConstant.*;
+
 
 @Service
 @Transactional
@@ -95,10 +96,39 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    public UserResponse findDriverByInvoiceId(Long invoiceId) throws NotFoundException {
+        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return userRepository.findByClientCompanyIdAndDriverId(companyId, invoiceId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public UserResponse findDispatcherByInvoiceId(Long invoiceId) throws NotFoundException {
+        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return userRepository.findByClientCompanyIdAndRegistrationInvoiceId(companyId, invoiceId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public UserResponse findManagerByInvoiceId(Long invoiceId) throws NotFoundException {
+        final Long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return userRepository.findByClientCompanyIdAndCheckingInvoiceId(companyId, invoiceId)
+                .filter(user -> !user.getStatus().equals(User.Status.DELETED))
+                .map(UserResponse::toUserResponse)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+
+    @Override
     public void sendActivationLink(ActivationDetailsRequest request) throws AlreadyExistException, ServiceException {
 
         final String email = request.getEmail();
         final String role = request.getRole();
+
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
 
         final Optional<ActivationDetails> userToActivateDb = activationDetailsRepository.findByEmail(email);

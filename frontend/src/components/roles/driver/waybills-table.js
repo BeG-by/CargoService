@@ -77,8 +77,7 @@ export const WaybillsTable = connect(mapStateToProps)((props) => {
             } else if (role === "MANAGER") {
                 url = `${MANAGER_WAYBILL_URL}?page=${curPage}&waybillsPerPage=${curRowsPerPage}`
             } else {
-                alert("Unrecognized role, waybills can watch only manager and driver")
-                return;
+                url = `${WAYBILL_URL}?page=${curPage}&waybillsPerPage=${curRowsPerPage}`
             }
 
             if (searchStr !== null) {

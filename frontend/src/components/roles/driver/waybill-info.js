@@ -37,7 +37,10 @@ export const WaybillInfo = (props) => {
     };
 
     const handleCloseInvoice = () => {
-        const form = <CloseInvoice handleClose={handleClose} invoice={waybill.invoice}/>
+        const form = <CloseInvoice
+            onClose={handleClose}
+            onCloseInvoice={handleClose}
+            invoice={waybill.invoice}/>
         setForm(form);
     }
 
@@ -53,8 +56,6 @@ export const WaybillInfo = (props) => {
         let response = await makeRequest("GET", WAYBILL_URL + "/" + props.waybillId);
         let selected = updated = response.data;
         if (!cleanupFunction) {
-            console.log("SELECTED POINTS");
-            console.log(selected.points);
             setWaybill({
                 id: selected.id,
                 departureDate: selected.departureDate,

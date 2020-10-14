@@ -3,6 +3,7 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillResponse;
+import by.itechart.cargo.dto.notification.notification_data.WaybillNotificationData;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchWaybill;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchWaybillRepository;
 import by.itechart.cargo.exception.NotFoundException;
@@ -62,7 +63,7 @@ public class WaybillServiceImpl implements WaybillService {
     }
 
     @Override
-    public void save(WaybillRequest waybillRequest) throws NotFoundException {
+    public Long save(WaybillRequest waybillRequest) throws NotFoundException {
         final Waybill waybill = waybillRequest.toWaybill();
 
         final JwtUserDetails currentUser = jwtTokenUtil.getJwtUser();
@@ -91,10 +92,11 @@ public class WaybillServiceImpl implements WaybillService {
 
         waybill.getPoints().forEach(p -> p.setWaybill(waybill));
 
-        final Waybill waybillDb = waybillRepository.save(waybill);
+        final Waybill savedWaybill = waybillRepository.save(waybill);
 
-        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(waybillDb));
-        log.info("Waybill has been saved {}", waybillDb);
+        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(savedWaybill));
+        log.info("Waybill has been saved {}", savedWaybill);
+        return savedWaybill.getId();
     }
 
     @Override
@@ -110,6 +112,13 @@ public class WaybillServiceImpl implements WaybillService {
         final Long companyId = currentUser.getClientCompany().getId();
         final Long driverId = currentUser.getId();
         return waybillRepository.findByStatusAndDriverIdY(driverId, companyId);
+    }
+
+    @Override
+    public Waybill findByPointId(Long pointId) throws NotFoundException {
+        long companyId = jwtTokenUtil.getCurrentCompanyId();
+        return waybillRepository.findByClientCompanyIdAndPointId(companyId, pointId)
+                .orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
     }
 
     @Override
@@ -211,6 +220,13 @@ public class WaybillServiceImpl implements WaybillService {
                 .map(WaybillResponse::toWaybillResponse)
                 .collect(Collectors.toList());
         return new WaybillPaginationResponse(waybillsPage.getTotalElements(), waybills);
+    }
+
+    @Override
+    public WaybillNotificationData findWaybillNotificationData(Long id) throws NotFoundException {
+        Waybill waybill = waybillRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
+        return WaybillNotificationData.fromWaybill(waybill);
     }
 
 }

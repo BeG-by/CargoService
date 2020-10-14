@@ -7,6 +7,7 @@ import by.itechart.cargo.security.JwtTokenFilter;
 import by.itechart.cargo.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -66,7 +67,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/api/auth/login", "/v1/api/auth/registration").permitAll()
+                .antMatchers("/v1/api/auth/login", "/v1/api/auth/registration", "/ws/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)

@@ -41,33 +41,50 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
     });
     const [checkPassage, setCheckPassage] = React.useState(true);
 
-    const handleClose = () => {
+    const closeAllInnerDialogs = () => {
         setOpenVerifyDialog(false);
         setOpenRejectDialog(false);
         setOpenCloseDialog(false);
         setOpenEditDialog(false);
     };
 
+    const closeInvoiceDialog = () => {
+        closeAllInnerDialogs();
+        props.onClose();
+    }
+
     const handleVerifyOpen = () => {
-        const form = <AssignVerificationInvoice handleClose={handleClose} invoice={invoice}/>
+        const form = <AssignVerificationInvoice
+            onClose={closeAllInnerDialogs}
+            onAssign={closeInvoiceDialog}
+            invoice={invoice}
+        />
         setForm(form);
         setOpenVerifyDialog(true);
     }
 
     const handleRejectOpen = () => {
-        const form = <RejectVerificationInvoice handleClose={handleClose} invoice={invoice}/>
+        const form = <RejectVerificationInvoice
+            onClose={closeAllInnerDialogs}
+            onReject={closeInvoiceDialog}
+            invoice={invoice}/>
         setForm(form);
         setOpenRejectDialog(true);
     }
 
     const handleCloseOpen = () => {
-        const form = <CloseInvoice handleClose={handleClose} invoice={invoice}/>
+        const form = <CloseInvoice
+            onClose={closeAllInnerDialogs}
+            onCloseInvoice={closeInvoiceDialog}
+            invoice={invoice}/>
         setForm(form);
         setOpenCloseDialog(true);
     }
 
     const handleEditOpen = () => {
-        const form = <EditInvoice handleClose={handleClose} invoice={invoice}/>
+        const form = <EditInvoice
+            handleClose={closeAllInnerDialogs}
+            invoice={invoice}/>
         setForm(form);
         setOpenEditDialog(true);
     }
@@ -143,22 +160,22 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
             <InvoiceInfoContent invoice={invoice} buttons={buttons}/>
             <DialogWindow
                 dialogTitle="Verification"
-                handleClose={handleClose}
+                handleClose={closeAllInnerDialogs}
                 openDialog={openVerifyDialog}
                 form={form}/>
             <DialogWindow
                 dialogTitle="Rejection"
-                handleClose={handleClose}
+                handleClose={closeAllInnerDialogs}
                 openDialog={openRejectDialog}
                 form={form}/>
             <DialogWindow
                 dialogTitle="Closing"
-                handleClose={handleClose}
+                handleClose={closeAllInnerDialogs}
                 openDialog={openCloseDialog}
                 form={form}/>
             <DialogWindow
                 dialogTitle="Editing"
-                handleClose={handleClose}
+                handleClose={closeAllInnerDialogs}
                 openDialog={openEditDialog}
                 form={form}/>
         </div>

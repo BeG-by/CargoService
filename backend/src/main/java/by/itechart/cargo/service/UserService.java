@@ -16,16 +16,21 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
-    void sendActivationLink(ActivationDetailsRequest userRequest) throws AlreadyExistException, ServiceException;
+    UserResponse findDriverByInvoiceId(Long invoiceId) throws NotFoundException;
+
+    UserResponse findDispatcherByInvoiceId(Long invoiceId) throws NotFoundException;
+
+    UserResponse findManagerByInvoiceId(Long invoiceId) throws NotFoundException;
+
+    void sendActivationLink(ActivationDetailsRequest request) throws AlreadyExistException, ServiceException;
 
     void update(UserUpdateRequest userUpdateRequest) throws NotFoundException;
 
     void delete(long id) throws NotFoundException;
 
-    void updatePhoto(PhotoRequest photoRequest , long userId) throws NotFoundException;
+    void updatePhoto(PhotoRequest photoRequest, long userId) throws NotFoundException;
 
     void updatePhone(PhoneRequest photoRequest) throws NotFoundException;
 
     void updatePassword(PasswordRequest passwordRequest) throws IncorrectPasswordException;
-
 }
