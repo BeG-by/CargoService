@@ -19,6 +19,7 @@ export const LOGOUT_URL = "/v1/api/auth/logout";
 export const INVOICE_NOTIFICATION_DATA_URL = "/v1/api/notifications/invoice"
 export const WAYBILL_NOTIFICATION_DATA_URL = "/v1/api/notifications/waybill"
 export const POINT_NOTIFICATION_DATA_URL = "/v1/api/notifications/point"
+export const WEB_SOCKET_CONNECT_URL = "http://localhost:8080/ws"
 
 export const makeRequest = (method, url, data = null) => {
     return data === null ?

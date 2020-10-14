@@ -5,7 +5,9 @@ import {
 } from "../../../components/parts/util/request-util";
 import useWaybillInfoForm from "../forms/use-waybill-info-form";
 
-export default function useNewWaybillHandler() {
+const TOAST_TITLE = "New waybill"
+
+export default function useNewWaybillMessageHandler() {
     const [WaybillDialogComponent, openWaybillDialog] = useWaybillInfoForm();
 
     const loadWaybillNotificationData = (waybillId) => {
@@ -25,8 +27,7 @@ export default function useNewWaybillHandler() {
     const handleNewWaybillMessage = async (messageData, openActionToast) => {
         let response = await loadWaybillNotificationData(messageData.waybillId);
         let formatData = convertToStringAndFormat(response.data);
-        let title = "New waybill";
-        openActionToast(title, formatData, () => openWaybillDialog(messageData.waybillId))
+        openActionToast(TOAST_TITLE, formatData, () => openWaybillDialog(messageData.waybillId))
     }
 
     return [WaybillDialogComponent, handleNewWaybillMessage]

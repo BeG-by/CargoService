@@ -2,15 +2,20 @@ import React, {useEffect, useState} from "react";
 import useToast from "../components/parts/toast-notification/useToast";
 import {connect} from "react-redux";
 import * as Stomp from "stompjs"
-import useInvoiceConfirmationForm from "./hooks/forms/use-invoice-confirmation-form";
 import useActionToast from "./hooks/action-toast/use-action-toast";
-import useWaybillInfoForm from "./hooks/forms/use-waybill-info-form";
-import useInvoiceEditForm from "./hooks/forms/use-invoice-edit-form";
-import useNewInvoiceHandler from "./hooks/handlers/use-new-invoice-handler";
-import usePointPassHandler from "./hooks/handlers/use-point-pass-handler";
-import useNewWaybillHandler from "./hooks/handlers/use-new-waybill-handler";
-import useInvoiceUpdateHandler from "./hooks/handlers/use-invoice-update-handler";
-import useInvoiceStatusUpdateHandler from "./hooks/handlers/use-invoice-status-update-handler";
+import useNewInvoiceMessageHandler from "./hooks/handlers/use-new-invoice-message-handler";
+import usePointPassMessageHandler from "./hooks/handlers/use-point-pass-message-handler";
+import useNewWaybillMessageHandler from "./hooks/handlers/use-new-waybill-message-handler";
+import useInvoiceUpdateMessageHandler from "./hooks/handlers/use-invoice-update-message-handler";
+import useInvoiceStatusUpdateMessageHandler from "./hooks/handlers/use-invoice-status-update-message-handler";
+import {
+    INVOICE_STATUS_UPDATE_MESSAGE_TYPE,
+    INVOICE_UPDATE_MESSAGE_TYPE,
+    NEW_INVOICE_MESSAGE_TYPE,
+    NEW_WAYBILL_MESSAGE_TYPE,
+    POINT_PASS_MESSAGE_TYPE
+} from "./notification-types";
+import {WEB_SOCKET_CONNECT_URL} from "../components/parts/util/request-util";
 
 const mapStateToProps = (store) => {
     return {
@@ -19,16 +24,18 @@ const mapStateToProps = (store) => {
     }
 };
 
+const UNKNOWN_ROLE = 'UNKNOWN';
+
 export const WebSocket = connect(mapStateToProps)((props) => {
     const [currentStompClient, setCurrentStompClient] = useState(null);
-    const [ToastComponent, showToast] = useToast();
+    const [NotificationToastComponent, openNotificationToast] = useToast();
     const [ActionToastComponent, openActionToast] = useActionToast()
 
-    const [NewWaybillHandlerComponent, handleNewWaybillMessage] = useNewWaybillHandler();
-    const [NewInvoiceHandlerComponent, handleNewInvoiceMessage] = useNewInvoiceHandler();
-    const [PointPassHandlerComponent, handlePointPassMessage] = usePointPassHandler()
-    const [InvoiceUpdateHandlerComponent, handleInvoiceUpdateMessage] = useInvoiceUpdateHandler()
-    const [InvoiceStatusUpdateHandlerComponent, handleInvoiceStatusUpdateMessage] = useInvoiceStatusUpdateHandler();
+    const [NewWaybillHandlerComponent, handleNewWaybillMessage] = useNewWaybillMessageHandler();
+    const [NewInvoiceHandlerComponent, handleNewInvoiceMessage] = useNewInvoiceMessageHandler();
+    const [PointPassHandlerComponent, handlePointPassMessage] = usePointPassMessageHandler()
+    const [InvoiceUpdateHandlerComponent, handleInvoiceUpdateMessage] = useInvoiceUpdateMessageHandler()
+    const [InvoiceStatusUpdateHandlerComponent, handleInvoiceStatusUpdateMessage] = useInvoiceStatusUpdateMessageHandler();
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -36,19 +43,19 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     }
 
     const onSocketConnect = (stompClient) => {
-        showToast("Connected to real-time messaging")
         setCurrentStompClient(stompClient);
         subscribeToPrivateUrl(stompClient);
     }
 
     const onSocketError = () => {
         setCurrentStompClient(null);
-        showToast("Cannot connect to real-time messaging", "warning")
+        openNotificationToast("Cannot connect to server for real-time notifications", "warning");
     }
 
     const connectToServer = () => {
         let SockJs = require("sockjs-client");
-        SockJs = new SockJs("http://localhost:8080/ws");
+        SockJs = new SockJs(WEB_SOCKET_CONNECT_URL);
+        // SockJs = new SockJs("http://localhost:8080/ws");
         return Stomp.over(SockJs);
     }
 
@@ -56,32 +63,28 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     const onMessageReceive = (msg) => {
         const messageData = JSON.parse(msg.body);
         switch (messageData.notificationType) {
-            case "NEW_INVOICE":
+            case NEW_INVOICE_MESSAGE_TYPE:
                 handleNewInvoiceMessage(messageData, openActionToast);
                 break;
-            case "NEW_WAYBILL":
+            case NEW_WAYBILL_MESSAGE_TYPE:
                 handleNewWaybillMessage(messageData, openActionToast);
                 break;
-            case "INVOICE_STATUS_UPDATE":
-                handleInvoiceStatusUpdateMessage(messageData, openActionToast, showToast)
+            case INVOICE_STATUS_UPDATE_MESSAGE_TYPE:
+                handleInvoiceStatusUpdateMessage(messageData, openActionToast, openNotificationToast)
                 break;
-            case "INVOICE_UPDATE":
+            case INVOICE_UPDATE_MESSAGE_TYPE:
                 handleInvoiceUpdateMessage(messageData, openActionToast);
                 break;
-            case "POINT_PASS":
+            case POINT_PASS_MESSAGE_TYPE:
                 handlePointPassMessage(messageData, openActionToast);
                 break;
-            default:
-                showToast("Some notification has come");
         }
     }
 
     useEffect(() => {
-        if (props.role !== 'UNKNOWN') {
+        if (props.role !== UNKNOWN_ROLE) {
             let stompClient = connectToServer();
             stompClient.connect({}, () => onSocketConnect(stompClient), () => onSocketError());
-        } else {
-            console.log("DROP CONNECTION")
         }
     }, [props.role])
 
@@ -89,7 +92,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     return (
         <div style={{zIndex: 999}}>
             {ActionToastComponent}
-            {ToastComponent}
+            {NotificationToastComponent}
 
             {NewInvoiceHandlerComponent}
             {PointPassHandlerComponent}

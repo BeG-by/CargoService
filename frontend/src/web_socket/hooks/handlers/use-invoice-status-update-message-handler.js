@@ -3,7 +3,7 @@ import {INVOICE_NOTIFICATION_DATA_URL, makeRequest} from "../../../components/pa
 import useInvoiceConfirmationForm from "../forms/use-invoice-confirmation-form";
 import useInvoiceEditForm from "../forms/use-invoice-edit-form";
 
-export default function useInvoiceStatusUpdateHandler() {
+export default function useInvoiceStatusUpdateMessageHandler() {
     const [InvoiceConfirmationDialogComponent, openInvoiceConfirmationDialogComponent] = useInvoiceConfirmationForm();
     const [InvoiceEditDialogComponent, openEditInvoiceDialog] = useInvoiceEditForm();
 

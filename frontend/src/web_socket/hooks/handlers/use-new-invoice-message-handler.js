@@ -2,7 +2,9 @@ import React from "react";
 import {INVOICE_NOTIFICATION_DATA_URL, makeRequest} from "../../../components/parts/util/request-util";
 import useInvoiceConfirmationForm from "../forms/use-invoice-confirmation-form";
 
-export default function useNewInvoiceHandler() {
+const INVOICE_TITLE = "New invoice";
+
+export default function useNewInvoiceMessageHandler() {
     const [InvoiceConfirmationDialogComponent, openInvoiceConfirmationDialogComponent] = useInvoiceConfirmationForm();
 
     const loadInvoiceNotificationData = (invoiceId) => {
@@ -25,8 +27,7 @@ export default function useNewInvoiceHandler() {
     const handleNewInvoiceMessage = async (messageData, openActionToast) => {
         let response = await loadInvoiceNotificationData(messageData.invoiceId);
         let formatData = convertToStringAndFormat(response.data);
-        let title = "New invoice";
-        openActionToast(title, formatData, () => openInvoiceConfirmationDialogComponent(messageData.invoiceId))
+        openActionToast(INVOICE_TITLE, formatData, () => openInvoiceConfirmationDialogComponent(messageData.invoiceId))
     }
 
     return [InvoiceConfirmationDialogComponent, handleNewInvoiceMessage]
