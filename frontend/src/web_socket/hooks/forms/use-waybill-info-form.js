@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {DialogWindow} from "../../../components/parts/dialogs/dialog";
-import {InvoiceInfo} from "../../../components/roles/manager/invoice-info";
 import {WaybillInfo} from "../../../components/roles/driver/waybill-info";
 
 export default () => {
