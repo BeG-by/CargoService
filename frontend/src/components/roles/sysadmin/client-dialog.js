@@ -228,17 +228,7 @@ export default function ClientDialog(props) {
                                         type="submit"
                                         disabled={formProps.listener}
                                     >
-                                        Save
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={handleDelete}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button variant="contained" onClick={handleClose}>
-                                        Close
+                                        Update
                                     </Button>
                                 </Grid>
                             </Form>

@@ -4,20 +4,19 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import ClientDialog from "./client-dialog";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
 import fetchFieldFromObject from "../../parts/util/function-util";
-import {CLIENTS_URL, makeRequest, handleRequestError} from "../../parts/util/request-util";
+import {CLIENTS_URL, handleRequestError, makeRequest} from "../../parts/util/request-util";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
 import EditIcon from "@material-ui/icons/Edit";
 import ConfirmDeletingDialog from "../admin/slide-dialog";
 import {connect} from "react-redux";
-import {NotAuthorized} from "../../pages/error-page/error-401";
+import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -40,6 +39,9 @@ const mapStateToProps = (store) => {
     }
 };
 
+const REMOVE_TITLE = "Do you want to remove the client ?";
+
+
 export const ClientsTable = connect(mapStateToProps)((props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -47,8 +49,14 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
     const [clientDialogOpen, setClientDialogOpen] = useState(false);
     const [selectedClientCompanyId, setSelectedClientCompanyId] = useState(-1);
     const [toastComponent, showToastComponent] = useToast();
-    const role = props.role;
-    const REMOVE_TITLE = "Do you want to remove the client ?";
+    const [order, setOrder] = useState("asc");
+    const [orderBy, setOrderBy] = useState("name");
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
 
     async function updateTable() {
         try {
@@ -98,28 +106,19 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
                         </Button>
                     </div>
                     <Table aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth, fontSize: 18, color: "#3f51b5"}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
+                        <EnhancedTableHead
+                            columns={columns}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                            checkBoxes={false}
+                        />
                         <TableBody>
-                            {clients
+                            {stableSort(clients, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((client) => {
                                     return (
                                         <TableRow
-                                            onClick={() => {
-                                                handleTableRowClick(client);
-                                            }}
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
@@ -132,27 +131,33 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
                                                 } else if (value === "JP") {
                                                     value = "Juridical person";
                                                 }
+                                                if (column.id !== "edit_delete")
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
                                                         {value}
                                                     </TableCell>
                                                 );
                                             })}
-                                            <div className="table-delete-edit-div">
-                                                <Button
-                                                    className="menu-table-btn"
-                                                    color={"primary"}
-                                                    startIcon={<EditIcon/>}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleTableRowClick(client)
-                                                    }}/>
-                                                {/*<ConfirmDeletingDialog //TODO remove client */}
-                                                {/*    id={user.id}*/}
-                                                {/*    onDelete={deleteSelectedUser}*/}
-                                                {/*    text={REMOVE_TITLE}*/}
-                                                {/*/>*/}
-                                            </div>
+                                            <TableCell
+                                                key={"edit_delete"}
+                                                align={"right"}
+                                            >
+                                                <div className="table-delete-edit-div">
+                                                    <Button
+                                                        className="menu-table-btn"
+                                                        color={"primary"}
+                                                        startIcon={<EditIcon/>}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleTableRowClick(client)
+                                                        }}/>
+                                                    <ConfirmDeletingDialog //TODO remove client
+                                                        id={client.id}
+                                                        onDelete={() => alert("Delete")}
+                                                        text={REMOVE_TITLE}
+                                                    />
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
