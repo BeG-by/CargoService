@@ -7,8 +7,10 @@ import useActionToast from "./hooks/action-toast/use-action-toast";
 import useWaybillInfoForm from "./hooks/forms/use-waybill-info-form";
 import useInvoiceEditForm from "./hooks/forms/use-invoice-edit-form";
 import useNewInvoiceHandler from "./hooks/handlers/use-new-invoice-handler";
-import usePointPass from "./hooks/handlers/use-point-pass-handler";
 import usePointPassHandler from "./hooks/handlers/use-point-pass-handler";
+import useNewWaybillHandler from "./hooks/handlers/use-new-waybill-handler";
+import useInvoiceUpdateHandler from "./hooks/handlers/use-invoice-update-handler";
+import useInvoiceStatusUpdateHandler from "./hooks/handlers/use-invoice-status-update-handler";
 
 const mapStateToProps = (store) => {
     return {
@@ -21,12 +23,12 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     const [currentStompClient, setCurrentStompClient] = useState(null);
     const [ToastComponent, showToast] = useToast();
     const [ActionToastComponent, openActionToast] = useActionToast()
-    const [InvoiceConfirmationDialogComponent, openInvoiceConfirmationDialogComponent] = useInvoiceConfirmationForm();
-    const [WaybillDialogComponent, openWaybillDialog] = useWaybillInfoForm();
-    const [InvoiceEditDialogComponent, openEditInvoiceDialog] = useInvoiceEditForm();
 
+    const [NewWaybillHandlerComponent, handleNewWaybillMessage] = useNewWaybillHandler();
     const [NewInvoiceHandlerComponent, handleNewInvoiceMessage] = useNewInvoiceHandler();
     const [PointPassHandlerComponent, handlePointPassMessage] = usePointPassHandler()
+    const [InvoiceUpdateHandlerComponent, handleInvoiceUpdateMessage] = useInvoiceUpdateHandler()
+    const [InvoiceStatusUpdateHandlerComponent, handleInvoiceStatusUpdateMessage] = useInvoiceStatusUpdateHandler();
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -50,46 +52,6 @@ export const WebSocket = connect(mapStateToProps)((props) => {
         return Stomp.over(SockJs);
     }
 
-    const handleNewWaybillMessage = (messageData) => {
-        openActionToast(
-            `New waybill`,
-            [""],
-            () => openWaybillDialog(messageData.waybillId))
-    }
-
-    const handleInvoiceStatusUpdateMessage = (messageData) => {
-        switch (messageData.newStatus) {
-            case "REJECTED":
-                openActionToast(
-                    `Invoice was rejected`, [``],
-                    () => openEditInvoiceDialog(messageData.invoiceId, showToast)
-                )
-                break;
-            case "ACCEPTED":
-                openActionToast(
-                    `Invoice was accepted`, [``],
-                    () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
-                break;
-            default:
-                openActionToast(
-                    `Invoice status updated`, [``],
-                    () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
-                break;
-        }
-    }
-
-    const handleInvoiceUpdateMessage = (messageData) => {
-        openActionToast(
-            `Invoice was updated`, [``],
-            () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
-    }
-
-    // const handlePointPass = (messageData) => {
-    //     openActionToast(
-    //         `Point pass`,
-    //         [""],
-    //         () => openWaybillDialog(messageData.waybillId))
-    // }
 
     const onMessageReceive = (msg) => {
         const messageData = JSON.parse(msg.body);
@@ -98,13 +60,13 @@ export const WebSocket = connect(mapStateToProps)((props) => {
                 handleNewInvoiceMessage(messageData, openActionToast);
                 break;
             case "NEW_WAYBILL":
-                handleNewWaybillMessage(messageData);
+                handleNewWaybillMessage(messageData, openActionToast);
                 break;
             case "INVOICE_STATUS_UPDATE":
-                handleInvoiceStatusUpdateMessage(messageData);
+                handleInvoiceStatusUpdateMessage(messageData, openActionToast, showToast)
                 break;
             case "INVOICE_UPDATE":
-                handleInvoiceUpdateMessage(messageData);
+                handleInvoiceUpdateMessage(messageData, openActionToast);
                 break;
             case "POINT_PASS":
                 handlePointPassMessage(messageData, openActionToast);
@@ -126,14 +88,14 @@ export const WebSocket = connect(mapStateToProps)((props) => {
 
     return (
         <div style={{zIndex: 999}}>
-            {WaybillDialogComponent}
-            {InvoiceConfirmationDialogComponent}
-            {InvoiceEditDialogComponent}
             {ActionToastComponent}
             {ToastComponent}
 
             {NewInvoiceHandlerComponent}
             {PointPassHandlerComponent}
+            {InvoiceUpdateHandlerComponent}
+            {NewWaybillHandlerComponent}
+            {InvoiceStatusUpdateHandlerComponent}
         </div>
     )
 })

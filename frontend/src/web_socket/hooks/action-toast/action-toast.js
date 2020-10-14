@@ -16,11 +16,13 @@ export default function ActionToast(props) {
 
     const handleViewClick = () => {
         onViewClick();
+        onClose();
     }
 
     return (
         <Snackbar open={open}
                   autoHideDuration={DEFAULT_DURATION}
+                  style={{marginTop: 75}}
                   anchorOrigin={{vertical: "top", horizontal: "right"}}
                   key={"action_toast_id"}
                   onClose={handleClose}>
