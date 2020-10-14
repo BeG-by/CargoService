@@ -14,15 +14,15 @@ public class PasswordRequest {
 
 
     @NotBlank(message = "Old password is mandatory")
-    @Size(min = 5 , max = 16, message = "Old password must contain 5-16 symbols")
+    @Size(min = 4 , max = 16, message = "Old password must contain 4-16 symbols")
     private String oldPassword;
 
     @NotBlank(message = "New password is mandatory")
-    @Size(min = 5 , max = 16, message = "New password must contain 5-16 symbols")
+    @Size(min = 4 , max = 16, message = "New password must contain 4-16 symbols")
     private String newPassword;
 
     @NotBlank(message = "Confirming password is mandatory")
-    @Size(min = 5 , max = 16, message = "Confirming password must contain 5-16 symbols")
+    @Size(min = 4 , max = 16, message = "Confirming password must contain 4-16 symbols")
     private String confirmNewPassword;
 
 }

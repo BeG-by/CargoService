@@ -33,6 +33,9 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Value("${link.registration}")
     private String registrationLink;
 
+    @Value("${link.password}")
+    private String passwordLink;
+
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
     private final TemplateUtil templateUtil;
@@ -155,8 +158,19 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         sendMail(to, subject, content);
         return code;
-
     }
 
+    @Override
+    public String sendResetPasswordMail(String to, User user) throws ServiceException {
+
+        final String code = UUID.randomUUID().toString();
+        final String link = passwordLink + "?code=" + code;
+        final String subject = "Reset password in the cargo system";
+
+        final String content = templateUtil.getPasswordTemplate(user, link);
+
+        sendMail(to, subject, content);
+        return code;
+    }
 
 }

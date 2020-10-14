@@ -1,4 +1,4 @@
-package by.itechart.cargo.mail;
+package by.itechart.cargo.util;
 
 import by.itechart.cargo.service.MailSenderService;
 import lombok.extern.slf4j.Slf4j;

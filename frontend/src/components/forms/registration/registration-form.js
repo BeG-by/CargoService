@@ -70,8 +70,6 @@ export const RegistrationForm = (props) => {
                             activationCode: params.code
                         };
 
-                        console.log(user);
-
                         makeRequest("POST", REGISTRATION_URL, user)
                             .then(res => {
                                 showToast(res.data, "success");
