@@ -2,10 +2,13 @@ import React, {useEffect, useState} from "react";
 import useToast from "../components/parts/toast-notification/useToast";
 import {connect} from "react-redux";
 import * as Stomp from "stompjs"
-import useInvoiceConfirmationForm from "./hooks/use-invoice-confirmation-form";
-import useActionToast from "./hooks/toast/use-action-toast";
-import useWaybillInfoForm from "./hooks/use-waybill-info-form";
-import useInvoiceEditForm from "./hooks/use-invoice-edit-form";
+import useInvoiceConfirmationForm from "./hooks/forms/use-invoice-confirmation-form";
+import useActionToast from "./hooks/action-toast/use-action-toast";
+import useWaybillInfoForm from "./hooks/forms/use-waybill-info-form";
+import useInvoiceEditForm from "./hooks/forms/use-invoice-edit-form";
+import useNewInvoiceHandler from "./hooks/handlers/use-new-invoice-handler";
+import usePointPass from "./hooks/handlers/use-point-pass-handler";
+import usePointPassHandler from "./hooks/handlers/use-point-pass-handler";
 
 const mapStateToProps = (store) => {
     return {
@@ -21,6 +24,9 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     const [InvoiceConfirmationDialogComponent, openInvoiceConfirmationDialogComponent] = useInvoiceConfirmationForm();
     const [WaybillDialogComponent, openWaybillDialog] = useWaybillInfoForm();
     const [InvoiceEditDialogComponent, openEditInvoiceDialog] = useInvoiceEditForm();
+
+    const [NewInvoiceHandlerComponent, handleNewInvoiceMessage] = useNewInvoiceHandler();
+    const [PointPassHandlerComponent, handlePointPassMessage] = usePointPassHandler()
 
     const subscribeToPrivateUrl = (stompClient) => {
         const privateUrl = `/user/${props.userId}/queue/messages`
@@ -42,13 +48,6 @@ export const WebSocket = connect(mapStateToProps)((props) => {
         let SockJs = require("sockjs-client");
         SockJs = new SockJs("http://localhost:8080/ws");
         return Stomp.over(SockJs);
-    }
-
-    const handleNewInvoiceMessage = (messageData) => {
-        openActionToast(
-            `New invoice!`,
-            [""],
-            () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
     }
 
     const handleNewWaybillMessage = (messageData) => {
@@ -85,18 +84,18 @@ export const WebSocket = connect(mapStateToProps)((props) => {
             () => openInvoiceConfirmationDialogComponent(messageData.invoiceId));
     }
 
-    const handlePointPass = (messageData) => {
-        openActionToast(
-            `Point pass`,
-            [""],
-            () => openWaybillDialog(messageData.waybillId))
-    }
+    // const handlePointPass = (messageData) => {
+    //     openActionToast(
+    //         `Point pass`,
+    //         [""],
+    //         () => openWaybillDialog(messageData.waybillId))
+    // }
 
     const onMessageReceive = (msg) => {
         const messageData = JSON.parse(msg.body);
         switch (messageData.notificationType) {
             case "NEW_INVOICE":
-                handleNewInvoiceMessage(messageData);
+                handleNewInvoiceMessage(messageData, openActionToast);
                 break;
             case "NEW_WAYBILL":
                 handleNewWaybillMessage(messageData);
@@ -108,7 +107,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
                 handleInvoiceUpdateMessage(messageData);
                 break;
             case "POINT_PASS":
-                handlePointPass(messageData);
+                handlePointPassMessage(messageData, openActionToast);
                 break;
             default:
                 showToast("Some notification has come");
@@ -132,6 +131,9 @@ export const WebSocket = connect(mapStateToProps)((props) => {
             {InvoiceEditDialogComponent}
             {ActionToastComponent}
             {ToastComponent}
+
+            {NewInvoiceHandlerComponent}
+            {PointPassHandlerComponent}
         </div>
     )
 })

@@ -3,6 +3,7 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillResponse;
+import by.itechart.cargo.dto.notification.notification_data.WaybillNotificationData;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchWaybill;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchWaybillRepository;
 import by.itechart.cargo.exception.NotFoundException;
@@ -219,6 +220,13 @@ public class WaybillServiceImpl implements WaybillService {
                 .map(WaybillResponse::toWaybillResponse)
                 .collect(Collectors.toList());
         return new WaybillPaginationResponse(waybillsPage.getTotalElements(), waybills);
+    }
+
+    @Override
+    public WaybillNotificationData findWaybillNotificationData(Long id) throws NotFoundException {
+        Waybill waybill = waybillRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
+        return WaybillNotificationData.fromWaybill(waybill);
     }
 
 }

@@ -1,6 +1,7 @@
 package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
+import by.itechart.cargo.dto.notification.notification_data.PointNotificationData;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Point;
 import by.itechart.cargo.repository.PointRepository;
@@ -41,6 +42,14 @@ public class PointServiceImpl implements PointService {
         foundPoint.setPassed(true);
         Point pointDb = pointRepository.save(foundPoint);
         log.info("Point has been passed {}", pointDb);
+    }
+
+    @Override
+    public PointNotificationData findPointNotificationData(Long id) throws NotFoundException {
+        Point point = pointRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(POINT_NOT_FOUND_MESSAGE));
+        return PointNotificationData.fromPoint(point);
+
     }
 
 }

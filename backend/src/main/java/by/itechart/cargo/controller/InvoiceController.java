@@ -1,6 +1,5 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.controller.web_socket.NotificationController;
 import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;

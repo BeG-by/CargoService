@@ -1,6 +1,5 @@
 package by.itechart.cargo.controller;
 
-import by.itechart.cargo.controller.web_socket.NotificationController;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;

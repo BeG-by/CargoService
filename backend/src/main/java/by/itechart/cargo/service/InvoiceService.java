@@ -5,6 +5,7 @@ import by.itechart.cargo.dto.model_dto.invoice.InvoicePaginationResponse;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceRequest;
 import by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse;
 import by.itechart.cargo.dto.model_dto.invoice.UpdateInvoiceStatusRequest;
+import by.itechart.cargo.dto.notification.notification_data.InvoiceNotificationData;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 
@@ -35,4 +36,6 @@ public interface InvoiceService {
     void updateInvoice(InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException;
 
     void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException;
+
+    InvoiceNotificationData findInvoiceNotificationData(Long id) throws NotFoundException;
 }

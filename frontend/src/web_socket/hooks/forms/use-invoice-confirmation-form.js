@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {DialogWindow} from "../../components/parts/dialogs/dialog";
-import {InvoiceInfo} from "../../components/roles/manager/invoice-info";
+import {DialogWindow} from "../../../components/parts/dialogs/dialog";
+import {InvoiceInfo} from "../../../components/roles/manager/invoice-info";
 
 export default () => {
     const [open, setOpen] = useState(false);

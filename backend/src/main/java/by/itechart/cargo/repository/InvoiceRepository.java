@@ -19,7 +19,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<Invoice> findAllByIdIsIn(List<Long> ids);
 
-    Invoice findByIdAndClientCompanyId(Long id, Long clientCompanyId);
+    Optional<Invoice> findByIdAndClientCompanyId(Long id, Long clientCompanyId);
 
     Long countAllByClientCompanyId(Long clientCompanyId);
 

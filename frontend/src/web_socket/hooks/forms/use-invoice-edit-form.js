@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import InvoiceDialog from "../../components/roles/dispatcher/invoice/invoice-dialog";
-import {EMPTY_PRODUCT_OWNER} from "../../components/roles/dispatcher/invoice/invoice-form";
+import InvoiceDialog from "../../../components/roles/dispatcher/invoice/invoice-dialog";
+import {EMPTY_PRODUCT_OWNER} from "../../../components/roles/dispatcher/invoice/invoice-form";
 
 export default () => {
     const [open, setOpen] = useState(false);
