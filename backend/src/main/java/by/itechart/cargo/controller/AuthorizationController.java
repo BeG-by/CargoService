@@ -3,11 +3,14 @@ package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.ResetPasswordMail;
+import by.itechart.cargo.dto.authorization_dto.ResetPasswordRequest;
 import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
 import by.itechart.cargo.elasticsearch.ElasticsearchTestDataInserter;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +51,20 @@ public class AuthorizationController {
             throws AlreadyExistException, IncorrectPasswordException, NotFoundException {
         authorizationService.registration(request);
         return ResponseEntity.ok("Registration completed successfully");
+    }
+
+    @PostMapping("/mail")
+    public ResponseEntity<String> resetPasswordMail(@RequestBody @Valid ResetPasswordMail request)
+            throws NotFoundException, ServiceException, AlreadyExistException {
+        authorizationService.resetPassword(request.getEmail());
+        return ResponseEntity.ok("Instructions have been sent to email " + request.getEmail());
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest request)
+            throws NotFoundException, IncorrectPasswordException {
+        authorizationService.resetPassword(request);
+        return ResponseEntity.ok("Password has been change");
     }
 
 }

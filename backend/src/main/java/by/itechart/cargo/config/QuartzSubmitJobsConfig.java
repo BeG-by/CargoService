@@ -1,6 +1,6 @@
 package by.itechart.cargo.config;
 
-import by.itechart.cargo.mail.SendMailJob;
+import by.itechart.cargo.util.SendMailJob;
 import org.quartz.JobDetail;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

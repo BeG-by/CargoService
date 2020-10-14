@@ -34,6 +34,7 @@ public class TemplateUtil {
         templateNamesMap.put(TemplateType.BIRTHDAY, "birthday.ftl");
         templateNamesMap.put(TemplateType.BLOCKED, "blocked.ftl");
         templateNamesMap.put(TemplateType.ACTIVATION, "activation.ftl");
+        templateNamesMap.put(TemplateType.RESET_PASSWORD, "reset-password.ftl");
 
     }
 
@@ -104,6 +105,29 @@ public class TemplateUtil {
         }
     }
 
+    public String getPasswordTemplate(User user, String link) throws ServiceException {
+
+        Map<String, String> templateVars = new HashMap<>();
+        templateVars.put("name", user.getName());
+        templateVars.put("surname", user.getSurname());
+        templateVars.put("link", link);
+
+        StringBuilder content = new StringBuilder();
+        try {
+
+            String templateName = templateNamesMap.get(TemplateType.RESET_PASSWORD);
+            Template temp = configuration.getTemplate(templateName);
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    temp, templateVars));
+
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            log.error("Template getting failed", e);
+            throw new ServiceException("Service temporary unavailable");
+        }
+    }
+
+
     public Map<String, String> getAllContent() throws ServiceException {
 
         final ClientCompany clientCompany = new ClientCompany();
@@ -125,6 +149,5 @@ public class TemplateUtil {
         map.put(TemplateType.BLOCKED.toString(), blockedTemplate);
         return map;
     }
-
 
 }

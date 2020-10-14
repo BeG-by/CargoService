@@ -46,8 +46,7 @@ public class NotificationController {
 
     @GetMapping("/invoice/{id}")
     public ResponseEntity<InvoiceNotificationData> findInvoice(@PathVariable Long id) throws NotFoundException {
-        ResponseEntity<InvoiceNotificationData> ok = ResponseEntity.ok(invoiceService.findInvoiceNotificationData(id));
-        return ok;
+        return ResponseEntity.ok(invoiceService.findInvoiceNotificationData(id));
     }
 
     @GetMapping("/waybill/{id}")

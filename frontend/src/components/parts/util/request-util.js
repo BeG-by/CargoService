@@ -17,15 +17,17 @@ export const ACT_URL = "/v1/api/acts";
 export const CLIENTS_URL = "/v1/api/clients/";
 export const LOGOUT_URL = "/v1/api/auth/logout";
 
-export const INVOICE_NOTIFICATION_DATA_URL = "/v1/api/notifications/invoice"
-export const WAYBILL_NOTIFICATION_DATA_URL = "/v1/api/notifications/waybill"
-export const POINT_NOTIFICATION_DATA_URL = "/v1/api/notifications/point"
-export const WEB_SOCKET_CONNECT_URL = "http://localhost:8080/ws"
+export const INVOICE_NOTIFICATION_DATA_URL = "/v1/api/notifications/invoice";
+export const WAYBILL_NOTIFICATION_DATA_URL = "/v1/api/notifications/waybill";
+export const POINT_NOTIFICATION_DATA_URL = "/v1/api/notifications/point";
+export const WEB_SOCKET_CONNECT_URL = "http://localhost:8080/ws";
 
 export const LOGIN_URL = "/v1/api/auth/login";
 export const REGISTRATION_URL = "/v1/api/auth/registration";
 export const TEMPLATES_URL = "/v1/api/emails/templates";
 export const EMAIL_URL = "/v1/api/emails";
+export const RESET_PASSWORD_MAIL_URL = "/v1/api/auth/mail";
+export const RESET_PASSWORD_URL = "/v1/api/auth/password";
 
 
 export const makeRequest = (method, url, data = null) => {
