@@ -1,4 +1,4 @@
-package by.itechart.cargo.service.constant;
+package by.itechart.cargo.service.util;
 
 public interface MessageConstant {
 

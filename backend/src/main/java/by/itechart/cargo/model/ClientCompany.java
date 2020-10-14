@@ -98,6 +98,10 @@ public class ClientCompany implements Serializable, Cloneable {
     @JsonIgnore
     private List<Storage> storages;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientCompany")
+    @JsonIgnore
+    private List<ActivationDetails> activationDetails;
+
 
     @Override
     public String toString() {

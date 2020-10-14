@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static by.itechart.cargo.service.constant.MessageConstant.CLIENT_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.CLIENT_NOT_FOUND_MESSAGE;
 
 @Transactional
 @Service

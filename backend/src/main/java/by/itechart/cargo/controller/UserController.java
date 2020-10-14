@@ -4,6 +4,7 @@ import by.itechart.cargo.dto.model_dto.user.*;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,9 @@ public class UserController {
 
     @PostMapping
     @Secured({ADMIN, OWNER})
-    public ResponseEntity<String> save(@RequestBody @Valid UserSaveRequest userRequest) throws AlreadyExistException {
-        userService.save(userRequest);
-        return ResponseEntity.ok("User has been saved");
+    public ResponseEntity<String> sendLink(@RequestBody @Valid ActivationDetailsRequest request) throws AlreadyExistException, ServiceException {
+        userService.sendActivationLink(request);
+        return ResponseEntity.ok("Link has been sent");
     }
 
     @GetMapping("/{id}")

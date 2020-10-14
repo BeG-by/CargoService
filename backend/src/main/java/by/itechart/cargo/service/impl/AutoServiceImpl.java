@@ -21,7 +21,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static by.itechart.cargo.service.constant.MessageConstant.AUTO_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.AUTO_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional

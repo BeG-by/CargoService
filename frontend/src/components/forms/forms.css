@@ -29,3 +29,28 @@
     margin-bottom: 40px;
     font-size: 20px;
 }
+
+.login-form {
+    width: 380px;
+    min-height: 200px;
+    max-height: 240px;
+}
+
+.reset-password {
+    text-align: right;
+    color: #3f51b5;
+    font-size: 14px;
+    margin-top: 7px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.reset-password:hover {
+    text-decoration: underline;
+}
+
+.text-info {
+    color: #5f6368;
+    font-weight: 300;
+    margin-bottom: 15px;
+}
