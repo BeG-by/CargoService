@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-import static by.itechart.cargo.service.constant.MessageConstant.*;
+import static by.itechart.cargo.service.util.MessageConstant.*;
 
 
 @Service
