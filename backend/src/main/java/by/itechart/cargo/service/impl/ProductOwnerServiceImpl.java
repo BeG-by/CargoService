@@ -20,14 +20,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.PRODUCT_OWNER_EXIST_MESSAGE;
-import static by.itechart.cargo.service.constant.MessageConstant.PRODUCT_OWNER_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.PRODUCT_OWNER_EXIST_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.PRODUCT_OWNER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional

@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static by.itechart.cargo.service.constant.MessageConstant.DRIVER_NOT_FOUND_MESSAGE;
+import static by.itechart.cargo.service.util.MessageConstant.DRIVER_NOT_FOUND_MESSAGE;
 
 @Service
 @Transactional

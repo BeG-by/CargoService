@@ -1,96 +1,159 @@
-import React, {Component} from "react";
-import axios from 'axios';
-import '../forms.css';
-import {LoginFormError, LoginFormView} from "./login-form-views";
+import React, {useEffect, useState} from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import {Form, Formik} from "formik";
+import FormikField from "../../parts/util/formik-field"
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
-import {withRouter} from "react-router-dom"
+import {withRouter} from "react-router-dom";
+import {ValidationSchemaEmail, ValidationSchemaPassword} from "../../parts/validation/login-form-validation";
+import '../forms.css';
+import useToast from "../../parts/toast-notification/useToast";
+import {LOGIN_URL, makeRequest} from "../../parts/util/request-util";
 
-class LoginForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            error: null,
-            errorText: '',
-            user: {login: '', password: '', roles: []}
-        };
-        this.onChangeLogin = this.onChangeLogin.bind(this);
-        this.onChangePassword = this.onChangePassword.bind(this);
-        this.goBack = this.goBack.bind(this);
-    }
 
-    searchByLoginPass = (values, {props = this.props, setSubmitting}) => {
-        setSubmitting(false);
+export const LoginForm = (props) => {
 
-        const endpoint = "/v1/api/auth/login";
-        const login = this.state.user.login;
-        const password = this.state.user.password;
-        const user_object = {
-            email: login,
-            password: password
-        };
+    const {open, onClose, history} = props;
+    const [toast, showToast] = useToast();
+    const [resetOpen, setResetOpen] = useState(false);
 
-        axios.post(endpoint, user_object)
-            .then(res => {
-                    let data = res.data;
-                    localStorage.setItem("authorization", data.token);
-                    props.changeUserAndCompany(data.user, data.company);
-                    this.props.history.push("/main");
-                },
-                error => {
-                    this.setState({
-                        errorText: error.response.data,
-                        error
-                    });
-                });
-    };
+    return (
+        <div>
+            <Dialog
+                open={open}
+                onClose={onClose}
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">
+                    <span id="form-title">{resetOpen ? "Reset password" : " Sign in the Cargo system"}</span>
+                    <IconButton aria-label="close"
+                                onClick={onClose}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    {resetOpen ? <ResetPasswordForm/> :
+                        <Formik
+                            enableReinitialize
+                            initialValues={{
+                                email: "",
+                                password: "",
+                            }}
+                            validationSchema={ValidationSchemaEmail.concat(ValidationSchemaPassword)}
+                            onSubmit={(values) => {
 
-    onChangePassword(event) {
-        this.setState({
-                user: {
-                    password: event.target.value,
-                    login: this.state.user.login,
-                    roles: this.state.user.roles
-                }
-            }
-        );
-    }
+                                makeRequest("POST", LOGIN_URL, {email: values.email, password: values.password})
+                                    .then(res => {
+                                        localStorage.setItem("authorization", res.data.token);
+                                        props.changeUserAndCompany(res.data.user, res.data.company);
+                                        history.push("/main");
+                                    })
+                                    .catch(error => {
+                                        let message = error.response.data;
+                                        if (error.response && error.response.status !== 500) {
+                                            if (message.startsWith("User not found")) {
+                                                showToast("Email doesn't exist")
+                                            } else {
+                                                showToast(error.response.data, "error");
+                                            }
+                                        } else {
+                                            showToast("Operation was failed. Cannot get response from server", "error");
+                                        }
+                                    })
 
-    onChangeLogin(event) {
-        this.setState({
-                user: {
-                    password: this.state.user.password,
-                    login: event.target.value,
-                    roles: this.state.user.roles
-                }
-            }
-        );
-    }
+                            }}
+                        >
+                            {(formProps) => {
+                                return (
+                                    <Form className="login-form">
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"email"}
+                                            label={"Email"}
+                                            formikFieldName={"email"}
+                                        />
+                                        <FormikField
+                                            formikProps={formProps}
+                                            id={"password"}
+                                            label={"Password"}
+                                            formikFieldName={"password"}
+                                            type={"password"}
+                                        />
+                                        <div className="reset-password" onClick={() => setResetOpen(true)}>
+                                            Forgot your password ?
+                                        </div>
+                                        <div style={{textAlign: "center", marginTop: 10, margiBottom: 5}}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
+                                                disabled={formProps.listener}
+                                            >
+                                                SIGN IN
+                                            </Button>
+                                        </div>
+                                    </Form>
+                                );
+                            }}
+                        </Formik>
+                    }
+                </DialogContent>
+                {toast}
+            </Dialog>
+        </div>
+    );
+};
 
-    goBack() {
-        this.setState({
-            error: null,
-            errorText: null,
-            user: {
-                password: '',
-                login: '',
-                roles: []
-            }
-        })
-    }
 
-    render() {
-        const {error} = this.state;
-        if (error) {
-            let err = LoginFormError(this);
-            return <div>{err}</div>;
-        } else {
-            let loginform = LoginFormView(this);
-            return <div>{loginform}</div>;
-        }
-    }
-}
+export const ResetPasswordForm = () => {
+
+    return (
+        <Formik
+            enableReinitialize
+            initialValues={{
+                email: "",
+            }}
+            validationSchema={ValidationSchemaEmail}
+            onSubmit={(values) => {
+                console.log(values)
+            }}
+        >
+            {(formProps) => {
+                return (
+                    <Form className="login-form">
+                        <div className="text-info">
+                            Please, enter your email and we will send you instructions on how to reset your password
+                        </div>
+                        <FormikField
+                            formikProps={formProps}
+                            id={"email"}
+                            label={"Email"}
+                            formikFieldName={"email"}
+                        />
+                        <div style={{textAlign: "center", marginTop: 10, margiBottom: 5}}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                disabled={formProps.listener}
+                            >
+                                CONFIRM
+                            </Button>
+                        </div>
+                    </Form>
+                );
+            }}
+        </Formik>
+    );
+};
+
 
 const mapActionsToProps = (dispatch) => {
     return {

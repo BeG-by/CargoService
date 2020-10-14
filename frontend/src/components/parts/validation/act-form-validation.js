@@ -6,7 +6,7 @@ export const ActFormValidation = Yup.object({
         .min(5, "Min length must be greater than 5 symbols")
         .max(255, "Max length must be lesser than 255 symbols"),
     productsCount: Yup.number()
-        .required("ffffffff")
+        .required("ffffffff") //TODO ????
         .min(1, "Lost products are required")
 });
 

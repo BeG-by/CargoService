@@ -31,6 +31,8 @@ import {
 import {ProfileInfo} from "./pages/profile-info";
 import CurrentWaybillBody from "./pages/current-waybill-page";
 import {WebSocket} from "../web_socket/web-socket";
+import RegistrationForm from "./forms/registration/registration-form";
+
 
 export default function App() {
     const [openMenu, setOpenMenu] = React.useState(false);
@@ -58,6 +60,7 @@ export default function App() {
                     <Route exact path="/info" component={InfoBody}/>
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
+                    <Route exact path="/registration" component={RegistrationForm}/>
                     <PrivateRoute exact path="/main" component={MainBody}/>
                     <PrivateRoute exact path="/profile" component={ProfileInfo}/>
                     <PrivateRoute exact path="/waybill" component={WaybillsTable}

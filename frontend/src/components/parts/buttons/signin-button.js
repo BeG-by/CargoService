@@ -13,22 +13,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SigninButton = (props) => {
+
+    const {handleClose, openDialog, handleClickOpen} = props;
+
     const classes = useStyles();
     const form = <LoginForm/>;
     return (
         <div className={classes.sectionDesktop}>
             <Button variant="outlined"
                     color="inherit"
-                    onClick={props.handleClickOpen}>
+                    onClick={handleClickOpen}>
                 Sign in
             </Button>
-            <DialogWindow
-                fullWidth="true"
-                maxWidth="xs"
-                dialogTitle="Entry:"
-                handleClose={props.handleClose}
-                openDialog={props.openDialog}
-                form={form}/>
+            <LoginForm
+                onClose={handleClose}
+                open={openDialog}
+            />
+            {/*<DialogWindow*/}
+            {/*    fullWidth="true"*/}
+            {/*    maxWidth="xs"*/}
+            {/*    dialogTitle="Entry:"*/}
+            {/*    handleClose={props.handleClose}*/}
+            {/*    openDialog={props.openDialog}*/}
+            {/*    form={form}/>*/}
         </div>
     );
 }
