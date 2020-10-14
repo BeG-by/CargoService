@@ -133,6 +133,7 @@ export const UserTable = connect(mapStateToProps)((props) => {
             let photoInBase64 = reader.result;
             makeRequest("PUT", USER_URL + "/photo/" + selectedPhotoId, {photo: photoInBase64})
                 .then(res => {
+
                         users.forEach(u => {
                                 if (u.id === selectedPhotoId) {
                                     u.photo = u.photo + "?time=" + new Date().getTime();
@@ -140,8 +141,6 @@ export const UserTable = connect(mapStateToProps)((props) => {
                                 }
                             }
                         );
-
-                        setUsers(users);
 
                     }
                 )

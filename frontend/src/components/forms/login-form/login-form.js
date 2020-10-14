@@ -14,7 +14,15 @@ import {withRouter} from "react-router-dom";
 import {ValidationSchemaEmail, ValidationSchemaPassword} from "../../parts/validation/login-form-validation";
 import '../forms.css';
 import useToast from "../../parts/toast-notification/useToast";
-import {LOGIN_URL, makeRequest} from "../../parts/util/request-util";
+import {
+    handleRequestError,
+    LOGIN_URL,
+    makeRequest,
+    RESET_PASSWORD_MAIL_URL,
+    RESET_PASSWORD_URL
+} from "../../parts/util/request-util";
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 export const LoginForm = (props) => {
@@ -39,7 +47,11 @@ export const LoginForm = (props) => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    {resetOpen ? <ResetPasswordForm/> :
+                    {resetOpen ?
+                        <ResetPasswordForm
+                            showToast={showToast}
+                            comeBack={setResetOpen}
+                        /> :
                         <Formik
                             enableReinitialize
                             initialValues={{
@@ -112,7 +124,9 @@ export const LoginForm = (props) => {
 };
 
 
-export const ResetPasswordForm = () => {
+export const ResetPasswordForm = (props) => {
+
+    const {showToast, comeBack} = props;
 
     return (
         <Formik
@@ -122,7 +136,9 @@ export const ResetPasswordForm = () => {
             }}
             validationSchema={ValidationSchemaEmail}
             onSubmit={(values) => {
-                console.log(values)
+                makeRequest("POST", RESET_PASSWORD_MAIL_URL, {email: values.email})
+                    .then(res => showToast(res.data))
+                    .catch(error => handleRequestError(error, showToast))
             }}
         >
             {(formProps) => {
@@ -137,7 +153,7 @@ export const ResetPasswordForm = () => {
                             label={"Email"}
                             formikFieldName={"email"}
                         />
-                        <div style={{textAlign: "center", marginTop: 10, margiBottom: 5}}>
+                        <div className="login-confirm-div">
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -146,6 +162,19 @@ export const ResetPasswordForm = () => {
                             >
                                 CONFIRM
                             </Button>
+                            <div className="back-arrow">
+                                <Tooltip title="Back to sign in"
+                                         arrow>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        onClick={() => comeBack(false)}
+                                    >
+                                        <ArrowBackRoundedIcon/>
+                                    </Button>
+                                </Tooltip>
+                            </div>
                         </div>
                     </Form>
                 );

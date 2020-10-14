@@ -27,7 +27,7 @@ export const UpdateUserScheme = Yup.object({
         .matches(/^\+?\d+$/, "Phone must contain only digits"),
     passport: Yup.string()
         .required("Passport is required")
-        .min(6, "Min length must be greater than 2 symbols")
+        .min(6, "Min length must be greater than 6 symbols")
         .max(24, "Max length must be lesser than 24 symbols")
         .matches(/^[0-9A-Za-z]+$/, "Passport must contain symbols A-Z, a-z, 0-9"),
     country: Yup.string()
@@ -49,6 +49,9 @@ export const UpdateUserScheme = Yup.object({
         .required("House is required")
         .max(6, "House length must be lesser than 6 symbols")
         .matches(/^[A-Яа-яA-Za-z0-9]+$/, "House must contain symbols A-Z, a-z, А-Я, а-я, 0-9"),
+    flat: Yup.string()
+        .max(6, "Flat length must be lesser than 6 symbols")
+
 });
 
 export const PasswordNotRequiredScheme = Yup.object({

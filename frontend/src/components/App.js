@@ -32,6 +32,7 @@ import {ProfileInfo} from "./pages/profile-info";
 import CurrentWaybillBody from "./pages/current-waybill-page";
 import {WebSocket} from "../web_socket/web-socket";
 import RegistrationForm from "./forms/registration/registration-form";
+import ChangePasswordForm from "./forms/reset-password-form/reset-password";
 import {Greeting} from "./parts/greeting/greeting";
 
 
@@ -62,6 +63,7 @@ export default function App() {
                     <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
                     <Route exact path="/registration" component={RegistrationForm}/>
+                    <Route exact path="/password" component={ChangePasswordForm}/>
                     <PrivateRoute exact path="/main" component={MainBody}/>
                     <PrivateRoute exact path="/profile" component={ProfileInfo}/>
                     <PrivateRoute exact path="/waybill" component={WaybillsTable}
