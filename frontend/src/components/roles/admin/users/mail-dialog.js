@@ -82,7 +82,7 @@ export const MailDialog = (props) => {
                                 data.text = values.message;
                                 makeRequest("POST", EMAIL_URL, data)
                                     .then(res => {
-                                        showToast("Emails has been successfully sent");
+                                        showToast("Emails have been successfully sent");
                                         handleClose()
                                     })
                                     .catch(error => handleRequestError(error, showToast))
@@ -91,7 +91,7 @@ export const MailDialog = (props) => {
                                 data.type = values.template;
                                 makeRequest("POST", EMAIL_URL + "/template", data)
                                     .then(res => {
-                                        showToast("Emails has been successfully sent");
+                                        showToast("Emails have been successfully sent");
                                         handleClose()
                                     })
                                     .catch(error => handleRequestError(error, showToast))

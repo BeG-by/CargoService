@@ -53,7 +53,8 @@ export const UpdateUserScheme = Yup.object({
 
 export const PasswordNotRequiredScheme = Yup.object({
     password: Yup.string()
-        .min(4, "Min length must be lesser than 4 symbols"),
+        .min(4, "Min length must be lesser than 4 symbols")
+        .max(16, "Street length must be lesser than 16 symbols")
 });
 
 

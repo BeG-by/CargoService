@@ -36,14 +36,14 @@ public class EmailController {
     @Secured({ADMIN, OWNER})
     public ResponseEntity<?> sendEmail(@Valid @RequestBody MessageRequest request) throws NotFoundException, ServiceException {
         mailSenderService.sendMail(request);
-        return ResponseEntity.ok("Emails has been sent");
+        return ResponseEntity.ok("Emails have been sent");
     }
 
     @PostMapping("/template")
     @Secured({ADMIN, OWNER})
     public ResponseEntity<?> sendTemplateEmail(@Valid @RequestBody MessageTemplateRequest request) throws NotFoundException, ServiceException {
         mailSenderService.sendMail(request);
-        return ResponseEntity.ok("Emails has been sent");
+        return ResponseEntity.ok("Emails have been sent");
     }
 
 
