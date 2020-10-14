@@ -32,6 +32,7 @@ import {ProfileInfo} from "./pages/profile-info";
 import CurrentWaybillBody from "./pages/current-waybill-page";
 import {WebSocket} from "../web_socket/web-socket";
 import RegistrationForm from "./forms/registration/registration-form";
+import {Greeting} from "./parts/greeting/greeting";
 
 
 export default function App() {
@@ -82,6 +83,7 @@ export default function App() {
                     <Route component={NotFound}/>
                 </Switch>
                 <WebSocket/>
+                <Greeting/>
                 <CssBaseline/>
                 <Footer/>
             </div>
