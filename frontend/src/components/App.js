@@ -34,6 +34,7 @@ import {WebSocket} from "../web_socket/web-socket";
 import RegistrationForm from "./forms/registration/registration-form";
 import ChangePasswordForm from "./forms/reset-password-form/reset-password";
 import {Greeting} from "./parts/greeting/greeting";
+import {OwnerContent} from "./roles/owner/owner-content";
 
 
 export default function App() {
@@ -80,6 +81,8 @@ export default function App() {
                                   hasAnyAuthorities={[ROLE_DISPATCHER, ROLE_ADMIN, ROLE_OWNER]}/>
                     <PrivateRoute exact path={"/current"} component={CurrentWaybillBody}
                                   hasAnyAuthorities={[ROLE_DRIVER]}/>
+                    <PrivateRoute exact path={"/reports"} component={OwnerContent}
+                                  hasAnyAuthorities={[ROLE_OWNER]}/>
                     <Route exact path={"/success"}><Redirect to={"/main"}/></Route> // TODO ???
                     <PrivateRoute exact path={"/clients"} component={ClientsTable} hasAnyAuthorities={[ROLE_SYSADMIN]}/>
                     <Route component={NotFound}/>

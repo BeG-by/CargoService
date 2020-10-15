@@ -18,6 +18,7 @@ import {ItemStorages} from "../drawer-items/item-storages";
 import {ItemProfile} from "../drawer-items/item-profile";
 import {ItemClientTable} from "../drawer-items/item-clients";
 import {ItemCurrentWaybill} from "../drawer-items/item-current-waybill";
+import {ItemReports} from "../drawer-items/item-reports";
 
 
 const drawerWidth = 240;
@@ -86,6 +87,17 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             components.push(<Divider key='SecondDivider'/>);
             break;
         case 'OWNER':
+            components.push(<ItemReports key="Reports"/>);
+            components.push(<Divider key='BeforeDivider'/>);
+            components.push(<ItemUserTable key="Employees"/>);
+            components.push(<ItemStorages key='Storages'/>);
+            components.push(<ItemAutosTable key="Autos"/>);
+            components.push(<ItemOwnerTable key="Product owners"/>);
+            components.push(<ItemInvoiceList key='Invoices'/>);
+            components.push(<ItemWaybillList key='Waybills'/>);
+            components.push(<Divider key='Divider'/>);
+            components.push(<ItemProfile key="Profile"/>);
+            components.push(<Divider key='SecondDivider'/>);
             break;
         default:
     }

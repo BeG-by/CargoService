@@ -6,6 +6,7 @@ import {UserTable} from "../roles/admin/users/user-table";
 import {connect} from "react-redux";
 import SimpleBackdrop from "../parts/progress/progress";
 import CurrentWaybillBody from "./current-waybill-page";
+import OwnerContent from "../roles/owner/owner-content";
 
 const mapStateToProps = (store) => {
     return {
@@ -33,7 +34,7 @@ export const MainBody = connect(mapStateToProps)((props) => {
             content = <CurrentWaybillBody/>;
             break;
         case 'OWNER':
-            content = () => {return "Owner..."};
+            content = <OwnerContent/>;
             break;
         default:
             content = <SimpleBackdrop/>

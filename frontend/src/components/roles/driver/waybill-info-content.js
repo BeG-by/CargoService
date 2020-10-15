@@ -241,7 +241,7 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
                     </Paper>
 
                     <Paper className={`${styles.infoPiece} table-paper`}
-                           style={{padding: 20}}>
+                           style={{padding: 20 ,  maxWidth: "60%"}}>
                         {role === "DRIVER" ?
                             <DriverMap
                                 markers={convertPointsFromBackendApi(waybill.points)}
