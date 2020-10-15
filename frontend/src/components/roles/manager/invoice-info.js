@@ -132,11 +132,9 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
 
     if (status.trim() === 'REGISTERED' && props.role === "MANAGER") {
         closeDisabled = true;
-        editDisabled = true;
     } else if (status.trim() === 'ACCEPTED' && checkPassage && props.role === "DRIVER") {
         verifyDisabled = true;
         rejectDisabled = true;
-        editDisabled = true;
     } else if (status.trim() === 'REJECTED' && props.role === "DISPATCHER") {
         verifyDisabled = true;
         rejectDisabled = true;
@@ -145,15 +143,13 @@ export const InvoiceInfo = connect(mapStateToProps)((props) => {
         verifyDisabled = true;
         rejectDisabled = true;
         closeDisabled = true;
-        editDisabled = true;
     }
 
     let buttons = <div className='btn-row'>
         <OkButton content={'Verify'} handleClick={handleVerifyOpen} disabled={verifyDisabled}/>
         <OkButton content={'Reject'} handleClick={handleRejectOpen} disabled={rejectDisabled}/>
         <OkButton content={'Close'} handleClick={handleCloseOpen} disabled={closeDisabled}/>
-        <OkButton content={'Edit'} handleClick={handleEditOpen} disabled={editDisabled}/>
-    </div>
+    </div>;
 
     return (
         <div>

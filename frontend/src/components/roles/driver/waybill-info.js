@@ -49,7 +49,7 @@ export const WaybillInfo = (props) => {
         setActFillDialogOpen(true);
     }
 
-    //TODO question. Second request ?
+
     let updated = {};
 
     async function fetchWaybill(cleanupFunction) {

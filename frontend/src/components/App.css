@@ -184,5 +184,23 @@ main {
 .red-status {
     color: crimson;
     border: 1px solid crimson;
+}
 
+.main-body-info {
+    display: block;
+    text-align: center;
+    padding: 30px 50px;
+    max-width: 50%;
+    margin: 50px;
+}
+
+.block {
+    width: 50%;
+    height: 500px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
 }
