@@ -55,9 +55,6 @@
     margin-bottom: 15px;
 }
 
-.back-arrow {
-    /*margin-right: 80px;*/
-}
 
 .login-confirm-div {
     display: flex;
@@ -71,12 +68,21 @@
     margin-bottom: 100px;
 }
 
-.reset-password-form header {
+.reset-password-form header{
     font-size: 1.6rem;
     color: #3f51b5;
     text-align: center;
     padding-top: 10px;
 }
+
+.reg-header {
+    font-size: 1.4rem;
+    color: #3f51b5;
+    text-align: center;
+    padding-top: 10px;
+}
+
+
 
 .password-form {
     padding: 20px;
