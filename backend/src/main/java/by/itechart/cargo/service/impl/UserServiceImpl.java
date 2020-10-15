@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoResponse findInfo() {
         final User authUser = jwtTokenUtil.getJwtUser().toUser();
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
-        final ClientCompany clientCompany = clientCompanyRepository.findById(companyId).orElse(new ClientCompany());
+        final ClientCompany clientCompany = clientCompanyRepository.findByIdAndNotDeleted(companyId).orElse(new ClientCompany());
         return new UserInfoResponse(UserResponse.toUserResponse(authUser), clientCompany);
     }
 

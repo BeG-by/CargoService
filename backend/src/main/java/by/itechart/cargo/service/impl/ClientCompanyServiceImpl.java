@@ -34,12 +34,12 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     @Override
     public ClientCompany findById(Long id) throws NotFoundException {
-        return clientCompanyRepository.findById(id).orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
+        return clientCompanyRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
     }
 
     @Override
     public List<ClientCompany> findAll() {
-        return clientCompanyRepository.findAll();
+        return clientCompanyRepository.findAllNotDeleted();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     @Override
     public void update(ClientCompanyDTO clientCompanyDTO) throws NotFoundException, AlreadyExistException {
-        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyDTO.getId())
+        ClientCompany clientCompany = clientCompanyRepository.findByIdAndNotDeleted(clientCompanyDTO.getId())
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
 
         Optional<ClientCompany> byName = clientCompanyRepository.findByName(clientCompanyDTO.getName());
@@ -102,7 +102,7 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     @Override
     public void delete(Long id) throws NotFoundException {
-        ClientCompany clientCompany = clientCompanyRepository.findById(id)
+        ClientCompany clientCompany = clientCompanyRepository.findByIdAndNotDeleted(id)
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
 
         for (User user : clientCompany.getUsers()) {

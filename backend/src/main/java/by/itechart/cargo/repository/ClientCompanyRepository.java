@@ -11,18 +11,14 @@ public interface ClientCompanyRepository extends JpaRepository<ClientCompany, Lo
 
 
     @Query("FROM ClientCompany c WHERE c.status <> 'DELETED'")
-    List<ClientCompany> findAll();
+    List<ClientCompany> findAllNotDeleted();
 
     @Query("FROM ClientCompany c WHERE c.status <> 'DELETED' AND c.id = :id")
-    Optional<ClientCompany> findById(Long id);
+    Optional<ClientCompany> findByIdAndNotDeleted(Long id);
 
-    @Query("FROM ClientCompany c WHERE c.status <> 'DELETED' AND c.name = :name")
     Optional<ClientCompany> findByName(String name);
 
-    @Query("FROM ClientCompany c WHERE c.status <> 'DELETED' AND c.payerAccountNumber = :number")
     Optional<ClientCompany> findByPayerAccountNumber(String number);
 
-    @Query("FROM ClientCompany c WHERE c.status <> 'DELETED' AND c.email = :email")
     Optional<ClientCompany> findByEmail(String email);
-
 }

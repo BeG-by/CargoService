@@ -18,7 +18,6 @@ import ConfirmDeletingDialog from "../admin/slide-dialog";
 import {connect} from "react-redux";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 import Tooltip from "@material-ui/core/Tooltip";
-import {makeDeleteClientRequest} from "./request-utils";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
