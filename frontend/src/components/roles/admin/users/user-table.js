@@ -136,7 +136,7 @@ export const UserTable = connect(mapStateToProps)((props) => {
 
                         users.forEach(u => {
                                 if (u.id === selectedPhotoId) {
-                                    u.photo = u.photo + "?time=" + new Date().getTime();
+                                    u.photo = photoInBase64;
                                     showToastComponent("User's photo has been updated");
                                 }
                             }

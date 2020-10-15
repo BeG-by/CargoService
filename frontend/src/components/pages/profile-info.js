@@ -36,9 +36,23 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
     const [openPassword, showPasswordDialog] = useState(false);
 
     const maxSizeOfImg = 12000000;
-    let avatar = user.photo === "" || user.photo === null ? photo : user.photo;
+
     let location = user.address !== null ? user.address.country + ", " + user.address.city + ", " + user.address.street + ", " + user.address.house : "";
     let role = user.roles[0][0] + user.roles[0].slice(1).toLowerCase();
+
+    const setAvatar = () => {
+        let avatar;
+        if (user.photo === "" || user.photo === null) {
+            avatar = photo
+        } else if (user.photo.startsWith("data")) {
+            avatar = user.photo;
+        } else {
+            avatar = user.photo + "?time=" + new Date().getTime();
+        }
+
+        return avatar;
+
+    };
 
     const handleChange = (e) => {
         let file = e.target.files[0];
@@ -94,7 +108,7 @@ export const ProfileInfo = connect(mapStateToProps, mapActionsToProps)((props) =
                             <div>
                                 <Tooltip title="Click to change photo" arrow>
                                     <img
-                                        src={avatar}
+                                        src={setAvatar()}
                                         alt="photo"
                                         className="profile-avatar"
                                         onClick={() => {

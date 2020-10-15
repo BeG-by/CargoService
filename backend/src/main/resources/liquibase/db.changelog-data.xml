@@ -266,6 +266,7 @@
     </changeSet>
 
     <changeSet id="instert_storage" author="vladislav.mironuk">
+
         <insert tableName="storage">
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
