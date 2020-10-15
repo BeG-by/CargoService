@@ -3,6 +3,7 @@ package by.itechart.cargo.controller;
 import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
+import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.service.ClientCompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class ClientCompanyController {
 
     @PostMapping
     @Secured(SYSADMIN)
-    public ResponseEntity<String> save(@RequestBody @Valid ClientCompanyDTO companyRequest) throws AlreadyExistException {
+    public ResponseEntity<String> save(@RequestBody @Valid ClientCompanyDTO companyRequest) throws AlreadyExistException, NotFoundException, ServiceException {
         clientCompanyService.save(companyRequest);
         return ResponseEntity.ok("Client company has been saved");
     }

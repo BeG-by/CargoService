@@ -73,7 +73,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     public void save(ProductOwnerSaveRequest productOwnerSaveRequest) throws AlreadyExistException {
         ProductOwner productOwner = productOwnerSaveRequest.toProductOwner();
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
-        ClientCompany clientCompanyProxy = clientCompanyRepository.findById(clientCompany.getId()).get();
+        ClientCompany clientCompanyProxy = clientCompanyRepository.findByIdAndNotDeleted(clientCompany.getId()).get();
 
         if (productOwnerRepository.findByNameAndClientCompanyAndStatus(productOwner.getName(), clientCompanyProxy, ProductOwner.Status.ACTIVE).isPresent()) {
             throw new AlreadyExistException(PRODUCT_OWNER_EXIST_MESSAGE);
@@ -89,7 +89,7 @@ public class ProductOwnerServiceImpl implements ProductOwnerService {
     @Override
     public void update(ProductOwnerUpdateRequest productOwnerUpdateRequest) throws NotFoundException, AlreadyExistException {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
-        ClientCompany clientCompanyProxy = clientCompanyRepository.findById(clientCompany.getId()).get();
+        ClientCompany clientCompanyProxy = clientCompanyRepository.findByIdAndNotDeleted(clientCompany.getId()).get();
 
         ProductOwner productOwner = productOwnerRepository
                 .findByIdAndClientCompanyAndStatus(productOwnerUpdateRequest.getId(), clientCompanyProxy, ProductOwner.Status.ACTIVE)

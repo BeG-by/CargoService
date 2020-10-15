@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -8,15 +8,10 @@ import ClientDialogDatePicker from "./client-dialog-date-picker";
 import FormikField from "./formik-field";
 
 import ClientCompanyTypeSelector from "./client-company-type-selector";
-import {Formik, Form} from "formik";
-import {
-    makeDeleteClientRequest,
-    makeSaveClientRequest,
-    makeGetClientByIdRequest,
-    makeUpdateClientRequest,
-} from "./request-utils";
+import {Form, Formik} from "formik";
 import {ClientFormValidationSchema} from "./validation-schema";
 import useToast from "../../parts/toast-notification/useToast";
+import {CLIENTS_URL, handleRequestError, makeRequest} from "../../parts/util/request-util";
 
 const EMPTY_CLIENT = {
     id: -1,
@@ -50,53 +45,44 @@ export default function ClientDialog(props) {
 
     async function getClientById(id) {
         try {
-            const response = await makeGetClientByIdRequest(id);
+            let response = await makeRequest("GET", CLIENTS_URL + `/${id}`);
             setClient(response.data);
         } catch (error) {
-            handleRequestError(error);
             onClose();
         }
     }
 
     async function saveClient(client) {
         try {
-            await makeSaveClientRequest(client);
+            await makeRequest("POST", CLIENTS_URL, client);
             openToast("Client has been saved", "success");
             setClient(EMPTY_CLIENT);
             onSubmit();
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error, openToast);
         }
     }
 
     async function updateClient(client) {
         client.id = props.clientCompanyId;
         try {
-            await makeUpdateClientRequest(client);
+            await makeRequest("PUT", CLIENTS_URL, client);
             openToast("Client has been updated", "success");
             setClient(EMPTY_CLIENT);
             onSubmit();
         } catch (error) {
-            handleRequestError(error);
+            handleRequestError(error, openToast);
         }
     }
 
     async function deleteClient() {
         try {
-            await makeDeleteClientRequest(props.clientCompanyId);
+            await makeRequest("DELETE", CLIENTS_URL + `/${props.clientCompanyId}`);
             openToast("Client has been deleted", "success");
             setClient(EMPTY_CLIENT);
             onDelete();
         } catch (error) {
-            handleRequestError(error);
-        }
-    }
-
-    function handleRequestError(error) {
-        if (error.response && !error.response.status === 500) {
-            openToast(error.response.data, "error");
-        } else {
-            openToast("Cannot get response from server", "error");
+            handleRequestError(error, openToast);
         }
     }
 
@@ -228,17 +214,7 @@ export default function ClientDialog(props) {
                                         type="submit"
                                         disabled={formProps.listener}
                                     >
-                                        Save
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={handleDelete}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button variant="contained" onClick={handleClose}>
-                                        Close
+                                        Update
                                     </Button>
                                 </Grid>
                             </Form>

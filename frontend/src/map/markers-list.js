@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ListItem} from "material-ui/List";
 import List from "@material-ui/core/List";
 import {API_KEY} from "./abstract-map";
-import {pointsComparator} from "./utils";
+import {countDistanceBetweenMarkers, pointsComparator} from "./utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,10 +17,15 @@ const useStyles = makeStyles((theme) => ({
 export default function ItemList(props) {
     const classes = useStyles();
     const [geocodedPoints, setGeocodedPoints] = useState([]);
+    const [distance, setDistance] = useState(0);
 
     const handleRowClick = (geocodedPoint) => {
         props.onRowClick(geocodedPoint.index);
     };
+
+    const updateDistance = (points) => {
+        setDistance(countDistanceBetweenMarkers(points) / 1000);
+    }
 
 
     const isPointGeocoded = (point) => {
@@ -91,12 +96,13 @@ export default function ItemList(props) {
         } else if (props.items.length < geocodedPoints.length) {
             deleteGeocodedPoint(props.items);
         }
+        updateDistance(props.items)
     }, [props.items.length])
 
     return (
         <List className={classes.root}>
             <div align={"center"}>
-                <h3>{props.listName}</h3>
+                <h3>{props.listName + `  [${distance.toFixed(3)} km]`}</h3>
             </div>
             {geocodedPoints.sort(pointsComparator).map((point, key) => {
                 return (

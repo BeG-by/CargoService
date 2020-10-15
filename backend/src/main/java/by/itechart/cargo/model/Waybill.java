@@ -38,6 +38,9 @@ public class Waybill implements Serializable, Cloneable {
     @Column(name = "arrival_date")
     private LocalDate arrivalDate;
 
+    @Column(name = "distance")
+    private Double distance;
+
     @JoinColumn(name = "id_auto", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference

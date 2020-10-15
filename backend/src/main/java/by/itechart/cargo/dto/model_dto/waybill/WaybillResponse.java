@@ -19,6 +19,7 @@ public class WaybillResponse {
     private Invoice invoice;
     private String status;
     private String auto;
+    private Double distance;
     private String departureDate;
     private String arrivalDate;
     private List<Point> points;
@@ -29,6 +30,7 @@ public class WaybillResponse {
         response.setStatus(waybill.getStatus().name());
         response.setInvoice(waybill.getInvoice());
         response.setPoints(waybill.getPoints());
+        response.setDistance(waybill.getDistance());
         response.setAuto(waybill.getAuto().getMark() + " " + waybill.getAuto().getAutoType());
         response.setDepartureDate(waybill.getDepartureDate() == null ? null : waybill.getDepartureDate().toString());
         response.setArrivalDate(waybill.getArrivalDate() == null ? null : waybill.getArrivalDate().toString());
