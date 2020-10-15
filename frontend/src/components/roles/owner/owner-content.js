@@ -3,13 +3,13 @@ import {Form, Formik} from "formik";
 import Paper from "@material-ui/core/Paper";
 import DatePickerField from "../../parts/layout/date-picker";
 import {Button} from "@material-ui/core";
-import {makeRequest} from "../../parts/util/request-util";
 import useToast from "../../parts/toast-notification/useToast";
 import {DataFormValidation} from "../../parts/validation/data-form-validation";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import * as XLSX from "xlsx";
 import * as FileSaver from 'file-saver';
 import {reportData} from "./excel-data";
+import {Chart} from "./chart-example";
 
 const useStyles = makeStyles((theme) => ({
     infoPiece: {
@@ -71,7 +71,7 @@ export const OwnerContent = () => {
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
 
     return (
-        <main className="main-body-field">
+        <main className="main-body-without-back">
             <div className="info-content">
                 <div className="info-content-column">
                     <React.Fragment>
@@ -143,7 +143,7 @@ export const OwnerContent = () => {
                                padding: 20,
                                width: "50%"
                            }}>
-                        Here is your very informative chart (or two)
+                        <Chart/>
                     </Paper>
                 </div>
             </div>
