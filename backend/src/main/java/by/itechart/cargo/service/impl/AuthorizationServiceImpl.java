@@ -146,26 +146,30 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 .orElseThrow(() -> new NotFoundException(String.format("Email %s doesn't exist in the system", email)));
 
         final Optional<ResetPasswordDetails> details = resetPasswordDetailsRepository
-                .findByEmail(email)
-                .filter(password -> !password.isReset());
+                .findByEmail(email);
 
-        if (details.isPresent()) {
+        if (details.isPresent() && !details.get().isReset()) {
             throw new AlreadyExistException(String.format("Instructions was sent to email %s in %s ",
                     email,
-                    details.get().getCreateDate()));
+                    details.get().getLastModified()));
+        } else if (details.isPresent()) {
+
+            final String code = mailSenderService.sendResetPasswordMail(email, user);
+            details.get().setActivationCode(code);
+            details.get().setReset(false);
+            log.info("Password details for resetting has been updated {}", details.get());
+
+        } else {
+            final String code = mailSenderService.sendResetPasswordMail(email, user);
+            final ResetPasswordDetails resetPasswordDetails = ResetPasswordDetails.builder()
+                    .activationCode(code)
+                    .email(email)
+                    .isReset(false)
+                    .build();
+            final ResetPasswordDetails resetPasswordDetailsDb = resetPasswordDetailsRepository.save(resetPasswordDetails);
+            log.info("Password details for resetting has been saved {}", resetPasswordDetailsDb);
         }
 
-        final String code = mailSenderService.sendResetPasswordMail(email, user);
-
-        final ResetPasswordDetails resetPasswordDetails = ResetPasswordDetails.builder()
-                .activationCode(code)
-                .email(email)
-                .isReset(false)
-                .build();
-
-        final ResetPasswordDetails resetPasswordDetailsDb = resetPasswordDetailsRepository.save(resetPasswordDetails);
-
-        log.info("Password details for resetting has been saved {}", resetPasswordDetailsDb);
 
     }
 

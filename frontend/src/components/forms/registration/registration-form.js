@@ -73,7 +73,7 @@ export const RegistrationForm = (props) => {
                         makeRequest("POST", REGISTRATION_URL, user)
                             .then(res => {
                                 showToast(res.data, "success");
-                                setTimeout(() => window.location.href = "/", 3000)
+                                setTimeout(() => window.location.href = "/", 2000)
                             })
                             .catch(error => handleRequestError(error, showToast))
 
