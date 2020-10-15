@@ -440,6 +440,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="distance" type="real">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="arrival_date" type="DATE" defaultValue="NOW">
                 <constraints nullable="false"/>
             </column>
