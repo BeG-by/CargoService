@@ -5,6 +5,7 @@ import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Address;
 import by.itechart.cargo.model.ClientCompany;
+import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.service.ClientCompanyService;
 import lombok.extern.slf4j.Slf4j;
@@ -48,14 +49,14 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
         final String payerAccountNumber = clientCompany.getPayerAccountNumber();
         final String email = clientCompany.getEmail();
 
-        if (clientCompanyRepository.getByName(name).isPresent()) {
+        if (clientCompanyRepository.findByName(name).isPresent()) {
             throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", name));
         }
 
-        if (clientCompanyRepository.getByPayerAccountNumber(payerAccountNumber).isPresent()) {
+        if (clientCompanyRepository.findByPayerAccountNumber(payerAccountNumber).isPresent()) {
             throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", payerAccountNumber));
         }
-        if (clientCompanyRepository.getByEmail(email).isPresent()) {
+        if (clientCompanyRepository.findByEmail(email).isPresent()) {
             throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", email));
         }
 
@@ -68,16 +69,16 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyDTO.getId())
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
 
-        Optional<ClientCompany> byName = clientCompanyRepository.getByName(clientCompanyDTO.getName());
+        Optional<ClientCompany> byName = clientCompanyRepository.findByName(clientCompanyDTO.getName());
         if (byName.isPresent() && !byName.get().getId().equals(clientCompany.getId())) {
             throw new AlreadyExistException(String.format("Client company with name \"%s\" exists", clientCompanyDTO.getName()));
         }
 
-        Optional<ClientCompany> byPayerAccountNumber = clientCompanyRepository.getByPayerAccountNumber(clientCompanyDTO.getPayerAccountNumber());
+        Optional<ClientCompany> byPayerAccountNumber = clientCompanyRepository.findByPayerAccountNumber(clientCompanyDTO.getPayerAccountNumber());
         if (byPayerAccountNumber.isPresent() && !byPayerAccountNumber.get().getId().equals(clientCompany.getId())) {
             throw new AlreadyExistException(String.format("Client company with payer account number \"%s\" exists", clientCompanyDTO.getPayerAccountNumber()));
         }
-        Optional<ClientCompany> byEmail = clientCompanyRepository.getByEmail(clientCompanyDTO.getEmail());
+        Optional<ClientCompany> byEmail = clientCompanyRepository.findByEmail(clientCompanyDTO.getEmail());
         if (byEmail.isPresent() && !byEmail.get().getId().equals(clientCompany.getId())) {
             throw new AlreadyExistException(String.format("Client company with email \"%s\" exists", clientCompanyDTO.getEmail()));
         }
@@ -103,7 +104,15 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     public void delete(Long id) throws NotFoundException {
         ClientCompany clientCompany = clientCompanyRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
-        clientCompanyRepository.delete(clientCompany);
+
+        for (User user : clientCompany.getUsers()) {
+            if (!user.getStatus().equals(User.Status.DELETED)) {
+                user.setStatus(User.Status.DELETED);
+                log.info("User has been deleted {}", user);
+            }
+        }
+
+        clientCompany.setStatus(ClientCompany.Status.DELETED);
         log.info("Client company has been deleted {}", clientCompany);
     }
 

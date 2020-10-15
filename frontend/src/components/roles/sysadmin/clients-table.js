@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import ClientDialog from "./client-dialog";
 import Button from "@material-ui/core/Button";
 import useToast from "../../parts/toast-notification/useToast";
-import fetchFieldFromObject from "../../parts/util/function-util";
+import fetchFieldFromObject, {getSimplePropertiesFromObject} from "../../parts/util/function-util";
 import {CLIENTS_URL, handleRequestError, makeRequest} from "../../parts/util/request-util";
 import {Typography} from "@material-ui/core";
 import LibraryAddRoundedIcon from "@material-ui/icons/LibraryAddRounded";
@@ -17,6 +17,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import ConfirmDeletingDialog from "../admin/slide-dialog";
 import {connect} from "react-redux";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
+import Tooltip from "@material-ui/core/Tooltip";
+import {makeDeleteClientRequest} from "./request-utils";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
@@ -25,10 +27,10 @@ const columns = [
     {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN},
     {id: "type", label: "Company type", minWidth: MIN_WIDTH, align: ALIGN},
     {id: "payerAccountNumber", label: "Payer account number", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "address.country", label: "Country", minWidth: 150, align: ALIGN},
-    {id: "address.city", label: "City", minWidth: 150, align: ALIGN},
-    {id: "address.street", label: "Street", minWidth: 150, align: ALIGN},
-    {id: "address.house", label: "House", minWidth: 150, align: ALIGN},
+    {id: "country", label: "Country", minWidth: 150, align: ALIGN},
+    {id: "city", label: "City", minWidth: 150, align: ALIGN},
+    {id: "street", label: "Street", minWidth: 150, align: ALIGN},
+    {id: "house", label: "House", minWidth: 150, align: ALIGN},
     {id: "registrationDate", label: "Date of registration", minWidth: MIN_WIDTH, align: ALIGN},
     {id: "edit_delete", label: "", align: "right"}
 ];
@@ -48,7 +50,7 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
     const [clients, setClients] = useState([]);
     const [clientDialogOpen, setClientDialogOpen] = useState(false);
     const [selectedClientCompanyId, setSelectedClientCompanyId] = useState(-1);
-    const [toastComponent, showToastComponent] = useToast();
+    const [NotificationToast, openNotificationToast] = useToast();
     const [order, setOrder] = useState("asc");
     const [orderBy, setOrderBy] = useState("name");
 
@@ -61,9 +63,9 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
     async function updateTable() {
         try {
             const response = await makeRequest("GET", CLIENTS_URL);
-            setClients(response.data);
+            setClients(response.data.map(client => getSimplePropertiesFromObject(client)));
         } catch (error) {
-            handleRequestError(error, showToastComponent);
+            handleRequestError(error, openNotificationToast);
         }
     }
 
@@ -84,6 +86,16 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+
+    const handleClientDelete = async (clientId) => {
+        try {
+            await makeRequest("DELETE", CLIENTS_URL + `/${clientId}`);
+            openNotificationToast("Client has been deleted", "success");
+            updateTable();
+        } catch (error) {
+            handleRequestError(error);
+        }
+    }
 
     const handleCreateNewClientCLick = () => {
         setClientDialogOpen(true);
@@ -132,28 +144,31 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
                                                     value = "Juridical person";
                                                 }
                                                 if (column.id !== "edit_delete")
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {value}
-                                                    </TableCell>
-                                                );
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {value}
+                                                        </TableCell>
+                                                    );
                                             })}
                                             <TableCell
                                                 key={"edit_delete"}
                                                 align={"right"}
                                             >
                                                 <div className="table-delete-edit-div">
-                                                    <Button
-                                                        className="menu-table-btn"
-                                                        color={"primary"}
-                                                        startIcon={<EditIcon/>}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleTableRowClick(client)
-                                                        }}/>
+                                                    <Tooltip title="Click to edit client" arrow>
+                                                        <Button
+                                                            className="menu-table-btn"
+                                                            color={"primary"}
+                                                            startIcon={<EditIcon/>}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleTableRowClick(client)
+                                                            }}/>
+                                                    </Tooltip>
                                                     <ConfirmDeletingDialog //TODO remove client
                                                         id={client.id}
-                                                        onDelete={() => alert("Delete")}
+                                                        onDelete={handleClientDelete}
+                                                        toolTitle={"Click to delete client"}
                                                         text={REMOVE_TITLE}
                                                     />
                                                 </div>
@@ -195,7 +210,7 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
                     }}
                 />
             </Paper>
-            {toastComponent}
+            {NotificationToast}
         </main>
     );
 })
