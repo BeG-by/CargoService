@@ -72,7 +72,7 @@ public class WaybillServiceImpl implements WaybillService {
         final Long autoId = waybillRequest.getAutoId();
 
         final ClientCompany clientCompany = clientCompanyRepository
-                .findById(companyId).orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
+                .findByIdAndNotDeleted(companyId).orElseThrow(() -> new NotFoundException(CLIENT_NOT_FOUND_MESSAGE));
         waybill.setClientCompany(clientCompany);
 
         final Invoice invoice = invoiceRepository

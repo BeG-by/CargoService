@@ -6,7 +6,7 @@ import {WaybillFormValidation} from "../../parts/validation/waybill-form-validat
 import FormControl from "@material-ui/core/FormControl";
 import DatePickerField from "../../parts/layout/date-picker";
 import ManagerMapForPointAdding from "../../../map/manager-map-for-points-creating";
-import {convertPointsToBackendApi} from "../../../map/utils";
+import {convertPointsToBackendApi, countDistanceBetweenMarkers} from "../../../map/utils";
 import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import Paper from "@material-ui/core/Paper";
@@ -29,6 +29,7 @@ const mapStateToProps = (store) => {
     }
 };
 
+
 export const WaybillForm = connect(mapStateToProps)((props) => {
     const [ToastComponent, openToast] = useToast();
     const [invoice, setInvoice] = useState(props.invoice);
@@ -36,6 +37,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const [pointIndex, setPointIndex] = useState(0);
     const [points, setPoints] = useState([]);
     const [autos, setAutos] = useState([]);
+    const [distance, setDistance] = useState(0);
 
     const useStyles = makeStyles(() => ({
         formControl: {
@@ -55,6 +57,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     useEffect(() => {
         setInvoice(props.invoice);
     }, [props.invoice]);
+
+    const updateDistance = (points) => {
+        setDistance(countDistanceBetweenMarkers(points) / 1000);
+    }
 
     async function fetchAutos(cleanupFunction) {
         if (!cleanupFunction) {
@@ -77,24 +83,25 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     const handlePointDelete = (marker) => {
         for (let i = 0; i < points.length; i++) {
             if (marker.index === points[i].index) {
-                setPoints(prevState => {
-                    let markers = prevState;
-                    markers.splice(i, 1);
-                    return markers;
-                })
+                let newPoints = points
+                newPoints.splice(i, 1);
+                setPoints(newPoints);
+                updateDistance(newPoints);
             }
         }
     }
 
     const handlePointAdd = (event) => {
-        setPoints(prevState => [...prevState, {
+        let newPoints = [...points, {
             isPassed: false,
             passageDate: null,
             index: pointIndex,
             lat: event.latLng.lat(),
             lng: event.latLng.lng(),
-        }])
+        }]
+        setPoints(newPoints)
         setPointIndex(pointIndex + 1);
+        updateDistance(newPoints);
     };
 
 
@@ -117,6 +124,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
             waybill.autoId = selectedAuto.id;
             waybill.departureDate = values.departureDate;
             waybill.arrivalDate = values.arrivalDate;
+            waybill.distance = distance;
             const saveWaybillRequest = async (waybill) => {
                 await saveWaybill(waybill);
                 props.onSave();
@@ -137,7 +145,6 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
     };
 
     const convertShipperAndConsigneeToStringInInvoices = (invoice) => {
-        console.log(invoice)
         if (invoice.shipper.id === null || invoice.shipper.id === undefined) {
             return invoice;
         }
@@ -217,6 +224,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                value={invoice.consignee}
                                                style={{width: "100%"}}/>
 
+                                    <br/><br/>
                                     <br/><br/>
                                     <Grid container justify={"center"}>
                                         <Grid item>

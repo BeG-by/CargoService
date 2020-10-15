@@ -25,6 +25,9 @@ public class WaybillRequest {
     @NotNull(message = "Departure date is mandatory")
     private LocalDate departureDate;
 
+    @Positive(message = "Distance must be positive")
+    private Double distance;
+
     @NotNull (message = "Arrival date is mandatory")
     @FutureOrPresent(message = "Arrival date must be present or future date")
     private LocalDate arrivalDate;
@@ -46,6 +49,7 @@ public class WaybillRequest {
                 .id(id)
                 .departureDate(departureDate)
                 .arrivalDate(arrivalDate)
+                .distance(distance)
                 .points(points)
                 .build();
     }

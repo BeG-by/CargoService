@@ -1,9 +1,10 @@
-import React, {useCallback, useRef} from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import {GoogleMap, Marker, Polyline, useLoadScript} from "@react-google-maps/api";
 import MarkersList from "./markers-list.js";
 import {GOOGLE_MAP_API_KEY} from "../keys.json";
 import Search from "./search";
 import Locate from "./locate";
+import {countDistanceBetweenMarkers} from "./utils";
 
 export const API_KEY = GOOGLE_MAP_API_KEY;
 const MAP_CONTAINER_STYLE = {width: 750, height: 600}

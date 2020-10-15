@@ -5,14 +5,14 @@ import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.exception.ServiceException;
+import by.itechart.cargo.model.ActivationDetails;
 import by.itechart.cargo.model.ClientCompany;
 import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
-import by.itechart.cargo.model.ActivationDetails;
+import by.itechart.cargo.repository.ActivationDetailsRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
 import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
-import by.itechart.cargo.repository.ActivationDetailsRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.AWSS3Service;
 import by.itechart.cargo.service.MailSenderService;
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 import static by.itechart.cargo.service.util.MessageConstant.*;
 
@@ -72,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoResponse findInfo() {
         final User authUser = jwtTokenUtil.getJwtUser().toUser();
         final Long companyId = jwtTokenUtil.getCurrentCompanyId();
-        final ClientCompany clientCompany = clientCompanyRepository.findById(companyId).orElse(new ClientCompany());
+        final ClientCompany clientCompany = clientCompanyRepository.findByIdAndNotDeleted(companyId).orElse(new ClientCompany());
         return new UserInfoResponse(UserResponse.toUserResponse(authUser), clientCompany);
     }
 
@@ -122,7 +121,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
-
     @Override
     public void sendActivationLink(ActivationDetailsRequest request) throws AlreadyExistException, ServiceException {
 
@@ -158,7 +156,6 @@ public class UserServiceImpl implements UserService {
 
         final ActivationDetails userSave = activationDetailsRepository.save(activationDetails);
         log.info("Activation details have been saved {}", userSave);
-
     }
 
 
