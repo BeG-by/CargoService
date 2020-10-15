@@ -9,7 +9,9 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import * as XLSX from "xlsx";
 import * as FileSaver from 'file-saver';
 import {reportData} from "./excel-data";
-import {Chart} from "./chart-example";
+import {ProfitChart} from "./chart-example";
+import {makeRequest} from "../../parts/util/request-util"
+
 
 const useStyles = makeStyles((theme) => ({
     infoPiece: {
@@ -25,10 +27,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+const EMPTY_DATA = {
+    startDate: "2019-01-01",
+    profits: [313,456,403,391],
+    losses: [233,300,303,350],
+};
+
 export const OwnerContent = () => {
     const styles = useStyles();
-    const [ToastComponent, openToast] = useToast();
+    const [toastComponent, openToast] = useToast();
     const [button, setButton] = useState("");
+    const [chartData, setChartData] = useState(EMPTY_DATA);
 
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
@@ -52,20 +62,36 @@ export const OwnerContent = () => {
             let period = data.filter(i => i.date >= values.startDate && i.date <= values.endDate);
             exportToCSV(period, fileName);
 
+        } else {
+            // let url = `${DIAGRAM_URL}?startDate=${values.startDate}&endDate=${values.endDate}`;
+            makeRequest("GET", "v1/api/stats")
+                .then(res => {
+                        setChartData(transformDataToChartData(res.data))
+                    }
+                )
+                .catch(error => console.log(error.data.response))
         }
-        // } else {
-        //     let url = `${DIAGRAM_URL}?startDate=${values.startDate}&endDate=${values.endDate}`;
-        //     await makeRequest("GET", url).then(
-        //         () => {
-        //             //todo show diagram
-        //         },
-        //         () => {
-        //             openToast("Diagram creating failed", "error");
-        //         }
-        //     );
-        // }
 
     };
+
+
+    const transformDataToChartData = (data) => {
+
+        const dataForChart = {
+            startDate: data[0].date,
+            profits: [],
+            losses: []
+        };
+
+        data.forEach(item => {
+            dataForChart.profits.push(Number(item.profit));
+            dataForChart.losses.push(Number(item.losses));
+        });
+
+        return dataForChart;
+
+    };
+
 
     let date = new Date();
     let today = date.toISOString().substring(0, date.toISOString().indexOf("T"));
@@ -135,7 +161,7 @@ export const OwnerContent = () => {
                                 </Form>
                             )}
                         </Formik>
-                        {ToastComponent}
+                        {toastComponent}
                     </React.Fragment>
 
                     <Paper className={`table-paper`}
@@ -143,7 +169,9 @@ export const OwnerContent = () => {
                                padding: 20,
                                width: "50%"
                            }}>
-                        <Chart/>
+                        <ProfitChart
+                            dataProps={chartData}
+                        />
                     </Paper>
                 </div>
             </div>
