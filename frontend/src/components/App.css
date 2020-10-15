@@ -149,6 +149,16 @@ main {
     border-radius: 30px;
 }
 
+.main-body-without-back {
+    display: block;
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 50px;
+    margin: 80px 80px;
+    color: white;
+    max-width: 100%;
+}
+
 /*Reset default styles for <NavLink>*/
 
 .nav-link-item {

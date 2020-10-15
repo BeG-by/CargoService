@@ -240,7 +240,7 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                     </Grid>
                                 </Paper>
                                 <Paper className={`table-paper`}
-                                       style={{flexDirection: "column", alignItems: "flex-start", padding: 10}}>
+                                       style={{flexDirection: "column", alignItems: "flex-start", padding: 10 , maxWidth: "60%"}}>
                                     <ManagerMapForPointAdding
                                         markers={points}
                                         onMarkerAdd={handlePointAdd}

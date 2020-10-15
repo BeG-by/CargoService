@@ -7,6 +7,8 @@ import Paper from "@material-ui/core/Paper";
 import {withRouter} from "react-router-dom";
 import useToast from "../../parts/toast-notification/useToast";
 import {handleRequestError, makeRequest, REGISTRATION_URL} from "../../parts/util/request-util";
+import "../forms.css"
+import {RegistrationValidation} from "../../parts/validation/registartion-form";
 
 
 export const RegistrationForm = (props) => {
@@ -31,12 +33,12 @@ export const RegistrationForm = (props) => {
 
     return (
         <main>
-            <Paper style={{width: 400, marginBottom: 80}}>
+            <Paper style={{width: 400, marginBottom: 80, padding: 20}}>
                 <Formik
                     initialValues={{
                         id: "",
                         password: "",
-                        confirmPassword: "",
+                        confirm: "",
                         name: "",
                         surname: "",
                         patronymic: "",
@@ -49,11 +51,13 @@ export const RegistrationForm = (props) => {
                         house: "",
                         flat: "",
                     }}
+
+                    validationSchema={RegistrationValidation}
                     onSubmit={(values) => {
 
                         const user = {
                             password: values.password,
-                            confirmPassword: values.confirmPassword,
+                            confirmPassword: values.confirm,
                             name: values.name,
                             surname: values.surname,
                             patronymic: values.patronymic,
@@ -70,18 +74,26 @@ export const RegistrationForm = (props) => {
                             activationCode: params.code
                         };
 
-                        makeRequest("POST", REGISTRATION_URL, user)
-                            .then(res => {
-                                showToast(res.data, "success");
-                                setTimeout(() => window.location.href = "/", 2000)
-                            })
-                            .catch(error => handleRequestError(error, showToast))
+
+                        if (user.password === user.confirmPassword) {
+                            makeRequest("POST", REGISTRATION_URL, user)
+                                .then(res => {
+                                    showToast(res.data, "success");
+                                    setTimeout(() => window.location.href = "/", 2000)
+                                })
+                                .catch(error => handleRequestError(error, showToast))
+                        } else {
+                            showToast("Passwords don't match", "error")
+                        }
 
                     }}
                 >
                     {(formProps) => {
                         return (
                             <Form>
+                                <header className="reg-header">
+                                    Registration
+                                </header>
                                 <FormikField
                                     formikProps={formProps}
                                     id={"password"}
@@ -91,7 +103,7 @@ export const RegistrationForm = (props) => {
                                 />
                                 <FormikField
                                     formikProps={formProps}
-                                    id={"confirmPassword"}
+                                    id={"confirm"}
                                     label={"Confirm password"}
                                     formikFieldName={"confirm"}
                                     type={"password"}
@@ -171,7 +183,7 @@ export const RegistrationForm = (props) => {
                                         type="submit"
                                         disabled={formProps.listener}
                                     >
-                                        Registration
+                                        Confirm
                                     </Button>
                                 </div>
                             </Form>

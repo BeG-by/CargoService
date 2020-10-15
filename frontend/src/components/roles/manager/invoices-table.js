@@ -19,7 +19,7 @@ import Button from "@material-ui/core/Button";
 import {
     DISPATCHER_INVOICES_URL,
     DRIVER_INVOICES_URL,
-    handleRequestError,
+    handleRequestError, INVOICE_URL,
     makeRequest,
     MANAGER_INVOICES_URL
 } from "../../parts/util/request-util";
@@ -116,6 +116,9 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
                     case "DISPATCHER":
                         await fetchInvoicesForDispatcher(params);
                         break;
+                    case "OWNER":
+                        await fetchInvoicesForOwner(params);
+                        break;
                 }
             } catch (err) {
                 setInvoices([]);
@@ -141,6 +144,13 @@ export const InvoicesTable = connect(mapStateToProps)((props) => {
         setTotalInvoicesAmount(response.data.totalAmount);
         setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
     };
+
+    const fetchInvoicesForOwner = async (params) => {
+        let response = await makeRequest("GET", `${INVOICE_URL}${params}`);
+        setTotalInvoicesAmount(response.data.totalAmount);
+        setInvoices(convertShipperAndConsigneeToStringInInvoices(response.data.invoices));
+    };
+
 
 
     useEffect(() => {
