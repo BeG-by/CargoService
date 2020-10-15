@@ -7,6 +7,9 @@ import {makeRequest} from "../../parts/util/request-util";
 import useToast from "../../parts/toast-notification/useToast";
 import {DataFormValidation} from "../../parts/validation/data-form-validation";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import * as XLSX from "xlsx";
+import * as FileSaver from 'file-saver';
+import {reportData} from "./excel-data";
 
 const useStyles = makeStyles((theme) => ({
     infoPiece: {
@@ -27,20 +30,29 @@ export const OwnerContent = () => {
     const [ToastComponent, openToast] = useToast();
     const [button, setButton] = useState("");
 
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+
+    const exportToCSV = (csvData, fileName) => {
+        const ws = XLSX.utils.json_to_sheet(csvData);
+        const wb = {Sheets: {'data': ws}, SheetNames: ['data']};
+        const excelBuffer = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
+        const data = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data, fileName + fileExtension);
+        openToast("Report is creating...", "info");
+    };
+
     //TODO
     const handleSubmit = async (values) => {
 
-        // if (button === "report") {
-        //     let url = `${REPORT_URL}?startDate=${values.startDate}&endDate=${values.endDate}`;
-        //     await makeRequest("GET", url).then(
-        //         () => {
-        //             //todo create report on backend
-        //             openToast("Report has been created", "info");
-        //         },
-        //         () => {
-        //             openToast("Report creating failed", "error");
-        //         }
-        //     );
+        if (button === "report") {
+
+            let fileName = "report_" + values.startDate + "_" + values.endDate + " " + Date.now();
+            const data = reportData();
+            let period = data.filter(i => i.date >= values.startDate && i.date <= values.endDate);
+            exportToCSV(period, fileName);
+
+        }
         // } else {
         //     let url = `${DIAGRAM_URL}?startDate=${values.startDate}&endDate=${values.endDate}`;
         //     await makeRequest("GET", url).then(
