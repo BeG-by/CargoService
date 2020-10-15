@@ -18,19 +18,21 @@ import ConfirmDeletingDialog from "../admin/slide-dialog";
 import {connect} from "react-redux";
 import EnhancedTableHead, {getComparator, stableSort} from "../../parts/util/sorted-table-head";
 import Tooltip from "@material-ui/core/Tooltip";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 
 const MIN_WIDTH = 170;
 const ALIGN = "left";
+const FONT_SIZE = 18;
 
 const columns = [
-    {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "type", label: "Company type", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "payerAccountNumber", label: "Payer account number", minWidth: MIN_WIDTH, align: ALIGN},
-    {id: "country", label: "Country", minWidth: 150, align: ALIGN},
-    {id: "city", label: "City", minWidth: 150, align: ALIGN},
-    {id: "street", label: "Street", minWidth: 150, align: ALIGN},
-    {id: "house", label: "House", minWidth: 150, align: ALIGN},
-    {id: "registrationDate", label: "Date of registration", minWidth: MIN_WIDTH, align: ALIGN},
+    {id: "name", label: "Name", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "type", label: "Company type", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "payerAccountNumber", label: "Payer account number", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "country", label: "Country", minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "city", label: "City", minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "street", label: "Street", minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "house", label: "House", minWidth: 150, align: ALIGN, fontSize: FONT_SIZE},
+    {id: "registrationDate", label: "Date of registration", minWidth: MIN_WIDTH, align: ALIGN, fontSize: FONT_SIZE},
     {id: "edit_delete", label: "", align: "right"}
 ];
 
@@ -105,7 +107,11 @@ export const ClientsTable = connect(mapStateToProps)((props) => {
             <Paper className="table-paper">
                 <TableContainer className="table-container">
                     <div className="table-header-wrapper">
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="button" display="block" gutterBottom
+                                    style={{fontSize: 26, marginLeft: 15, marginTop: 15, textDecoration: "underline"}}
+                                    className="table-title"
+                        >
+                            <LibraryBooksIcon/>
                             Clients
                         </Typography>
                         <Button variant="contained"

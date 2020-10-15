@@ -212,7 +212,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="shipper"
                                                disabled={true}
-                                               value={invoice.shipper}
+                                               value={invoice.shipper.address === undefined ?
+                                                   invoice.shipper :
+                                                   `${invoice.shipper.address.country} ${invoice.shipper.address.city} ${invoice.shipper.address.street}  ${invoice.shipper.address.house}`
+                                               }
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>
@@ -221,7 +224,10 @@ export const WaybillForm = connect(mapStateToProps)((props) => {
                                                type="text"
                                                id="consignee"
                                                disabled={true}
-                                               value={invoice.consignee}
+                                               value={invoice.consignee.address === undefined ?
+                                                   invoice.consignee :
+                                                   `${invoice.consignee.address.country} ${invoice.consignee.address.city} ${invoice.consignee.address.street}  ${invoice.consignee.address.house}`
+                                               }
                                                style={{width: "100%"}}/>
 
                                     <br/><br/>

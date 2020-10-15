@@ -80,6 +80,7 @@ export const MailDialog = (props) => {
 
                             if (selectedTemplate === "") {
                                 data.text = values.message;
+                                showToast("Email is sending..." , "info")
                                 makeRequest("POST", EMAIL_URL, data)
                                     .then(res => {
                                         showToast("Emails have been successfully sent");
@@ -89,6 +90,7 @@ export const MailDialog = (props) => {
 
                             } else {
                                 data.type = values.template;
+                                showToast("Email is sending..." , "info")
                                 makeRequest("POST", EMAIL_URL + "/template", data)
                                     .then(res => {
                                         showToast("Emails have been successfully sent");

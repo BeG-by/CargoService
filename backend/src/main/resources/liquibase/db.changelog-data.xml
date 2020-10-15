@@ -20,9 +20,9 @@
         </insert>
 
         <insert tableName="client_company">
-            <column name="name" value="Google"/>
+            <column name="name" value="ТирексЛине"/>
             <column name="type" value="JP"/>
-            <column name="pan" value="123456789"/>
+            <column name="pan" value="123456389"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
             <column name="street" value="Gikalo"/>
@@ -32,7 +32,7 @@
         </insert>
 
         <insert tableName="client_company">
-            <column name="name" value="Yandex"/>
+            <column name="name" value="CargoFast"/>
             <column name="type" value="JP"/>
             <column name="pan" value="987654321"/>
             <column name="country" value="Belarus"/>
@@ -40,8 +40,33 @@
             <column name="street" value="Nemiga"/>
             <column name="house" value="53"/>
             <column name="flat" value="31"/>
-            <column name="email" value="yandex-ex@yandex.com"/>
+            <column name="email" value="cargoFast-ex@yandex.com"/>
         </insert>
+
+        <insert tableName="client_company">
+            <column name="name" value="FastTravel"/>
+            <column name="type" value="JP"/>
+            <column name="pan" value="937654321"/>
+            <column name="country" value="USA"/>
+            <column name="city" value="New York"/>
+            <column name="street" value="Berdival"/>
+            <column name="house" value="533b"/>
+            <column name="flat" value="31"/>
+            <column name="email" value="fastTravel-ex@yandex.com"/>
+        </insert>
+
+        <insert tableName="client_company">
+            <column name="name" value="SlowTravel"/>
+            <column name="type" value="JP"/>
+            <column name="pan" value="987654331"/>
+            <column name="country" value="Belarus"/>
+            <column name="city" value="Minsk"/>
+            <column name="street" value="Nemiga"/>
+            <column name="house" value="53"/>
+            <column name="flat" value="31"/>
+            <column name="email" value="example-slow@gmail.com"/>
+        </insert>
+
 
     </changeSet>
 

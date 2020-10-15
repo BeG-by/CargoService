@@ -65,7 +65,7 @@ export const UserInfo = connect(mapStateToProps)((props) => {
                             </Typography>
                             <img
                                 src={user.photo !== undefined && user.photo !== null && user.photo.trim()
-                                    ? user.photo
+                                    ? user.photo = user.photo + "?time=" + new Date().getTime()
                                     : photo}
                                 width={100}
                                 height={100}

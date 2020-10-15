@@ -12,6 +12,8 @@ import {Form, Formik} from "formik";
 import {ClientFormValidationSchema} from "./validation-schema";
 import useToast from "../../parts/toast-notification/useToast";
 import {CLIENTS_URL, handleRequestError, makeRequest} from "../../parts/util/request-util";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const EMPTY_CLIENT = {
     id: -1,
@@ -119,7 +121,14 @@ export default function ClientDialog(props) {
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">{client.name}</DialogTitle>
+                <DialogTitle id="form-dialog-title">
+                    <span id="form-title">Client</span>
+                    <IconButton aria-label="close"
+                                onClick={handleClose}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                </DialogTitle>
                 <DialogContent>
                     <Formik
                         enableReinitialize
@@ -214,7 +223,7 @@ export default function ClientDialog(props) {
                                         type="submit"
                                         disabled={formProps.listener}
                                     >
-                                        Update
+                                        {props.clientCompanyId >= 1 ? "Update" : "Save"}
                                     </Button>
                                 </Grid>
                             </Form>
