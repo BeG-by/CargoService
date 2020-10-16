@@ -204,3 +204,7 @@ main {
     left: 0;
     margin: auto;
 }
+
+#demo-simple-select-label {
+    font-size: 20px !important;
+}

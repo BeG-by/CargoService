@@ -58,7 +58,10 @@ export const WaybillInfoContent = connect(mapStateToProps)((props) => {
 
     const handleInvoiceInfoOpen = () => {
         if (invoice) {
-            setForm(<InvoiceInfo invoiceId={invoice.id}/>);
+            setForm(<InvoiceInfo
+                invoiceId={invoice.id}
+                onClose={handleClose}
+            />);
             setTitle("Invoice # " + invoice.number);
             setInvoiceInfoDialogOpen(true);
         }
