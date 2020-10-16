@@ -136,6 +136,7 @@ export const ResetPasswordForm = (props) => {
             }}
             validationSchema={ValidationSchemaEmail}
             onSubmit={(values) => {
+                showToast("Email is sending..." , "info")
                 makeRequest("POST", RESET_PASSWORD_MAIL_URL, {email: values.email})
                     .then(res => showToast(res.data))
                     .catch(error => handleRequestError(error, showToast))
