@@ -150,7 +150,7 @@ export const UserDialog = (props) => {
                                     role: values.role
                                 };
 
-
+                                showToast("Email is sending..." , "info")
                                 makeRequest("POST", USER_URL, data)
                                     .then(res => {
                                         handleClose();

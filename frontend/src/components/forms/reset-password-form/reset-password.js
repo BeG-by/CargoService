@@ -52,7 +52,7 @@ export function ChangePasswordForm(props) {
                             if (passwordRequest.password !== passwordRequest.confirm) {
                                 showToast("Passwords don't match", "error");
                             } else {
-
+                                showToast("Email is sending..." , "info")
                                 makeRequest("POST", RESET_PASSWORD_URL, passwordRequest)
                                     .then(res => {
                                         showToast(res.data, "success");

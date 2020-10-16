@@ -169,7 +169,7 @@
         </insert>
 
         <insert tableName="user">
-            <column name="email" value="owner@gmail.com"/>
+            <column name="email" value="istokx08@mail.ru"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Mark"/>
             <column name="patronymic" value="Markovich"/>

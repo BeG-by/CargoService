@@ -102,6 +102,7 @@ export default function ClientDialog(props) {
     const handleSubmit = (values) => {
         const client = parseClient(values);
         if (props.clientCompanyId === -1) {
+            openToast("Email is sending..." , "info")
             saveClient(client);
         } else {
             updateClient(client);

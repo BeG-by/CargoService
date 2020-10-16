@@ -34,16 +34,16 @@ public class ElasticsearchTestDataInserter {
     }
 
     private void insertWaybills() {
-        ElasticsearchWaybill first = new ElasticsearchWaybill(1L, "TTN321332", 3L, 5L, 2L);
-        elasticsearchWaybillRepository.save(first);
+//        ElasticsearchWaybill first = new ElasticsearchWaybill(1L, "TTN321332", 3L, 5L, 2L);
+//        elasticsearchWaybillRepository.save(first);
     }
 
     private void insertInvoices() {
-        ElasticsearchInvoice first = new ElasticsearchInvoice(1L, "TTN321332", 2L, 2L, 3L, 5L);
-        ElasticsearchInvoice second = new ElasticsearchInvoice(3L, "TTN123123222", 2L, 2L, 3L, 5L);
-
-        elasticsearchInvoiceRepository.save(first);
-        elasticsearchInvoiceRepository.save(second);
+//        ElasticsearchInvoice first = new ElasticsearchInvoice(1L, "TTN321332", 2L, 2L, 3L, 5L);
+//        ElasticsearchInvoice second = new ElasticsearchInvoice(3L, "TTN123123222", 2L, 2L, 3L, 5L);
+//
+//        elasticsearchInvoiceRepository.save(first);
+//        elasticsearchInvoiceRepository.save(second);
     }
 
     private void insertProductOwners() {
