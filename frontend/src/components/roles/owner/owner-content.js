@@ -8,8 +8,7 @@ import {DataFormValidation} from "../../parts/validation/data-form-validation";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import * as XLSX from "xlsx";
 import * as FileSaver from 'file-saver';
-import {reportData} from "./excel-data";
-import {ProfitChart} from "./chart-example";
+import {ProfitChart} from "./profit-chart";
 import {handleRequestError, makeRequest, STATS_URL} from "../../parts/util/request-util"
 
 
@@ -34,7 +33,7 @@ const EMPTY_DATA = {
     losses: [233, 300, 303, 350],
 };
 
-export const OwnerContent = (instance, callback) => {
+export const OwnerContent = () => {
     const styles = useStyles();
     const [toastComponent, openToast] = useToast();
     const [button, setButton] = useState("");
@@ -52,18 +51,38 @@ export const OwnerContent = (instance, callback) => {
         openToast("Report is creating...", "info");
     };
 
-    //TODO
+
     const handleSubmit = async (values) => {
+
+        let url = `${STATS_URL}?start=${values.startDate}&end=${values.endDate}`;
 
         if (button === "report") {
 
-            let fileName = "report_" + values.startDate + "_" + values.endDate + " " + Date.now();
-            const data = reportData();
-            let period = data.filter(i => i.date >= values.startDate && i.date <= values.endDate);
-            exportToCSV(period, fileName);
+            makeRequest("GET", url)
+                .then(res => {
+
+                        let fileName = "report_" + values.startDate + "_" + values.endDate + " " + Date.now();
+                        const data = res.data;
+                        let totalProfit = 0;
+                        let totalLoss = 0;
+
+                        for (let i = 0; i < data.length; i++) {
+                            totalProfit = totalProfit + Number(data[i].profit);
+                            totalLoss = totalLoss + Number(data[i].losses);
+                        }
+
+                        let total = totalProfit - totalLoss;
+                        data[0].totalProfit = totalProfit;
+                        data[0].totalLoss = totalLoss;
+                        data[0].total = total;
+                        exportToCSV(data, fileName);
+                    }
+                )
+                .catch(error => handleRequestError(error, openToast))
+
 
         } else {
-            let url = `${STATS_URL}?start=${values.startDate}&end=${values.endDate}`;
+
             makeRequest("GET", url)
                 .then(res => {
                         setChartData(transformDataToChartData(res.data));
@@ -99,10 +118,6 @@ export const OwnerContent = (instance, callback) => {
 
         for (let i = 0; i < data.length; i++) {
             let arr = data[i].date.split("-");
-
-            console.log(arr);
-            console.log(new Date(arr[0], Number(arr[1]), arr[2]));
-
             if (new Date(arr[0], arr[1], arr[2]).getTime() < min.getTime()) {
                 min = new Date(arr[0], arr[1], arr[2]);
             }
@@ -192,6 +207,9 @@ export const OwnerContent = (instance, callback) => {
                         <ProfitChart
                             dataProps={chartData}
                         />
+                        <div>
+
+                        </div>
                     </Paper>
                 </div>
             </div>
