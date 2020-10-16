@@ -10,7 +10,7 @@ import * as XLSX from "xlsx";
 import * as FileSaver from 'file-saver';
 import {reportData} from "./excel-data";
 import {ProfitChart} from "./chart-example";
-import {makeRequest} from "../../parts/util/request-util"
+import {handleRequestError, makeRequest, STATS_URL} from "../../parts/util/request-util"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 const EMPTY_DATA = {
-    startDate: "2019-01-01",
-    profits: [313,456,403,391],
-    losses: [233,300,303,350],
+    startDate: "2020-09-13",
+    profits: [313, 456, 403, 391],
+    losses: [233, 300, 303, 350],
 };
 
-export const OwnerContent = () => {
+export const OwnerContent = (instance, callback) => {
     const styles = useStyles();
     const [toastComponent, openToast] = useToast();
     const [button, setButton] = useState("");
@@ -63,13 +63,13 @@ export const OwnerContent = () => {
             exportToCSV(period, fileName);
 
         } else {
-            // let url = `${DIAGRAM_URL}?startDate=${values.startDate}&endDate=${values.endDate}`;
-            makeRequest("GET", "v1/api/stats")
+            let url = `${STATS_URL}?start=${values.startDate}&end=${values.endDate}`;
+            makeRequest("GET", url)
                 .then(res => {
-                        setChartData(transformDataToChartData(res.data))
+                        setChartData(transformDataToChartData(res.data));
                     }
                 )
-                .catch(error => console.log(error.data.response))
+                .catch(error => handleRequestError(error, openToast))
         }
 
     };
@@ -78,7 +78,7 @@ export const OwnerContent = () => {
     const transformDataToChartData = (data) => {
 
         const dataForChart = {
-            startDate: data[0].date,
+            startDate: getStartDate(data),
             profits: [],
             losses: []
         };
@@ -89,6 +89,26 @@ export const OwnerContent = () => {
         });
 
         return dataForChart;
+
+    };
+
+
+    const getStartDate = (data) => {
+
+        let min = new Date(2050, 0, 1);
+
+        for (let i = 0; i < data.length; i++) {
+            let arr = data[i].date.split("-");
+
+            console.log(arr);
+            console.log(new Date(arr[0], Number(arr[1]), arr[2]));
+
+            if (new Date(arr[0], arr[1], arr[2]).getTime() < min.getTime()) {
+                min = new Date(arr[0], arr[1], arr[2]);
+            }
+        }
+
+        return min.getFullYear() + "-" + (min.getMonth() - 1) + "-" + min.getDate();
 
     };
 

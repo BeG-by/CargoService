@@ -29,6 +29,7 @@ export const TEMPLATES_URL = "/v1/api/emails/templates";
 export const EMAIL_URL = "/v1/api/emails";
 export const RESET_PASSWORD_MAIL_URL = "/v1/api/auth/mail";
 export const RESET_PASSWORD_URL = "/v1/api/auth/password";
+export const STATS_URL = "/v1/api/stats";
 
 
 export const makeRequest = (method, url, data = null) => {
