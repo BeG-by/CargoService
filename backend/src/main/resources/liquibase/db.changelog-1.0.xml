@@ -414,7 +414,6 @@
     <!-- Waybill -->
     <changeSet id="1.0.6" author="marianna.patrusova">
 
-        <!--Waybill-->
         <sql>CREATE TYPE waybill_status AS ENUM('CURRENT', 'FUTURE' , 'DONE')
         </sql>
 

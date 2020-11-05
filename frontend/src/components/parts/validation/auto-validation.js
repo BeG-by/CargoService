@@ -23,7 +23,7 @@ export const AutoScheme = Yup.object({
         .matches(/^[0-9]+$/, "Max load must be contain only digit"),
     dateOfIssue: Yup.string()
         .test(
-            'test',
+            'test.js',
             'Date must be equal or before than today',
             function (value) {
                 let date = new Date();

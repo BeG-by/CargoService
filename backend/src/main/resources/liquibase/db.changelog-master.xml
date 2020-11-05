@@ -6,5 +6,4 @@
     <include file="classpath:liquibase/db.changelog-1.1.xml"/>
     <include file="classpath:liquibase/db.changelog-data.xml"/>
     <include file="classpath:liquibase/db.changelog-demo-users.xml"/>
-<!--    <include file="classpath:liquibase/db.changelog-demo-product-owners.xml"/>-->
 </databaseChangeLog>
