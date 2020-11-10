@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -14,13 +14,7 @@ import {withRouter} from "react-router-dom";
 import {ValidationSchemaEmail, ValidationSchemaPassword} from "../../parts/validation/login-form-validation";
 import '../forms.css';
 import useToast from "../../parts/toast-notification/useToast";
-import {
-    handleRequestError,
-    LOGIN_URL,
-    makeRequest,
-    RESET_PASSWORD_MAIL_URL,
-    RESET_PASSWORD_URL
-} from "../../parts/util/request-util";
+import {handleRequestError, LOGIN_URL, makeRequest, RESET_PASSWORD_MAIL_URL} from "../../parts/util/request-util";
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import Tooltip from "@material-ui/core/Tooltip";
 
@@ -39,7 +33,7 @@ export const LoginForm = (props) => {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">
-                    <span id="form-title">{resetOpen ? "Reset password" : " Sign in the Cargo system"}</span>
+                    <span id="form-title">{resetOpen ? "Reset password" : "Sign in the Cargo system"}</span>
                     <IconButton aria-label="close"
                                 onClick={onClose}
                     >

@@ -20,6 +20,8 @@
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
         <aws.version>1.11.750</aws.version>
         <apache.io.version>2.6</apache.io.version>
+        <selenium.version>3.141.59</selenium.version>
+        <webdriver.version>4.2.2</webdriver.version>
     </properties>
 
     <dependencies>
@@ -139,6 +141,21 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${apache.io.version}</version>
+        </dependency>
+
+        <!-- Selenium -->
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdriver.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
