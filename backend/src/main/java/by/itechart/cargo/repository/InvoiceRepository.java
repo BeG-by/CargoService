@@ -11,6 +11,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<Invoice> findAllByClientCompanyIdAndCheckingUserId(Long clientCompanyId, Long checkingUserId, Pageable pageable);
 
+    List<Invoice> findAllByClientCompanyIdAndCheckingUserId(Long clientCompanyId, Long checkingUserId);
+
     List<Invoice> findAllByClientCompanyIdAndRegistrationUserId(Long clientCompanyId, Long registrationUserId, Pageable pageable);
 
     List<Invoice> findAllByClientCompanyIdAndDriverId(Long clientCompanyId, Long driverId, Pageable pageable);
@@ -30,4 +32,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     Long countAllByClientCompanyIdAndRegistrationUserId(Long clientCompanyId, Long registrationUserId);
 
     Optional<Invoice> findByNumber(String number);
+
 }

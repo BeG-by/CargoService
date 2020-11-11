@@ -20,6 +20,7 @@
     "moment": "^2.28.0",
     "notistack": "^1.0.1",
     "react": "^16.13.1",
+    "react-big-calendar": "^0.28.6",
     "react-crud-table": "0.0.8",
     "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
