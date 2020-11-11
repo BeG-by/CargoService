@@ -9,6 +9,8 @@ import by.itechart.cargo.dto.notification.notification_data.InvoiceNotificationD
 import by.itechart.cargo.exception.AlreadyExistException;
 import by.itechart.cargo.exception.NotFoundException;
 
+import java.util.List;
+
 public interface InvoiceService {
 
     InvoicePaginationResponse findAll(int requestedPage, int invoicesPerPage);
@@ -38,4 +40,7 @@ public interface InvoiceService {
     void updateStatus(UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException;
 
     InvoiceNotificationData findInvoiceNotificationData(Long id) throws NotFoundException;
+
+    List<InvoiceResponse> findAllForCalendar();
+
 }

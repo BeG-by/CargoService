@@ -4,6 +4,7 @@ import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.dto.model_dto.waybill.UpdatePointsRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillResponse;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Point;
 import by.itechart.cargo.model.Waybill;

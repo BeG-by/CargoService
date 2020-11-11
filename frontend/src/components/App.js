@@ -35,6 +35,7 @@ import RegistrationForm from "./forms/registration/registration-form";
 import ChangePasswordForm from "./forms/reset-password-form/reset-password";
 import {Greeting} from "./parts/greeting/greeting";
 import {OwnerContent} from "./roles/owner/owner-content";
+import {CalendarTable} from "./roles/manager/calendar-table";
 
 
 export default function App() {
@@ -69,6 +70,8 @@ export default function App() {
                     <PrivateRoute exact path="/profile" component={ProfileInfo}/>
                     <PrivateRoute exact path="/waybill" component={WaybillsTable}
                                   hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER]}/>
+                    <PrivateRoute exact path={"/calendar"} component={CalendarTable}
+                                  hasAnyAuthorities={[ROLE_OWNER, ROLE_MANAGER]}/>
                     <PrivateRoute exact path={"/invoice"} component={InvoicesTable}
                                   hasAnyAuthorities={[ROLE_MANAGER, ROLE_OWNER, ROLE_DRIVER, ROLE_DISPATCHER]}/>
                     <PrivateRoute exact path={"/users"} component={UserTable}

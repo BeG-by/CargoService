@@ -376,6 +376,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public List<InvoiceResponse> findAllForCalendar() {
+        long currentCompanyId = jwtTokenUtil.getCurrentCompanyId();
+        long id = jwtTokenUtil.getJwtUser().getId();
+        List<Invoice> invoices = invoiceRepository.findAllByClientCompanyIdAndCheckingUserId(currentCompanyId, id);
+        return InvoiceResponse.fromInvoices(invoices);
+    }
+
+    @Override
     public DataForInvoiceCreating findDataForInvoiceCreating() {
         ClientCompany clientCompany = jwtTokenUtil.getJwtUser().getClientCompany();
         List<Storage> storages = storageRepository.findAllByClientCompanyIdAndStatus(clientCompany.getId(), Storage.Status.ACTIVE);
