@@ -189,6 +189,25 @@
             <column name="last_modified_date" value="2010-01-01"/>
         </insert>
 
+        <insert tableName="user">
+            <column name="email" value="freight.application.itechart@gmail.com"/>
+            <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
+            <column name="name" value="Eugene"/>
+            <column name="patronymic" value="Oauth"/>
+            <column name="country" value="Беларусь"/>
+            <column name="city" value="Берёза"/>
+            <column name="street" value="Пушкинская"/>
+            <column name="house" value="221b"/>
+            <column name="surname" value="Morozov"/>
+            <column name="passport" value="MP323231311"/>
+            <column name="id_client_company" value="2"/>
+            <column name="birthday" value="1991-11-11"/>
+            <column name="phone" value="8(029)323-11-54"/>
+            <column name="online" value="false"/>
+            <column name="create_date" value="2010-01-01"/>
+            <column name="last_modified_date" value="2010-01-01"/>
+        </insert>
+
 
         <insert tableName="user_role">
             <column name="id_user" value="8"/>
@@ -238,6 +257,11 @@
         <insert tableName="user_role">
             <column name="id_user" value="17"/>
             <column name="id_role" value="5"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="id_user" value="18"/>
+            <column name="id_role" value="4"/>
         </insert>
 
     </changeSet>

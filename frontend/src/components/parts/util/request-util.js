@@ -30,6 +30,7 @@ export const RESET_PASSWORD_MAIL_URL = "/v1/api/auth/mail";
 export const RESET_PASSWORD_URL = "/v1/api/auth/password";
 export const STATS_URL = "/v1/api/stats";
 export const CALENDAR_URL = "/v1/api/invoices/calendar";
+export const OAUTH_LOGIN_URL = "/v1/api/auth/oauth2";
 
 
 export const makeRequest = (method, url, data = null) => {
