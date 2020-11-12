@@ -8,6 +8,13 @@ Content-Type: application/json
 
 ###
 
+GET localhost:8080/v1/api/loader/page?url=https://www.tut.by/
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpYXQiOjE2MDUxMDY4MjEsImV4cCI6MTYwNTk3MDgyMX0.i-08Po2AL6yt23JItHCN3aWuRiKsJ_yKMmlYo0vVetU
+
+
+###
+
 // --- Owners ---
 
 GET localhost:8080/v1/api/owners
