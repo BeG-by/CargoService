@@ -11,15 +11,13 @@ public interface MailSenderService {
 
     void sendBirthdayMailJob();
 
-    void sendMail(String to, String subject, String text) throws ServiceException;
-
-    void sendMail(MessageRequest request) throws ServiceException, NotFoundException;
+    void sendMail(MessageRequest request) throws NotFoundException;
 
     void sendMail(MessageTemplateRequest request) throws ServiceException, NotFoundException;
 
     String sendActivationMail(String to, String role) throws ServiceException;
 
-    String sendResetPasswordMail(String to , User user) throws ServiceException;
+    String sendResetPasswordMail(String to, User user) throws ServiceException;
 
 
 }
