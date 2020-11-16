@@ -24,6 +24,7 @@
         <webdriver.version>4.2.2</webdriver.version>
         <appache.commons.lang.version>3.9</appache.commons.lang.version>
         <freemarker.version>2.3.30</freemarker.version>
+        <redis.embedded.version>0.7.2</redis.embedded.version>
     </properties>
 
     <dependencies>
@@ -78,9 +79,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
+
+        <!-- Redis -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>${redis.embedded.version}</version>
         </dependency>
 
 

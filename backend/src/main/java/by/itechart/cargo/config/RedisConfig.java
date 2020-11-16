@@ -1,6 +1,7 @@
 package by.itechart.cargo.config;
 
-import by.itechart.cargo.util.RedisReceiver;
+import by.itechart.cargo.util.redis.RedisMessageReceiver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,14 @@ public class RedisConfig {
 
     @Value("cargo-email")
     private String topic;
+
+    private RedisMessageReceiver redisMessageReceiver;
+
+    @Autowired
+    public RedisConfig(RedisMessageReceiver redisMessageReceiver) {
+        this.redisMessageReceiver = redisMessageReceiver;
+    }
+
 
     @Bean
     public LettuceConnectionFactory lettuceConnectionFactory() {
@@ -35,7 +44,7 @@ public class RedisConfig {
     public RedisMessageListenerContainer redisContainer() {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(lettuceConnectionFactory());
-        container.addMessageListener(new MessageListenerAdapter(new RedisReceiver()), topic());
+        container.addMessageListener(new MessageListenerAdapter(redisMessageReceiver), topic());
         return container;
     }
 

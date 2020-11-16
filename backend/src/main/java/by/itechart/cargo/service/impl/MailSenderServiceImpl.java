@@ -8,15 +8,12 @@ import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.service.MailSenderService;
 import by.itechart.cargo.service.util.TemplateUtil;
-
+import by.itechart.cargo.util.redis.RedisMessageSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +24,20 @@ import java.util.UUID;
 @Slf4j
 public class MailSenderServiceImpl implements MailSenderService {
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
-
     @Value("${link.registration}")
     private String registrationLink;
 
     @Value("${link.password}")
     private String passwordLink;
 
-    private final JavaMailSender javaMailSender;
+    private final RedisMessageSender redisMessageSender;
     private final UserRepository userRepository;
     private final TemplateUtil templateUtil;
 
+
     @Autowired
-    public MailSenderServiceImpl(JavaMailSender javaMailSender, UserRepository userRepository, TemplateUtil templateUtil) {
-        this.javaMailSender = javaMailSender;
+    public MailSenderServiceImpl(RedisMessageSender redisMessageSender, UserRepository userRepository, TemplateUtil templateUtil) {
+        this.redisMessageSender = redisMessageSender;
         this.userRepository = userRepository;
         this.templateUtil = templateUtil;
     }
@@ -63,7 +58,7 @@ public class MailSenderServiceImpl implements MailSenderService {
                     final String content = templateUtil.getBirthdayTemplate(user);
                     String to = user.getEmail();
                     String subject = "Greeting";
-                    sendMail(to, subject, content);
+                    redisMessageSender.sendMail(to, subject, content);
                 } catch (ServiceException e) {
                     log.error(e.getMessage());
                 }
@@ -74,33 +69,13 @@ public class MailSenderServiceImpl implements MailSenderService {
 
 
     @Override
-    public void sendMail(String to, String subject, String text) throws ServiceException {
-
-        try {
-            final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-
-            helper.setTo(to);
-            helper.setFrom(fromEmail);
-            helper.setSubject(subject);
-            helper.setText(text, true);
-
-            javaMailSender.send(mimeMessage);
-            log.info("Message has been sent to {} , subject is {}", to, subject);
-        } catch (Exception e) {
-            log.error("Mail sending failed", e);
-            throw new ServiceException("Service for sending emails is temporary unavailable");
-        }
-    }
-
-    @Override
-    public void sendMail(MessageRequest request) throws ServiceException, NotFoundException {
+    public void sendMail(MessageRequest request) throws NotFoundException {
 
         List<String> errors = new ArrayList<>();
 
         for (String email : request.getEmails()) {
             if (userRepository.findByEmail(email).isPresent()) {
-                sendMail(email, request.getSubject(), request.getText());
+                redisMessageSender.sendMail(email, request.getSubject(), request.getText());
             } else {
                 errors.add(String.format("Email %s doesn't exist", email));
             }
@@ -134,7 +109,7 @@ public class MailSenderServiceImpl implements MailSenderService {
                         throw new NotFoundException("Template doesn't exist");
                 }
 
-                sendMail(email, request.getSubject(), content);
+                redisMessageSender.sendMail(email, request.getSubject(), content);
 
             } else {
                 errors.add(String.format("Email %s doesn't exist", email));
@@ -156,7 +131,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         final String content = templateUtil.getActivationTemplate(link);
 
-        sendMail(to, subject, content);
+        redisMessageSender.sendMail(to, subject, content);
         return code;
     }
 
@@ -169,7 +144,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         final String content = templateUtil.getPasswordTemplate(user, link);
 
-        sendMail(to, subject, content);
+        redisMessageSender.sendMail(to, subject, content);
         return code;
     }
 
