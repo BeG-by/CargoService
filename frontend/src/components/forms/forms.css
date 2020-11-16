@@ -82,8 +82,10 @@
     padding-top: 10px;
 }
 
-
-
 .password-form {
     padding: 20px;
+}
+
+.google-btn {
+    margin-left: 20px !important;
 }

@@ -2,6 +2,7 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.Oauth2Request;
 import by.itechart.cargo.dto.authorization_dto.ResetPasswordRequest;
 import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
@@ -23,14 +24,19 @@ import by.itechart.cargo.service.AuthorizationService;
 import by.itechart.cargo.service.MailSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static by.itechart.cargo.service.util.MessageConstant.EMAIL_EXIST_MESSAGE;
 import static by.itechart.cargo.service.util.MessageConstant.USER_NOT_FOUND_MESSAGE;
@@ -49,6 +55,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final ResetPasswordDetailsRepository resetPasswordDetailsRepository;
+
+    @Value("${spring.security.oauth2.client.provider.google.user-info-uri}")
+    private String info_url;
 
     @Autowired
     public AuthorizationServiceImpl(UserRepository userRepository,
@@ -200,6 +209,34 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         detailsDb.setReset(true);
 
+    }
+
+    @Override
+    public AuthorizationResponse oauth2login(Oauth2Request request) throws NotFoundException, IncorrectPasswordException {
+
+        String email = request.getEmail();
+        String accessToken = request.getAccessToken();
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer" + accessToken);
+
+        HttpEntity<String> requestToGoogle = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(info_url, HttpMethod.GET, requestToGoogle, Object.class);
+        Map<String, String> info = (Map<String, String>) responseEntity.getBody();
+
+        if (!email.equals(info.get("email"))) {
+            throw new IncorrectPasswordException("Unauthorized");
+        }
+
+        final String token = jwtTokenUtil.createToken(email, user.getRoles());
+        user.setOnline(true);
+
+        return new AuthorizationResponse(token, UserResponse.toUserResponse(user), ClientCompanyDTO.fromClientCompany(user.getClientCompany()));
     }
 
 }

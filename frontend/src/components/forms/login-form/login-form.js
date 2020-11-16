@@ -14,9 +14,16 @@ import {withRouter} from "react-router-dom";
 import {ValidationSchemaEmail, ValidationSchemaPassword} from "../../parts/validation/login-form-validation";
 import '../forms.css';
 import useToast from "../../parts/toast-notification/useToast";
-import {handleRequestError, LOGIN_URL, makeRequest, RESET_PASSWORD_MAIL_URL} from "../../parts/util/request-util";
+import {
+    handleRequestError,
+    LOGIN_URL,
+    makeRequest,
+    OAUTH_LOGIN_URL,
+    RESET_PASSWORD_MAIL_URL
+} from "../../parts/util/request-util";
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import Tooltip from "@material-ui/core/Tooltip";
+import GoogleLogin from "react-google-login";
 
 
 export const LoginForm = (props) => {
@@ -24,6 +31,21 @@ export const LoginForm = (props) => {
     const {open, onClose, history} = props;
     const [toast, showToast] = useToast();
     const [resetOpen, setResetOpen] = useState(false);
+
+    const CLIENT_ID = "321725933906-8kmoujml8tgeesc5ugatmlce8ub9tedj.apps.googleusercontent.com";
+
+
+    const onGoogleLogin = (res) => {
+
+        makeRequest("POST", OAUTH_LOGIN_URL, {accessToken: res.accessToken, email: res.profileObj.email})
+            .then(res => {
+                    localStorage.setItem("authorization", res.data.token);
+                    props.changeUserAndCompany(res.data.user, res.data.company);
+                    history.push("/main");
+                }
+            ).catch(error => handleRequestError(error, showToast))
+    };
+
 
     return (
         <div>
@@ -104,6 +126,24 @@ export const LoginForm = (props) => {
                                             >
                                                 SIGN IN
                                             </Button>
+                                            <GoogleLogin
+                                                clientId={CLIENT_ID}
+                                                render={renderProps => (
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        type="submit"
+                                                        className={"google-btn"}
+                                                        disabled={renderProps.disabled}
+                                                        onClick={renderProps.onClick}
+                                                    >
+                                                        SIGN IN WITH GOOGLE
+                                                    </Button>
+                                                )}
+                                                onSuccess={onGoogleLogin}
+                                                scope={"email"}
+                                                cookiePolicy={'single_host_origin'}
+                                            />
                                         </div>
                                     </Form>
                                 );
@@ -130,7 +170,7 @@ export const ResetPasswordForm = (props) => {
             }}
             validationSchema={ValidationSchemaEmail}
             onSubmit={(values) => {
-                showToast("Email is sending..." , "info")
+                showToast("Email is sending...", "info")
                 makeRequest("POST", RESET_PASSWORD_MAIL_URL, {email: values.email})
                     .then(res => showToast(res.data))
                     .catch(error => handleRequestError(error, showToast))

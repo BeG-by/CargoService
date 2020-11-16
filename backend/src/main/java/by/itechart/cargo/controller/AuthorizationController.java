@@ -1,10 +1,7 @@
 package by.itechart.cargo.controller;
 
 
-import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
-import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
-import by.itechart.cargo.dto.authorization_dto.ResetPasswordMail;
-import by.itechart.cargo.dto.authorization_dto.ResetPasswordRequest;
+import by.itechart.cargo.dto.authorization_dto.*;
 import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
 import by.itechart.cargo.elasticsearch.ElasticsearchTestDataInserter;
 import by.itechart.cargo.exception.AlreadyExistException;
@@ -65,6 +62,12 @@ public class AuthorizationController {
             throws NotFoundException, IncorrectPasswordException {
         authorizationService.resetPassword(request);
         return ResponseEntity.ok("Password has been change");
+    }
+
+    @PostMapping("/oauth2")
+    public ResponseEntity<?> resetPassword(@RequestBody @Valid Oauth2Request request)
+            throws NotFoundException, IncorrectPasswordException {
+        return ResponseEntity.ok(authorizationService.oauth2login(request));
     }
 
 }
