@@ -141,6 +141,13 @@
             <version>${apache.io.version}</version>
         </dependency>
 
+        <!-- Encache -->
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
