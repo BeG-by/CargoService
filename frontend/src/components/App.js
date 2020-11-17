@@ -11,7 +11,6 @@ import {Footer} from "./parts/layout/footer";
 import {MainBody} from "./pages/main-body";
 import {WaybillsTable} from "./roles/driver/waybills-table"
 import InfoBody from "./pages/info-body";
-import SendMailBody from "./pages/send-mail-body";
 import ContactsBody from "./pages/contacts-body";
 import InvoicesTable from "./roles/manager/invoices-table";
 import {UserTable} from "./roles/admin/users/user-table";
@@ -36,6 +35,8 @@ import ChangePasswordForm from "./forms/reset-password-form/reset-password";
 import {Greeting} from "./parts/greeting/greeting";
 import {OwnerContent} from "./roles/owner/owner-content";
 import {CalendarTable} from "./roles/manager/calendar-table";
+import {TokenParser} from "./pages/oauth-jwt-token-parse";
+import {NotExist, UserNotExist} from "./pages/error-page/error-oauth2-denied";
 
 
 export default function App() {
@@ -62,8 +63,8 @@ export default function App() {
                 <Switch>
                     <Route exact path="/" component={WelcomeBody}/>
                     <Route exact path="/info" component={InfoBody}/>
-                    <Route exact path="/email" component={SendMailBody}/>
                     <Route exact path="/contacts" component={ContactsBody}/>
+                    <Route exact path="/jwt-parser" component={TokenParser}/>
                     <Route exact path="/registration" component={RegistrationForm}/>
                     <Route exact path="/password" component={ChangePasswordForm}/>
                     <PrivateRoute exact path="/main" component={MainBody}/>
@@ -86,8 +87,9 @@ export default function App() {
                                   hasAnyAuthorities={[ROLE_DRIVER]}/>
                     <PrivateRoute exact path={"/reports"} component={OwnerContent}
                                   hasAnyAuthorities={[ROLE_OWNER]}/>
-                    <Route exact path={"/success"}><Redirect to={"/main"}/></Route> // TODO ???
+                    <Route exact path={"/success"}><Redirect to={"/main"}/></Route>
                     <PrivateRoute exact path={"/clients"} component={ClientsTable} hasAnyAuthorities={[ROLE_SYSADMIN]}/>
+                    <Route exact path={"/error-oauth-denied"} component={UserNotExist}/>
                     <Route component={NotFound}/>
                 </Switch>
                 <WebSocket/>
