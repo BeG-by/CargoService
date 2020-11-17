@@ -17,13 +17,14 @@ import useToast from "../../parts/toast-notification/useToast";
 import {
     handleRequestError,
     LOGIN_URL,
-    makeRequest,
+    makeRequest, OAUTH_GITHUB,
     OAUTH_LOGIN_URL,
     RESET_PASSWORD_MAIL_URL
 } from "../../parts/util/request-util";
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import Tooltip from "@material-ui/core/Tooltip";
 import GoogleLogin from "react-google-login";
+import {GithubLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 
 
 export const LoginForm = (props) => {
@@ -68,87 +69,97 @@ export const LoginForm = (props) => {
                             showToast={showToast}
                             comeBack={setResetOpen}
                         /> :
-                        <Formik
-                            enableReinitialize
-                            initialValues={{
-                                email: "",
-                                password: "",
-                            }}
-                            validationSchema={ValidationSchemaEmail.concat(ValidationSchemaPassword)}
-                            onSubmit={(values) => {
+                        <div>
+                            <Formik
+                                enableReinitialize
+                                initialValues={{
+                                    email: "",
+                                    password: "",
+                                }}
+                                validationSchema={ValidationSchemaEmail.concat(ValidationSchemaPassword)}
+                                onSubmit={(values) => {
 
-                                makeRequest("POST", LOGIN_URL, {email: values.email, password: values.password})
-                                    .then(res => {
-                                        localStorage.setItem("authorization", res.data.token);
-                                        props.changeUserAndCompany(res.data.user, res.data.company);
-                                        history.push("/main");
-                                    })
-                                    .catch(error => {
-                                        let message = error.response.data;
-                                        if (error.response && error.response.status !== 500) {
-                                            if (message.startsWith("User not found")) {
-                                                showToast("Email doesn't exist")
+                                    makeRequest("POST", LOGIN_URL, {email: values.email, password: values.password})
+                                        .then(res => {
+                                            localStorage.setItem("authorization", res.data.token);
+                                            props.changeUserAndCompany(res.data.user, res.data.company);
+                                            history.push("/main");
+                                        })
+                                        .catch(error => {
+                                            let message = error.response.data;
+                                            if (error.response && error.response.status !== 500) {
+                                                if (message.startsWith("User not found")) {
+                                                    showToast("Email doesn't exist")
+                                                } else {
+                                                    showToast(error.response.data, "error");
+                                                }
                                             } else {
-                                                showToast(error.response.data, "error");
+                                                showToast("Operation was failed. Cannot get response from server", "error");
                                             }
-                                        } else {
-                                            showToast("Operation was failed. Cannot get response from server", "error");
-                                        }
-                                    })
+                                        })
 
-                            }}
-                        >
-                            {(formProps) => {
-                                return (
-                                    <Form className="login-form">
-                                        <FormikField
-                                            formikProps={formProps}
-                                            id={"email"}
-                                            label={"Email"}
-                                            formikFieldName={"email"}
-                                        />
-                                        <FormikField
-                                            formikProps={formProps}
-                                            id={"password"}
-                                            label={"Password"}
-                                            formikFieldName={"password"}
-                                            type={"password"}
-                                        />
-                                        <div className="reset-password" onClick={() => setResetOpen(true)}>
-                                            Forgot your password ?
-                                        </div>
-                                        <div style={{textAlign: "center", marginTop: 10, margiBottom: 5}}>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                type="submit"
-                                                disabled={formProps.listener}
-                                            >
-                                                SIGN IN
-                                            </Button>
-                                            <GoogleLogin
-                                                clientId={CLIENT_ID}
-                                                render={renderProps => (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        type="submit"
-                                                        className={"google-btn"}
-                                                        disabled={renderProps.disabled}
-                                                        onClick={renderProps.onClick}
-                                                    >
-                                                        SIGN IN WITH GOOGLE
-                                                    </Button>
-                                                )}
-                                                onSuccess={onGoogleLogin}
-                                                scope={"email"}
-                                                cookiePolicy={'single_host_origin'}
+                                }}
+                            >
+                                {(formProps) => {
+                                    return (
+                                        <Form className="login-form">
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"email"}
+                                                label={"Email"}
+                                                formikFieldName={"email"}
                                             />
-                                        </div>
-                                    </Form>
-                                );
-                            }}
-                        </Formik>
+                                            <FormikField
+                                                formikProps={formProps}
+                                                id={"password"}
+                                                label={"Password"}
+                                                formikFieldName={"password"}
+                                                type={"password"}
+                                            />
+                                            <div className="reset-password" onClick={() => setResetOpen(true)}>
+                                                Forgot your password ?
+                                            </div>
+                                            <div className={"buttons-login-div"}>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    type="submit"
+                                                    disabled={formProps.listener}
+                                                    style={{fontSize: 18, textTransform: "none"}}
+                                                >
+                                                    Sign in
+                                                </Button>
+                                            </div>
+                                        </Form>
+                                    );
+                                }}
+                            </Formik>
+                            <div className={"buttons-login-div"}>
+                                <GoogleLogin
+                                    clientId={CLIENT_ID}
+                                    render={renderProps => (
+                                        <GoogleLoginButton
+                                            disabled={renderProps.disabled}
+                                            onClick={renderProps.onClick}
+                                            text={"Sign in with Google"}
+                                            style={{fontSize: 18}}
+                                        />
+                                    )}
+                                    onSuccess={onGoogleLogin}
+                                    scope={"email"}
+                                    cookiePolicy={'single_host_origin'}
+                                />
+
+                                <GithubLoginButton
+                                    onClick={() => {
+                                        window.location.href = OAUTH_GITHUB;
+                                    }}
+                                    text={"Sign in with GitHub"}
+                                    style={{fontSize: 18}}
+                                />
+                            </div>
+                        </div>
+
                     }
                 </DialogContent>
                 {toast}

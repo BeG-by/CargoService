@@ -1,9 +1,6 @@
 package by.itechart.cargo.controller.advice_controller;
 
-import by.itechart.cargo.exception.AlreadyExistException;
-import by.itechart.cargo.exception.IncorrectPasswordException;
-import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.exception.ServiceException;
+import by.itechart.cargo.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -64,6 +61,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<String> handleIncorrectPasswordException(IncorrectPasswordException e) {
+        log.error(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(EmailsNotMatchException.class)
+    public ResponseEntity<String> handleEmailsNotException(IncorrectPasswordException e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
