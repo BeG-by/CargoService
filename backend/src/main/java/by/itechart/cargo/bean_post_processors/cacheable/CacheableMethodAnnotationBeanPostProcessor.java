@@ -1,5 +1,8 @@
 package by.itechart.cargo.bean_post_processors.cacheable;
 
+import by.itechart.cargo.security.JwtTokenUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ClassUtils;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -7,6 +10,7 @@ import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProcessor {
-    CacheManager cacheManager;
+    private final CacheManager cacheManager;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public CacheableMethodAnnotationBeanPostProcessor() {
+    @Autowired
+    public CacheableMethodAnnotationBeanPostProcessor(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
         cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build();
         cacheManager.init();
     }
@@ -36,6 +44,7 @@ public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProce
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Method[] methods = bean.getClass().getDeclaredMethods();
         List<Method> cacheableMethods = new ArrayList<>();
+
         for (Method method : methods) {
             CacheableMethod annotation = method.getAnnotation(CacheableMethod.class);
             if (annotation != null) {
@@ -55,11 +64,14 @@ public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProce
             if (isCacheableMethod(cachesStructures, method)) {
                 return method.invoke(bean, args);
             }
+            log.debug("Cacheable method invoking ");
             CacheStructure cacheStructure = cachesStructures.get(method.getName());
             Cache<Object, Object> cache = cacheManager.getCache(cacheStructure.getName(), cacheStructure.getKeyClass(), cacheStructure.getValueClass());
             if (cache.containsKey(args[0])) {
+                log.debug("Cache contains value");
                 return cache.get(args[0]);
             } else {
+                log.debug("Cache contains value");
                 Object result = method.invoke(bean, args);
                 cache.put(args[0], result);
                 return result;
@@ -89,8 +101,8 @@ public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProce
 
         if (isValidMethodForCache(method)) {
             String cacheName = method.getName();
-            Class<Object> methodParameter = (Class<Object>) method.getParameters()[0].getType();
-            Class<Object> returnType = (Class<Object>) method.getReturnType();
+            Class<Object> methodParameter = castFromPrimitive((Class<Object>) method.getParameters()[0].getType());
+            Class<Object> returnType = castFromPrimitive((Class<Object>) method.getReturnType());
 
             CacheStructure cacheStructure = new CacheStructure(cacheName, methodParameter, returnType);
 
@@ -103,6 +115,13 @@ public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProce
         } else {
             throw new InvalidMethodForCache();
         }
+    }
+
+    private Class<Object> castFromPrimitive(Class<Object> type) {
+        if (type.isPrimitive()) {
+            return (Class<Object>) ClassUtils.primitiveToWrapper(type);
+        }
+        return type;
     }
 
     private boolean isValidMethodForCache(Method method) {

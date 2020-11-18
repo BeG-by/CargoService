@@ -5,7 +5,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CacheableMethod {
-    int ttl();
+    int ttl();  //time to live
 
     int amountHeapEntries();
 }

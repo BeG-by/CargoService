@@ -76,21 +76,21 @@ public class InvoiceController {
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         Long id = invoiceService.save(invoiceRequest);
-        notificationController.notifyAboutNewInvoice(id, invoiceRequest.getManagerId());
+//        notificationController.notifyAboutNewInvoice(id, invoiceRequest.getManagerId());
         return ResponseEntity.ok("Invoice has been saved");
     }
 
     @PostMapping("/status")
     public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         invoiceService.updateStatus(invoiceRequest);
-        notificationController.notifyAboutInvoiceStatusChange(invoiceRequest.getId(), invoiceRequest.getStatus());
+//        notificationController.notifyAboutInvoiceStatusChange(invoiceRequest.getId(), invoiceRequest.getStatus());
         return ResponseEntity.ok("Invoice status has been updated");
     }
 
     @PutMapping
     public ResponseEntity<String> update(@RequestBody @Valid InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException {
         invoiceService.updateInvoice(invoiceRequest);
-        notificationController.notifyAboutInvoiceUpdate(invoiceRequest.getId());
+//        notificationController.notifyAboutInvoiceUpdate(invoiceRequest.getId());
         return ResponseEntity.ok("Invoice status has been updated");
     }
 }

@@ -1,5 +1,6 @@
 package by.itechart.cargo.service.impl;
 
+import by.itechart.cargo.bean_post_processors.cacheable.CacheableMethod;
 import by.itechart.cargo.dto.model_dto.invoice.*;
 import by.itechart.cargo.dto.notification.notification_data.InvoiceNotificationData;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchInvoice;
@@ -25,7 +26,6 @@ import static by.itechart.cargo.dto.model_dto.invoice.InvoiceResponse.fromInvoic
 import static by.itechart.cargo.service.util.MessageConstant.*;
 
 @Service
-@Transactional
 @Slf4j
 public class InvoiceServiceImpl implements InvoiceService {
 
@@ -179,6 +179,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    @CacheableMethod(ttl = 10000, amountHeapEntries = 100)
     public InvoiceResponse findById(long id) throws NotFoundException {
         Long clientCompanyId = jwtTokenUtil.getJwtUser().getClientCompany().getId();
         Invoice invoice = invoiceRepository.findByIdAndClientCompanyId(id, clientCompanyId)
@@ -247,7 +248,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         final Invoice savedInvoice = invoiceRepository.save(invoice);
-        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(savedInvoice));
+//        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(savedInvoice));
 
         log.info("Invoice has been saved {}", savedInvoice);
         return savedInvoice.getId();
