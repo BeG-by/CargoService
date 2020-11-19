@@ -1,4 +1,4 @@
-package by.itechart.cargo.aws_lambda;
+package by.itechart.cargo.microservices.pdf_loading;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -104,7 +104,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
 
     const loadPage = async () => {
         let response = await axios("/v1/api/loader/page?url=https://www.google.com/");
-        window.open(response.data);
+        // window.open(response.data);
     }
 
     useEffect(() => {

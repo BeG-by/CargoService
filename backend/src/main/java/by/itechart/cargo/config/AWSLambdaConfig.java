@@ -1,6 +1,6 @@
 package by.itechart.cargo.config;
 
-import by.itechart.cargo.aws_lambda.AmazonLambdaService;
+import by.itechart.cargo.microservices.pdf_loading.AmazonLambdaService;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.lambda.AWSLambda;

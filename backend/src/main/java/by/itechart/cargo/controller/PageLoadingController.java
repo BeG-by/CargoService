@@ -22,7 +22,7 @@ public class PageLoadingController {
 
     @GetMapping("/page")
     public ResponseEntity<String> downloadPage(@RequestParam String url) {
-        String presignedUrl = pageLoader.savePage(url);
-        return ResponseEntity.ok(presignedUrl);
+        pageLoader.savePage(url);
+        return ResponseEntity.ok("In process");
     }
 }
