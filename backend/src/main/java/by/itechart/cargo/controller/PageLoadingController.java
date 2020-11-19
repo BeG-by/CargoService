@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/api/loader")
-public class PageDownloadController {
-
+public class PageLoadingController {
     PageLoader pageLoader;
 
     @Autowired
-    public PageDownloadController(PageLoader pageLoader) {
+    public PageLoadingController(PageLoader pageLoader) {
         this.pageLoader = pageLoader;
     }
 

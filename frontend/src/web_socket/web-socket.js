@@ -54,8 +54,8 @@ export const WebSocket = connect(mapStateToProps)((props) => {
 
     const connectToServer = () => {
         let SockJs = require("sockjs-client");
-        SockJs = new SockJs(WEB_SOCKET_CONNECT_URL);
-        // SockJs = new SockJs("http://localhost:8080/ws");
+        // SockJs = new SockJs(WEB_SOCKET_CONNECT_URL);
+        SockJs = new SockJs("http://localhost:8080/ws");
         return Stomp.over(SockJs);
     }
 

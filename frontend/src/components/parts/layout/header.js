@@ -11,12 +11,14 @@ import {SigninButton} from "../buttons/signin-button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeUserAndCompany} from "../../store/actions";
-import {Link} from "react-router-dom";
+import {Link, Switch} from "react-router-dom";
 import "../../App.css";
 import Avatar from "@material-ui/core/Avatar";
 import photo from "../../../resources/images/user_no_photo.png";
 import {handleRequestError, makeRequest, USER_URL} from "../util/request-util";
 import useToast from "../toast-notification/useToast";
+import {Button} from "@material-ui/core";
+import * as axios from "axios";
 
 const drawerWidth = 240;
 
@@ -99,6 +101,11 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
             handleRequestError(error, showToast);
         }
     };
+
+    const loadPage = async () => {
+        let response = await axios("/v1/api/loader/page?url=https://www.google.com/");
+        window.open(response.data);
+    }
 
     useEffect(() => {
         if (isAuthenticate) {
@@ -183,6 +190,7 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                 </div>
                 <LoginButton/>
             </Toolbar>
+            <Button onClick={loadPage}>Load google page</Button>
             {toast}
         </AppBar>
     );
