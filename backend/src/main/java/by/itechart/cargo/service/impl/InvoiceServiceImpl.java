@@ -14,6 +14,7 @@ import by.itechart.cargo.security.JwtUserDetails;
 import by.itechart.cargo.service.InvoiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import static by.itechart.cargo.service.util.MessageConstant.*;
 
 @Service
 @Slf4j
+@Transactional
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;

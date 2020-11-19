@@ -12,6 +12,8 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -26,52 +28,54 @@ import java.util.Map;
 @Component
 public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProcessor {
     private final CacheManager cacheManager;
-    private final JwtTokenUtil jwtTokenUtil;
+    private Map<String, Class<?>> beanClasses = new HashMap<>();
 
-    @Autowired
-    public CacheableMethodAnnotationBeanPostProcessor(JwtTokenUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
+
+    public CacheableMethodAnnotationBeanPostProcessor() {
         cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build();
         cacheManager.init();
+        beanClasses = new HashMap<>();
     }
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        Method[] methods = bean.getClass().getMethods();
+        for (Method method : methods) {
+            if (method.getAnnotation(CacheableMethod.class) != null) {
+                beanClasses.put(beanName, bean.getClass());
+            }
+        }
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (!beanClasses.containsKey(beanName)) {
+            return bean;
+        }
         Method[] methods = bean.getClass().getDeclaredMethods();
         List<Method> cacheableMethods = new ArrayList<>();
-
         for (Method method : methods) {
-            CacheableMethod annotation = method.getAnnotation(CacheableMethod.class);
+            CacheableMethod annotation = AnnotationUtils.findAnnotation(method, CacheableMethod.class);
             if (annotation != null) {
                 cacheableMethods.add(method);
             }
         }
-        if (cacheableMethods.size() == 0) {
-            return bean;
-        }
-        return insertCacheableLogic(bean, cacheableMethods);
+        return insertCacheableLogic(bean, beanName, cacheableMethods);
     }
 
-    private Object insertCacheableLogic(Object bean, List<Method> cacheableMethods) {
+    private Object insertCacheableLogic(Object bean, String beanName, List<Method> cacheableMethods) {
         Map<String, CacheStructure> cachesStructures = createCachesForMethods(cacheableMethods);
-        Class<?> beanClass = bean.getClass();
+        Class<?> beanClass = beanClasses.get(beanName);
         return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), (proxy, method, args) -> {
             if (isCacheableMethod(cachesStructures, method)) {
                 return method.invoke(bean, args);
             }
-            log.debug("Cacheable method invoking ");
             CacheStructure cacheStructure = cachesStructures.get(method.getName());
             Cache<Object, Object> cache = cacheManager.getCache(cacheStructure.getName(), cacheStructure.getKeyClass(), cacheStructure.getValueClass());
             if (cache.containsKey(args[0])) {
-                log.debug("Cache contains value");
                 return cache.get(args[0]);
             } else {
-                log.debug("Cache contains value");
                 Object result = method.invoke(bean, args);
                 cache.put(args[0], result);
                 return result;
@@ -95,7 +99,7 @@ public class CacheableMethodAnnotationBeanPostProcessor implements BeanPostProce
     }
 
     private CacheStructure createCacheForMethod(Method method) throws InvalidMethodForCache {
-        CacheableMethod annotation = method.getAnnotation(CacheableMethod.class);
+        CacheableMethod annotation = AnnotationUtils.findAnnotation(method, CacheableMethod.class);
         int ttl = annotation.ttl();
         int amountHeapEntries = annotation.amountHeapEntries();
 

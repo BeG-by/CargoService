@@ -56,9 +56,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         List<User> users = userRepository.findAllPresent();
 
         for (User user : users) {
-            if (user.getBirthday().getMonthValue() == month
-                    && user.getBirthday().getDayOfMonth() == day) {
-
+            if (user.getBirthday().getMonthValue() == month && user.getBirthday().getDayOfMonth() == day) {
                 try {
                     final String content = templateUtil.getBirthdayTemplate(user);
                     String to = user.getEmail();
