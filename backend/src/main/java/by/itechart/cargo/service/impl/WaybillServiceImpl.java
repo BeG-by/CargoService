@@ -3,6 +3,7 @@ package by.itechart.cargo.service.impl;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillResponse;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillUpdateDateRequest;
 import by.itechart.cargo.dto.notification.notification_data.WaybillNotificationData;
 import by.itechart.cargo.elasticsearch.model.ElasticsearchWaybill;
 import by.itechart.cargo.elasticsearch.repository.ElasticsearchWaybillRepository;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -227,6 +229,19 @@ public class WaybillServiceImpl implements WaybillService {
         Waybill waybill = waybillRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
         return WaybillNotificationData.fromWaybill(waybill);
+    }
+
+    @Override
+    public void updateDates(List<WaybillUpdateDateRequest> requests) throws NotFoundException {
+
+        for (WaybillUpdateDateRequest request : requests) {
+            Waybill waybill = waybillRepository.findById(request.getId()).orElseThrow(() -> new NotFoundException(WAYBILL_NOT_FOUND_MESSAGE));
+            waybill.setDepartureDate(request.getStart());
+            waybill.setArrivalDate(request.getEnd());
+        }
+
+        log.info("Waybills has been updated id={}", requests.stream().map(WaybillUpdateDateRequest::getId).collect(Collectors.toList()));
+
     }
 
 }

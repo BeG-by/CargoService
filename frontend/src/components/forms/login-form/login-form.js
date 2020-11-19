@@ -199,7 +199,7 @@ export const ResetPasswordForm = (props) => {
                             label={"Email"}
                             formikFieldName={"email"}
                         />
-                        <div className="login-confirm-div">
+                        <div className="login-confirm-div margin-bottom">
                             <Button
                                 variant="contained"
                                 color="primary"

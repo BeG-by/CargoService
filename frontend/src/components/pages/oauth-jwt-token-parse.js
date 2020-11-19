@@ -9,9 +9,6 @@ export function TokenParser() {
         let token = url.searchParams.get("token");
         localStorage.setItem("authorization", token);
         window.location.href = "http://localhost:3000/main";
-
-
-
     });
 
     return <WelcomeBody/>;
