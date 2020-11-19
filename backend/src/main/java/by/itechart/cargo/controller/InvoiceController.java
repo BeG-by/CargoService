@@ -29,11 +29,13 @@ public class InvoiceController {
     }
 
     @GetMapping
+    @Secured({OWNER, MANAGER, DRIVER, DISPATCHER})
     public ResponseEntity<InvoicePaginationResponse> findAll(@RequestParam int requestedPage, @RequestParam int invoicesPerPage) {
         return ResponseEntity.ok(invoiceService.findAll(requestedPage, invoicesPerPage));
     }
 
     @GetMapping("/initial/data")
+    @Secured({OWNER, MANAGER, DRIVER, DISPATCHER})
     public ResponseEntity<DataForInvoiceCreating> findDataForInvoiceCreating() {
         return ResponseEntity.ok(invoiceService.findDataForInvoiceCreating());
     }
@@ -81,12 +83,14 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
+    @Secured({OWNER, MANAGER, DRIVER, DISPATCHER})
     public ResponseEntity<InvoiceResponse> findById(@PathVariable long id) throws NotFoundException {
         InvoiceResponse byId = invoiceService.findById(id);
         return ResponseEntity.ok(byId);
     }
 
     @PostMapping
+    @Secured({OWNER, MANAGER, DRIVER, DISPATCHER})
     public ResponseEntity<String> save(@RequestBody @Valid InvoiceRequest invoiceRequest) throws AlreadyExistException, NotFoundException {
         Long id = invoiceService.save(invoiceRequest);
         notificationController.notifyAboutNewInvoice(id, invoiceRequest.getManagerId());
@@ -94,6 +98,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/status")
+    @Secured({OWNER, MANAGER, DRIVER, DISPATCHER})
     public ResponseEntity<String> updateStatus(@RequestBody @Valid UpdateInvoiceStatusRequest invoiceRequest) throws NotFoundException {
         invoiceService.updateStatus(invoiceRequest);
         notificationController.notifyAboutInvoiceStatusChange(invoiceRequest.getId(), invoiceRequest.getStatus());
@@ -101,6 +106,7 @@ public class InvoiceController {
     }
 
     @PutMapping
+    @Secured({OWNER, MANAGER, DRIVER, DISPATCHER})
     public ResponseEntity<String> update(@RequestBody @Valid InvoiceRequest invoiceRequest) throws NotFoundException, AlreadyExistException {
         invoiceService.updateInvoice(invoiceRequest);
         notificationController.notifyAboutInvoiceUpdate(invoiceRequest.getId());
