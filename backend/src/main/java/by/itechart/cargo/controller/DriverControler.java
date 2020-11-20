@@ -17,11 +17,11 @@ import static by.itechart.cargo.security.RoleConstant.DISPATCHER;
 
 @RestController
 @RequestMapping("/v1/api/drivers")
-public class DriverController {
+public class DriverControler {
 
     private final DriverService driverService;
 
-    public DriverController(DriverService driverService) {
+    public DriverControler(DriverService driverService) {
         this.driverService = driverService;
     }
 
@@ -35,5 +35,4 @@ public class DriverController {
     public ResponseEntity<UserResponse> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(driverService.findById(id));
     }
-
 }

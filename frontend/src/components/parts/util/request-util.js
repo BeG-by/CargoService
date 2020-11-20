@@ -16,6 +16,7 @@ export const POINT_URL = "/v1/api/waybills/points";
 export const ACT_URL = "/v1/api/acts";
 export const CLIENTS_URL = "/v1/api/clients/";
 export const LOGOUT_URL = "/v1/api/auth/logout";
+export const LOAD_PDF_URL = "/v1/api/loader/page"
 
 export const INVOICE_NOTIFICATION_DATA_URL = "/v1/api/notifications/invoice";
 export const WAYBILL_NOTIFICATION_DATA_URL = "/v1/api/notifications/waybill";
