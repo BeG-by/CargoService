@@ -1,23 +1,20 @@
 package by.itechart.cargo.controller;
 
 
-import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
-import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
-import by.itechart.cargo.dto.authorization_dto.ResetPasswordMail;
-import by.itechart.cargo.dto.authorization_dto.ResetPasswordRequest;
+import by.itechart.cargo.dto.authorization_dto.*;
 import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
 import by.itechart.cargo.elasticsearch.ElasticsearchTestDataInserter;
-import by.itechart.cargo.exception.AlreadyExistException;
-import by.itechart.cargo.exception.IncorrectPasswordException;
-import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.exception.ServiceException;
+import by.itechart.cargo.exception.*;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/v1/api/auth")
@@ -26,6 +23,12 @@ public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
     private final ElasticsearchTestDataInserter testDataInserter;
+
+    @Value("${auth2.jwt.redirect-uri}")
+    private String jwtRedirectURI;
+
+    @Value("${auth2.denied.redirect-uri}")
+    private String deniedRedirectURI;
 
     @Autowired
     public AuthorizationController(AuthorizationService authorizationService, ElasticsearchTestDataInserter testDataInserter) {
@@ -65,6 +68,24 @@ public class AuthorizationController {
             throws NotFoundException, IncorrectPasswordException {
         authorizationService.resetPassword(request);
         return ResponseEntity.ok("Password has been change");
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> googleLogin(@RequestBody @Valid Oauth2Request request)
+            throws NotFoundException, EmailsNotMatchException {
+        return ResponseEntity.ok(authorizationService.oauth2GoogleLogin(request));
+    }
+
+    @GetMapping("/code")
+    public void githubLogin(@RequestParam("code") String authCode, HttpServletResponse res) throws IOException {
+
+        try {
+            String token = authorizationService.oauth2GitHubLogin(authCode);
+            res.sendRedirect(jwtRedirectURI + "?token=" + token);
+        } catch (NotFoundException e) {
+            res.sendRedirect(deniedRedirectURI);
+        }
+
     }
 
 }

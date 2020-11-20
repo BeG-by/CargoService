@@ -67,14 +67,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/api/auth/login", "/v1/api/auth/registration", "/v1/api/auth/password", "/v1/api/auth/mail", "/ws/**").permitAll()
+                .antMatchers("/v1/api/auth/login", "/v1/api/auth/registration", "/v1/api/auth/password", "/v1/api/auth/mail", "/ws/**" ).permitAll()
+                .antMatchers("/v1/api/auth/google" , "/v1/api/auth/code").permitAll()
                 .antMatchers(HttpMethod.POST, "/ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling().authenticationEntryPoint(customEntryPointBean())
                 .and()
-                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandlerBean());
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandlerBean())
+                .and()
+                .oauth2Login();
     }
 
 }

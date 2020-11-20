@@ -16,16 +16,24 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class RedisConfig {
     private final static String TOPIC_FOR_PDF_LOADING_REQUEST = "pubsub:pdf-loading-req";
     private final static String TOPIC_FOR_PDF_LOADING_RESPONSE = "pubsub:pdf-loading-resp";
+    @Value("cargo-email")
+    private String topic;
+
 
     private final PDFLoadingMicroservice pdfLoadingMicroservice;
     private final PDFLoadingResponseListener pdfLoadingResponseListener;
+    private RedisMessageReceiver redisMessageReceiver;
 
 
     @Autowired
-    public RedisConfig(PDFLoadingMicroservice pdfLoadingMicroservice, PDFLoadingResponseListener pdfLoadingResponseListener) {
+    public RedisConfig(PDFLoadingMicroservice pdfLoadingMicroservice,
+                       PDFLoadingResponseListener pdfLoadingResponseListener,
+                       RedisMessageReceiver redisMessageReceiver) {
         this.pdfLoadingMicroservice = pdfLoadingMicroservice;
         this.pdfLoadingResponseListener = pdfLoadingResponseListener;
+        this.redisMessageReceiver = redisMessageReceiver;
     }
+
 
     @Bean
     public LettuceConnectionFactory lettuceConnectionFactory() {
@@ -46,6 +54,7 @@ public class RedisConfig {
 
         container.addMessageListener(new MessageListenerAdapter(pdfLoadingMicroservice), topicForPdfLoadingRequest());
         container.addMessageListener(new MessageListenerAdapter(pdfLoadingResponseListener), topicForPdfLoadingResponse());
+        container.addMessageListener(new MessageListenerAdapter(redisMessageReceiver), topic());
         return container;
     }
 
@@ -63,4 +72,11 @@ public class RedisConfig {
     ChannelTopic topicForPdfLoadingResponse() {
         return new ChannelTopic(TOPIC_FOR_PDF_LOADING_RESPONSE);
     }
+//        template.setValueSerializer(new GenericToStringSerializer<>(Object.class));
+
+    @Bean
+    public ChannelTopic topic() {
+        return new ChannelTopic(topic);
+    }
+
 }

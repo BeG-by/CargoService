@@ -375,7 +375,7 @@
         </insert>
 
         <insert tableName="product_owner">
-            <column name="name" value="МАГАЗИН-ИП-РОГОВ"/>
+            <column name="name" value="МАГАЗИН-ИП-МАРУСЯ"/>
             <column name="type" value="SP"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
@@ -401,7 +401,7 @@
 
 
         <insert tableName="product_owner">
-            <column name="name" value="Ninja"/>
+            <column name="name" value="Электросила"/>
             <column name="type" value="SP"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
@@ -412,25 +412,25 @@
             <column name="id_client_company" value="2"/>
         </insert>
         <insert tableName="product_owner">
-            <column name="name" value="NANI"/>
+            <column name="name" value="OOO DoubleFox"/>
             <column name="type" value="SP"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
-            <column name="street" value="st. Karl Marksa"/>
-            <column name="house" value="321"/>
+            <column name="street" value="st. Lenina"/>
+            <column name="house" value="31"/>
             <column name="registration_date" value="2020-01-01"/>
-            <column name="phone" value="+3753233213"/>
+            <column name="phone" value="+3755133213"/>
             <column name="id_client_company" value="2"/>
         </insert>
         <insert tableName="product_owner">
-            <column name="name" value="Ninoral"/>
+            <column name="name" value="Science Industry"/>
             <column name="type" value="SP"/>
             <column name="country" value="Belarus"/>
             <column name="city" value="Minsk"/>
-            <column name="street" value="st. Karl Marksa"/>
-            <column name="house" value="321"/>
+            <column name="street" value="st. Nemifa"/>
+            <column name="house" value="311"/>
             <column name="registration_date" value="2020-01-01"/>
-            <column name="phone" value="+3753233213"/>
+            <column name="phone" value="+3753239513"/>
             <column name="id_client_company" value="2"/>
         </insert>
     </changeSet>

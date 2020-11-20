@@ -20,6 +20,11 @@
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
         <aws.version>1.11.750</aws.version>
         <apache.io.version>2.6</apache.io.version>
+        <selenium.version>3.141.59</selenium.version>
+        <webdriver.version>4.2.2</webdriver.version>
+        <appache.commons.lang.version>3.9</appache.commons.lang.version>
+        <freemarker.version>2.3.30</freemarker.version>
+        <redis.embedded.version>0.7.2</redis.embedded.version>
     </properties>
 
     <dependencies>
@@ -85,6 +90,19 @@
             <version>0.7.2</version>
         </dependency>
 
+        <!-- Redis -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>${redis.embedded.version}</version>
+        </dependency>
+
 
         <!-- PostgreSql  -->
         <dependency>
@@ -129,12 +147,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
+            <version>${appache.commons.lang.version}</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.30</version>
+            <version>${freemarker.version}</version>
         </dependency>
 
         <!-- AWS -->
@@ -149,6 +167,21 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${apache.io.version}</version>
+        </dependency>
+
+        <!-- Selenium -->
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdriver.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

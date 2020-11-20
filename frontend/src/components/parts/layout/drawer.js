@@ -19,6 +19,7 @@ import {ItemProfile} from "../drawer-items/item-profile";
 import {ItemClientTable} from "../drawer-items/item-clients";
 import {ItemCurrentWaybill} from "../drawer-items/item-current-waybill";
 import {ItemReports} from "../drawer-items/item-reports";
+import {ItemCalendar} from "../drawer-items/item-calendar";
 
 
 const drawerWidth = 240;
@@ -79,9 +80,16 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
             break;
         case 'DRIVER':
             components.push(<ItemCurrentWaybill key='Current waybill'/>);
+            components.push(<ItemInvoiceList key='Invoices'/>);
+            components.push(<ItemWaybillList key='Waybills'/>);
+            components.push(<Divider key='Divider'/>);
+            components.push(<ItemProfile key="Profile"/>);
+            components.push(<Divider key='SecondDivider'/>);
+            break;
         case 'MANAGER':
             components.push(<ItemInvoiceList key='Invoices'/>);
             components.push(<ItemWaybillList key='Waybills'/>);
+            components.push(<ItemCalendar key='Calendar'/>);
             components.push(<Divider key='Divider'/>);
             components.push(<ItemProfile key="Profile"/>);
             components.push(<Divider key='SecondDivider'/>);

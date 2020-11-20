@@ -20,8 +20,7 @@ export const LOGOUT_URL = "/v1/api/auth/logout";
 export const INVOICE_NOTIFICATION_DATA_URL = "/v1/api/notifications/invoice";
 export const WAYBILL_NOTIFICATION_DATA_URL = "/v1/api/notifications/waybill";
 export const POINT_NOTIFICATION_DATA_URL = "/v1/api/notifications/point";
-export const WEB_SOCKET_CONNECT_URL = "http://192.168.4.128:8080/ws";
-// export const WEB_SOCKET_CONNECT_URL = "http://localhost:8080/ws";
+export const WEB_SOCKET_CONNECT_URL = "http://localhost:8080/ws";
 
 export const LOGIN_URL = "/v1/api/auth/login";
 export const REGISTRATION_URL = "/v1/api/auth/registration";
@@ -30,6 +29,10 @@ export const EMAIL_URL = "/v1/api/emails";
 export const RESET_PASSWORD_MAIL_URL = "/v1/api/auth/mail";
 export const RESET_PASSWORD_URL = "/v1/api/auth/password";
 export const STATS_URL = "/v1/api/stats";
+export const CALENDAR_URL = "/v1/api/invoices/calendar";
+export const OAUTH_LOGIN_URL = "/v1/api/auth/google";
+
+export const OAUTH_GITHUB = "http://localhost:8080/oauth2/authorization/github";
 
 
 export const makeRequest = (method, url, data = null) => {

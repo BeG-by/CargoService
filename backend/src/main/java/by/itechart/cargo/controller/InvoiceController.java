@@ -6,10 +6,14 @@ import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+
+import static by.itechart.cargo.security.RoleConstant.*;
 
 @RestController
 @RequestMapping("/v1/api/invoices")
@@ -35,6 +39,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/driver")
+    @Secured({DRIVER})
     public ResponseEntity<InvoicePaginationResponse> findInvoicesForDriver(@RequestParam(required = false) String number,
                                                                            @RequestParam int requestedPage,
                                                                            @RequestParam int invoicesPerPage) {
@@ -46,6 +51,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/manager")
+    @Secured({MANAGER})
     public ResponseEntity<InvoicePaginationResponse> findInvoicesForManager(@RequestParam(required = false) String number,
                                                                             @RequestParam int requestedPage,
                                                                             @RequestParam int invoicesPerPage) {
@@ -57,6 +63,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/dispatcher")
+    @Secured({DISPATCHER})
     public ResponseEntity<InvoicePaginationResponse> findInvoicesForDispatcher(@RequestParam(required = false) String number,
                                                                                @RequestParam int requestedPage,
                                                                                @RequestParam int invoicesPerPage) {
@@ -65,6 +72,12 @@ public class InvoiceController {
         } else {
             return ResponseEntity.ok(invoiceService.findAllByNumberStartsWithForDispatcher(number, requestedPage, invoicesPerPage));
         }
+    }
+
+    @GetMapping("/calendar")
+    @Secured({MANAGER})
+    public ResponseEntity<List<InvoiceResponse>> findInfoForCalendar() {
+        return ResponseEntity.ok(invoiceService.findAllForCalendar());
     }
 
     @GetMapping("/{id}")

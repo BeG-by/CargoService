@@ -2,14 +2,12 @@ package by.itechart.cargo.service.impl;
 
 import by.itechart.cargo.dto.authorization_dto.AuthorizationRequest;
 import by.itechart.cargo.dto.authorization_dto.AuthorizationResponse;
+import by.itechart.cargo.dto.authorization_dto.Oauth2Request;
 import by.itechart.cargo.dto.authorization_dto.ResetPasswordRequest;
 import by.itechart.cargo.dto.model_dto.client_company.ClientCompanyDTO;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
-import by.itechart.cargo.exception.AlreadyExistException;
-import by.itechart.cargo.exception.IncorrectPasswordException;
-import by.itechart.cargo.exception.NotFoundException;
-import by.itechart.cargo.exception.ServiceException;
+import by.itechart.cargo.exception.*;
 import by.itechart.cargo.model.ActivationDetails;
 import by.itechart.cargo.model.ResetPasswordDetails;
 import by.itechart.cargo.model.Role;
@@ -23,14 +21,20 @@ import by.itechart.cargo.service.AuthorizationService;
 import by.itechart.cargo.service.MailSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static by.itechart.cargo.service.util.MessageConstant.EMAIL_EXIST_MESSAGE;
 import static by.itechart.cargo.service.util.MessageConstant.USER_NOT_FOUND_MESSAGE;
@@ -49,6 +53,21 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final ResetPasswordDetailsRepository resetPasswordDetailsRepository;
+
+    @Value("${spring.security.oauth2.client.provider.google.user-info-uri}")
+    private String googleUserInfoURI;
+
+    @Value("${spring.security.oauth2.client.registration.github.client-id}")
+    private String githubClientId;
+
+    @Value("${spring.security.oauth2.client.registration.github.client-secret}")
+    private String githubClientSecret;
+
+    @Value("${spring.security.oauth2.client.provider.github.token-uri}")
+    private String githubTokenURI;
+
+    @Value("${spring.security.oauth2.client.provider.github.user-info-uri}")
+    private String gitHubUserURI;
 
     @Autowired
     public AuthorizationServiceImpl(UserRepository userRepository,
@@ -200,6 +219,87 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         detailsDb.setReset(true);
 
+    }
+
+    @Override
+    public AuthorizationResponse oauth2GoogleLogin(Oauth2Request request) throws NotFoundException, EmailsNotMatchException {
+
+        String email = request.getEmail();
+        String accessToken = request.getAccessToken();
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer" + accessToken);
+
+        HttpEntity<String> requestToGoogle = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(googleUserInfoURI, HttpMethod.GET, requestToGoogle, Object.class);
+        Map<String, String> info = (Map<String, String>) responseEntity.getBody();
+
+        if (!email.equals(info.get("email"))) {
+            throw new EmailsNotMatchException("Unauthorized");
+        }
+
+        final String token = jwtTokenUtil.createToken(email, user.getRoles());
+        user.setOnline(true);
+
+        return new AuthorizationResponse(token, UserResponse.toUserResponse(user), ClientCompanyDTO.fromClientCompany(user.getClientCompany()));
+    }
+
+    @Override
+    public String oauth2GitHubLogin(String authCode) throws NotFoundException {
+
+        String accessToken = getAccessTokenGithub(authCode);
+        String email = getUserInfoGithub(accessToken);
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND_MESSAGE));
+        String token = jwtTokenUtil.createToken(user.getEmail(), user.getRoles());
+        user.setOnline(true);
+
+        return token;
+    }
+
+
+    private String getAccessTokenGithub(String authCode) {
+        String credentials = githubClientId + ":" + githubClientSecret;
+        String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + encodedCredentials);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        String access_token_url = githubTokenURI +
+                "?code=" + authCode +
+                "&grant_type=authorization_code";
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(access_token_url, HttpMethod.POST, request, Object.class);
+        Map<String, String> tokenResponse = (Map<String, String>) responseEntity.getBody();
+
+        log.info("Access token from gitHub has been received {}", tokenResponse);
+
+        return tokenResponse.get("access_token");
+
+    }
+
+
+    private String getUserInfoGithub(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "token " + accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(gitHubUserURI, HttpMethod.GET, request, Object.class);
+        ArrayList<Map<String, String>> emails = (ArrayList<Map<String, String>>) responseEntity.getBody();
+
+        log.info("Info about user by access token has been received {}", emails);
+
+        return emails.get(0).get("email");
     }
 
 }
