@@ -131,7 +131,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
                 {components}
             </List>
             <List>
-                <ItemLoadPage/>
+                {props.role === "UNKNOWN" ? "" : <ItemLoadPage/>}
                 <ItemInfo/>
                 <ItemContacts/>
             </List>

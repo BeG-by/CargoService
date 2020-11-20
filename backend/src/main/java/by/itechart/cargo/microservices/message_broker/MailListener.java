@@ -1,4 +1,4 @@
-package by.itechart.cargo.util.redis;
+package by.itechart.cargo.microservices.message_broker;
 
 
 import lombok.SneakyThrows;
@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 @Slf4j
-public class RedisMessageReceiver implements MessageListener {
+public class MailListener implements MessageListener {
 
 
     @Value("${spring.mail.username}")
@@ -23,7 +23,7 @@ public class RedisMessageReceiver implements MessageListener {
     private final JavaMailSender javaMailSender;
 
     @Autowired
-    public RedisMessageReceiver(JavaMailSender javaMailSender) {
+    public MailListener(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
@@ -33,12 +33,11 @@ public class RedisMessageReceiver implements MessageListener {
 
         try {
 
-            String[] params = message.toString().split(RedisMessageSender.MESSAGE_DELIMITER);
+            String[] params = message.toString().split(MailPublisherImpl.MESSAGE_DELIMITER);
 
             String to = params[0];
             String subject = params[1];
             String text = params[2];
-
 
             final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");

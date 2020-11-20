@@ -11,9 +11,9 @@ export const ItemLoadPage = () => {
     const [ToastComponent, showToast] = useToast();
 
     const loadPage = async () => {
-        let URL_TO_LOAD = "https://material-ui.com/components/buttons/";
+        let URL_TO_LOAD = "https://www.tut.by";
         await axios(`${LOAD_PDF_URL}?url=` + URL_TO_LOAD);
-        showToast("Preparing pdf...", "info");
+        showToast("Preparing pdf... (tut.by)", "info");
     }
 
     return (

@@ -17,11 +17,11 @@ import static by.itechart.cargo.security.RoleConstant.DISPATCHER;
 
 @RestController
 @RequestMapping("/v1/api/drivers")
-public class DriverControler {
+public class DriverController {
 
     private final DriverService driverService;
 
-    public DriverControler(DriverService driverService) {
+    public DriverController(DriverService driverService) {
         this.driverService = driverService;
     }
 

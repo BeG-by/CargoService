@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/api/loader")
 public class PageLoadingController {
-    PageLoaderServiceImpl pageLoaderServiceImpl;
+
+    private final PageLoaderServiceImpl pageLoaderServiceImpl;
 
     @Autowired
     public PageLoadingController(PageLoaderServiceImpl pageLoaderServiceImpl) {
