@@ -2,9 +2,12 @@ package by.itechart.cargo.service;
 
 import by.itechart.cargo.dto.model_dto.waybill.WaybillPaginationResponse;
 import by.itechart.cargo.dto.model_dto.waybill.WaybillRequest;
+import by.itechart.cargo.dto.model_dto.waybill.WaybillUpdateDateRequest;
 import by.itechart.cargo.dto.notification.notification_data.WaybillNotificationData;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.Waybill;
+
+import java.util.List;
 
 
 public interface WaybillService {
@@ -32,4 +35,6 @@ public interface WaybillService {
     WaybillPaginationResponse findAll(Integer page, Integer waybillsPerPage);
 
     WaybillNotificationData findWaybillNotificationData(Long id) throws NotFoundException;
+
+    void updateDates(List<WaybillUpdateDateRequest> request) throws NotFoundException;
 }

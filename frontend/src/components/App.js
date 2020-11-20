@@ -36,7 +36,7 @@ import {Greeting} from "./parts/greeting/greeting";
 import {OwnerContent} from "./roles/owner/owner-content";
 import {CalendarTable} from "./roles/manager/calendar-table";
 import {TokenParser} from "./pages/oauth-jwt-token-parse";
-import {NotExist, UserNotExist} from "./pages/error-page/error-oauth2-denied";
+import {UserNotExist} from "./pages/error-page/error-oauth2-denied";
 
 
 export default function App() {

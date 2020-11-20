@@ -53,11 +53,11 @@ VALUES ('Beer', 'BARREL', 3, 'KG', 'BYN', '132', '1330', 'ACCEPTED', null, null,
 
 INSERT INTO public.waybill(waybill_status, id_invoice, id_auto, departure_date, distance, arrival_date,
                            id_client_company)
-VALUES ('CURRENT', 1, 1, '2020-11-11', 1000, '2020-11-20', 2);
+VALUES ('CURRENT', 1, 1, '2020-11-11', 1000, '2020-11-17', 2);
 
 INSERT INTO public.waybill(waybill_status, id_invoice, id_auto, departure_date, distance, arrival_date,
                            id_client_company)
-VALUES ('CURRENT', 2, 2, '2020-11-13', 1000, '2020-11-16', 2);
+VALUES ('CURRENT', 2, 2, '2020-11-29', 1000, '2020-11-29', 2);
 
 INSERT INTO public.waybill(waybill_status, id_invoice, id_auto, departure_date, distance, arrival_date,
                            id_client_company)
@@ -69,7 +69,7 @@ VALUES ('CURRENT', 4, 1, '2020-11-20', 1000, '2020-11-22', 2);
 
 INSERT INTO public.waybill(waybill_status, id_invoice, id_auto, departure_date, distance, arrival_date,
                            id_client_company)
-VALUES ('CURRENT', 5, 2, '2020-11-11', 1000, '2020-11-20', 2);
+VALUES ('CURRENT', 5, 2, '2020-11-25', 1000, '2020-11-28', 2);
 
 
 -- Points --
