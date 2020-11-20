@@ -1,8 +1,7 @@
 package by.itechart.cargo.controller;
 
 
-import by.itechart.cargo.service.impl.PageLoader;
-import com.sun.mail.iap.Response;
+import by.itechart.cargo.service.impl.PageLoaderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/api/loader")
 public class PageLoadingController {
-    PageLoader pageLoader;
+    PageLoaderServiceImpl pageLoaderServiceImpl;
 
     @Autowired
-    public PageLoadingController(PageLoader pageLoader) {
-        this.pageLoader = pageLoader;
+    public PageLoadingController(PageLoaderServiceImpl pageLoaderServiceImpl) {
+        this.pageLoaderServiceImpl = pageLoaderServiceImpl;
     }
 
     @GetMapping("/page")
     public ResponseEntity<String> downloadPage(@RequestParam String url) {
-        pageLoader.savePage(url);
+        pageLoaderServiceImpl.savePage(url);
         return ResponseEntity.ok("In process");
     }
 }

@@ -18,6 +18,11 @@ public abstract class Notification {
     }
 
     enum Type {
-        NEW_INVOICE, NEW_WAYBILL, INVOICE_STATUS_UPDATE, POINT_PASS, INVOICE_UPDATE
+        NEW_INVOICE,
+        NEW_WAYBILL,
+        INVOICE_STATUS_UPDATE,
+        POINT_PASS,
+        INVOICE_UPDATE,
+        PDF_READY,
     }
 }

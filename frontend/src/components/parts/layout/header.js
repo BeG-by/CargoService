@@ -103,8 +103,9 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
     };
 
     const loadPage = async () => {
-        let response = await axios("/v1/api/loader/page?url=https://www.google.com/");
-        // window.open(response.data);
+        let URL_TO_LOAD = "httdsaps://material-ui.com/components/buttons/";
+        let response = await axios("/v1/api/loader/page?url=" + URL_TO_LOAD);
+        showToast("Preparing pdf...", "info");
     }
 
     useEffect(() => {
@@ -188,9 +189,9 @@ export const Header = connect(mapStateToProps, mapActionsToProps)((props) => {
                 <div className={classes.spaceAround}>
                     {renderUserPhoto()}
                 </div>
+                <Button variant="outlined" color="inherit" onClick={loadPage}>Load page</Button>
                 <LoginButton/>
             </Toolbar>
-            <Button onClick={loadPage}>Load google page</Button>
             {toast}
         </AppBar>
     );

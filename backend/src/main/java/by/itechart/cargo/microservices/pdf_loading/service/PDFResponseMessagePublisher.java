@@ -1,4 +1,4 @@
-package by.itechart.cargo.microservices.pdf_loading;
+package by.itechart.cargo.microservices.pdf_loading.service;
 
 import by.itechart.cargo.microservices.MessagePublisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,6 @@ public class PDFResponseMessagePublisher implements MessagePublisher {
 
     @Override
     public void publish(Long responseReceiverId, String message) {
-        redisTemplate.convertAndSend(channelTopic.getTopic(), message);
+        redisTemplate.convertAndSend(channelTopic.getTopic(), responseReceiverId + "_" + message);
     }
 }

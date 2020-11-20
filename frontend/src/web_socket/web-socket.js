@@ -8,11 +8,12 @@ import usePointPassMessageHandler from "./hooks/handlers/use-point-pass-message-
 import useNewWaybillMessageHandler from "./hooks/handlers/use-new-waybill-message-handler";
 import useInvoiceUpdateMessageHandler from "./hooks/handlers/use-invoice-update-message-handler";
 import useInvoiceStatusUpdateMessageHandler from "./hooks/handlers/use-invoice-status-update-message-handler";
+import usePDFSuccessLoadingMessageHandler from "./hooks/handlers/use-pdf-success-loading-notification-handler";
 import {
     INVOICE_STATUS_UPDATE_MESSAGE_TYPE,
     INVOICE_UPDATE_MESSAGE_TYPE,
     NEW_INVOICE_MESSAGE_TYPE,
-    NEW_WAYBILL_MESSAGE_TYPE,
+    NEW_WAYBILL_MESSAGE_TYPE, PDF_READY_MESSAGE_TYPE,
     POINT_PASS_MESSAGE_TYPE
 } from "./notification-types";
 import {WEB_SOCKET_CONNECT_URL} from "../components/parts/util/request-util";
@@ -31,6 +32,7 @@ export const WebSocket = connect(mapStateToProps)((props) => {
     const [NotificationToastComponent, openNotificationToast] = useToast();
     const [ActionToastComponent, openActionToast] = useActionToast()
 
+    const [handleSuccessPDFLoading] = usePDFSuccessLoadingMessageHandler();
     const [NewWaybillHandlerComponent, handleNewWaybillMessage] = useNewWaybillMessageHandler();
     const [NewInvoiceHandlerComponent, handleNewInvoiceMessage] = useNewInvoiceMessageHandler();
     const [PointPassHandlerComponent, handlePointPassMessage] = usePointPassMessageHandler()
@@ -77,6 +79,9 @@ export const WebSocket = connect(mapStateToProps)((props) => {
                 break;
             case POINT_PASS_MESSAGE_TYPE:
                 handlePointPassMessage(messageData, openActionToast);
+                break;
+            case PDF_READY_MESSAGE_TYPE:
+                handleSuccessPDFLoading(messageData, openActionToast);
                 break;
         }
     }

@@ -1,10 +1,8 @@
 package by.itechart.cargo.config;
 
-import by.itechart.cargo.microservices.pdf_loading.AmazonLambdaService;
-import by.itechart.cargo.microservices.pdf_loading.PDFLoadingMicroservice;
-import by.itechart.cargo.microservices.pdf_loading.PDFLoadingMicroserviceConnector;
-import by.itechart.cargo.microservices.pdf_loading.PDFResponseMessagePublisher;
-import liquibase.pro.packaged.A;
+import by.itechart.cargo.microservices.pdf_loading.connector.PDFLoadingResponseListener;
+import by.itechart.cargo.microservices.pdf_loading.connector.PublisherToPDFLoadingMicroservice;
+import by.itechart.cargo.microservices.pdf_loading.service.PDFLoadingMicroservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +17,14 @@ public class RedisConfig {
     private final static String TOPIC_FOR_PDF_LOADING_REQUEST = "pubsub:pdf-loading-req";
     private final static String TOPIC_FOR_PDF_LOADING_RESPONSE = "pubsub:pdf-loading-resp";
 
-    PDFLoadingMicroservice pdfLoadingMicroservice;
+    private final PDFLoadingMicroservice pdfLoadingMicroservice;
+    private final PDFLoadingResponseListener pdfLoadingResponseListener;
+
 
     @Autowired
-    public RedisConfig(PDFLoadingMicroservice pdfLoadingMicroservice) {
+    public RedisConfig(PDFLoadingMicroservice pdfLoadingMicroservice, PDFLoadingResponseListener pdfLoadingResponseListener) {
         this.pdfLoadingMicroservice = pdfLoadingMicroservice;
+        this.pdfLoadingResponseListener = pdfLoadingResponseListener;
     }
 
     @Bean
@@ -44,17 +45,13 @@ public class RedisConfig {
         container.setConnectionFactory(lettuceConnectionFactory());
 
         container.addMessageListener(new MessageListenerAdapter(pdfLoadingMicroservice), topicForPdfLoadingRequest());
-        container.addMessageListener(new MessageListenerAdapter(pdfLoadingMicroserviceConnector()), topicForPdfLoadingResponse());
+        container.addMessageListener(new MessageListenerAdapter(pdfLoadingResponseListener), topicForPdfLoadingResponse());
         return container;
     }
 
-
     @Bean
-    PDFLoadingMicroserviceConnector pdfLoadingMicroserviceConnector() {
-        PDFLoadingMicroserviceConnector microserviceConnector = new PDFLoadingMicroserviceConnector();
-        microserviceConnector.setRedisTemplate(redisTemplate());
-        microserviceConnector.setTopicForPDFLoadingRequests(topicForPdfLoadingRequest());
-        return microserviceConnector;
+    PublisherToPDFLoadingMicroservice publisherToPDFLoadingMicroservice() {
+        return new PublisherToPDFLoadingMicroservice(topicForPdfLoadingRequest(), redisTemplate());
     }
 
     @Bean
