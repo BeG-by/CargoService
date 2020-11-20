@@ -1,6 +1,6 @@
 import React from "react";
 
-const TOAST_TITLE = "PDF created!"
+const TOAST_TITLE = "PDF ready"
 
 export default function useInvoiceUpdateMessageHandler() {
     const handleInvoiceUpdateMessage = async (messageData, openActionToast) => {

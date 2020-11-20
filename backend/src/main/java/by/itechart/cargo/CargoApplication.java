@@ -18,15 +18,6 @@ public class CargoApplication {
         redisServer.start();
     }
 
-
-    private RedisServer redisServer;
-
-    @PostConstruct
-    public void init() {
-        redisServer = new RedisServer();
-        redisServer.start();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(CargoApplication.class, args);
     }

@@ -20,6 +20,7 @@ import {ItemClientTable} from "../drawer-items/item-clients";
 import {ItemCurrentWaybill} from "../drawer-items/item-current-waybill";
 import {ItemReports} from "../drawer-items/item-reports";
 import {ItemCalendar} from "../drawer-items/item-calendar";
+import {ItemLoadPage} from "../drawer-items/item-load-page";
 
 
 const drawerWidth = 240;
@@ -130,6 +131,7 @@ export const DrawerMenu = connect(mapStateToProps)((props) => {
                 {components}
             </List>
             <List>
+                <ItemLoadPage/>
                 <ItemInfo/>
                 <ItemContacts/>
             </List>
