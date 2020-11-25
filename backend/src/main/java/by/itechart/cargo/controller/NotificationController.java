@@ -61,7 +61,7 @@ public class NotificationController {
 
     void notifyAboutNewInvoice(Long invoiceId, Long notificationRecipient) {
         NewInvoiceNotification notification = new NewInvoiceNotification(invoiceId, notificationRecipient);
-        messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipient), PRIVATE_ENDPOINT, notification);
+        messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipient), "/queue/messages", notification);
     }
 
     void notifyAboutInvoiceStatusChange(Long invoiceId, Invoice.Status invoiceStatus) throws NotFoundException {

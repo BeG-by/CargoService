@@ -38,7 +38,7 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthorizationResponse> login(@RequestBody @Valid AuthorizationRequest authorizationRequest) throws NotFoundException {
-        testDataInserter.insertTestData();
+//        testDataInserter.insertTestData();
         return ResponseEntity.ok(authorizationService.login(authorizationRequest));
     }
 

@@ -27,7 +27,7 @@ import GoogleLogin from "react-google-login";
 import {GithubLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 
 
-export const LoginForm = (props) => {
+export const LoginFormWeb = (props) => {
 
     const {open, onClose, history} = props;
     const [toast, showToast] = useToast();
@@ -78,8 +78,7 @@ export const LoginForm = (props) => {
                                 }}
                                 validationSchema={ValidationSchemaEmail.concat(ValidationSchemaPassword)}
                                 onSubmit={(values) => {
-
-                                    makeRequest("POST", LOGIN_URL, {email: values.email, password: values.password})
+                                         makeRequest("POST", LOGIN_URL, {email: values.email, password: values.password})
                                         .then(res => {
                                             localStorage.setItem("authorization", res.data.token);
                                             props.changeUserAndCompany(res.data.user, res.data.company);
@@ -236,4 +235,4 @@ const mapActionsToProps = (dispatch) => {
     }
 };
 
-export default withRouter(connect(null, mapActionsToProps)(LoginForm));
+export default withRouter(connect(null, mapActionsToProps)(LoginFormWeb));

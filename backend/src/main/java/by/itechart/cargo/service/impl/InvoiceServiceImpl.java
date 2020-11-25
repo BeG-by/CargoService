@@ -247,7 +247,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         final Invoice savedInvoice = invoiceRepository.save(invoice);
-        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(savedInvoice));
+//        elasticsearchInvoiceRepository.save(ElasticsearchInvoice.fromInvoice(savedInvoice));
 
         log.info("Invoice has been saved {}", savedInvoice);
         return savedInvoice.getId();
