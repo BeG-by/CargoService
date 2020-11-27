@@ -7,7 +7,7 @@
     <changeSet id="insert_users_for_demo" author="mironuk.vladislav">
 
         <insert tableName="user">
-            <column name="email" value="chillman@gmail.com"/>
+            <column name="email" value="istok08@mail.ru"/>
             <column name="password" value="$2a$10$53740pxEa.1BcdVJMPjfl.CYbCKDzzTSuThJt2MDvmUL9JodqzqpW"/>
             <column name="name" value="Vladislav"/>
             <column name="patronymic" value="Igorevich"/>
