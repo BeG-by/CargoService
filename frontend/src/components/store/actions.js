@@ -1,4 +1,4 @@
-import {ACTION_CHANGE_USER, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
+import {ACTION_CHANGE_JWT_TOKEN, ACTION_CHANGE_USER, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
 
 export const changeUserAndCompany = (newUser, newCompany) => {
     return {
@@ -9,6 +9,15 @@ export const changeUserAndCompany = (newUser, newCompany) => {
         }
     }
 };
+
+export const changeJWTToken = (newJWTToken) => {
+    return {
+        type: ACTION_CHANGE_JWT_TOKEN,
+        payload: {
+            jwtToken: newJWTToken,
+        }
+    }
+}
 
 export const changeUser = (newUser) => {
     return {

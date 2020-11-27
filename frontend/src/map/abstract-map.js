@@ -31,8 +31,8 @@ export default function AbstractMap(props) {
 
 
     const {isLoaded, loadError} = useLoadScript({
-        googleMapsApiKey: API_KEY,
-        libraries: LIBRARIES,
+        // googleMapsApiKey: API_KEY,
+        // libraries: LIBRARIES,
     });
 
     const handleMapClick = (event) => {

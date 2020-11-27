@@ -2,7 +2,7 @@ import React from "react";
 import {Text, View} from "react-native";
 import LoginForm from "./components/forms/login-form/LoginForm"
 import {NativeRouter, Switch, Route, Link, BackButton} from "react-router-native";
-import {UserInfo} from "./components/forms/login-form/UserInfo"
+import {Map} from "./components/forms/login-form/Map"
 import {createStore} from "redux";
 import {rootReducer} from "./components/store/reducers";
 import {Provider} from "react-redux";
@@ -17,7 +17,7 @@ export default function AndroidApp() {
                     <Switch>
                         <BackButton>
                             <Route exact path={"/"} render={props => <LoginForm {...props}/>}/>
-                            <Route path={"/user-info"} render={props => <UserInfo {...props}/>}/>
+                            <Route path={"/user-info"} render={props => <Map {...props}/>}/>
                         </BackButton>
                     </Switch>
                 </NativeRouter>

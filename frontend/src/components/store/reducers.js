@@ -1,7 +1,8 @@
-import {ACTION_CHANGE_USER, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
-import {NOT_AUTH} from "../../security/private-route";
+import {ACTION_CHANGE_JWT_TOKEN, ACTION_CHANGE_USER, ACTION_CHANGE_USER_AND_COMPANY} from "./action-type";
+// import {NOT_AUTH} from "../../security/private-route";
 
 const initState = {
+    jwtToken: "",
     user: {
         id: 0,
         email: "",
@@ -19,7 +20,7 @@ const initState = {
             },
         birthday: "",
         status: "",
-        roles: [NOT_AUTH],
+        roles: ["123"],
         photo: "",
         phone: ""
     },
@@ -32,6 +33,8 @@ export const rootReducer = (state = initState, action) => {
             return {...state, user: action.payload.user, company: action.payload.company}
         case ACTION_CHANGE_USER:
             return {...state, user: action.payload.user}
+        case ACTION_CHANGE_JWT_TOKEN:
+            return {...state, jwtToken: action.payload.jwtToken}
     }
 
     return state;

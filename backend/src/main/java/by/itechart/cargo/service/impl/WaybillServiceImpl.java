@@ -96,7 +96,7 @@ public class WaybillServiceImpl implements WaybillService {
 
         final Waybill savedWaybill = waybillRepository.save(waybill);
 
-        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(savedWaybill));
+//        elasticsearchWaybillRepository.save(ElasticsearchWaybill.fromWaybill(savedWaybill));
         log.info("Waybill has been saved {}", savedWaybill);
         return savedWaybill.getId();
     }

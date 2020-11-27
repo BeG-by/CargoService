@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Text, View, Button, TextInput, StyleSheet} from "react-native";
 import {bindActionCreators} from "redux";
-import {changeUserAndCompany} from "../../store/actions";
+import {changeJWTToken, changeUserAndCompany} from "../../store/actions";
 import {withRouter} from "react-router-native";
 import {connect} from "react-redux";
 
@@ -11,7 +11,7 @@ function LoginForm(props) {
     const [password, setPassword] = useState("");
 
     const makeLoginRequest = async () => {
-        const url = "/v1/api/auth/login";
+        const url = "http://192.168.100.18/v1/api/auth/login";
 
         const method = "POST";
         const headers = {'Accept': 'application/json', 'Content-Type': 'application/json',}
@@ -25,9 +25,10 @@ function LoginForm(props) {
         try {
             let data = await makeLoginRequest();
             props.changeUserAndCompany(data.user, data.company);
-            props.history.push("user-info")
+            props.changeJWTToken(data.token);
+            props.history.push("user-info");
         } catch (error) {
-            alert("Cannot authenticate");
+            alert(error)
         }
     }
     return (
@@ -80,7 +81,8 @@ const styles = StyleSheet.create({
 
 const mapActionsToProps = (dispatch) => {
     return {
-        changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch)
+        changeUserAndCompany: bindActionCreators(changeUserAndCompany, dispatch),
+        changeJWTToken: bindActionCreators(changeJWTToken, dispatch),
     }
 };
 
