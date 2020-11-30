@@ -35,5 +35,4 @@ public class DriverController {
     public ResponseEntity<UserResponse> findById(@PathVariable long id) throws NotFoundException {
         return ResponseEntity.ok(driverService.findById(id));
     }
-
 }

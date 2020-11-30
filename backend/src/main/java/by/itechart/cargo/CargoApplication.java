@@ -10,8 +10,6 @@ import javax.annotation.PreDestroy;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class CargoApplication {
-
-
     private RedisServer redisServer;
 
     @PostConstruct

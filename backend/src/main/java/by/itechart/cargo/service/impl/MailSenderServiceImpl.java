@@ -4,11 +4,11 @@ import by.itechart.cargo.dto.model_dto.mail.MessageRequest;
 import by.itechart.cargo.dto.model_dto.mail.MessageTemplateRequest;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.exception.ServiceException;
+import by.itechart.cargo.microservices.MailPublisher;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.service.MailSenderService;
 import by.itechart.cargo.service.util.TemplateUtil;
-import by.itechart.cargo.util.redis.RedisMessageSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,14 +30,14 @@ public class MailSenderServiceImpl implements MailSenderService {
     @Value("${link.password}")
     private String passwordLink;
 
-    private final RedisMessageSender redisMessageSender;
+    private final MailPublisher mailPublisher;
     private final UserRepository userRepository;
     private final TemplateUtil templateUtil;
 
 
     @Autowired
-    public MailSenderServiceImpl(RedisMessageSender redisMessageSender, UserRepository userRepository, TemplateUtil templateUtil) {
-        this.redisMessageSender = redisMessageSender;
+    public MailSenderServiceImpl(MailPublisher mailPublisher, UserRepository userRepository, TemplateUtil templateUtil) {
+        this.mailPublisher = mailPublisher;
         this.userRepository = userRepository;
         this.templateUtil = templateUtil;
     }
@@ -58,7 +58,7 @@ public class MailSenderServiceImpl implements MailSenderService {
                     final String content = templateUtil.getBirthdayTemplate(user);
                     String to = user.getEmail();
                     String subject = "Greeting";
-                    redisMessageSender.sendMail(to, subject, content);
+                    mailPublisher.publishMail(to, subject, content);
                 } catch (ServiceException e) {
                     log.error(e.getMessage());
                 }
@@ -75,7 +75,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         for (String email : request.getEmails()) {
             if (userRepository.findByEmail(email).isPresent()) {
-                redisMessageSender.sendMail(email, request.getSubject(), request.getText());
+                mailPublisher.publishMail(email, request.getSubject(), request.getText());
             } else {
                 errors.add(String.format("Email %s doesn't exist", email));
             }
@@ -97,7 +97,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
             if (userDb.isPresent()) {
 
-                String content = "";
+                String content;
                 switch (request.getType()) {
                     case "BIRTHDAY":
                         content = templateUtil.getBirthdayTemplate(userDb.get());
@@ -109,7 +109,7 @@ public class MailSenderServiceImpl implements MailSenderService {
                         throw new NotFoundException("Template doesn't exist");
                 }
 
-                redisMessageSender.sendMail(email, request.getSubject(), content);
+                mailPublisher.publishMail(email, request.getSubject(), content);
 
             } else {
                 errors.add(String.format("Email %s doesn't exist", email));
@@ -131,7 +131,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         final String content = templateUtil.getActivationTemplate(link);
 
-        redisMessageSender.sendMail(to, subject, content);
+        mailPublisher.publishMail(to, subject, content);
         return code;
     }
 
@@ -144,7 +144,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
         final String content = templateUtil.getPasswordTemplate(user, link);
 
-        redisMessageSender.sendMail(to, subject, content);
+        mailPublisher.publishMail(to, subject, content);
         return code;
     }
 

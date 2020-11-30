@@ -59,12 +59,12 @@ public class NotificationController {
         return ResponseEntity.ok(pointService.findPointNotificationData(id));
     }
 
-    void notifyAboutNewInvoice(Long invoiceId, Long notificationRecipient) {
+    public void notifyAboutNewInvoice(Long invoiceId, Long notificationRecipient) {
         NewInvoiceNotification notification = new NewInvoiceNotification(invoiceId, notificationRecipient);
         messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipient), PRIVATE_ENDPOINT, notification);
     }
 
-    void notifyAboutInvoiceStatusChange(Long invoiceId, Invoice.Status invoiceStatus) throws NotFoundException {
+    public void notifyAboutInvoiceStatusChange(Long invoiceId, Invoice.Status invoiceStatus) throws NotFoundException {
         List<Long> recipientIds = new ArrayList<>();
         switch (invoiceStatus) {
             case REGISTERED:
@@ -87,21 +87,26 @@ public class NotificationController {
         }
     }
 
-    void notifyAboutNewWaybill(Long waybillId, Long notificationRecipientId) {
+    public void notifyAboutNewWaybill(Long waybillId, Long notificationRecipientId) {
         NewWaybillNotification notification = new NewWaybillNotification(notificationRecipientId, waybillId);
         messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipientId), PRIVATE_ENDPOINT, notification);
     }
 
-    void notifyAboutPointPass(Long pointId) throws NotFoundException {
+    public void notifyAboutPointPass(Long pointId) throws NotFoundException {
         Waybill waybill = waybillService.findByPointId(pointId);
         UserResponse manager = userService.findManagerByInvoiceId(waybill.getInvoice().getId());
-        PointPassNotification notification = new PointPassNotification(waybill.getId(), pointId, manager.getId());//todo: detached entity error? (discover why not)
+        PointPassNotification notification = new PointPassNotification(waybill.getId(), pointId, manager.getId());
         messagingTemplate.convertAndSendToUser(String.valueOf(manager.getId()), PRIVATE_ENDPOINT, notification);
     }
 
-    void notifyAboutInvoiceUpdate(Long invoiceId) throws NotFoundException {
+    public void notifyAboutInvoiceUpdate(Long invoiceId) throws NotFoundException {
         Long managerId = userService.findManagerByInvoiceId(invoiceId).getId();
         InvoiceUpdateNotification notification = new InvoiceUpdateNotification(invoiceId, managerId);
         messagingTemplate.convertAndSendToUser(String.valueOf(managerId), PRIVATE_ENDPOINT, notification);
+    }
+
+    public void notifyAboutPDFSuccessLoading(String presignedURI, Long notificationRecipientId) {
+        PDFReadyNotification notification = new PDFReadyNotification(notificationRecipientId, presignedURI);
+        messagingTemplate.convertAndSendToUser(String.valueOf(notificationRecipientId), PRIVATE_ENDPOINT, notification);
     }
 }
