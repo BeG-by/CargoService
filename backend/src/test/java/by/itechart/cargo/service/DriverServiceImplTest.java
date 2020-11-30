@@ -8,14 +8,10 @@ import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.security.JwtUserDetails;
-import by.itechart.cargo.service.impl.DriverServiceImpl;
-import com.amazonaws.services.connect.model.UserNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -23,11 +19,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class DriverServiceTest {
+public class DriverServiceImplTest {
 
     @Autowired
     public DriverService driverService;
@@ -78,7 +74,7 @@ public class DriverServiceTest {
 
     @Test
     @DisplayName("findById() - should throw UserNotFoundException")
-    public void should_throwUserNotFoundException_whenGivenInvalidId() throws Exception {
+    public void should_throwUserNotFoundException_whenGivenInvalidId() {
         final long INVALID_ID = -1;
         final long VALID_ID = 1;
 

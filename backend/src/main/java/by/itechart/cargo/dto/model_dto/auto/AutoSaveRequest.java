@@ -2,6 +2,7 @@ package by.itechart.cargo.dto.model_dto.auto;
 
 import by.itechart.cargo.model.Auto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AutoSaveRequest {
 
     @NotBlank(message = "Auto mark is mandatory")
