@@ -29,6 +29,11 @@ public class ClientCompanyController {
         this.clientCompanyService = clientCompanyService;
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("123");
+    }
+
     @GetMapping
     @Secured(SYSADMIN)
     public ResponseEntity<List<ClientCompany>> findAll() {
