@@ -53,7 +53,7 @@ public class UserController {
 
     @PutMapping
     @Secured({ADMIN, OWNER})
-    public ResponseEntity<String> update(@RequestBody @Valid UserUpdateRequest userUpdateRequest) throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<String> update(@RequestBody @Valid UserUpdateRequest userUpdateRequest) throws NotFoundException {
         userService.update(userUpdateRequest);
         return ResponseEntity.ok("User has been updated");
     }
