@@ -7,6 +7,7 @@ import by.itechart.cargo.repository.RoleRepository;
 import by.itechart.cargo.repository.UserRepository;
 import by.itechart.cargo.security.JwtTokenUtil;
 import by.itechart.cargo.service.DriverService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import static by.itechart.cargo.service.util.MessageConstant.DRIVER_NOT_FOUND_ME
 
 @Service
 @Transactional
+@Slf4j
 public class DriverServiceImpl implements DriverService {
 
     private final UserRepository userRepository;

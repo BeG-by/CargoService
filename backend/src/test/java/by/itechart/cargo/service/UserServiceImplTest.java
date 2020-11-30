@@ -6,6 +6,7 @@ import by.itechart.cargo.exception.IncorrectPasswordException;
 import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.model.ActivationDetails;
 import by.itechart.cargo.model.ClientCompany;
+import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.repository.ActivationDetailsRepository;
 import by.itechart.cargo.repository.ClientCompanyRepository;
@@ -67,7 +68,7 @@ class UserServiceImplTest {
     @Test
     void should_returnUser_and_returnCompany() {
 
-        JwtUserDetails mockJwtUser = MockEntityFactory.getMockJwtUser();
+        JwtUserDetails mockJwtUser = MockEntityFactory.getMockJwtUser(Role.RoleType.ADMIN);
         User mockUser = mockJwtUser.toUser();
         ClientCompany mockCompany = MockEntityFactory.getMockCompany();
 
@@ -88,7 +89,7 @@ class UserServiceImplTest {
     @Test
     void should_returnUser_whenGivenId() {
 
-        User mockUser = MockEntityFactory.getMockUser();
+        User mockUser = MockEntityFactory.getMockUser(Role.RoleType.ADMIN);
 
         Mockito.when(userRepository.findByIdAndClientCompanyId(-1L, -1L)).thenReturn(Optional.of(mockUser));
 
@@ -105,7 +106,7 @@ class UserServiceImplTest {
     @Test
     void should_throwNotFondException_whenUserStatusEqualsDeleted() {
 
-        User mockUser = MockEntityFactory.getMockUser();
+        User mockUser = MockEntityFactory.getMockUser(Role.RoleType.ADMIN);
         mockUser.setStatus(User.Status.DELETED);
 
         Mockito.when(userRepository.findByIdAndClientCompanyId(-1L, -1L)).thenReturn(Optional.of(mockUser));
@@ -178,7 +179,7 @@ class UserServiceImplTest {
         userUpdateRequest.setRoles(new HashSet<>());
         userUpdateRequest.setStatus("ACTIVE");
 
-        Mockito.when(userRepository.findByIdAndClientCompanyId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(Optional.of(MockEntityFactory.getMockUser()));
+        Mockito.when(userRepository.findByIdAndClientCompanyId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(Optional.of(MockEntityFactory.getMockUser(Role.RoleType.ADMIN)));
 
         userService.update(userUpdateRequest);
 
@@ -214,8 +215,8 @@ class UserServiceImplTest {
         PhotoRequest photoRequest = new PhotoRequest();
         photoRequest.setPhoto("photo");
 
-        Mockito.when(jwtTokenUtil.getJwtUser()).thenReturn(MockEntityFactory.getMockJwtUser());
-        Mockito.when(userRepository.findByIdAndClientCompanyId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(Optional.of(MockEntityFactory.getMockUser()));
+        Mockito.when(jwtTokenUtil.getJwtUser()).thenReturn(MockEntityFactory.getMockJwtUser(Role.RoleType.ADMIN));
+        Mockito.when(userRepository.findByIdAndClientCompanyId(Mockito.anyLong(), Mockito.anyLong())).thenReturn(Optional.of(MockEntityFactory.getMockUser(Role.RoleType.ADMIN)));
 
         userService.updatePhoto(photoRequest, -1L);
 
@@ -233,9 +234,9 @@ class UserServiceImplTest {
         passwordRequest.setNewPassword("new");
         passwordRequest.setConfirmNewPassword("new");
 
-        Mockito.when(jwtTokenUtil.getJwtUser()).thenReturn(MockEntityFactory.getMockJwtUser());
+        Mockito.when(jwtTokenUtil.getJwtUser()).thenReturn(MockEntityFactory.getMockJwtUser(Role.RoleType.ADMIN));
         Mockito.when(passwordEncoder.matches("mockPassword", "mockPassword")).thenReturn(true);
-        Mockito.when(userRepository.findByIdAndClientCompanyId(-1L, -1L)).thenReturn(Optional.of(MockEntityFactory.getMockUser()));
+        Mockito.when(userRepository.findByIdAndClientCompanyId(-1L, -1L)).thenReturn(Optional.of(MockEntityFactory.getMockUser(Role.RoleType.ADMIN)));
 
         userService.updatePassword(passwordRequest);
 
@@ -254,7 +255,7 @@ class UserServiceImplTest {
         passwordRequest.setNewPassword("new");
         passwordRequest.setConfirmNewPassword("new_new");
 
-        Mockito.when(jwtTokenUtil.getJwtUser()).thenReturn(MockEntityFactory.getMockJwtUser());
+        Mockito.when(jwtTokenUtil.getJwtUser()).thenReturn(MockEntityFactory.getMockJwtUser(Role.RoleType.ADMIN));
         Mockito.when(passwordEncoder.matches("mockPassword", "mockPassword")).thenReturn(true);
 
         assertThrows(IncorrectPasswordException.class, () -> userService.updatePassword(passwordRequest));
