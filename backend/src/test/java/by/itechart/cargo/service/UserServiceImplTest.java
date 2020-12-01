@@ -85,7 +85,7 @@ class UserServiceImplTest {
     }
 
     @SneakyThrows
-    @DisplayName("findUserById() - Should return userResponse")
+    @DisplayName("findUserById() - should return userResponse")
     @Test
     void should_returnUser_whenGivenId() {
 
