@@ -3,6 +3,7 @@ package by.itechart.cargo.api;
 import by.itechart.cargo.dto.model_dto.user.PhoneRequest;
 import by.itechart.cargo.dto.model_dto.user.UserResponse;
 import by.itechart.cargo.dto.model_dto.user.UserUpdateRequest;
+import by.itechart.cargo.model.Role;
 import by.itechart.cargo.model.User;
 import by.itechart.cargo.service.MockEntityFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -48,7 +49,7 @@ class UserLayerIntegrationTest {
     @Order(1)
     void should_updateUserName() {
 
-        User mockUser = MockEntityFactory.getMockUser();
+        User mockUser = MockEntityFactory.getMockUser(Role.RoleType.ADMIN);
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.fromUser(mockUser);
         userUpdateRequest.setId(4L);
 
@@ -87,7 +88,7 @@ class UserLayerIntegrationTest {
     @Sql(value = {"/sql/user-update-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void should_returnUpdatedUserAdmin() {
 
-        User mockUser = MockEntityFactory.getMockUser();
+        User mockUser = MockEntityFactory.getMockUser(Role.RoleType.ADMIN);
 
         mockMvc.perform(get("/v1/api/users/info"))
                 .andDo(print())
