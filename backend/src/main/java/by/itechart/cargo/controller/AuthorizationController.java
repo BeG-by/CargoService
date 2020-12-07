@@ -3,7 +3,6 @@ package by.itechart.cargo.controller;
 
 import by.itechart.cargo.dto.authorization_dto.*;
 import by.itechart.cargo.dto.model_dto.user.UserSaveRequest;
-import by.itechart.cargo.elasticsearch.ElasticsearchTestDataInserter;
 import by.itechart.cargo.exception.*;
 import by.itechart.cargo.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import java.io.IOException;
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
-    private final ElasticsearchTestDataInserter testDataInserter;
 
     @Value("${auth2.jwt.redirect-uri}")
     private String jwtRedirectURI;
@@ -31,14 +29,12 @@ public class AuthorizationController {
     private String deniedRedirectURI;
 
     @Autowired
-    public AuthorizationController(AuthorizationService authorizationService, ElasticsearchTestDataInserter testDataInserter) {
+    public AuthorizationController(AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
-        this.testDataInserter = testDataInserter;
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthorizationResponse> login(@RequestBody @Valid AuthorizationRequest authorizationRequest) throws NotFoundException {
-        testDataInserter.insertTestData();
         return ResponseEntity.ok(authorizationService.login(authorizationRequest));
     }
 

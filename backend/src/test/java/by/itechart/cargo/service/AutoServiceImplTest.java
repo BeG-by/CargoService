@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import static by.itechart.cargo.service.MockEntityFactory.getMockCompany;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@TestPropertySource("/application-test.properties")
 public class AutoServiceImplTest {
     @Autowired
     public AutoService autoService;

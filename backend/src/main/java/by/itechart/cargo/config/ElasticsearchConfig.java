@@ -1,6 +1,7 @@
 package by.itechart.cargo.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,13 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @ComponentScan(basePackages = {"by.itechart.cargo.elasticsearch"})
 public class ElasticsearchConfig {
 
+    @Value("${host_name.elasticsearch}")
+    private String host;
+
     @Bean
     public RestHighLevelClient client() {
         ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo("localhost:9200")
+                .connectedTo(host)
                 .build();
         return RestClients.create(clientConfiguration).rest();
     }

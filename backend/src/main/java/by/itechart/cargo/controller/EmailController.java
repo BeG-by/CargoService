@@ -6,7 +6,6 @@ import by.itechart.cargo.exception.NotFoundException;
 import by.itechart.cargo.exception.ServiceException;
 import by.itechart.cargo.service.MailSenderService;
 import by.itechart.cargo.service.util.TemplateUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -34,7 +33,7 @@ public class EmailController {
 
     @PostMapping
     @Secured({ADMIN, OWNER})
-    public ResponseEntity<?> sendEmail(@Valid @RequestBody MessageRequest request) throws NotFoundException, ServiceException {
+    public ResponseEntity<?> sendEmail(@Valid @RequestBody MessageRequest request) throws NotFoundException {
         mailSenderService.sendMail(request);
         return ResponseEntity.ok("Emails have been sent");
     }
